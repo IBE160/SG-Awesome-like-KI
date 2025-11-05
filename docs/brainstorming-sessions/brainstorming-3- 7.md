@@ -195,3 +195,14 @@ _Session facilitated using the BMAD CIS brainstorming framework_
 *   **Refinement:** Tie the quotes directly to the answers in a quiz, making the encouragement feel earned and relevant.
 *   **Question:** What if the app could show you how the knowledge you're gaining could be used to help others or solve real-world problems?
 *   **Insight:** This would connect learning to a sense of purpose, directly addressing the need to feel "needed".
+
+## SMART Goals Defined (Session with Business Analyst Mary)
+
+### 1. SMART Goal for Priority #1 (Providing alternative learning methods - summaries, quizzes):
+> **Within 4 weeks, we will develop and launch a Minimum Viable Product (MVP) that allows a user to upload a plain text document and receive a simple, auto-generated summary and a multiple-choice quiz. Success will be measured by conducting a user-testing session with at least 5 students, where they successfully generate a total of at least 10 summaries and 10 quizzes, thereby validating the core functionality of the app.**
+
+### 2. SMART Goal for Priority #2 (Addressing the emotional toll on students):
+> **Within 4 weeks, we will implement a quiz results screen that, after every quiz, displays the user's score, a list of incorrectly answered questions, and a motivational quote from a predefined list of at least 20 quotes. This feature is relevant as it aims to motivate students to focus on areas where they show low results, thereby contributing to a more positive learning experience and addressing potential emotional discouragement.**
+
+### 3. SMART Goal for Priority #3 (Creating a more inclusive learning environment):
+> **Within 4 weeks, we will design and implement the quiz and summary interface to be clean, uncluttered, and readable, adhering to a predefined checklist of at least 5 basic accessibility best practices. Success will be measured by gathering qualitative feedback on clarity and ease of use from at least 5 users during a testing session. This is relevant because prioritizing accessibility and clarity creates a fundamentally equitable experience, giving all students an equal opportunity to engage with the material and demonstrate their knowledge, which is the first step towards our long-term vision of a truly inclusive learning environment.**
