@@ -100,7 +100,7 @@ _Key realizations from the session_
 
 **Key Lessons:**
 1. The solution must address both the "how" of learning and the "how" of assessment.
-2. The app should provide a few distinct learning methods and gather data for future personalization.
+2. The app should provide a few distinct learning methods and and gather data for future personalization.
 3. The solution should be framed as empowerment, not just accommodation.
 4. Be mindful of the potential downsides of a technology-based solution (digital crutch, digital divide).
 5. The app can be a "proof of concept" for a more inclusive and personalized approach.
@@ -157,3 +157,41 @@ _Key realizations from the session_
 ---
 
 _Session facilitated using the BMAD CIS brainstorming framework_
+
+---
+## Brainstorming Session 2 - Part 2 (2025-11-05)
+
+**Focus:** Shifting from students with ADHD/dyslexia to two new user groups:
+1.  Busy parents with full-time jobs
+2.  Students aiming for good grades
+
+**Techniques Used:** Role Playing, Five Whys, "What If" Scenarios
+
+### Technique 1: Role Playing
+
+#### Persona 1: Busy Parent with a Full-Time Job
+
+*   **Daily Routine:** Wakes up, rushes through morning, maybe has a moment for a quick quiz. Commutes to work (ideal time for audio summaries). Tries to squeeze in a short summary during breaks. Commute home, errands, kids. Cooks dinner. Finally, a small window to study late at night.
+*   **Core Pain Point:** Extreme time scarcity. The overwhelming feeling is one of pressure to be efficient and a fear of wasting precious minutes on non-essential information.
+*   **Key Idea Generated:** The ability to upload learning goals to ensure the app focuses on the most critical material. Audio summaries for commutes are essential.
+
+#### Persona 2: Student Aiming for Good Grades
+
+*   **Core Pain Point:** The overwhelming feeling of having to learn EVERYTHING to get from a B to an A. The pressure is immense.
+
+### Technique 2: Five Whys (on the "Ambitious Student" persona)
+
+*   **Problem:** I feel like I have to learn EVERYTHING.
+*   **Why 1?** To be able to answer every question right and get top grades.
+*   **Why 2?** I feel pressure from parents and friends to get good grades.
+*   **Why 3?** My parents had good grades and got good jobs, and they want the same for me. It's a proven path to success.
+*   **Why 4?** Following this path makes me feel important.
+*   **Root Cause Insight:** The drive for top grades is not just about knowledge; it's about a deep-seated need to **feel seen and needed**.
+
+### Technique 3: "What If" Scenarios (addressing the root cause)
+
+*   **Question:** What if our app could make you feel "seen and needed" *before* you even get the top grade?
+*   **Idea 1:** Give positive motivational quotes.
+*   **Refinement:** Tie the quotes directly to the answers in a quiz, making the encouragement feel earned and relevant.
+*   **Question:** What if the app could show you how the knowledge you're gaining could be used to help others or solve real-world problems?
+*   **Insight:** This would connect learning to a sense of purpose, directly addressing the need to feel "needed".
