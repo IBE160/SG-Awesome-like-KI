@@ -2,7 +2,7 @@
 
 **Date:** 2025-11-05
 **Facilitator:** Mary, Business Analyst
-**Participant:** BIP
+**Participant:** Sofie
 
 This document contains the core technical design decisions and the results of a structured brainstorming session for the "AI Study Buddy" application.
 
