@@ -155,7 +155,75 @@ This section visualizes the journey for each key persona, highlighting their uni
     *   **Feelings:** Productive, efficient, less stressed about falling behind.
     *   **Touchpoints:** Mobile app interface, topic selection, "Listen to Summary" button, summary length options, short quiz interface.
 *   **Stage 4: Balancing Life & Learning: Sustained Progress**
-    *   **Actions:** As her exam approaches, dedicates more focused time -> Takes longer quizzes and reads detailed summaries -> Reviews past quiz results to pinpoint weak areas.
+    *   **Actions:** As her exam approaches, dedicates slightly more focused time -> Takes longer quizzes and reads detailed summaries -> Reviews past quiz results to pinpoint weak areas.
     *   **Thoughts:** "I'm actually going to be ready for this exam." "This app has made it possible to study despite my crazy schedule."
     *   **Feelings:** Confident, prepared, proud of her progress.
     *   **Touchpoints:** Longer quizzes, detailed summaries, quiz history, progress tracking.
+
+---
+
+## 9. User Stories: Alex (The Overwhelmed Student)
+
+### Stage 1: Discovery & Onboarding
+1.  **As Alex, I want to be able to sign up for a new account using my email and a password, so that I can get access to the application.**
+2.  **As Alex, I want the sign-up process to be simple and quick, so that I don't get frustrated or lose motivation before I even start.**
+
+### Stage 2: Initial Setup & Upload
+1.  **As Alex, I want to be able to create a new "Project" to organize my study materials for a specific course, so that I can keep my work structured and easy to find.**
+2.  **As Alex, I want to be able to upload documents (like PDFs or plain text) into my project, so that the app can process them.**
+3.  **As Alex, I want the process of creating a project and uploading a document to be intuitive and fast, so that I can get to the core features of the app without delay.**
+
+### Stage 3: Generating & Reviewing Content
+1.  **As Alex, I want to be able to easily choose between generating a summary or a quiz from my uploaded documents, so that I can get the type of content I need for my study method.**
+2.  **As Alex, when generating a quiz, I want to be able to select between a "Short" or "Long" quiz, so that I can control the depth and duration of my assessment.**
+3.  **As Alex, I want the summary and quiz generation process to be fast, so that I don't lose focus or get impatient while waiting.**
+4.  **As Alex, I want the generated summaries to be clear and concise, highlighting the most important information, so that I can quickly grasp key concepts.**
+5.  **As Alex, I want the generated quizzes to have relevant questions and clear answer options (or an easy way to input answers), so that I can effectively test my understanding.**
+
+### Stage 4: Long-term Use & Progress Tracking
+1.  **As Alex, I want to be able to easily access a history of my past summaries and quiz results, so that I can review what I've learned and track my progress over time.**
+2.  **As Alex, I want to be able to retake quizzes, so that I can reinforce my learning and improve my scores on challenging topics.**
+3.  **As Alex, I want to feel that the app is helping me manage my studies and reduce my feeling of being overwhelmed, so that I can stay motivated and confident in my academic journey.**
+
+### 10. User Stories: Ben (The Ambitious Achiever)
+
+### Stage 1: Discovery & Onboarding
+1.  **As Ben, I want to be able to sign up for an account, so that I can evaluate the app's features for my advanced study needs.**
+2.  **As Ben, I want to see a professional and clean interface during onboarding, so that I can feel confident that the app is a serious and powerful tool.**
+
+### Stage 2: Initial Test & Quality Assessment
+1.  **As Ben, I want to be able to create projects and topics to meticulously organize my study materials, so that I can maintain a structured approach to my learning.**
+2.  **As Ben, I want to be able to upload complex documents and precisely input my learning goals, so that the app can generate highly relevant and tailored content for my specific exam objectives.**
+3.  **As Ben, I want to be able to generate a *long* quiz from my materials, so that I can thoroughly test my knowledge and identify subtle gaps in my understanding.**
+4.  **As Ben, I want the generated summaries to be comprehensive and accurate, allowing me to cross-reference them with my learning goals and original documents, so that I can verify the app's quality and reliability.**
+
+### Stage 3: Intensive Exam Preparation & Performance Tracking
+1.  **As Ben, I want to be able to easily review my past quiz results and performance metrics, so that I can quickly identify my weak topics and areas needing further study.**
+2.  **As Ben, I want to be able to revisit summaries and take new, targeted quizzes on specific topics, so that I can solidify my understanding and ensure comprehensive preparation for exams.**
+3.  **As Ben, I want the app to provide clear feedback on my progress and mastery of topics, so that I feel confident and in control of my exam preparation.**
+
+### Stage 4: Exam Success & Continued Mastery
+1.  **As Ben, after completing a course, I want to be able to easily manage my workspace by either deleting old documents or archiving completed projects, so that I can keep my study environment organized and focused on current material.**
+2.  **As Ben, I want to be able to seamlessly start a new project for my next course, so that I can continue to use the app as my primary, long-term study tool.**
+
+### 11. User Stories: Sarah (The Time-Strapped Parent)
+
+### Stage 1: Discovery & Onboarding
+1.  **As Sarah, I want to be able to sign up for an account quickly and easily, so that I can immediately explore if the app fits into my extremely limited schedule.**
+2.  **As Sarah, I want the onboarding process to clearly demonstrate how the app can save me time and be used in short bursts, so that I feel confident it won't add to my overwhelm.**
+
+### Stage 2: First Use: On-the-Go Setup
+1.  **As Sarah, I want to be able to quickly create a new project and topic on my mobile device, so that I can organize my study materials even when I only have a few minutes.**
+2.  **As Sarah, I want to be able to easily upload documents from my phone's cloud storage, so that I can add study material on the go during short breaks.**
+3.  **As Sarah, I want the setup and upload process to be extremely fast and intuitive on my mobile device, so that I can make progress without feeling rushed or frustrated.**
+
+### Stage 3: Fragmented Learning & Quick Consumption
+1.  **As Sarah, I want to be able to access summaries in an audio format, so that I can learn efficiently during my commute or while performing other tasks.**
+2.  **As Sarah, I want to be able to choose between a short or long summary, so that I can adapt the content consumption to the amount of time I have available.**
+3.  **As Sarah, I want to be able to take quick, short quizzes, so that I can test my knowledge and reinforce learning during brief moments throughout my day.**
+4.  **As Sarah, I want the app to be highly responsive and load content instantly, so that I can maximize my learning during fragmented time slots without waiting.**
+
+### Stage 4: Balancing Life & Learning: Sustained Progress
+1.  **As Sarah, as my exam approaches, I want to be able to easily transition to more focused study, including taking longer quizzes and reading detailed summaries, so that I can thoroughly prepare.**
+2.  **As Sarah, I want to be able to review my past quiz results and identify my weak areas, so that I can efficiently target my remaining study time.**
+3.  **As Sarah, I want the app to help me feel confident and prepared for my certification exam, so that I can successfully advance my career.**
