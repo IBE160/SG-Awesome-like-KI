@@ -27,7 +27,7 @@ The insights in this report are a synthesis of qualitative data from the followi
 *   **Name:** Alex
 *   **Demographics:** 19-year-old university student.
 *   **Background:** Diagnosed with ADHD and dyslexia. Finds traditional, text-heavy study methods exhausting and demotivating. Struggles with focus during long reading sessions and feels that the current educational system doesn't cater to their learning style.
-*   **Goals & Motivations:** Wants to keep up with coursework without feeling constantly drained. Aims to find learning methods that are engaging, interactive, and play to their strengths. Motivated by a desire to prove that they can succeed academically when given the right tools.
+*   **Goals & Motivations:** Wants to keep up with coursework without feeling constantly drained. Aims to find learning methods that are engaging, interactive, and play to their strengths. Motivated by a desire to prove that they can succeed academically whengiven the right tools.
 *   **Pain Points & Frustrations:**
     *   Large blocks of text are intimidating and hard to process.
     *   Loses focus easily and gets frustrated.
@@ -87,30 +87,75 @@ Based on this research, the following recommendations should be considered durin
 
 ---
 
-## 8. User Journey Map: Alex (The Overwhelmed Student)
+## 8. User Journey Maps
 
-This map visualizes Alex's journey from discovering the app to becoming a confident, long-term user.
+This section visualizes the journey for each key persona, highlighting their unique actions, thoughts, and feelings at each stage.
 
-### Stage 1: Discovery & Onboarding
-*   **Actions:** Hears about the app from a friend or online -> Navigates to the app/downloads it -> Signs up with email and password.
-*   **Thoughts:** "This might actually help me study." "I hope this is easy to use."
-*   **Feelings:** Hopeful, a slight reduction in feeling overwhelmed.
-*   **Touchpoints:** Word of mouth, app store, sign-up page.
+### Persona: Alex (The Overwhelmed Student)
 
-### Stage 2: Initial Setup & Upload
-*   **Actions:** Logs in -> Chooses "Create Project" on the home page -> Navigates to a project-specific page -> Chooses "Upload Document" and/or "Upload Learning Goal" -> Uploads one or more documents.
-*   **Thoughts:** "This is easy and fast." "I can organize all my materials here." "It's great that it can combine information from multiple documents."
-*   **Feelings:** Efficient, organized, hopeful, relieved.
-*   **Touchpoints:** Home screen, "Create Project" button/flow, project page, upload interface, learning goals input.
+*   **Stage 1: Discovery & Onboarding**
+    *   **Actions:** Hears about the app from a friend or online -> Navigates to the app/downloads it -> Signs up with email and password.
+    *   **Thoughts:** "This might actually help me study." "I hope this is easy to use."
+    *   **Feelings:** Hopeful, a slight reduction in feeling overwhelmed.
+    *   **Touchpoints:** Word of mouth, app store, sign-up page.
+*   **Stage 2: Initial Setup & Upload**
+    *   **Actions:** Logs in -> Chooses "Create Project" on the home page -> Navigates to a project-specific page -> Chooses "Upload Document" and/or "Upload Learning Goal" -> Uploads one or more documents.
+    *   **Thoughts:** "This is easy and fast." "I can organize all my materials here." "It's great that it can combine information from multiple documents."
+    *   **Feelings:** Efficient, organized, hopeful, relieved.
+    *   **Touchpoints:** Home screen, "Create Project" button/flow, project page, upload interface, learning goals input.
+*   **Stage 3: Generating & Reviewing Content**
+    *   **Actions:** After uploading, presses "Create Quiz" or "Create Summary" -> If quiz, selects "Short" or "Long" -> App generates content -> Reviews summary or takes quiz (typed or multiple-choice answers).
+    *   **Thoughts:** "This process is easy and fast." "The summary/quiz is a good way to get the most important information." "This helps me study the topic effectively."
+    *   **Feelings:** Efficient, engaged, learning effectively, less overwhelmed.
+    *   **Touchpoints:** "Create Quiz/Summary" buttons, quiz length selection, loading indicator, summary display, quiz interface, quiz feedback.
+*   **Stage 4: Long-term Use & Progress Tracking**
+    *   **Actions:** Revisits the app for new topics -> Accesses "History" to review past summaries and scores -> Retakes quizzes to improve.
+    *   **Thoughts:** "This app is really helping me." "I can actually see what I've learned and where I've improved." "Studying doesn't feel like a chore anymore."
+    *   **Feelings:** Confident, in control of his learning, motivated, less overwhelmed.
+    *   **Touchpoints:** History/Dashboard, past quiz results, progress indicators.
 
-### Stage 3: Generating & Reviewing Content
-*   **Actions:** After uploading, presses "Create Quiz" or "Create Summary" -> If quiz, selects "Short" or "Long" -> App generates content -> Reviews summary or takes quiz (typed or multiple-choice answers).
-*   **Thoughts:** "This process is easy and fast." "The summary/quiz is a good way to get the most important information." "This helps me study the topic effectively."
-*   **Feelings:** Efficient, engaged, learning effectively, less overwhelmed.
-*   **Touchpoints:** "Create Quiz/Summary" buttons, quiz length selection, loading indicator, summary display, quiz interface, quiz feedback.
+### Persona: Ben (The Ambitious Achiever)
 
-### Stage 4: Long-term Use & Progress Tracking
-*   **Actions:** Revisits the app for new topics -> Accesses "History" to review past summaries and scores -> Retakes quizzes to improve.
-*   **Thoughts:** "This app is really helping me." "I can actually see what I've learned and where I've improved." "Studying doesn't feel like a chore anymore."
-*   **Feelings:** Confident, in control of his learning, motivated, less overwhelmed.
-*   **Touchpoints:** History/Dashboard, past quiz results, progress indicators.
+*   **Stage 1: Discovery & Onboarding**
+    *   **Actions:** Hears about the app from a friend or online -> Navigates to the app -> Signs up with email and password.
+    *   **Thoughts:** "I hear this can make studying more efficient. I need to see if it's powerful enough for my needs."
+    *   **Feelings:** Curious, skeptical, hopeful for a competitive edge.
+    *   **Touchpoints:** Word of mouth, app store, sign-up page.
+*   **Stage 2: Initial Test & Quality Assessment**
+    *   **Actions:** Logs in -> Creates a project and topic -> Uploads a complex document and meticulously inputs learning goals -> Generates a summary and a *long* quiz -> Reads the summary carefully, cross-referencing it with his learning goals to ensure all critical information is present.
+    *   **Thoughts:** "Is this summary comprehensive enough?" "Are these quiz questions challenging and relevant?"
+    *   **Feelings:** Critical, analytical, hopeful but cautious.
+    *   **Touchpoints:** Project/Topic creation, document upload, learning goals input, summary generation, long quiz generation, summary review, quiz interface, original document.
+*   **Stage 3: Intensive Exam Preparation & Performance Tracking**
+    *   **Actions:** Regularly reviews past quiz results to identify weak topics -> Revisits summaries for those topics -> Takes new quizzes to solidify knowledge.
+    *   **Thoughts:** "This app is a game-changer for my exam prep." "I can clearly see my progress and where I need to focus."
+    *   **Feelings:** Confident, efficient, focused, empowered.
+    *   **Touchpoints:** Quiz history, progress dashboard, summary review, new quiz generation.
+*   **Stage 4: Exam Success & Continued Mastery**
+    *   **Actions:** After his exam, deletes documents from the completed project or starts a new project for his next course.
+    *   **Thoughts:** "This app was a key part of my success." "Time to set up my next project."
+    *   **Feelings:** Successful, accomplished, loyal to the app.
+    *   **Touchpoints:** Project management features (delete, create new), home page with project list.
+
+### Persona: Sarah (The Time-Strapped Parent)
+
+*   **Stage 1: Discovery & Onboarding**
+    *   **Actions:** Hears about the app from a friend or online -> Navigates to the app on her phone -> Signs up with email and password.
+    *   **Thoughts:** "I need something I can use in short bursts. I hope this is it."
+    *   **Feelings:** Hopeful, but worried about another time-consuming app.
+    *   **Touchpoints:** Word of mouth, app store, sign-up page.
+*   **Stage 2: First Use: On-the-Go Setup**
+    *   **Actions:** Logs in on her phone -> Quickly creates a project and topic -> Uploads a document from her cloud storage during a coffee break.
+    *   **Thoughts:** "This is so easy and simple." "I can actually do this quickly during my break."
+    *   **Feelings:** Relieved, efficient, productive.
+    *   **Touchpoints:** Mobile app interface, "Create Project/Topic" flow, mobile upload interface.
+*   **Stage 3: Fragmented Learning & Quick Consumption**
+    *   **Actions:** Accesses the app during her commute -> Listens to an audio summary -> Takes a quick, short quiz while waiting for an appointment.
+    *   **Thoughts:** "This is so fast and convenient." "The audio summary is a lifesaver." "I can actually learn while doing other things."
+    *   **Feelings:** Productive, efficient, less stressed about falling behind.
+    *   **Touchpoints:** Mobile app interface, topic selection, "Listen to Summary" button, summary length options, short quiz interface.
+*   **Stage 4: Balancing Life & Learning: Sustained Progress**
+    *   **Actions:** As her exam approaches, dedicates more focused time -> Takes longer quizzes and reads detailed summaries -> Reviews past quiz results to pinpoint weak areas.
+    *   **Thoughts:** "I'm actually going to be ready for this exam." "This app has made it possible to study despite my crazy schedule."
+    *   **Feelings:** Confident, prepared, proud of her progress.
+    *   **Touchpoints:** Longer quizzes, detailed summaries, quiz history, progress tracking.
