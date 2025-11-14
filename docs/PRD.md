@@ -58,15 +58,46 @@ As an EdTech application, the AI Study Buddy must navigate key regulations to en
 
 ### MVP - Minimum Viable Product
 
-{{mvp_scope}}
+The MVP is focused on reliably helping students understand their material quickly by breaking down tasks, explaining concepts clearly, and guiding them step-by-step.
+
+*   **Core AI Functionality:**
+    *   Generate concise summaries from uploaded text/PDF documents.
+    *   Generate multiple-choice quizzes with **user-selectable length (e.g., short, medium, long)**.
+*   **User Experience:**
+    *   A simple, clean, and intuitive user interface.
+    *   Clear, step-by-step guidance through the process of uploading and generating content.
+    *   **Motivational feedback on quiz results**, including explanations for correct answers to facilitate learning.
+*   **Foundation:**
+    *   Secure user registration and authentication.
+    *   File upload and management with **hierarchical organization** (e.g., by classes/topics) to ensure materials are easy to find.
 
 ### Growth Features (Post-MVP)
 
-{{growth_features}}
+These features make the product more competitive by providing personalized learning paths, smart progress tracking, and an AI that adapts to each student’s pace and confidence level.
+
+*   **Personalized Learning Paths:**
+    *   AI-driven recommendations for what to study next based on quiz performance.
+    *   "Workout Plans" (daily/bootcamp modes) to cater to different study habits.
+*   **Smart Progress Tracking:**
+    *   Visualizations of user progress over time.
+    *   Targeted feedback on weak chapters or topics.
+*   **Adaptive AI:**
+    *   The AI adjusts the difficulty of quizzes and the level of detail in summaries based on the user's performance and confidence level.
 
 ### Vision (Future)
 
-{{vision_features}}
+The long-term vision is a fully intelligent study companion that knows the student’s habits, predicts where they’ll struggle, keeps them motivated, and helps them learn anything—from any course—effortlessly.
+
+*   **Proactive Study Companion:**
+    *   The AI proactively suggests study sessions based on the user's habits and upcoming deadlines.
+    *   It predicts areas where the student might struggle and provides support in advance.
+*   **Motivational Engine:**
+    *   Gamification (achievements, streaks, etc.) to keep users motivated.
+    *   Personalized encouragement and feedback.
+*   **Universal Learning Partner:**
+    *   Support for a wide range of document types and languages.
+    *   Integration with other learning platforms (LMS, etc.).
+    *   "Chat with your documents" functionality for a fully interactive learning experience.
 
 ---
 
