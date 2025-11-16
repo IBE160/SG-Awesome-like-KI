@@ -15,7 +15,7 @@ workflow_path: "method-greenfield.yaml"
 
 workflow_status:
   product-brief: docs/product-brief.md
-  prd: required
+  prd: docs/PRD.md
   validate-prd: optional
   create-design: conditional
   create-architecture: required
