@@ -1,0 +1,24 @@
+# Workflow Status
+# generated: 2025-11-10
+# project: IBE160
+# project_type: software
+# selected_track: method
+# field_type: greenfield
+# workflow_path: method-greenfield.yaml
+
+generated: "2025-11-10"
+project: "IBE160"
+project_type: "software"
+selected_track: "method"
+field_type: "greenfield"
+workflow_path: "method-greenfield.yaml"
+
+workflow_status:
+  product-brief: docs/product-brief.md
+  prd: required
+  validate-prd: optional
+  create-design: conditional
+  create-architecture: required
+  validate-architecture: optional
+  solutioning-gate-check: required
+  sprint-planning: required
