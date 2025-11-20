@@ -27,7 +27,7 @@ These epics will be tackled in a logical sequence, with Epic 1 providing the gro
 
 Establish the foundational infrastructure, security, and project setup required to build, test, and deploy the application. This enables all future development.
 
-### Story 1.1: Initialize Project Repository & Basic Structure
+### Story 1.1: Initialize Project Repository & Basic Structure (Supports FR5.1, FR5.2, FR5.3)
 
 As a Developer,
 I want to set up the project repository with a clear structure and initial configuration,
@@ -45,7 +45,7 @@ So that all team members can easily access, contribute to, and understand the co
 
 **Technical Notes:** Use `git init` and standard project scaffolding. **Consider adding a `devcontainer` configuration to standardize the development environment.**
 
-### Story 1.2: Set Up Next.js Application & Tailwind CSS
+### Story 1.2: Set Up Next.js Application & Tailwind CSS (Supports FR5.1, FR5.2, FR5.3)
 
 As a Developer,
 I want to initialize the Next.js application with Tailwind CSS,
@@ -63,7 +63,7 @@ So that the frontend development can begin with a modern, responsive UI framewor
 
 **Technical Notes:** Use `npx create-next-app` and follow Tailwind CSS integration guides. **Ensure a lockfile (`package-lock.json` or `yarn.lock`) is used to maintain consistent dependency versions.**
 
-### Story 1.3: Initialize Supabase Project & Client Integration
+### Story 1.3: Initialize Supabase Project & Client Integration (Supports FR1.1, FR1.2, FR2.1)
 
 As a Developer,
 I want to set up a new Supabase project and integrate the Supabase client into the Next.js application,
@@ -82,7 +82,7 @@ So that we have a backend-as-a-service for database, authentication, and storage
 
 **Technical Notes:** Use Supabase CLI or web interface for project creation. **Encourage the use of the Supabase CLI for managing local development instances to avoid conflicts.**
 
-### Story 1.4: Implement Basic CI/CD Pipeline
+### Story 1.4: Implement Basic CI/CD Pipeline (Supports NFRs)
 
 As a Developer,
 I want to set up a basic Continuous Integration/Continuous Deployment (CI/CD) pipeline,
@@ -105,7 +105,7 @@ So that code changes are automatically tested and deployed, ensuring quality and
 
 Allow users to securely create and manage their accounts, providing a personalized and protected space for their study materials.
 
-### Story 2.1: User Registration
+### Story 2.1: User Registration [FR1.1]
 
 As a new user,
 I want to create an account with my email and a secure password,
@@ -122,7 +122,7 @@ So that I can access the AI Study Buddy's features.
 
 **Technical Notes:** Utilize Supabase Auth for email/password registration. Implement client-side and server-side validation for password strength. **Consider adding a CAPTCHA (e.g., hCaptcha) to prevent bot registrations and a check against a list of common passwords.**
 
-### Story 2.2: User Login & Session Management
+### Story 2.2: User Login & Session Management [FR1.1]
 
 As a registered user,
 I want to log in to my account,
@@ -141,7 +141,7 @@ So that I can access my personalized study materials and generated content.
 
 **Technical Notes:** Utilize Supabase Auth for login and `@supabase/ssr` for secure cookie-based session management. **Ensure the library is configured correctly to use secure, HTTP-only cookies to mitigate session hijacking risks.**
 
-### Story 2.3: Password Reset
+### Story 2.3: Password Reset [FR1.1]
 
 As a registered user,
 I want to reset my password if I forget it,
@@ -160,7 +160,7 @@ So that I can regain access to my account.
 
 **Technical Notes:** Utilize Supabase Auth's password reset functionality.
 
-### Story 2.4: User Profile Management & RLS Enforcement
+### Story 2.4: User Profile Management & RLS Enforcement [FR1.1, FR1.2]
 
 As a registered user,
 I want to manage my basic profile information,
@@ -185,7 +185,7 @@ So that my account details are accurate and my data is protected.
 
 Empower users to easily upload, organize, and manage their study materials, creating a structured and clutter-free learning environment.
 
-### Story 3.1: Document Upload (Text & PDF)
+### Story 3.1: Document Upload (Text & PDF) [FR2.1]
 
 As a user,
 I want to upload my study materials in plain text or PDF format,
@@ -205,7 +205,7 @@ So that I can use them to generate summaries and quizzes.
 
 **Technical Notes:** Utilize Supabase Storage for file storage. Implement client-side and server-side validation for file type and size. Integrate with a cloud-based AI service for PDF parsing.
 
-### Story 3.2: Create & Manage Classes
+### Story 3.2: Create & Manage Classes [FR2.2]
 
 As a user,
 I want to create and manage "classes" to organize my study materials,
@@ -225,7 +225,7 @@ So that I can easily group related content.
 
 **Technical Notes:** Design a database schema in Supabase (PostgreSQL) to support class creation and management, ensuring RLS is applied.
 
-### Story 3.3: Create & Manage Class Sections
+### Story 3.3: Create & Manage Class Sections [FR2.2]
 
 As a user,
 I want to create and manage "class sections" within my classes,
@@ -241,7 +241,7 @@ So that I can further organize my study materials by topic or module.
 **And** section names shall be limited to 25 alphanumeric characters.
 **And** if a user attempts to create a section with a name that already exists within the same class, the system shall display an error message: 'A section with this name already exists in this class. Please choose a different name.'
 
-### Story 3.4: Assign & View Content
+### Story 3.4: Assign & View Content [FR2.2, FR2.3]
 
 As a user,
 I want to assign uploaded documents and generated content to specific classes and sections,
@@ -260,7 +260,7 @@ So that I can easily find and access my study materials.
 
 **Technical Notes:** Implement database relationships between `study_materials`, `generated_content`, `classes`, and `class_sections`.
 
-### Story 3.5: Immediate Content Generation
+### Story 3.5: Immediate Content Generation (Supports FR3.1, FR3.2)
 
 As a user,
 I want to have the option to generate a summary or quiz immediately after uploading a document,
@@ -283,7 +283,7 @@ So that I can quickly get value from the tool without having to organize my cont
 
 Deliver the core "magic" of the product by transforming study materials into concise summaries and interactive quizzes, making learning more efficient and engaging.
 
-### Story 4.1: AI Summary Generation
+### Story 4.1: AI Summary Generation [FR3.1]
 
 As a user,
 I want to generate concise summaries from my uploaded study materials,
@@ -300,7 +300,7 @@ So that I can quickly grasp the key concepts.
 
 **Technical Notes:** Integrate with Claude AI via Vercel Functions. Implement robust error handling for AI API calls. **Mitigate AI risks by: 1) using robust prompt engineering, 2) performing basic output validation, 3) displaying a UI disclaimer about potential inaccuracies, 4) monitoring API usage, and 5) providing clear UI feedback (e.g., a loading spinner) during generation.**
 
-### Story 4.2: AI Quiz Generation (Selectable Length)
+### Story 4.2: AI Quiz Generation (Selectable Length) [FR3.2]
 
 As a user,
 I want to generate multiple-choice quizzes from my uploaded study materials with a selectable length,
@@ -318,7 +318,7 @@ So that I can test my knowledge effectively.
 
 **Technical Notes:** Integrate with Claude AI via Vercel Functions. Implement robust error handling for AI API calls. **Mitigate AI risks by: 1) using robust prompt engineering, 2) performing basic output validation, 3) displaying a UI disclaimer about potential inaccuracies, 4) monitoring API usage, and 5) providing clear UI feedback (e.g., a loading spinner) during generation.**
 
-### Story 4.3: Interactive Quiz Interface
+### Story 4.3: Interactive Quiz Interface [FR4.1]
 
 As a user,
 I want to take generated quizzes through an interactive interface,
@@ -335,7 +335,7 @@ So that I can actively test my understanding.
 
 **Technical Notes:** Design a clean and accessible UI for quiz taking.
 
-### Story 4.4: Motivational Feedback & Explanations
+### Story 4.4: Motivational Feedback & Explanations [FR4.2]
 
 As a user,
 I want to receive motivational feedback and explanations for quiz answers,
@@ -359,7 +359,7 @@ So that I can learn from my mistakes and build confidence.
 
 Ensure the application is intuitive, accessible, and enjoyable to use, fulfilling the promise of a clean, supportive, and frustration-free experience.
 
-### Story 5.1: Implement Core UI Design System
+### Story 5.1: Implement Core UI Design System [FR5.1]
 
 As a Developer,
 I want to implement the core UI design system based on Tailwind CSS and our UX principles,
@@ -376,7 +376,7 @@ So that all user-facing components have a consistent, clean, and friendly aesthe
 
 **Technical Notes:** Create a component library for reusable UI elements.
 
-### Story 5.2: Ensure Mobile Responsiveness
+### Story 5.2: Ensure Mobile Responsiveness [FR5.2]
 
 As a user,
 I want the application to be fully functional and visually appealing on various screen sizes (mobile, tablet, desktop),
@@ -393,7 +393,7 @@ So that I can access my study materials and tools from any device.
 
 **Technical Notes:** Utilize Tailwind CSS responsive utilities. Test across various device emulators and actual devices.
 
-### Story 5.3: Implement WCAG AA & Screen Reader Support
+### Story 5.3: Implement WCAG AA & Screen Reader Support [FR5.3]
 
 As a user with disabilities,
 I want to use the application effectively with assistive technologies like screen readers,
@@ -412,7 +412,7 @@ So that I can have an inclusive and equitable learning experience.
 
 **Technical Notes:** Use semantic HTML, ARIA attributes where necessary. Conduct accessibility audits.
 
-### Story 5.4: Implement Reduced Motion Options
+### Story 5.4: Implement Reduced Motion Options [FR5.3]
 
 As a user sensitive to motion,
 I want to minimize animations and transitions in the application,
