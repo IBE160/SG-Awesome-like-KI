@@ -260,22 +260,22 @@ So that I can easily find and access my study materials.
 
 **Technical Notes:** Implement database relationships between `study_materials`, `generated_content`, `classes`, and `class_sections`.
 
-### Story 3.5: Immediate Content Generation (Supports FR3.1, FR3.2)
+### Story 3.5: Post-Upload Actions
 
 As a user,
-I want to have the option to generate a summary or quiz immediately after uploading a document,
-So that I can quickly get value from the tool without having to organize my content first.
+I want to have the option to generate a summary or quiz immediately after uploading and organizing a document,
+So that I can quickly get value from the tool in a streamlined workflow.
 
 **Acceptance Criteria:**
 
-**Given** a document has been successfully uploaded
-**When** the upload is complete
-**Then** the UI presents immediate options to "Generate Summary" or "Generate Quiz".
-**And** generated content from unorganized documents shall be temporarily stored in an 'Unorganized' area, accessible to the user for later assignment.
+**Given** a document has been successfully uploaded via the guided workflow
+**When** the upload success confirmation is shown
+**Then** the UI presents prominent, clear options to "Generate Summary" or "Generate Quiz" for that new document.
+**And** selecting an option transitions the user directly into the respective generation wizard with the document pre-selected.
 
-**Prerequisites:** Story 3.1.
+**Prerequisites:** Story 3.1, Story 3.2.
 
-**Technical Notes:** This will require a flexible UI flow that can handle content generation for both organized and unorganized documents.
+**Technical Notes:** This requires a UI flow that seamlessly connects the end of the upload journey with the beginning of the generation journeys.
 
 ---
 
@@ -353,28 +353,69 @@ So that I can learn from my mistakes and build confidence.
 
 **Technical Notes:** Integrate AI-generated explanations into the quiz review UI. **The AI prompt should be engineered to generate feedback in a supportive, encouraging, and educational tone, acting as a helpful tutor rather than a simple grader.**
 
----
+### Story 4.5: Guided Summary Generation Wizard
 
-## Epic 5: UI, UX, & Accessibility Polish
-
-Ensure the application is intuitive, accessible, and enjoyable to use, fulfilling the promise of a clean, supportive, and frustration-free experience.
-
-### Story 5.1: Implement Core UI Design System [FR5.1]
-
-As a Developer,
-I want to implement the core UI design system based on Tailwind CSS and our UX principles,
-So that all user-facing components have a consistent, clean, and friendly aesthetic.
+As a user,
+I want to be guided through the process of generating a summary,
+So that I can easily configure and create a summary from any context.
 
 **Acceptance Criteria:**
 
-**Given** the Next.js application is set up
-**When** core UI components (e.g., buttons, input fields, navigation elements) are implemented
-**Then** they adhere to the defined UX principles (supportive, easy/simple, playful feel; academic, friendly, clean vibe).
-**And** they are styled consistently using Tailwind CSS.
+**Given** I am on a document view or the main dashboard
+**When** I initiate "Generate Summary"
+**Then** a multi-step wizard opens.
+**And** if initiated from a document, that document is pre-selected.
+**And** if initiated from the dashboard, I am prompted to select a document.
+**And** I can configure options for the summary (e.g., "Paragraph" vs. "Bullet Points").
+**And** I see a loading screen with progress information during generation.
+
+**Prerequisites:** Epic 3.
+
+**Technical Notes:** This story covers the frontend workflow for summary generation.
+
+### Story 4.6: Guided Quiz Generation Wizard
+
+As a user,
+I want to be guided through the process of generating a quiz,
+So that I can easily customize and create a quiz from any context.
+
+**Acceptance Criteria:**
+
+**Given** I am on a document view or the main dashboard
+**When** I initiate "Generate Quiz"
+**Then** a multi-step wizard opens.
+**And** if initiated from a document, that document is pre-selected.
+**And** if initiated from the dashboard, I am prompted to select one or more documents.
+**And** I can configure options for the quiz (e.g., length, question types).
+**And** I see a loading screen with progress information during generation.
+
+**Prerequisites:** Epic 3.
+
+**Technical Notes:** This story covers the frontend workflow for quiz generation.
+
+---
+
+## Epic 5: Core Experience & UI Implementation
+
+Ensure the application is intuitive, accessible, and enjoyable to use by implementing the defined user experience from the start, fulfilling the promise of a clean, supportive, and frustration-free experience.
+
+### Story 5.1: Implement "Guided Minimalism" Design Direction
+
+As a Developer,
+I want to implement the core UI based on the "Guided Minimalism" design direction and "Calm & Focused" color theme,
+So that all user-facing components have a consistent, clean, and supportive aesthetic from day one.
+
+**Acceptance Criteria:**
+
+**Given** the Next.js application is set up with shadcn/ui
+**When** core UI components (e.g., buttons, forms, layout) are implemented
+**Then** they adhere to the principles of "Guided Minimalism" (abundant white space, single-column focus, clear CTAs).
+**And** they are styled consistently using the "Calm & Focused" color palette.
+**And** shadcn/ui components are themed to match the design specification.
 
 **Prerequisites:** Epic 1 (Foundation & Core Setup).
 
-**Technical Notes:** Create a component library for reusable UI elements.
+**Technical Notes:** Create a central styling guide or theme file in Tailwind CSS. Add shadcn/ui components and theme them according to the spec.
 
 ### Story 5.2: Ensure Mobile Responsiveness [FR5.2]
 
@@ -386,7 +427,7 @@ So that I can access my study materials and tools from any device.
 
 **Given** any user-facing screen
 **When** viewed on a mobile phone, tablet, or desktop browser
-**Then** the layout adjusts gracefully, and all interactive elements remain accessible and usable.
+**Then** the layout adjusts gracefully, and all interactive elements remain accessible and usable with a minimum 44x44px touch target.
 **And** the application functions correctly on the latest stable versions of Chrome, Edge, and Safari.
 
 **Prerequisites:** Epic 1 (Foundation & Core Setup).
@@ -427,6 +468,25 @@ So that I can use the tool comfortably without discomfort.
 **Prerequisites:** Epic 1 (Foundation & Core Setup).
 
 **Technical Notes:** Utilize CSS media queries (`@media (prefers-reduced-motion)`) and JavaScript to control animations.
+
+### Story 5.5: Build Custom UX Components
+
+As a Developer,
+I want to build the high-effort custom components defined in the UX specification,
+So that the core user workflows are intuitive and engaging.
+
+**Acceptance Criteria:**
+
+**Given** the core UI foundation is in place
+**When** the custom components are built
+**Then** the `Document Preview Component` is implemented with all its specified states and actions.
+**And** the `Drag-and-Drop Upload Area` is fully functional and accessible.
+**And** the `Loading Screen/Modal for Generation` provides clear user feedback.
+**And** the `Quiz Interface` and `Summary View` components are implemented as designed.
+
+**Prerequisites:** Story 5.1.
+
+**Technical Notes:** Build these as reusable React components, ensuring they meet all behavior, state, and accessibility requirements from the UX specification.
 
 ---
 
