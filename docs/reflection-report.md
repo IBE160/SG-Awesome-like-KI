@@ -19,10 +19,9 @@
 Vi har utviklet en "Study-Buddy"-app, med hovedmål å hjelpe studenter med å studere. Spesielt studenter som sliter med å studere grunnet ulike årsaker, som feks ADHD/dysleksi, foreldre som jobber full-tid og studenter som blir overveldet fordi de ønsker å få så høy grad som mulig.
 
 ### 2.2 Arbeidsmetodikk
-[Beskriv hvordan dere organiserte arbeidet]
-- Hvordan fordelte dere oppgaver?
-- Hvilke verktøy brukte dere for samarbeid og hvordan det fungerte? (f.eks. Git, og Teams)
-- Hvordan brukte dere KI-verktøy i prosessen?
+- Vi brukte Teams til å jobbe sammen med oppgaven, der en av oss delte skjerm og jobbet i VsCode, vi byttet på å jobbe i VsCode.
+- Vi har ogsp brukt messenger for å snakke sammen underveis ellers, og avtale møter osv.
+- I noen tilfeller delte vi bare opp det som skulle gjøres og alle gjorde hver sin del.
 
 ### 2.3 Teknologi og verktøy
 [Liste over de viktigste teknologiene og verktøyene dere brukte]
