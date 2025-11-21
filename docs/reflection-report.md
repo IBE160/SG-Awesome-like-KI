@@ -16,13 +16,20 @@
 ## 2. Utviklingsprosessen
 
 ### 2.1 Oversikt over prosjektet
+[Kort beskrivelse av hva dere har utviklet. Hva var hovedmålet med applikasjonen?]
+
 Vi har utviklet en "Study-Buddy"-app, med hovedmål å hjelpe studenter med å studere. Spesielt studenter som sliter med å studere grunnet ulike årsaker, som feks ADHD/dysleksi, foreldre som jobber full-tid og studenter som blir overveldet fordi de ønsker å få så høy grad som mulig.
 
 ### 2.2 Arbeidsmetodikk
-- Vi brukte Teams til å jobbe sammen med oppgaven, der en av oss delte skjerm og jobbet i VsCode, vi byttet på å jobbe i VsCode.
-- Vi har ogsp brukt messenger for å snakke sammen underveis ellers, og avtale møter osv.
-- I noen tilfeller delte vi bare opp det som skulle gjøres og alle gjorde hver sin del.
+[Beskriv hvordan dere organiserte arbeidet]
 
+- Vi brukte Teams til å jobbe sammen med oppgaven, der en av oss delte skjerm og jobbet i VsCode, vi byttet på å jobbe i VsCode. 
+- Vi har også brukt messenger for å snakke sammen underveis ellers, og avtale møter osv. 
+- I noen tilfeller delte vi bare opp det som skulle gjøres og alle gjorde hver sin del. 
+
+- Hvordan fordelte dere oppgaver?
+- Hvilke verktøy brukte dere for samarbeid og hvordan det fungerte? (f.eks. Git, og Teams)
+- Hvordan brukte dere KI-verktøy i prosessen?
 ### 2.3 Teknologi og verktøy
 [Liste over de viktigste teknologiene og verktøyene dere brukte]
 - Frontend: Next.js, React, Tailwind CSS, shadcn/ui
@@ -35,6 +42,10 @@ Vi har utviklet en "Study-Buddy"-app, med hovedmål å hjelpe studenter med å s
 [Beskriv de ulike fasene i utviklingen]
 
 **Fase 1: Planlegging**
+- Her brukte vi agenten "analyst" og gjorde flere "Brainstomring-sessions" og flere "Research-sessions". 
+- Vi startet med å gjøre en session på hver av disse sammen, for så å få Gemini til å lage en liste med felre sessions vi burde gjøre i hver av de, for så og fordele disse mellom oss og gjøre de hver for oss. 
+- Vi endte opp med å til sammen gjøre 7 sessions i hver av de. 
+- 
 - [Hva gjorde dere i denne fasen?]
 - [Hvordan brukte dere KI her? Husk å lagre promptene deres! Inkluder ALLE stegene dere gjorde.]
 
