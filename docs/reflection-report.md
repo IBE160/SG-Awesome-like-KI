@@ -2,7 +2,7 @@
 
 ## 1. Gruppeinformasjon
 
-**Gruppenavn:** [Navn på gruppen]
+**Gruppenavn:** SG-Awsome-like-KI
 
 **Gruppemedlemmer:**
 - [Navn 1] - [Student-ID/E-post]
