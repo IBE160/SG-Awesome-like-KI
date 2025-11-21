@@ -5,9 +5,9 @@
 **Gruppenavn:** SG-Awsome-like-KI
 
 **Gruppemedlemmer:**
-- [Navn 1] - [Student-ID/E-post]
-- [Navn 2] - [Student-ID/E-post]
-- [Navn 3] - [Student-ID/E-post]
+- Hannah Letmolie - Halet4544@himolde.no/Hannah.Letmolie02@gmail.com
+- Marthe Bjerke - [Student-ID/E-post]
+- Sofie Brandstad - [Student-ID/E-post]
 
 **Dato:** [DD.MM.ÅÅÅÅ]
 
@@ -16,7 +16,7 @@
 ## 2. Utviklingsprosessen
 
 ### 2.1 Oversikt over prosjektet
-[Kort beskrivelse av hva dere har utviklet. Hva var hovedmålet med applikasjonen?]
+Vi har utviklet en "Study-Buddy"-app, med hovedmål å hjelpe studenter med å studere. Spesielt studenter som sliter med å studere grunnet ulike årsaker, som feks ADHD/dysleksi, foreldre som jobber full-tid og studenter som blir overveldet fordi de ønsker å få så høy grad som mulig.
 
 ### 2.2 Arbeidsmetodikk
 [Beskriv hvordan dere organiserte arbeidet]
