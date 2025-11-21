@@ -26,11 +26,11 @@
 
 ### 2.3 Teknologi og verktøy
 [Liste over de viktigste teknologiene og verktøyene dere brukte]
-- Frontend: [f.eks. NextJS, HTML/CSS]
-- Backend: [f.eks. Python/FastAPI]
-- Database: [f.eks. Supabase, MongoDB, PostgreSQL]
-- KI-verktøy: [f.eks. Claude Code, Gemini CLI, GPT-5 Codex]
-- Andre verktøy: [f.eks. VS Code, BMAD etc]
+- Frontend: Next.js, React, Tailwind CSS, shadcn/ui
+- Backend: Vercel Functions (for AI integration)
+- Database: Supabase (PostgreSQL)
+- KI-verktøy: Gemini CLI
+- Andre verktøy: Git, VS Code
 
 ### 2.4 Utviklingsfaser
 [Beskriv de ulike fasene i utviklingen]

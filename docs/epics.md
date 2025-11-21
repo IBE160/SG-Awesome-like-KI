@@ -263,19 +263,19 @@ So that I can easily find and access my study materials.
 ### Story 3.5: Post-Upload Actions
 
 As a user,
-I want to have the option to generate a summary or quiz immediately after uploading and organizing a document,
-So that I can quickly get value from the tool in a streamlined workflow.
+I want to have the option to generate a summary or quiz immediately after uploading a document,
+So that I can quickly get value from the tool without having to organize my content first.
 
 **Acceptance Criteria:**
 
-**Given** a document has been successfully uploaded via the guided workflow
-**When** the upload success confirmation is shown
-**Then** the UI presents prominent, clear options to "Generate Summary" or "Generate Quiz" for that new document.
-**And** selecting an option transitions the user directly into the respective generation wizard with the document pre-selected.
+**Given** a document has been successfully uploaded
+**When** the upload is complete
+**Then** the UI presents immediate options to "Generate Summary" or "Generate Quiz".
+**And** generated content from unorganized documents shall be temporarily stored in an 'Unorganized' area, accessible to the user for later assignment.
 
 **Prerequisites:** Story 3.1, Story 3.2.
 
-**Technical Notes:** This requires a UI flow that seamlessly connects the end of the upload journey with the beginning of the generation journeys.
+**Technical Notes:** This will require a flexible UI flow that can handle content generation for both organized and unorganized documents.
 
 ---
 
@@ -397,13 +397,13 @@ So that I can easily customize and create a quiz from any context.
 
 ## Epic 5: Core Experience & UI Implementation
 
-Ensure the application is intuitive, accessible, and enjoyable to use by implementing the defined user experience from the start, fulfilling the promise of a clean, supportive, and frustration-free experience.
+Ensure the application is intuitive, accessible, and enjoyable to use, fulfilling the promise of a clean, supportive, and frustration-free experience.
 
-### Story 5.1: Implement "Guided Minimalism" Design Direction
+### Story 5.1: Implement Core UI Design System
 
 As a Developer,
-I want to implement the core UI based on the "Guided Minimalism" design direction and "Calm & Focused" color theme,
-So that all user-facing components have a consistent, clean, and supportive aesthetic from day one.
+I want to implement the core UI design system based on Tailwind CSS and our UX principles,
+So that all user-facing components have a consistent, clean, and friendly aesthetic.
 
 **Acceptance Criteria:**
 
@@ -415,7 +415,7 @@ So that all user-facing components have a consistent, clean, and supportive aest
 
 **Prerequisites:** Epic 1 (Foundation & Core Setup).
 
-**Technical Notes:** Create a central styling guide or theme file in Tailwind CSS. Add shadcn/ui components and theme them according to the spec.
+**Technical Notes:** Create a component library for reusable UI elements.
 
 ### Story 5.2: Ensure Mobile Responsiveness [FR5.2]
 
@@ -427,7 +427,7 @@ So that I can access my study materials and tools from any device.
 
 **Given** any user-facing screen
 **When** viewed on a mobile phone, tablet, or desktop browser
-**Then** the layout adjusts gracefully, and all interactive elements remain accessible and usable with a minimum 44x44px touch target.
+**Then** the layout adjusts gracefully, and all interactive elements remain accessible and usable.
 **And** the application functions correctly on the latest stable versions of Chrome, Edge, and Safari.
 
 **Prerequisites:** Epic 1 (Foundation & Core Setup).
