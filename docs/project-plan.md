@@ -29,16 +29,16 @@
 ## Fase 2
 
 - [ ] Solutioning
-  - [ ] /run-agent-task architect *architecture {prompt / user-input-file}
-  - [ ] /run-agent-task architect *validate-architecture {prompt / user-input-file}
+  - [x] /run-agent-task architect *architecture {prompt / user-input-file}
+  - [x] /run-agent-task architect *validate-architecture {prompt / user-input-file}
 
 ## Fase 3
 
 - [ ] Implementation
-  - [ ] /run-agent-task sm *sprint-planning {prompt / user-input-file}
+  - [x] /run-agent-task sm *sprint-planning {prompt / user-input-file}
   - foreach epic in sprint planning:
-    - [ ] /run-agent-task sm epic-tech-content {prompt / user-input-file}
-    - [ ] /run-agent-task sm validate-epic-tech-content {prompt / user-input-file}
+    - [x] /run-agent-task sm epic-tech-content {prompt / user-input-file}
+    - [x] /run-agent-task sm validate-epic-tech-content {prompt / user-input-file}
     - foreach story in epic:
       - [ ] /run-agent-task sm *create-story {prompt / user-input-file}
       - [ ] /run-agent-task sm *validate-create-story {prompt / user-input-file}
