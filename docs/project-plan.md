@@ -7,7 +7,7 @@
   - [x] /analyst *brainstorm "User Flow Deviations & Edge Cases"
 - [x] Research
   - [x] /analyst *research "Which AI library should we use for orchestrating LLM interactions?"
-- [ x Product Brief
+- [x] Product Brief
   - [x] /analyst *product-brief "Read the two brainstorming sessions the research session and the @proposal.md file, and create a product brief for the project."
 
 ## Fase 1
