@@ -19,12 +19,12 @@
   - [x] /run-agent-task pm *validate-prd
   - [x] /run-agent-task ux-designer *create-ux-design {prompt / user-input-file}
   - [x] /run-agent-task ux-designer *validate-ux-design {prompt / user-input-file}
-   - [ ]File: ux-design-specification.md
-   - [ ]File: ux-color-themes.html
-   - [ ]File: ux-design-directions.html
-  - [ ] /run-agent-task tea *framework {prompt / user-input-file}
-  - [ ] /run-agent-task tea *ci {prompt / user-input-file}
-  - [ ] /run-agent-task tea *test-design {prompt / user-input-file}
+   - [x]File: ux-design-specification.md
+   - [x]File: ux-color-themes.html
+   - [x]File: ux-design-directions.html
+  - [x] /run-agent-task tea *framework {prompt / user-input-file}
+  - [x] /run-agent-task tea *ci {prompt / user-input-file}
+  - [x] /run-agent-task tea *test-design {prompt / user-input-file}
 
 ## Fase 2
 
@@ -44,9 +44,7 @@
       - [ ] /run-agent-task sm *validate-create-story {prompt / user-input-file}
       - [ ] /run-agent-task sm *story-context {prompt / user-input-file}
       - [ ] /run-agent-task sm *validate-story-context {prompt / user-input-file}
-      - [ ] /run-agent-task tea *validate-story-ready {prompt / user-input-file}
       - [ ] /run-agent-task dev *implement-story {prompt / user-input-file}
       - [ ] /run-agent-task dev *validate-story {prompt / user-input-file}
-      - [ ] /run-agent-task tea *automate {prompt / user-input-file}
-      - [ ] /run-agent-task tea *test-review {prompt / user-input-file}
+
     - [ ] /run-agent-task sm *retrospective {prompt / user-input-file}
