@@ -73,6 +73,19 @@ The MVP is focused on reliably helping students understand their material quickl
     *   Secure user registration and authentication.
     *   File upload and management with **hierarchical organization** (e.g., by classes/topics) to ensure materials are easy to find.
 
+### Out-of-Scope for MVP
+
+The following features, while valuable, are explicitly out of scope for the MVP to ensure a focused and timely delivery:
+
+*   **Personalized Learning Paths:** AI-driven recommendations and "Workout Plans" are deferred to post-MVP.
+*   **Smart Progress Tracking:** Visualizations of user progress and targeted feedback are deferred.
+*   **Adaptive AI:** The AI will not adapt its difficulty or level of detail based on user performance in the MVP.
+*   **Advanced Accessibility:** Features like "simplify this" for summaries and dyslexia-friendly display settings are deferred.
+*   **Gamification:** Achievements, streaks, and other gamification elements are not part of the MVP.
+*   **Social Features:** There will be no features for users to interact with each other.
+*   **LMS Integration:** Integration with other learning platforms is not part of the MVP.
+*   **"Chat with your documents" functionality:** This is a vision feature and not part of the MVP.
+
 ### Growth Features (Post-MVP)
 
 These features make the product more competitive by providing personalized learning paths, smart progress tracking, and an AI that adapts to each student’s pace and confidence level.
@@ -218,7 +231,7 @@ The UI will reinforce the product's core "magic" of transforming overwhelm into 
 *   **FR2.1 - Document Upload:** The system shall allow users to upload study materials in plain text and PDF formats, with file size limits and validation.
     *   **Acceptance Criteria:**
         *   Users can upload .txt and .pdf files.
-        *   The system shall enforce a strict file size limit (TBD).
+        *   The system shall enforce a strict file size limit of 10MB.
         *   The system shall perform basic file extension validation.
         *   **If a user attempts to upload an unsupported file type, the system shall display an error message: 'This file type is not supported. Please try another file.'**
         *   **If an uploaded PDF is password-protected or corrupted, the system shall display an error message: 'This file is password-protected or corrupted and cannot be processed.'**
@@ -345,9 +358,15 @@ The AI Study Buddy will adhere to **WCAG 2.1 Level AA compliance** as a baseline
 
 ## Implementation Planning
 
-### Epic Breakdown Required
+### Epic Breakdown
 
-Requirements must be decomposed into epics and bite-sized stories (200k context limit).
+The MVP will be delivered through the following 5 epics:
+
+1.  **Foundation & Core Setup:** Establish the foundational infrastructure, security, and project setup.
+2.  **User Onboarding & Authentication:** Allow users to securely create and manage their accounts.
+3.  **Content Management & Organization:** Empower users to upload, organize, and manage their study materials.
+4.  **AI-Powered Learning Tools:** Deliver the core "magic" of transforming study materials into summaries and quizzes.
+5.  **UI, UX, & Accessibility Polish:** Ensure the application is intuitive, accessible, and enjoyable to use.
 
 **Next Step:** Run `workflow epics-stories` to create the implementation breakdown.
 
@@ -357,7 +376,7 @@ Requirements must be decomposed into epics and bite-sized stories (200k context 
 
 {{#if product_brief_path}}
 
-- Product Brief: {{product_brief_path}}
+- Product Brief: docs/product-brief.md
   {{/if}}
   {{#if domain_brief_path}}
 - Domain Brief: {{domain_brief_path}}
@@ -376,6 +395,6 @@ Requirements must be decomposed into epics and bite-sized stories (200k context 
 
 ---
 
-_This PRD captures the essence of ibe160 - {{product_magic_summary}}_
+_This PRD captures the essence of ibe160 - the emotional shift from frustration and overwhelm to confidence and clarity_
 
 _Created through collaborative discovery between BIP and AI facilitator._
