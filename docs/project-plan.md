@@ -28,7 +28,7 @@
 
 ## Fase 2
 
-- [ ] Solutioning
+- [x] Solutioning
   - [x] /run-agent-task architect *architecture {prompt / user-input-file}
   - [x] /run-agent-task architect *validate-architecture {prompt / user-input-file}
 
