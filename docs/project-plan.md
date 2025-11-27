@@ -6,7 +6,7 @@
 2. Hvis jeg har skrevet noe der allerede, f.eks. "Root Cause Analysis and Solution Design for Player Inactivity", så kan dere bytte ut min prompt med deres egen.
 
 
-## Fase 0
+## Fase 0 (1)
 
 - [x] /run-agent-task analyst *workflow-init
   - [x] File: bmm-workflow-status.yaml
@@ -24,7 +24,7 @@
   - [x] /run-agent-task analyst *product-brief "Read the two brainstorming sessions the research session and the @proposal.md file, and create a product brief for the project."
     - [x] File: product-brief.md
 
-## Fase 1
+## Fase 1 (2)
 
 - [x] Planning
   - [x] /run-agent-task pm *prd
@@ -40,24 +40,24 @@
   - [x] /run-agent-task tea *ci {prompt / user-input-file}
   - [x] /run-agent-task tea *test-design {prompt / user-input-file}
 
-## Fase 2
+## Fase 2 (3)
 
-- [x] Solutioning
+- [ ] Solutioning
   - [x] /run-agent-task architect *create-architecture {prompt / user-input-file}
     - [x] File: architecture.md
   - [ ] /run-agent-task pm *create-epics-and-stories {prompt / user-input-file}
     - [ ] File: epics.md
   - [ ] /run-agent-task architect *solutioning-gate-check {prompt / user-input-file}
 
-## Fase 3
+## Fase 3 (4)
 
-- [x] Implementation
-  - [x] /run-agent-task sm *sprint-planning {prompt / user-input-file}
-    - [x] File: sprint-artifacts/sprint-status.yaml
+- [ ] Implementation
+  - [ ] /run-agent-task sm *sprint-planning {prompt / user-input-file}
+    - [ ] File: sprint-artifacts/sprint-status.yaml
   - foreach epic in sprint planning:
-    - [x] /run-agent-task sm create-epic-tech-context {prompt / user-input-file}
-      - [x] File: sprint-artifacts/tech-spec-epic-{{epic_id}}.md
-    - [x] /run-agent-task sm validate-epic-tech-context {prompt / user-input-file}
+    - [ ] /run-agent-task sm create-epic-tech-context {prompt / user-input-file}
+      - [ ] File: sprint-artifacts/tech-spec-epic-{{epic_id}}.md
+    - [ ] /run-agent-task sm validate-epic-tech-context {prompt / user-input-file}
     - foreach story in epic:
       - [ ] /run-agent-task sm *create-story {prompt / user-input-file}
         - [ ] File: sprint-artifacts/{{story_key}}.md
