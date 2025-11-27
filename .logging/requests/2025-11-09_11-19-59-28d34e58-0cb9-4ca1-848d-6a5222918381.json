@@ -1,0 +1,130 @@
+[
+  {
+    "request": {
+      "session.id": "28d34e58-0cb9-4ca1-848d-6a5222918381",
+      "installation.id": "792277eb-3021-4f9a-b550-88a0e2bf667e",
+      "user.email": "martheslaatta84@gmail.com",
+      "event.name": "gemini_cli.api_request",
+      "event.timestamp": "2025-11-09T11:20:00.518Z",
+      "model": "gemini-2.5-flash",
+      "prompt_id": "28d34e58-0cb9-4ca1-848d-6a5222918381########0",
+      "request_text": [
+        {
+          "role": "user",
+          "parts": [
+            {
+              "text": "This is the Gemini CLI. We are setting up the context for our chat.\nToday's date is søndag 9. november 2025 (formatted according to the user's locale).\nMy operating system is: win32\nI'm currently working in the directory: C:\\Users\\marth\\OneDrive - UiT Office 365\\Documents\\CV-vitnemål\\programmering med KI\\git main mappe\\SG-Awesome-like-KI\nHere is the folder structure of the current working directories:\n\nShowing up to 200 items (files + folders). Folders or files indicated with ... contain more items not shown, were ignored, or the display limit (200 items) was reached.\n\nC:\\Users\\marth\\OneDrive - UiT Office 365\\Documents\\CV-vitnemål\\programmering med KI\\git main mappe\\SG-Awesome-like-KI\\\n├───.gitignore\n├───proposal.md\n├───README.md\n├───.gemini\\\n│   ├───settings.json\n│   └───commands\\\n│       └───agents\\\n│           ├───analyst.toml\n│           ├───architect.toml\n│           ├───bmad-master.toml\n│           ├───brainstorming-coach.toml\n│           ├───creative-problem-solver.toml\n│           ├───design-thinking-coach.toml\n│           ├───dev.toml\n│           ├───game-architect.toml\n│           ├───game-designer.toml\n│           ├───game-dev.toml\n│           ├───innovation-strategist.toml\n│           ├───pm.toml\n│           ├───README.toml\n│           ├───sm.toml\n│           ├───storyteller.toml\n│           ├───tea.toml\n│           ├───ux-designer.toml\n│           └───ux-expert.toml\n├───.git\\...\n├───.logging\\\n│   ├───.gitignore\n│   ├───api-viewer.html\n│   ├───process-api-requests.py\n│   ├───README.md\n│   ├───requirements.txt\n│   ├───server.py\n│   ├───telemetry.md\n│   ├───truncate.py\n│   ├───watcher.py\n│   └───requests\\\n│       ├───2025-10-30_01-50-10-2c04764c-c66f-40b7-93ac-c0ab5cb890da.json\n│       └───2025-10-30_02-14-51-afd0b49e-1f92-456d-a6ff-afba8ef9a39f.json\n├───.vscode\\\n│   ├───launch.json\n│   ├───settings.json\n│   └───tasks.json\n├───bmad\\\n│   ├───_cfg\\\n│   │   ├───agent-manifest.csv\n│   │   ├───files-manifest.csv\n│   │   ├───manifest.yaml\n│   │   ├───task-manifest.csv\n│   │   ├───workflow-manifest.csv\n│   │   └───agents\\\n│   │       ├───bmm-analyst.customize.yaml\n│   │       ├───bmm-architect.customize.yaml\n│   │       ├───bmm-dev.customize.yaml\n│   │       ├───bmm-game-architect.customize.yaml\n│   │       ├───bmm-game-designer.customize.yaml\n│   │       ├───bmm-game-dev.customize.yaml\n│   │       ├───bmm-pm.customize.yaml\n│   │       ├───bmm-sm.customize.yaml\n│   │       ├───bmm-tea.customize.yaml\n│   │       ├───bmm-ux-designer.customize.yaml\n│   │       ├───bmm-ux-expert.customize.yaml\n│   │       ├───cis-brainstorming-coach.customize.yaml\n│   │       ├───cis-creative-problem-solver.customize.yaml\n│   │       ├───cis-design-thinking-coach.customize.yaml\n│   │       ├───cis-innovation-strategist.customize.yaml\n│   │       ├───cis-storyteller.customize.yaml\n│   │       └───core-bmad-master.customize.yaml\n│   ├───bmm\\\n│   │   ├───config.yaml\n│   │   ├───README.md\n│   │   ├───agents\\\n│   │   │   ├───analyst.md\n│   │   │   ├───architect.md\n│   │   │   ├───dev.md\n│   │   │   ├───game-architect.md\n│   │   │   ├───game-designer.md\n│   │   │   ├───game-dev.md\n│   │   │   ├───pm.md\n│   │   │   ├───sm.md\n│   │   │   ├───tea.md\n│   │   │   ├───ux-designer.md\n│   │   │   └───ux-expert.md\n│   │   ├───sub-modules\\\n│   │   │   └───claude-code\\\n│   │   │       ├───config.yaml\n│   │   │       ├───injections.yaml\n│   │   │       ├───readme.md\n│   │   │       └───sub-agents\\\n│   │   ├───tasks\\\n│   │   │   ├───daily-standup.xml\n│   │   │   └───retrospective.xml\n│   │   ├───teams\\\n│   │   │   ├───team-fullstack.yaml\n│   │   │   └───team-gamedev.yaml\n│   │   ├───testarch\\\n│   │   │   ├───README.md\n│   │   │   ├───tea-index.csv\n│   │   │   └───knowledge\\\n│   │   │       ├───ci-burn-in.md\n│   │   │       ├───component-tdd.md\n│   │   │       ├───contract-testing.md\n│   │   │       ├───data-factories.md\n│   │   │       ├───email-auth.md\n│   │   │       ├───error-handling.md\n│   │   │       ├───feature-flags.md\n│   │   │       ├───fixture-architecture.md\n│   │   │       ├───network-first.md\n│   │   │       ├───nfr-criteria.md\n│   │   │       ├───playwright-config.md\n│   │   │       ├───probability-impact.md\n│   │   │       ├───risk-governance.md\n│   │   │       ├───selective-testing.md\n│   │   │       ├───selector-resilience.md\n│   │   │       ├───test-healing-patterns.md\n│   │   │       ├───test-levels-framework.md\n│   │   │       ├───test-priorities-matrix.md\n│   │   │       ├───test-quality.md\n│   │   │       ├───timing-debugging.md\n│   │   │       └───visual-debugging.md\n│   │   └───workflows\\\n│   │       ├───README.md\n│   │       ├───1-analysis\\\n│   │       │   ├───brainstorm-game\\\n│   │       │   ├───brainstorm-project\\\n│   │       │   ├───document-project\\\n│   │       │   ├───game-brief\\\n│   │       │   ├───product-brief\\\n│   │       │   └───research\\\n│   │       ├───2-plan-workflows\\\n│   │       │   ├───README.md\n│   │       │   ├───create-ux-design\\\n│   │       │   ├───gdd\\\n│   │       │   ├───narrative\\\n│   │       │   ├───prd\\\n│   │       │   ├───tech-spec\\\n│   │       │   └───ux\\\n│   │       ├───3-solutioning\\\n│   │       │   ├───README.md\n│   │       │   ├───architecture\\\n│   │       │   └───...\n│   │       ├───4-implementation\\\n│   │       ├───helpers\\\n│   │       ├───testarch\\\n│   │       └───workflow-status\\\n│   ├───cis\\\n│   │   ├───config.yaml\n│   │   ├───readme.md\n│   │   ├───agents\\\n│   │   │   ├───brainstorming-coach.md\n│   │   │   ├───creative-problem-solver.md\n│   │   │   ├───design-thinking-coach.md\n│   │   │   ├───innovation-strategist.md\n│   │   │   ├───README.md\n│   │   │   └───storyteller.md\n│   │   ├───teams\\\n│   │   │   └───creative-squad.yaml\n│   │   └───workflows\\\n│   │       ├───README.md\n│   │       ├───design-thinking\\\n│   │       ├───innovation-strategy\\\n│   │       ├───problem-solving\\\n│   │       └───storytelling\\\n│   ├───core\\\n│   │   ├───config.yaml\n│   │   ├───agents\\\n│   │   │   ├───bmad-master.md\n│   │   │   └───bmad-web-orchestrator.agent.xml\n│   │   ├───tasks\\\n│   │   │   ├───adv-elicit-methods.csv\n│   │   │   ├───adv-elicit.xml\n│   │   │   ├───index-docs.xml\n│   │   │   ├───validate-workflow.xml\n│   │   │   └───workflow.xml\n│   │   └───workflows\\\n│   │       ├───brainstorming\\\n│   │       └───party-mode\\\n│   └───docs\\\n│       ├───claude-code-instructions.md\n│       └───gemini-instructions.md\n└───docs\\\n    ├───bmm-workflow-status.md\n    ├───product-brief.md\n    ├───brainstorming-sessions\\\n    │   ├───brainstorming-1.md\n    │   ├───brainstorming-2.md\n    │   ├───brainstorming-3.md\n    │   ├───brainstorming-4.md\n    │   ├───brainstorming-5.md\n    │   ├───brainstorming-6.md\n    │   └───brainstorming-7.md\n    ├───research-sessions\\\n    │   ├───research-1.md\n    │   ├───research-2.md\n    │   ├───research-3.1.md\n    │   ├───research-3.2.md\n    │   ├───research-3.3.md\n    │   ├───research-4.md\n    │   └───research-5.md\n    └───stories\\\n        └───.gitkeep\n\nReminder: Do not return an empty response when a tool call is required.\n\nMy setup is complete. I will provide my first command in the next turn."
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "parts": [
+            {
+              "text": "git switch main"
+            }
+          ]
+        }
+      ]
+    },
+    "response": {
+      "session.id": "28d34e58-0cb9-4ca1-848d-6a5222918381",
+      "installation.id": "792277eb-3021-4f9a-b550-88a0e2bf667e",
+      "user.email": "martheslaatta84@gmail.com",
+      "event.name": "gemini_cli.api_response",
+      "event.timestamp": "2025-11-09T11:20:02.642Z",
+      "model": "gemini-2.5-flash",
+      "duration_ms": 2124,
+      "input_token_count": 8567,
+      "output_token_count": 11,
+      "cached_content_token_count": 0,
+      "thoughts_token_count": 68,
+      "tool_token_count": 0,
+      "total_token_count": 8646,
+      "prompt_id": "28d34e58-0cb9-4ca1-848d-6a5222918381########0",
+      "auth_type": "oauth-personal",
+      "status_code": 200,
+      "response_text": [
+        {
+          "candidates": [
+            {
+              "content": {
+                "role": "model",
+                "parts": [
+                  {
+                    "thought": true,
+                    "text": "**Analyzing Project Setup**\n\nI've reviewed the project's environment and structure details. Everything seems configured correctly, and the directory tree gives me a good overview. I'm now ready to start exploring the code.\n\n\n"
+                  }
+                ]
+              }
+            }
+          ],
+          "usageMetadata": {
+            "trafficType": "ON_DEMAND"
+          },
+          "modelVersion": "gemini-2.5-flash",
+          "responseId": "765d6783cfba32bf"
+        },
+        {
+          "candidates": [
+            {
+              "content": {
+                "role": "model",
+                "parts": [
+                  {
+                    "thought": true,
+                    "text": "**Preparing for Execution**\n\nI've noted the user's environment, confirmed the setup's readiness, and am poised, awaiting the initial command. The ball is in their court now; I'm ready to act on their first input, anticipating the next steps.\n\n\n"
+                  }
+                ]
+              }
+            }
+          ],
+          "usageMetadata": {
+            "trafficType": "ON_DEMAND"
+          },
+          "modelVersion": "gemini-2.5-flash",
+          "responseId": "765d6783cfba32bf"
+        },
+        {
+          "candidates": [
+            {
+              "content": {
+                "role": "model",
+                "parts": [
+                  {
+                    "thoughtSignature": "Ci0B4/H/Xprdvjcjen+cTYXSu+FffDKzp4LV86WTeOD9XOJ/OEEoMgwitiJcrcIKjQEB4/H/Xpto3uIMEnhgszvEfTyJeQ9m8sm9IFV8rFseuowng43cT+jBOPR33INJfnIw41bKBcdny1Q7OvX6t5rFuW4ZBt4aRJHFMCdt0CJf/Chw6GFbz1VXyMYlIegZJL7EHx9udR+NSB2aNGwsWFPndlJYYueYcm75+sL59TNppAr+c+4dE1wN8minFpIKfwHj8f9enP5aNH567XSh/jkTyW3tFS5JP4xV6+snFDB2wHYjrped3gMimcapFMyluOKGyjlquahhMfvheZ4USObetHLDEbLlcEk7uve/PniUYoRWQapNlTGtZ9k2lf8UK8Irw/4rMeOaMWhNQYfEpYttMDBSwd/U+XVz0D7pS2MKmQEB4/H/XggHbIzOr0F20nHlpID/UOCdwMfMWJDh1zBuWYq6AzZZt30fTybRv0y37x3DMZjbEk9MaxrH62eMn0y1kVa53R7lNrIFpDrTiTt3uDH3cdezu81wUvpQlHmuAyJQbdgiYqEK/e/WbBHHWHmg/Sp7QPy7fPK8mWEwHDT/d08IUOH92H1A2ynHpqyjmNoNkM5facCBdE4=",
+                    "text": "Okay, I'm ready for your first command."
+                  }
+                ]
+              },
+              "finishReason": "STOP"
+            }
+          ],
+          "usageMetadata": {
+            "promptTokenCount": 8567,
+            "candidatesTokenCount": 11,
+            "totalTokenCount": 8646,
+            "trafficType": "ON_DEMAND",
+            "promptTokensDetails": [
+              {
+                "modality": "TEXT",
+                "tokenCount": 8567
+              }
+            ],
+            "candidatesTokensDetails": [
+              {
+                "modality": "TEXT",
+                "tokenCount": 11
+              }
+            ],
+            "thoughtsTokenCount": 68
+          },
+          "modelVersion": "gemini-2.5-flash",
+          "responseId": "765d6783cfba32bf"
+        }
+      ],
+      "http.status_code": 200
+    },
+    "error": null
+  }
+]

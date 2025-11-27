@@ -1,0 +1,587 @@
+[
+  {
+    "request": {
+      "session.id": "146cdb32-71c2-4fec-80e9-8865881c4e54",
+      "installation.id": "792277eb-3021-4f9a-b550-88a0e2bf667e",
+      "interactive": true,
+      "user.email": "martheslaatta84@gmail.com",
+      "event.name": "gemini_cli.api_request",
+      "event.timestamp": "2025-11-14T16:55:22.775Z",
+      "model": "gemini-2.5-flash",
+      "prompt_id": "146cdb32-71c2-4fec-80e9-8865881c4e54########0",
+      "request_text": [
+        {
+          "role": "user",
+          "parts": [
+            {
+              "text": "This is the Gemini CLI. We are setting up the context for our chat.\nToday's date is fredag 14. november 2025 (formatted according to the user's locale).\nMy operating system is: win32\nThe project's temporary directory is: C:\\Users\\marth\\.gemini\\tmp\\885302ac2ec808458a7549d4e16494b1e410a0e359452b2352d8da7dbf60a94c\nI'm currently working in the directory: C:\\Users\\marth\\OneDrive - UiT Office 365\\Documents\\CV-vitnemål\\programmering med KI\\git main mappe\\SG-Awesome-like-KI\nHere is the folder structure of the current working directories:\n\nShowing up to 200 items (files + folders). Folders or files indicated with ... contain more items not shown, were ignored, or the display limit (200 items) was reached.\n\nC:\\Users\\marth\\OneDrive - UiT Office 365\\Documents\\CV-vitnemål\\programmering med KI\\git main mappe\\SG-Awesome-like-KI\\\n├───.gitignore\n├───proposal.md\n├───README.md\n├───.gemini\\\n│   ├───settings.json\n│   └───commands\\\n│       └───agents\\\n│           ├───analyst.toml\n│           ├───architect.toml\n│           ├───bmad-master.toml\n│           ├───brainstorming-coach.toml\n│           ├───creative-problem-solver.toml\n│           ├───design-thinking-coach.toml\n│           ├───dev.toml\n│           ├───game-architect.toml\n│           ├───game-designer.toml\n│           ├───game-dev.toml\n│           ├───innovation-strategist.toml\n│           ├───pm.toml\n│           ├───README.toml\n│           ├───sm.toml\n│           ├───storyteller.toml\n│           ├───tea.toml\n│           ├───ux-designer.toml\n│           └───ux-expert.toml\n├───.git\\...\n├───.logging\\\n│   ├───.gitignore\n│   ├───api-viewer.html\n│   ├───process-api-requests.py\n│   ├───README.md\n│   ├───requirements.txt\n│   ├───server.py\n│   ├───telemetry.md\n│   ├───truncate.py\n│   ├───watcher.py\n│   └───requests\\\n│       ├───2025-10-30_01-50-10-2c04764c-c66f-40b7-93ac-c0ab5cb890da.json\n│       └───2025-10-30_02-14-51-afd0b49e-1f92-456d-a6ff-afba8ef9a39f.json\n├───.vscode\\\n│   ├───launch.json\n│   ├───settings.json\n│   └───tasks.json\n├───bmad\\\n│   ├───_cfg\\\n│   │   ├───agent-manifest.csv\n│   │   ├───files-manifest.csv\n│   │   ├───manifest.yaml\n│   │   ├───task-manifest.csv\n│   │   ├───workflow-manifest.csv\n│   │   └───agents\\\n│   │       ├───bmm-analyst.customize.yaml\n│   │       ├───bmm-architect.customize.yaml\n│   │       ├───bmm-dev.customize.yaml\n│   │       ├───bmm-game-architect.customize.yaml\n│   │       ├───bmm-game-designer.customize.yaml\n│   │       ├───bmm-game-dev.customize.yaml\n│   │       ├───bmm-pm.customize.yaml\n│   │       ├───bmm-sm.customize.yaml\n│   │       ├───bmm-tea.customize.yaml\n│   │       ├───bmm-ux-designer.customize.yaml\n│   │       ├───bmm-ux-expert.customize.yaml\n│   │       ├───cis-brainstorming-coach.customize.yaml\n│   │       ├───cis-creative-problem-solver.customize.yaml\n│   │       ├───cis-design-thinking-coach.customize.yaml\n│   │       ├───cis-innovation-strategist.customize.yaml\n│   │       ├───cis-storyteller.customize.yaml\n│   │       └───core-bmad-master.customize.yaml\n│   ├───bmm\\\n│   │   ├───config.yaml\n│   │   ├───README.md\n│   │   ├───agents\\\n│   │   │   ├───analyst.md\n│   │   │   ├───architect.md\n│   │   │   ├───dev.md\n│   │   │   ├───game-architect.md\n│   │   │   ├───game-designer.md\n│   │   │   ├───game-dev.md\n│   │   │   ├───pm.md\n│   │   │   ├───sm.md\n│   │   │   ├───tea.md\n│   │   │   ├───ux-designer.md\n│   │   │   └───ux-expert.md\n│   │   ├───sub-modules\\\n│   │   │   └───claude-code\\\n│   │   │       ├───config.yaml\n│   │   │       ├───injections.yaml\n│   │   │       ├───readme.md\n│   │   │       └───sub-agents\\\n│   │   ├───tasks\\\n│   │   │   ├───daily-standup.xml\n│   │   │   └───retrospective.xml\n│   │   ├───teams\\\n│   │   │   ├───team-fullstack.yaml\n│   │   │   └───team-gamedev.yaml\n│   │   ├───testarch\\\n│   │   │   ├───README.md\n│   │   │   ├───tea-index.csv\n│   │   │   └───knowledge\\\n│   │   │       ├───ci-burn-in.md\n│   │   │       ├───component-tdd.md\n│   │   │       ├───contract-testing.md\n│   │   │       ├───data-factories.md\n│   │   │       ├───email-auth.md\n│   │   │       ├───error-handling.md\n│   │   │       ├───feature-flags.md\n│   │   │       ├───fixture-architecture.md\n│   │   │       ├───network-first.md\n│   │   │       ├───nfr-criteria.md\n│   │   │       ├───playwright-config.md\n│   │   │       ├───probability-impact.md\n│   │   │       ├───risk-governance.md\n│   │   │       ├───selective-testing.md\n│   │   │       ├───selector-resilience.md\n│   │   │       ├───test-healing-patterns.md\n│   │   │       ├───test-levels-framework.md\n│   │   │       ├───test-priorities-matrix.md\n│   │   │       ├───test-quality.md\n│   │   │       ├───timing-debugging.md\n│   │   │       └───visual-debugging.md\n│   │   └───workflows\\\n│   │       ├───README.md\n│   │       ├───1-analysis\\\n│   │       │   ├───brainstorm-game\\\n│   │       │   ├───brainstorm-project\\\n│   │       │   ├───document-project\\\n│   │       │   ├───game-brief\\\n│   │       │   ├───product-brief\\\n│   │       │   └───research\\\n│   │       ├───2-plan-workflows\\\n│   │       │   ├───README.md\n│   │       │   ├───create-ux-design\\\n│   │       │   ├───gdd\\\n│   │       │   ├───narrative\\\n│   │       │   ├───prd\\\n│   │       │   ├───tech-spec\\\n│   │       │   └───ux\\\n│   │       ├───3-solutioning\\\n│   │       │   ├───README.md\n│   │       │   ├───architecture\\\n│   │       │   └───solutioning-gate-check\\\n│   │       ├───4-implementation\\\n│   │       │   ├───README.md\n│   │       │   ├───correct-course\\\n│   │       │   ├───create-story\\\n│   │       │   ├───dev-story\\\n│   │       │   ├───epic-tech-context\\\n│   │       │   ├───retrospective\\\n│   │       │   ├───review-story\\\n│   │       │   ├───sprint-planning\\\n│   │       │   └───...\n│   │       ├───helpers\\\n│   │       ├───testarch\\\n│   │       └───workflow-status\\\n│   ├───cis\\\n│   │   ├───config.yaml\n│   │   ├───readme.md\n│   │   ├───agents\\\n│   │   │   ├───brainstorming-coach.md\n│   │   │   ├───creative-problem-solver.md\n│   │   │   ├───design-thinking-coach.md\n│   │   │   ├───innovation-strategist.md\n│   │   │   ├───README.md\n│   │   │   └───storyteller.md\n│   │   ├───teams\\\n│   │   │   └───creative-squad.yaml\n│   │   └───workflows\\\n│   │       ├───README.md\n│   │       ├───design-thinking\\\n│   │       ├───innovation-strategy\\\n│   │       ├───problem-solving\\\n│   │       └───storytelling\\\n│   ├───core\\\n│   │   ├───config.yaml\n│   │   ├───agents\\\n│   │   │   ├───bmad-master.md\n│   │   │   └───bmad-web-orchestrator.agent.xml\n│   │   ├───tasks\\\n│   │   │   ├───adv-elicit-methods.csv\n│   │   │   ├───adv-elicit.xml\n│   │   │   ├───index-docs.xml\n│   │   │   ├───validate-workflow.xml\n│   │   │   └───workflow.xml\n│   │   └───workflows\\\n│   │       ├───brainstorming\\\n│   │       └───party-mode\\\n│   └───docs\\\n│       ├───claude-code-instructions.md\n│       └───gemini-instructions.md\n└───docs\\\n    ├───bmm-workflow-status.md\n    ├───brainstorming-sessions\\\n    ├───research-sessions\\\n    │   ├───research-2.md\n    │   ├───research-3.1.md\n    │   ├───research-3.2.md\n    │   ├───research-3.3.md\n    │   ├───research-4.md\n    │   └───research-5.md\n    └───stories\\\n        └───.gitkeep\n\nReminder: Do not return an empty response when a tool call is required.\n\nMy setup is complete. I will provide my first command in the next turn."
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "parts": [
+            {
+              "text": "can you help me. Can you delite my changes and not commit"
+            }
+          ]
+        },
+        {
+          "role": "model",
+          "parts": [
+            {
+              "thoughtSignature": "Ci8B4/H/XvVBavI4qyPXT77spGec7d+tOIQokzscukGTOIfLTruScr37sEwImY24nQpxAePx/14ziA3lNTkz2p0kxlWMvu8ZakME9vTuui801U2upP0DHWoOxihnuSOGvP8S4Rw59CmViUPzObTRGMUY0XT2NjKBtY1psn9+VcQ5K2U4AxG+bwNNYpXRYxRKvvOfQ8zERuxqlTB0N8aE2K8IHGYKfAHj8f9eILVirdnqdR/AesephfgfpTExYRPGcBPzsMIoL09Xndq2J/lx92ojI5fM4na2/BvG20UkISGpvTA94MqHvcU7JBuGr8jB8XFswpvFmTN/lSRDq6NpHoRwmI2+fpIbDt9emqZxqB7uZGW3GzoxGhYPnJ0uHwnDqxsKdAHj8f9e2QnaQcO78MN1Ki8b6Dhcjitaf6fiw3QKsTwc8zNvwVXRWnx4hCnHgrsX31AldySkhOCqH/+W+2mObKEK2zwqreFs/7DoNOFbb18agaDsvUaeokgjSMfKCv6wvLEMQBHx3R/mRzgkIpb2daC5o6W0",
+              "functionCall": {
+                "name": "run_shell_command",
+                "args": {
+                  "description": "Checking git status to identify changes.",
+                  "command": "git status"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "parts": [
+            {
+              "functionResponse": {
+                "id": "run_shell_command-1763139288267-639b64f8cbe8a",
+                "name": "run_shell_command",
+                "response": {
+                  "output": "Command: git status\nDirectory: (root)\nOutput: On branch fase-1                                                  \nYour branch is up to date with 'origin/fase-1'.                   \n                                                                  \nChanges not staged for commit:                                    \n  (use \"git add/rm <file>...\" to update what will be committed)   \n  (use \"git restore <file>...\" to discard changes in working direc\ntory)                                                             \n        deleted:    docs/brainstorming-sessions/brainstorming-1.md\n        deleted:    docs/brainstorming-sessions/brainstorming-2.md\n        deleted:    docs/brainstorming-sessions/brainstorming-3.md\n        deleted:    docs/brainstorming-sessions/brainstorming-4.md\n        deleted:    docs/brainstorming-sessions/brainstorming-5.md\n        deleted:    docs/brainstorming-sessions/brainstorming-6.md\n        deleted:    docs/brainstorming-sessions/brainstorming-7.md\n        deleted:    docs/product-brief.md                         \n        deleted:    docs/research-sessions/research-1.md          \n                                                                  \nno changes added to commit (use \"git add\" and/or \"git commit -a\")\nError: (none)\nExit Code: 0\nSignal: (none)\nBackground PIDs: (none)\nProcess Group PGID: 12864"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "role": "model",
+          "parts": [
+            {
+              "thoughtSignature": "CiUB4/H/XuTYuYfqJYaZio1G5gcrVRHFhnOP8Eegj2lrlH+gz2ecCncB4/H/XiY1WQsXPCyKLF/hfwzo14qwRTHxTY39OxsGsZWhhZDbTyz6nKkcyMphwjjoMxGdr2aftHJKRTvoXFWv1MaWsAaQkvufw8YV6j2jW8pevJ6Pzsx3IVVcoYn4Nh6r5sNMvnlkVyVwzNFNXeJ66/5hVi6ZagqAAQHj8f9enq6B7p+V7FYFLMKhJAOzKC6AqYCkecafQtqbgkd3vi6RRSaxejbn9d/VJSeo+aCbhi+94a07ZNZ+gv6coxMYSpNxR5X7wg9pxAjJXI9op9GejKyfwnT9TT6A/IFKj6aJYXeyKbdVDBccws7qxd53XIkyN8h9HCn0WFoqCjIB4/H/XkrNYxnZcX5BE/yGLSnGMeJHzNLZOBEdcWWUfoY+PVDqE4drsZL8ATFyj5dPsw==",
+              "functionCall": {
+                "name": "run_shell_command",
+                "args": {
+                  "description": "Discarding all unstaged changes in the working directory.",
+                  "command": "git restore ."
+                }
+              }
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "parts": [
+            {
+              "functionResponse": {
+                "id": "run_shell_command-1763139294694-4711dd97acb9d",
+                "name": "run_shell_command",
+                "response": {
+                  "output": "Command: git restore .\nDirectory: (root)\nOutput: fatal: Unable to create 'C:/Users/marth/OneDrive - UiT Office 365/\nDocuments/CV-vitnemål/programmering med KI/git main mappe/SG-Aweso\nme-like-KI/.git/index.lock': File exists.                         \n                                                                  \nAnother git process seems to be running in this repository, e.g.  \nan editor opened by 'git commit'. Please make sure all processes  \nare terminated then try again. If it still fails, a git process   \nmay have crashed in this repository earlier:                      \nremove the file manually to continue.\nError: (none)\nExit Code: 1\nSignal: (none)\nBackground PIDs: (none)\nProcess Group PGID: 13500"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "role": "model",
+          "parts": [
+            {
+              "thoughtSignature": "CiMB4/H/XoueMvjK7cOAF0bDQUoIktrdCIyzAUcfYS0F2wonqApjAePx/17EbQ41y0krZnwlz7Xy92zRU1nJZePXxJauBHNYszZulRK9twYT6uWSFLn+B+FTx0ZoafwXxPV6Bi3oxiOCIWsmTUN6J3VX3mRkILVpXhC3xTEYARCF6UHf0ARVsLoMCowBAePx/15XCYUSdFwifDv4xr30GxagAQAbw3RnnBpKOAebAfP9ignxQoww0cZEIUsZPbyi3SnxpBE/7UB6SxMV1s+eK0v5G9Zl4gf4OxYd/ScjfjmxcJZKe1T+IYlV6N0kaTUR7lxCRjuhBikgxs7mKF4PYnLPzrGrenzR74OIBvEXEZucEJLoZ5EcYGAKkwEB4/H/Xucy+k7L5hCw8vbDIkPLSOm5lNM+zfau3d8iQbvffu1xOX6l12Ii94mlKQVMLtr8hqhM0f0fZPgC3jgFU6icD7PsIR6AyS3+r84y3I7tCG5b65Bck5vIHj7oT8UbxDbZz6UvNv4tEdIVkLiIIj1bJHVIF5qKKjIdgZKeab6xr8QugQ9W4LoDV7zQN8bvjg4=",
+              "functionCall": {
+                "name": "run_shell_command",
+                "args": {
+                  "description": "Listing contents of the .git directory to find index.lock.",
+                  "command": "dir .git"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "parts": [
+            {
+              "functionResponse": {
+                "id": "run_shell_command-1763139301194-d8d6844c2638e",
+                "name": "run_shell_command",
+                "response": {
+                  "output": "Command: dir .git\nDirectory: (root)\nOutput:                                                                   \n                                                                  \n    Directory: C:\\Users\\marth\\OneDrive - UiT Office 365\\Documents \n    \\CV-vitnemål\\programmering med KI\\git main mappe\\SG-Awesome-l \n    ike-KI\\.git                                                   \n                                                                  \n                                                                  \nMode                 LastWriteTime         Length Name            \n----                 -------------         ------ ----            \ndar--l        26.10.2025     13:29                hooks           \ndar--l        26.10.2025     13:29                info            \ndar--l        26.10.2025     13:29                logs            \ndar--l        14.11.2025     17:18                objects         \ndar--l        26.10.2025     13:29                refs            \n-a---l        06.11.2025     20:34          12288 .COMMIT_EDITMSG \n                                                  .swp            \n-a---l        07.11.2025     19:21             80 COMMIT_EDITMSG  \n-a---l        02.11.2025     13:36            493 config          \n-a---l        26.10.2025     13:28             73 description     \n-a---l        14.11.2025     17:18            223 FETCH_HEAD      \n-a---l        04.11.2025     19:32             23 HEAD            \n-a---l        09.11.2025     12:11          51973 index           \n-a---l        09.11.2025     12:22              0 index.lock      \n-a---l        09.11.2025     12:15             41 ORIG_HEAD       \n-a---l        26.10.2025     13:28            112 packed-refs\nError: (none)\nExit Code: 0\nSignal: (none)\nBackground PIDs: (none)\nProcess Group PGID: 2780"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "role": "model",
+          "parts": [
+            {
+              "thoughtSignature": "CiQB4/H/XhILUCupRFOEs6zg2D7Yz0aXpsMPZk4aDUPTp01oG+cKXgHj8f9eNHtrzrTgpx/gtjTzIvwbcjHY7HNob9moBB2FeQltPA7J7uGaWO1oC9l5ovoKNTMvI6DPSeHNx/DZsUcaFVyIUXBXBiALOnHGwdQFu3h1EeaD9USvy/cP274KMAHj8f9eS1grrkxmIQzjKLgjqFe1VYpvMrvFojYTYRz2zVhUxCpGobXnUAflNZmwlw==",
+              "functionCall": {
+                "name": "run_shell_command",
+                "args": {
+                  "description": "Removing the git index.lock file.",
+                  "command": "rm .git/index.lock"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "parts": [
+            {
+              "functionResponse": {
+                "id": "run_shell_command-1763139305719-30f4503db6a4e",
+                "name": "run_shell_command",
+                "response": {
+                  "output": "Command: rm .git/index.lock\nDirectory: (root)\nOutput: (empty)\nError: (none)\nExit Code: 0\nSignal: (none)\nBackground PIDs: (none)\nProcess Group PGID: 2980"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "role": "model",
+          "parts": [
+            {
+              "thoughtSignature": "Ci0B4/H/XgMpOO+pGTWLSzZQ0uwo/Y6PACRdgMRPY5xyfS1mj2FcrjFUW7gCqlEKZAHj8f9epK6YKcxv3o+Y2n5ygUwzqw8QJFeIaTriFoObSROkxKGBkMtXXI1TkX+qFBMSv7YH1XW93OgNwf/spAHTfaW9kREdpmXTRSMqmpKJzNuCuuSY2hsKFdLtAvWcVuvM1YwKQgHj8f9eKpU/+ERUcpDlf6evRngwSN29RrSCsc+cADKXblqTLGsGNDLnCrNTBs9XkoX9BJq11RilfPqoFUMuz1BXzg==",
+              "functionCall": {
+                "name": "run_shell_command",
+                "args": {
+                  "description": "Retrying to discard all unstaged changes in the working directory.",
+                  "command": "git restore ."
+                }
+              }
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "parts": [
+            {
+              "functionResponse": {
+                "id": "run_shell_command-1763139312725-8c4315f5d665a",
+                "name": "run_shell_command",
+                "response": {
+                  "output": "Command: git restore .\nDirectory: (root)\nOutput: (empty)\nError: (none)\nExit Code: 0\nSignal: (none)\nBackground PIDs: (none)\nProcess Group PGID: 14156"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "role": "model",
+          "parts": [
+            {
+              "thoughtSignature": "CiQB4/H/XvyIlH3BgOsrW9Vtr/7kdpwuSYQusD/RRM4Nk6nDXjkKdAHj8f9eqk8xxcKUTdAGCm7v1/0oA1ucVkbC5kN9WLLtc9QjdBAZ0xYyJJm8tagrQAI1/41BJGKC8hiQHrqaxvpStPrttA5vOxdj7vFkJ0bfVNpSGVUG7h3qOcfafGRJVBgF/mGvhy5fX5JvwNa+e/wg9Oo1Ck8B4/H/XgVCUdzWN4rdpWha3qNVBDlKL6/USwPj13s82p3hgkhA1edIIDvC6tRGGBMuwpWkvroJbGW2Qar2IR7g3dMlq/RY5bsYPLG0ZDSr",
+              "functionCall": {
+                "name": "run_shell_command",
+                "args": {
+                  "command": "git status",
+                  "description": "Checking git status to confirm changes are discarded."
+                }
+              }
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "parts": [
+            {
+              "functionResponse": {
+                "id": "run_shell_command-1763139318492-647100a47ee5",
+                "name": "run_shell_command",
+                "response": {
+                  "output": "Command: git status\nDirectory: (root)\nOutput: On branch fase-1                                                  \nYour branch is up to date with 'origin/fase-1'.                   \n                                                                  \nnothing to commit, working tree clean\nError: (none)\nExit Code: 0\nSignal: (none)\nBackground PIDs: (none)\nProcess Group PGID: 9556"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "response": {
+      "session.id": "146cdb32-71c2-4fec-80e9-8865881c4e54",
+      "installation.id": "792277eb-3021-4f9a-b550-88a0e2bf667e",
+      "interactive": true,
+      "user.email": "martheslaatta84@gmail.com",
+      "event.name": "gemini_cli.api_response",
+      "event.timestamp": "2025-11-14T16:55:26.510Z",
+      "model": "gemini-2.5-flash",
+      "duration_ms": 3734,
+      "input_token_count": 10726,
+      "output_token_count": 13,
+      "cached_content_token_count": 10485,
+      "thoughts_token_count": 55,
+      "tool_token_count": 0,
+      "total_token_count": 10794,
+      "prompt_id": "146cdb32-71c2-4fec-80e9-8865881c4e54########0",
+      "auth_type": "oauth-personal",
+      "status_code": 200,
+      "response_text": [
+        {
+          "candidates": [
+            {
+              "content": {
+                "role": "model",
+                "parts": [
+                  {
+                    "thoughtSignature": "CikB4/H/XqaHpliIqW3fQtQ/KdLF6l82MbhSWFHnUZUAkWBu+QSU6OCNqgp7AePx/16okpUynKD+xWGWaTGRTZ3LSQnKt0slr+xykwv11m8WQttafm1gmdP6oZLyp6zn8m66MRQargZlSobVvq0Q3kFuO2ITp++/tackUygwT5UwjO2wzmJXZKitwQ0X+d0STe9jmpLB8I/TdRh2JNTfn61auDAF69DiCmoB4/H/XnJMUEN30e053nhkkqMNuAQmwKSnYEDDkn0e3YlD4u5kq6qlp7ZsOTV3ItXHLSsSLD6Z0Pkiv8+U0OiYnMr3VOy03cnnm/trdOJsaukP6nvn4FrQaE7qK6nm3lJutQ/RaPZaqMGDCm4B4/H/XgUbm+j+blRi3Hv9lxa3Fkycz3cfsBETSOMw+KNEJumAcZn9ono/+fy37uUHgoMj7pFqhCsiMhoPLcSNSFQQFOY6cR/n8nXPNJa/U7CLYb74040doMNlGAXF6H9o8u5x1UxGp3beCPWOTQ==",
+                    "text": "All changes have been successfully discarded. The working directory is clean."
+                  }
+                ]
+              },
+              "finishReason": "STOP"
+            }
+          ],
+          "usageMetadata": {
+            "promptTokenCount": 10726,
+            "candidatesTokenCount": 13,
+            "totalTokenCount": 10794,
+            "cachedContentTokenCount": 10485,
+            "trafficType": "ON_DEMAND",
+            "promptTokensDetails": [
+              {
+                "modality": "TEXT",
+                "tokenCount": 10726
+              }
+            ],
+            "cacheTokensDetails": [
+              {
+                "modality": "TEXT",
+                "tokenCount": 10485
+              }
+            ],
+            "candidatesTokensDetails": [
+              {
+                "modality": "TEXT",
+                "tokenCount": 13
+              }
+            ],
+            "thoughtsTokenCount": 55
+          },
+          "modelVersion": "gemini-2.5-flash",
+          "responseId": "9a4cd9600b0dd7f0"
+        }
+      ],
+      "http.status_code": 200
+    },
+    "error": null
+  },
+  {
+    "request": {
+      "session.id": "146cdb32-71c2-4fec-80e9-8865881c4e54",
+      "installation.id": "792277eb-3021-4f9a-b550-88a0e2bf667e",
+      "interactive": true,
+      "user.email": "martheslaatta84@gmail.com",
+      "event.name": "gemini_cli.api_request",
+      "event.timestamp": "2025-11-14T16:56:47.528Z",
+      "model": "gemini-2.5-flash",
+      "prompt_id": "146cdb32-71c2-4fec-80e9-8865881c4e54########1",
+      "request_text": [
+        {
+          "role": "user",
+          "parts": [
+            {
+              "text": "This is the Gemini CLI. We are setting up the context for our chat.\nToday's date is fredag 14. november 2025 (formatted according to the user's locale).\nMy operating system is: win32\nThe project's temporary directory is: C:\\Users\\marth\\.gemini\\tmp\\885302ac2ec808458a7549d4e16494b1e410a0e359452b2352d8da7dbf60a94c\nI'm currently working in the directory: C:\\Users\\marth\\OneDrive - UiT Office 365\\Documents\\CV-vitnemål\\programmering med KI\\git main mappe\\SG-Awesome-like-KI\nHere is the folder structure of the current working directories:\n\nShowing up to 200 items (files + folders). Folders or files indicated with ... contain more items not shown, were ignored, or the display limit (200 items) was reached.\n\nC:\\Users\\marth\\OneDrive - UiT Office 365\\Documents\\CV-vitnemål\\programmering med KI\\git main mappe\\SG-Awesome-like-KI\\\n├───.gitignore\n├───proposal.md\n├───README.md\n├───.gemini\\\n│   ├───settings.json\n│   └───commands\\\n│       └───agents\\\n│           ├───analyst.toml\n│           ├───architect.toml\n│           ├───bmad-master.toml\n│           ├───brainstorming-coach.toml\n│           ├───creative-problem-solver.toml\n│           ├───design-thinking-coach.toml\n│           ├───dev.toml\n│           ├───game-architect.toml\n│           ├───game-designer.toml\n│           ├───game-dev.toml\n│           ├───innovation-strategist.toml\n│           ├───pm.toml\n│           ├───README.toml\n│           ├───sm.toml\n│           ├───storyteller.toml\n│           ├───tea.toml\n│           ├───ux-designer.toml\n│           └───ux-expert.toml\n├───.git\\...\n├───.logging\\\n│   ├───.gitignore\n│   ├───api-viewer.html\n│   ├───process-api-requests.py\n│   ├───README.md\n│   ├───requirements.txt\n│   ├───server.py\n│   ├───telemetry.md\n│   ├───truncate.py\n│   ├───watcher.py\n│   └───requests\\\n│       ├───2025-10-30_01-50-10-2c04764c-c66f-40b7-93ac-c0ab5cb890da.json\n│       └───2025-10-30_02-14-51-afd0b49e-1f92-456d-a6ff-afba8ef9a39f.json\n├───.vscode\\\n│   ├───launch.json\n│   ├───settings.json\n│   └───tasks.json\n├───bmad\\\n│   ├───_cfg\\\n│   │   ├───agent-manifest.csv\n│   │   ├───files-manifest.csv\n│   │   ├───manifest.yaml\n│   │   ├───task-manifest.csv\n│   │   ├───workflow-manifest.csv\n│   │   └───agents\\\n│   │       ├───bmm-analyst.customize.yaml\n│   │       ├───bmm-architect.customize.yaml\n│   │       ├───bmm-dev.customize.yaml\n│   │       ├───bmm-game-architect.customize.yaml\n│   │       ├───bmm-game-designer.customize.yaml\n│   │       ├───bmm-game-dev.customize.yaml\n│   │       ├───bmm-pm.customize.yaml\n│   │       ├───bmm-sm.customize.yaml\n│   │       ├───bmm-tea.customize.yaml\n│   │       ├───bmm-ux-designer.customize.yaml\n│   │       ├───bmm-ux-expert.customize.yaml\n│   │       ├───cis-brainstorming-coach.customize.yaml\n│   │       ├───cis-creative-problem-solver.customize.yaml\n│   │       ├───cis-design-thinking-coach.customize.yaml\n│   │       ├───cis-innovation-strategist.customize.yaml\n│   │       ├───cis-storyteller.customize.yaml\n│   │       └───core-bmad-master.customize.yaml\n│   ├───bmm\\\n│   │   ├───config.yaml\n│   │   ├───README.md\n│   │   ├───agents\\\n│   │   │   ├───analyst.md\n│   │   │   ├───architect.md\n│   │   │   ├───dev.md\n│   │   │   ├───game-architect.md\n│   │   │   ├───game-designer.md\n│   │   │   ├───game-dev.md\n│   │   │   ├───pm.md\n│   │   │   ├───sm.md\n│   │   │   ├───tea.md\n│   │   │   ├───ux-designer.md\n│   │   │   └───ux-expert.md\n│   │   ├───sub-modules\\\n│   │   │   └───claude-code\\\n│   │   │       ├───config.yaml\n│   │   │       ├───injections.yaml\n│   │   │       ├───readme.md\n│   │   │       └───sub-agents\\\n│   │   ├───tasks\\\n│   │   │   ├───daily-standup.xml\n│   │   │   └───retrospective.xml\n│   │   ├───teams\\\n│   │   │   ├───team-fullstack.yaml\n│   │   │   └───team-gamedev.yaml\n│   │   ├───testarch\\\n│   │   │   ├───README.md\n│   │   │   ├───tea-index.csv\n│   │   │   └───knowledge\\\n│   │   │       ├───ci-burn-in.md\n│   │   │       ├───component-tdd.md\n│   │   │       ├───contract-testing.md\n│   │   │       ├───data-factories.md\n│   │   │       ├───email-auth.md\n│   │   │       ├───error-handling.md\n│   │   │       ├───feature-flags.md\n│   │   │       ├───fixture-architecture.md\n│   │   │       ├───network-first.md\n│   │   │       ├───nfr-criteria.md\n│   │   │       ├───playwright-config.md\n│   │   │       ├───probability-impact.md\n│   │   │       ├───risk-governance.md\n│   │   │       ├───selective-testing.md\n│   │   │       ├───selector-resilience.md\n│   │   │       ├───test-healing-patterns.md\n│   │   │       ├───test-levels-framework.md\n│   │   │       ├───test-priorities-matrix.md\n│   │   │       ├───test-quality.md\n│   │   │       ├───timing-debugging.md\n│   │   │       └───visual-debugging.md\n│   │   └───workflows\\\n│   │       ├───README.md\n│   │       ├───1-analysis\\\n│   │       │   ├───brainstorm-game\\\n│   │       │   ├───brainstorm-project\\\n│   │       │   ├───document-project\\\n│   │       │   ├───game-brief\\\n│   │       │   ├───product-brief\\\n│   │       │   └───research\\\n│   │       ├───2-plan-workflows\\\n│   │       │   ├───README.md\n│   │       │   ├───create-ux-design\\\n│   │       │   ├───gdd\\\n│   │       │   ├───narrative\\\n│   │       │   ├───prd\\\n│   │       │   ├───tech-spec\\\n│   │       │   └───ux\\\n│   │       ├───3-solutioning\\\n│   │       │   ├───README.md\n│   │       │   ├───architecture\\\n│   │       │   └───solutioning-gate-check\\\n│   │       ├───4-implementation\\\n│   │       │   ├───README.md\n│   │       │   ├───correct-course\\\n│   │       │   ├───create-story\\\n│   │       │   ├───dev-story\\\n│   │       │   ├───epic-tech-context\\\n│   │       │   ├───retrospective\\\n│   │       │   ├───review-story\\\n│   │       │   ├───sprint-planning\\\n│   │       │   └───...\n│   │       ├───helpers\\\n│   │       ├───testarch\\\n│   │       └───workflow-status\\\n│   ├───cis\\\n│   │   ├───config.yaml\n│   │   ├───readme.md\n│   │   ├───agents\\\n│   │   │   ├───brainstorming-coach.md\n│   │   │   ├───creative-problem-solver.md\n│   │   │   ├───design-thinking-coach.md\n│   │   │   ├───innovation-strategist.md\n│   │   │   ├───README.md\n│   │   │   └───storyteller.md\n│   │   ├───teams\\\n│   │   │   └───creative-squad.yaml\n│   │   └───workflows\\\n│   │       ├───README.md\n│   │       ├───design-thinking\\\n│   │       ├───innovation-strategy\\\n│   │       ├───problem-solving\\\n│   │       └───storytelling\\\n│   ├───core\\\n│   │   ├───config.yaml\n│   │   ├───agents\\\n│   │   │   ├───bmad-master.md\n│   │   │   └───bmad-web-orchestrator.agent.xml\n│   │   ├───tasks\\\n│   │   │   ├───adv-elicit-methods.csv\n│   │   │   ├───adv-elicit.xml\n│   │   │   ├───index-docs.xml\n│   │   │   ├───validate-workflow.xml\n│   │   │   └───workflow.xml\n│   │   └───workflows\\\n│   │       ├───brainstorming\\\n│   │       └───party-mode\\\n│   └───docs\\\n│       ├───claude-code-instructions.md\n│       └───gemini-instructions.md\n└───docs\\\n    ├───bmm-workflow-status.md\n    ├───brainstorming-sessions\\\n    ├───research-sessions\\\n    │   ├───research-2.md\n    │   ├───research-3.1.md\n    │   ├───research-3.2.md\n    │   ├───research-3.3.md\n    │   ├───research-4.md\n    │   └───research-5.md\n    └───stories\\\n        └───.gitkeep\n\nReminder: Do not return an empty response when a tool call is required.\n\nMy setup is complete. I will provide my first command in the next turn."
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "parts": [
+            {
+              "text": "can you help me. Can you delite my changes and not commit"
+            }
+          ]
+        },
+        {
+          "role": "model",
+          "parts": [
+            {
+              "thoughtSignature": "Ci8B4/H/XvVBavI4qyPXT77spGec7d+tOIQokzscukGTOIfLTruScr37sEwImY24nQpxAePx/14ziA3lNTkz2p0kxlWMvu8ZakME9vTuui801U2upP0DHWoOxihnuSOGvP8S4Rw59CmViUPzObTRGMUY0XT2NjKBtY1psn9+VcQ5K2U4AxG+bwNNYpXRYxRKvvOfQ8zERuxqlTB0N8aE2K8IHGYKfAHj8f9eILVirdnqdR/AesephfgfpTExYRPGcBPzsMIoL09Xndq2J/lx92ojI5fM4na2/BvG20UkISGpvTA94MqHvcU7JBuGr8jB8XFswpvFmTN/lSRDq6NpHoRwmI2+fpIbDt9emqZxqB7uZGW3GzoxGhYPnJ0uHwnDqxsKdAHj8f9e2QnaQcO78MN1Ki8b6Dhcjitaf6fiw3QKsTwc8zNvwVXRWnx4hCnHgrsX31AldySkhOCqH/+W+2mObKEK2zwqreFs/7DoNOFbb18agaDsvUaeokgjSMfKCv6wvLEMQBHx3R/mRzgkIpb2daC5o6W0",
+              "functionCall": {
+                "name": "run_shell_command",
+                "args": {
+                  "description": "Checking git status to identify changes.",
+                  "command": "git status"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "parts": [
+            {
+              "functionResponse": {
+                "id": "run_shell_command-1763139288267-639b64f8cbe8a",
+                "name": "run_shell_command",
+                "response": {
+                  "output": "Command: git status\nDirectory: (root)\nOutput: On branch fase-1                                                  \nYour branch is up to date with 'origin/fase-1'.                   \n                                                                  \nChanges not staged for commit:                                    \n  (use \"git add/rm <file>...\" to update what will be committed)   \n  (use \"git restore <file>...\" to discard changes in working direc\ntory)                                                             \n        deleted:    docs/brainstorming-sessions/brainstorming-1.md\n        deleted:    docs/brainstorming-sessions/brainstorming-2.md\n        deleted:    docs/brainstorming-sessions/brainstorming-3.md\n        deleted:    docs/brainstorming-sessions/brainstorming-4.md\n        deleted:    docs/brainstorming-sessions/brainstorming-5.md\n        deleted:    docs/brainstorming-sessions/brainstorming-6.md\n        deleted:    docs/brainstorming-sessions/brainstorming-7.md\n        deleted:    docs/product-brief.md                         \n        deleted:    docs/research-sessions/research-1.md          \n                                                                  \nno changes added to commit (use \"git add\" and/or \"git commit -a\")\nError: (none)\nExit Code: 0\nSignal: (none)\nBackground PIDs: (none)\nProcess Group PGID: 12864"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "role": "model",
+          "parts": [
+            {
+              "thoughtSignature": "CiUB4/H/XuTYuYfqJYaZio1G5gcrVRHFhnOP8Eegj2lrlH+gz2ecCncB4/H/XiY1WQsXPCyKLF/hfwzo14qwRTHxTY39OxsGsZWhhZDbTyz6nKkcyMphwjjoMxGdr2aftHJKRTvoXFWv1MaWsAaQkvufw8YV6j2jW8pevJ6Pzsx3IVVcoYn4Nh6r5sNMvnlkVyVwzNFNXeJ66/5hVi6ZagqAAQHj8f9enq6B7p+V7FYFLMKhJAOzKC6AqYCkecafQtqbgkd3vi6RRSaxejbn9d/VJSeo+aCbhi+94a07ZNZ+gv6coxMYSpNxR5X7wg9pxAjJXI9op9GejKyfwnT9TT6A/IFKj6aJYXeyKbdVDBccws7qxd53XIkyN8h9HCn0WFoqCjIB4/H/XkrNYxnZcX5BE/yGLSnGMeJHzNLZOBEdcWWUfoY+PVDqE4drsZL8ATFyj5dPsw==",
+              "functionCall": {
+                "name": "run_shell_command",
+                "args": {
+                  "description": "Discarding all unstaged changes in the working directory.",
+                  "command": "git restore ."
+                }
+              }
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "parts": [
+            {
+              "functionResponse": {
+                "id": "run_shell_command-1763139294694-4711dd97acb9d",
+                "name": "run_shell_command",
+                "response": {
+                  "output": "Command: git restore .\nDirectory: (root)\nOutput: fatal: Unable to create 'C:/Users/marth/OneDrive - UiT Office 365/\nDocuments/CV-vitnemål/programmering med KI/git main mappe/SG-Aweso\nme-like-KI/.git/index.lock': File exists.                         \n                                                                  \nAnother git process seems to be running in this repository, e.g.  \nan editor opened by 'git commit'. Please make sure all processes  \nare terminated then try again. If it still fails, a git process   \nmay have crashed in this repository earlier:                      \nremove the file manually to continue.\nError: (none)\nExit Code: 1\nSignal: (none)\nBackground PIDs: (none)\nProcess Group PGID: 13500"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "role": "model",
+          "parts": [
+            {
+              "thoughtSignature": "CiMB4/H/XoueMvjK7cOAF0bDQUoIktrdCIyzAUcfYS0F2wonqApjAePx/17EbQ41y0krZnwlz7Xy92zRU1nJZePXxJauBHNYszZulRK9twYT6uWSFLn+B+FTx0ZoafwXxPV6Bi3oxiOCIWsmTUN6J3VX3mRkILVpXhC3xTEYARCF6UHf0ARVsLoMCowBAePx/15XCYUSdFwifDv4xr30GxagAQAbw3RnnBpKOAebAfP9ignxQoww0cZEIUsZPbyi3SnxpBE/7UB6SxMV1s+eK0v5G9Zl4gf4OxYd/ScjfjmxcJZKe1T+IYlV6N0kaTUR7lxCRjuhBikgxs7mKF4PYnLPzrGrenzR74OIBvEXEZucEJLoZ5EcYGAKkwEB4/H/Xucy+k7L5hCw8vbDIkPLSOm5lNM+zfau3d8iQbvffu1xOX6l12Ii94mlKQVMLtr8hqhM0f0fZPgC3jgFU6icD7PsIR6AyS3+r84y3I7tCG5b65Bck5vIHj7oT8UbxDbZz6UvNv4tEdIVkLiIIj1bJHVIF5qKKjIdgZKeab6xr8QugQ9W4LoDV7zQN8bvjg4=",
+              "functionCall": {
+                "name": "run_shell_command",
+                "args": {
+                  "description": "Listing contents of the .git directory to find index.lock.",
+                  "command": "dir .git"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "parts": [
+            {
+              "functionResponse": {
+                "id": "run_shell_command-1763139301194-d8d6844c2638e",
+                "name": "run_shell_command",
+                "response": {
+                  "output": "Command: dir .git\nDirectory: (root)\nOutput:                                                                   \n                                                                  \n    Directory: C:\\Users\\marth\\OneDrive - UiT Office 365\\Documents \n    \\CV-vitnemål\\programmering med KI\\git main mappe\\SG-Awesome-l \n    ike-KI\\.git                                                   \n                                                                  \n                                                                  \nMode                 LastWriteTime         Length Name            \n----                 -------------         ------ ----            \ndar--l        26.10.2025     13:29                hooks           \ndar--l        26.10.2025     13:29                info            \ndar--l        26.10.2025     13:29                logs            \ndar--l        14.11.2025     17:18                objects         \ndar--l        26.10.2025     13:29                refs            \n-a---l        06.11.2025     20:34          12288 .COMMIT_EDITMSG \n                                                  .swp            \n-a---l        07.11.2025     19:21             80 COMMIT_EDITMSG  \n-a---l        02.11.2025     13:36            493 config          \n-a---l        26.10.2025     13:28             73 description     \n-a---l        14.11.2025     17:18            223 FETCH_HEAD      \n-a---l        04.11.2025     19:32             23 HEAD            \n-a---l        09.11.2025     12:11          51973 index           \n-a---l        09.11.2025     12:22              0 index.lock      \n-a---l        09.11.2025     12:15             41 ORIG_HEAD       \n-a---l        26.10.2025     13:28            112 packed-refs\nError: (none)\nExit Code: 0\nSignal: (none)\nBackground PIDs: (none)\nProcess Group PGID: 2780"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "role": "model",
+          "parts": [
+            {
+              "thoughtSignature": "CiQB4/H/XhILUCupRFOEs6zg2D7Yz0aXpsMPZk4aDUPTp01oG+cKXgHj8f9eNHtrzrTgpx/gtjTzIvwbcjHY7HNob9moBB2FeQltPA7J7uGaWO1oC9l5ovoKNTMvI6DPSeHNx/DZsUcaFVyIUXBXBiALOnHGwdQFu3h1EeaD9USvy/cP274KMAHj8f9eS1grrkxmIQzjKLgjqFe1VYpvMrvFojYTYRz2zVhUxCpGobXnUAflNZmwlw==",
+              "functionCall": {
+                "name": "run_shell_command",
+                "args": {
+                  "description": "Removing the git index.lock file.",
+                  "command": "rm .git/index.lock"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "parts": [
+            {
+              "functionResponse": {
+                "id": "run_shell_command-1763139305719-30f4503db6a4e",
+                "name": "run_shell_command",
+                "response": {
+                  "output": "Command: rm .git/index.lock\nDirectory: (root)\nOutput: (empty)\nError: (none)\nExit Code: 0\nSignal: (none)\nBackground PIDs: (none)\nProcess Group PGID: 2980"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "role": "model",
+          "parts": [
+            {
+              "thoughtSignature": "Ci0B4/H/XgMpOO+pGTWLSzZQ0uwo/Y6PACRdgMRPY5xyfS1mj2FcrjFUW7gCqlEKZAHj8f9epK6YKcxv3o+Y2n5ygUwzqw8QJFeIaTriFoObSROkxKGBkMtXXI1TkX+qFBMSv7YH1XW93OgNwf/spAHTfaW9kREdpmXTRSMqmpKJzNuCuuSY2hsKFdLtAvWcVuvM1YwKQgHj8f9eKpU/+ERUcpDlf6evRngwSN29RrSCsc+cADKXblqTLGsGNDLnCrNTBs9XkoX9BJq11RilfPqoFUMuz1BXzg==",
+              "functionCall": {
+                "name": "run_shell_command",
+                "args": {
+                  "description": "Retrying to discard all unstaged changes in the working directory.",
+                  "command": "git restore ."
+                }
+              }
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "parts": [
+            {
+              "functionResponse": {
+                "id": "run_shell_command-1763139312725-8c4315f5d665a",
+                "name": "run_shell_command",
+                "response": {
+                  "output": "Command: git restore .\nDirectory: (root)\nOutput: (empty)\nError: (none)\nExit Code: 0\nSignal: (none)\nBackground PIDs: (none)\nProcess Group PGID: 14156"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "role": "model",
+          "parts": [
+            {
+              "thoughtSignature": "CiQB4/H/XvyIlH3BgOsrW9Vtr/7kdpwuSYQusD/RRM4Nk6nDXjkKdAHj8f9eqk8xxcKUTdAGCm7v1/0oA1ucVkbC5kN9WLLtc9QjdBAZ0xYyJJm8tagrQAI1/41BJGKC8hiQHrqaxvpStPrttA5vOxdj7vFkJ0bfVNpSGVUG7h3qOcfafGRJVBgF/mGvhy5fX5JvwNa+e/wg9Oo1Ck8B4/H/XgVCUdzWN4rdpWha3qNVBDlKL6/USwPj13s82p3hgkhA1edIIDvC6tRGGBMuwpWkvroJbGW2Qar2IR7g3dMlq/RY5bsYPLG0ZDSr",
+              "functionCall": {
+                "name": "run_shell_command",
+                "args": {
+                  "command": "git status",
+                  "description": "Checking git status to confirm changes are discarded."
+                }
+              }
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "parts": [
+            {
+              "functionResponse": {
+                "id": "run_shell_command-1763139318492-647100a47ee5",
+                "name": "run_shell_command",
+                "response": {
+                  "output": "Command: git status\nDirectory: (root)\nOutput: On branch fase-1                                                  \nYour branch is up to date with 'origin/fase-1'.                   \n                                                                  \nnothing to commit, working tree clean\nError: (none)\nExit Code: 0\nSignal: (none)\nBackground PIDs: (none)\nProcess Group PGID: 9556"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "role": "model",
+          "parts": [
+            {
+              "thoughtSignature": "CikB4/H/XqaHpliIqW3fQtQ/KdLF6l82MbhSWFHnUZUAkWBu+QSU6OCNqgp7AePx/16okpUynKD+xWGWaTGRTZ3LSQnKt0slr+xykwv11m8WQttafm1gmdP6oZLyp6zn8m66MRQargZlSobVvq0Q3kFuO2ITp++/tackUygwT5UwjO2wzmJXZKitwQ0X+d0STe9jmpLB8I/TdRh2JNTfn61auDAF69DiCmoB4/H/XnJMUEN30e053nhkkqMNuAQmwKSnYEDDkn0e3YlD4u5kq6qlp7ZsOTV3ItXHLSsSLD6Z0Pkiv8+U0OiYnMr3VOy03cnnm/trdOJsaukP6nvn4FrQaE7qK6nm3lJutQ/RaPZaqMGDCm4B4/H/XgUbm+j+blRi3Hv9lxa3Fkycz3cfsBETSOMw+KNEJumAcZn9ono/+fy37uUHgoMj7pFqhCsiMhoPLcSNSFQQFOY6cR/n8nXPNJa/U7CLYb74040doMNlGAXF6H9o8u5x1UxGp3beCPWOTQ==",
+              "text": "All changes have been successfully discarded. The working directory is clean."
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "parts": [
+            {
+              "text": "gitswich main"
+            }
+          ]
+        }
+      ]
+    },
+    "response": {
+      "session.id": "146cdb32-71c2-4fec-80e9-8865881c4e54",
+      "installation.id": "792277eb-3021-4f9a-b550-88a0e2bf667e",
+      "interactive": true,
+      "user.email": "martheslaatta84@gmail.com",
+      "event.name": "gemini_cli.api_response",
+      "event.timestamp": "2025-11-14T16:57:23.858Z",
+      "model": "gemini-2.5-flash",
+      "duration_ms": 36330,
+      "input_token_count": 28645,
+      "output_token_count": 16,
+      "cached_content_token_count": 10182,
+      "thoughts_token_count": 27,
+      "tool_token_count": 0,
+      "total_token_count": 28688,
+      "prompt_id": "146cdb32-71c2-4fec-80e9-8865881c4e54########1",
+      "auth_type": "oauth-personal",
+      "status_code": 200,
+      "response_text": [
+        {
+          "candidates": [
+            {
+              "content": {
+                "role": "model",
+                "parts": [
+                  {
+                    "thought": true,
+                    "text": "**Considering Branch Changes**\n\nI'm focusing on the mechanics of switching branches. Specifically, I'm thinking about the direct command needed to move the user to the `main` branch. My current plan is to use `git checkout main`.\n\n\n"
+                  }
+                ]
+              }
+            }
+          ],
+          "usageMetadata": {
+            "trafficType": "ON_DEMAND"
+          },
+          "modelVersion": "gemini-2.5-flash",
+          "responseId": "9e3b5aaf8c0f5ab0"
+        },
+        {
+          "candidates": [
+            {
+              "content": {
+                "role": "model",
+                "parts": [
+                  {
+                    "thoughtSignature": "Ci8B4/H/XorlYXEE3MW3cYcUV4VamrI41PMzf2/xHU95+iC94i0BfjaAJ90hu4rYhQpjAePx/16rbPeb+uVbnI7HxPnD+7rOOvU8lg++M13f2KHnEFvfmjfiYhlyzgDWy4J+b+Ru0KS/ogL9RSBRmiGRg3letzG7hVMBD9yA+hoex0Dq/oM+TL1g61fuqpvYIiZ0vVzDCjQB4/H/Xp+kvfUxDAmMd6B6PQ34TGqYS3LrCwGOb9K3AVkWBgK0C5K53gnFcRhen/6t00qp",
+                    "functionCall": {
+                      "name": "run_shell_command",
+                      "args": {
+                        "description": "Switching to the main branch.",
+                        "command": "git checkout main"
+                      }
+                    }
+                  }
+                ]
+              },
+              "finishReason": "STOP"
+            }
+          ],
+          "usageMetadata": {
+            "promptTokenCount": 28645,
+            "candidatesTokenCount": 16,
+            "totalTokenCount": 28688,
+            "cachedContentTokenCount": 10182,
+            "trafficType": "ON_DEMAND",
+            "promptTokensDetails": [
+              {
+                "modality": "TEXT",
+                "tokenCount": 28645
+              }
+            ],
+            "cacheTokensDetails": [
+              {
+                "modality": "TEXT",
+                "tokenCount": 10182
+              }
+            ],
+            "candidatesTokensDetails": [
+              {
+                "modality": "TEXT",
+                "tokenCount": 16
+              }
+            ],
+            "thoughtsTokenCount": 27
+          },
+          "modelVersion": "gemini-2.5-flash",
+          "responseId": "9e3b5aaf8c0f5ab0"
+        }
+      ],
+      "http.status_code": 200
+    },
+    "error": null
+  }
+]

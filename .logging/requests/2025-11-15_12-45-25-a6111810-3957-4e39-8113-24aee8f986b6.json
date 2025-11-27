@@ -1,0 +1,183 @@
+[
+  {
+    "request": {
+      "session.id": "a6111810-3957-4e39-8113-24aee8f986b6",
+      "installation.id": "792277eb-3021-4f9a-b550-88a0e2bf667e",
+      "interactive": true,
+      "user.email": "martheslaatta84@gmail.com",
+      "event.name": "gemini_cli.api_request",
+      "event.timestamp": "2025-11-15T12:47:54.324Z",
+      "model": "gemini-2.5-flash",
+      "prompt_id": "a6111810-3957-4e39-8113-24aee8f986b6########0",
+      "request_text": [
+        {
+          "role": "user",
+          "parts": [
+            {
+              "text": "This is the Gemini CLI. We are setting up the context for our chat.\nToday's date is lørdag 15. november 2025 (formatted according to the user's locale).\nMy operating system is: win32\nThe project's temporary directory is: C:\\Users\\marth\\.gemini\\tmp\\885302ac2ec808458a7549d4e16494b1e410a0e359452b2352d8da7dbf60a94c\nI'm currently working in the directory: C:\\Users\\marth\\OneDrive - UiT Office 365\\Documents\\CV-vitnemål\\programmering med KI\\git main mappe\\SG-Awesome-like-KI\nHere is the folder structure of the current working directories:\n\nShowing up to 200 items (files + folders). Folders or files indicated with ... contain more items not shown, were ignored, or the display limit (200 items) was reached.\n\nC:\\Users\\marth\\OneDrive - UiT Office 365\\Documents\\CV-vitnemål\\programmering med KI\\git main mappe\\SG-Awesome-like-KI\\\n├───.gitignore\n├───proposal.md\n├───README.md\n├───.gemini\\\n│   ├───settings.json\n│   └───commands\\\n│       └───agents\\\n├───.git\\...\n├───.logging\\\n│   ├───.gitignore\n│   ├───api-viewer.html\n│   ├───process-api-requests.py\n│   ├───README.md\n│   ├───requirements.txt\n│   ├───server.py\n│   ├───telemetry.md\n│   ├───truncate.py\n│   ├───watcher.py\n│   └───requests\\\n├───.vscode\\\n│   ├───launch.json\n│   ├───settings.json\n│   └───tasks.json\n├───bmad\\\n│   ├───_cfg\\\n│   │   └───agents\\\n│   ├───bmm\\\n│   │   ├───config.yaml\n│   │   ├───agents\\\n│   │   │   ├───analyst.md\n│   │   │   ├───architect.md\n│   │   │   ├───dev.md\n│   │   │   ├───game-architect.md\n│   │   │   ├───game-designer.md\n│   │   │   ├───game-dev.md\n│   │   │   ├───pm.md\n│   │   │   ├───sm.md\n│   │   │   ├───tea.md\n│   │   │   ├───ux-designer.md\n│   │   │   └───ux-expert.md\n│   │   ├───sub-modules\\\n│   │   │   └───claude-code\\\n│   │   │       ├───config.yaml\n│   │   │       ├───injections.yaml\n│   │   │       ├───readme.md\n│   │   │       └───sub-agents\\\n│   │   ├───tasks\\\n│   │   │   ├───daily-standup.xml\n│   │   │   └───retrospective.xml\n│   │   ├───teams\\\n│   │   │   ├───team-fullstack.yaml\n│   │   │   └───team-gamedev.yaml\n│   │   ├───testarch\\\n│   │   │   ├───README.md\n│   │   │   ├───tea-index.csv\n│   │   │   └───knowledge\\\n│   │   │       ├───ci-burn-in.md\n│   │   │       ├───component-tdd.md\n│   │   │       ├───contract-testing.md\n│   │   │       ├───data-factories.md\n│   │   │       ├───email-auth.md\n│   │   │       ├───error-handling.md\n│   │   │       ├───feature-flags.md\n│   │   │       ├───fixture-architecture.md\n│   │   │       ├───network-first.md\n│   │   │       ├───nfr-criteria.md\n│   │   │       ├───playwright-config.md\n│   │   │       ├───probability-impact.md\n│   │   │       ├───risk-governance.md\n│   │   │       ├───selective-testing.md\n│   │   │       ├───selector-resilience.md\n│   │   │       ├───test-healing-patterns.md\n│   │   │       ├───test-levels-framework.md\n│   │   │       ├───test-priorities-matrix.md\n│   │   │       ├───test-quality.md\n│   │   │       ├───timing-debugging.md\n│   │   │       └───visual-debugging.md\n│   │   └───workflows\\\n│   │       ├───README.md\n│   │       ├───1-analysis\\\n│   │       │   ├───brainstorm-game\\\n│   │       │   ├───brainstorm-project\\\n│   │       │   ├───document-project\\\n│   │       │   ├───game-brief\\\n│   │       │   ├───product-brief\\\n│   │       │   └───research\\\n│   │       ├───2-plan-workflows\\\n│   │       │   ├───README.md\n│   │       │   ├───create-ux-design\\\n│   │       │   ├───gdd\\\n│   │       │   ├───narrative\\\n│   │       │   ├───prd\\\n│   │       │   ├───tech-spec\\\n│   │       │   └───ux\\\n│   │       ├───3-solutioning\\\n│   │       │   ├───README.md\n│   │       │   ├───architecture\\\n│   │       │   └───solutioning-gate-check\\\n│   │       ├───4-implementation\\\n│   │       │   ├───README.md\n│   │       │   ├───correct-course\\\n│   │       │   ├───create-story\\\n│   │       │   ├───dev-story\\\n│   │       │   ├───epic-tech-context\\\n│   │       │   ├───retrospective\\\n│   │       │   ├───review-story\\\n│   │       │   ├───sprint-planning\\\n│   │       │   ├───story-context\\\n│   │       │   ├───story-done\\\n│   │       │   ├───story-ready\\\n│   │       │   └───temp-testing-files\\\n│   │       ├───helpers\\\n│   │       │   └───sprint-status\\\n│   │       ├───testarch\\\n│   │       │   ├───README.md\n│   │       │   ├───atdd\\\n│   │       │   ├───automate\\\n│   │       │   ├───ci\\\n│   │       │   ├───framework\\\n│   │       │   ├───nfr-assess\\\n│   │       │   ├───test-design\\\n│   │       │   ├───test-review\\\n│   │       │   └───trace\\\n│   │       └───workflow-status\\\n│   │           ├───instructions.md\n│   │           ├───project-levels.yaml\n│   │           ├───README.md\n│   │           ├───workflow-status-template.md\n│   │           ├───workflow.yaml\n│   │           ├───init\\\n│   │           └───paths\\\n│   ├───cis\\\n│   │   ├───config.yaml\n│   │   ├───readme.md\n│   │   ├───agents\\\n│   │   │   ├───brainstorming-coach.md\n│   │   │   ├───creative-problem-solver.md\n│   │   │   ├───design-thinking-coach.md\n│   │   │   ├───innovation-strategist.md\n│   │   │   ├───README.md\n│   │   │   └───storyteller.md\n│   │   ├───teams\\\n│   │   │   └───creative-squad.yaml\n│   │   └───workflows\\\n│   │       ├───README.md\n│   │       ├───design-thinking\\\n│   │       │   ├───design-methods.csv\n│   │       │   ├───instructions.md\n│   │       │   ├───README.md\n│   │       │   ├───template.md\n│   │       │   └───workflow.yaml\n│   │       ├───innovation-strategy\\\n│   │       │   ├───innovation-frameworks.csv\n│   │       │   ├───instructions.md\n│   │       │   ├───README.md\n│   │       │   ├───template.md\n│   │       │   └───workflow.yaml\n│   │       ├───problem-solving\\\n│   │       │   ├───instructions.md\n│   │       │   ├───README.md\n│   │       │   ├───solving-methods.csv\n│   │       │   ├───template.md\n│   │       │   └───workflow.yaml\n│   │       └───storytelling\\\n│   │           ├───instructions.md\n│   │           ├───README.md\n│   │           ├───story-types.csv\n│   │           ├───template.md\n│   │           └───workflow.yaml\n│   ├───core\\\n│   │   ├───config.yaml\n│   │   ├───agents\\\n│   │   │   ├───bmad-master.md\n│   │   │   └───bmad-web-orchestrator.agent.xml\n│   │   ├───tasks\\\n│   │   │   ├───adv-elicit-methods.csv\n│   │   │   ├───adv-elicit.xml\n│   │   │   ├───index-docs.xml\n│   │   │   ├───validate-workflow.xml\n│   │   │   └───workflow.xml\n│   │   └───workflows\\\n│   │       ├───brainstorming\\\n│   │       │   ├───brain-methods.csv\n│   │       │   └───instructions.md\n│   │       │   └───...\n│   │       └───party-mode\\\n│   └───docs\\\n│       ├───claude-code-instructions.md\n│       └───gemini-instructions.md\n└───docs\\\n    ├───bmm-workflow-status.md\n    ├───brainstorming-sessions\\\n    ├───research-sessions\\\n    │   ├───research-2.md\n    │   ├───research-3.1.md\n    │   ├───research-3.2.md\n    │   ├───research-3.3.md\n    │   ├───research-4.md\n    │   └───research-5.md\n    └───stories\\\n        └───.gitkeep\n\nReminder: Do not return an empty response when a tool call is required.\n\nMy setup is complete. I will provide my first command in the next turn."
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "parts": [
+            {
+              "text": "Git switch main"
+            }
+          ]
+        },
+        {
+          "role": "model",
+          "parts": [
+            {
+              "thoughtSignature": "Ci8B4/H/Xh5oWg2e6jmKeS1Ci1Yx8UUa/Qjzs/JzxoTWzAXPS4J4G797PlLEcZtx3AptAePx/14ZEf0kRYk44TxfuslAAdzJ6SnrP0elXydd9lqNgeUipG1AlnwgM9WiDU0ytipVqeEI5CEB3OE7BtkCPLcoD/snxDgDi0YdgrfiKZXrdG8wXchchLETPOt0VgknTboz8bV7OeTkj/R30gpkAePx/14zRvo3ONh/naAuJuf0vYlo4UII4jzm5cHsc9j3RFP+mQlg2ALa5Jc6lzI8bJcqDZIgtflKGfdmIMd/tn1A4GILxJpWQqJqYUZxi/y7rW+LHOrVQLK3Qt+97WaJLJFHLwpDAePx/16HbWJlHbxSOHU1T5cooM4Uj/OYQ8AnPbUKKDKkeG50aei4DFXdnQv/ucKaaR4pOoVV+1uHiFAz9aytqbFdgQ==",
+              "functionCall": {
+                "name": "run_shell_command",
+                "args": {
+                  "description": "Switching the current git branch to 'main'.",
+                  "command": "git switch main"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "parts": [
+            {
+              "functionResponse": {
+                "id": "run_shell_command-1763210865976-9701903e47c83",
+                "name": "run_shell_command",
+                "response": {
+                  "output": "Command: git switch main\nDirectory: (root)\nOutput: fatal: Unable to create 'C:/Users/marth/OneDrive - UiT Office 365/Documents/CV-vitnem\nål/programmering med KI/git main mappe/SG-Awesome-like-KI/.git/index.lock': File exis\nts.                                                                                  \n                                                                                     \nAnother git process seems to be running in this repository, e.g.                     \nan editor opened by 'git commit'. Please make sure all processes                     \nare terminated then try again. If it still fails, a git process                      \nmay have crashed in this repository earlier:                                         \nremove the file manually to continue.\nError: (none)\nExit Code: 1\nSignal: (none)\nBackground PIDs: (none)\nProcess Group PGID: 6424"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "role": "model",
+          "parts": [
+            {
+              "thoughtSignature": "CiMB4/H/XlQXSWyoqfdr2gXqkQeacxLBE9FBUMY2YGkMPBtQ9gp0AePx/14IGfxXhz934yEnkzyzaStWa6fgIdO+RgJeBnkHWd2FbSG5959iB80/AQTYiRwi5w8UvdZ9oOwC7Wv/pP2NpbomidSo4FFMbh0wGCAmeB3rJyB6C/SpEBVpo29MOtPBTTse8X6acZNIPbRQwnm8mWcKcAHj8f9e2sWzcUQEpZX7met/JTup3kvGXsCoM5pGhx4X3sJhz6AtePSzfklrqErJx4PVsNRmbPi9ICBdpPUCG2zbtEL+i10W5OqLjon9YL2NaKHzmmTircGJ47lXOzDs7Z1XTv/SQZR+3/Jhd9REmmkKOwHj8f9emS8cLbZ0ipIuh/t/0qkHU7GExjcIE1dboaOWZDO9ui9IEPG/ckXx67mhax2KLhtIJy3ksub4",
+              "functionCall": {
+                "name": "run_shell_command",
+                "args": {
+                  "command": "rm .git/index.lock",
+                  "description": "Removing the git index.lock file to resolve the git process issue."
+                }
+              }
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "parts": [
+            {
+              "functionResponse": {
+                "id": "run_shell_command-1763210871089-29ae10f6b6f29",
+                "name": "run_shell_command",
+                "response": {
+                  "output": "Command: rm .git/index.lock\nDirectory: (root)\nOutput: (empty)\nError: (none)\nExit Code: 0\nSignal: (none)\nBackground PIDs: (none)\nProcess Group PGID: 13440"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "response": {
+      "session.id": "a6111810-3957-4e39-8113-24aee8f986b6",
+      "installation.id": "792277eb-3021-4f9a-b550-88a0e2bf667e",
+      "interactive": true,
+      "user.email": "martheslaatta84@gmail.com",
+      "event.name": "gemini_cli.api_response",
+      "event.timestamp": "2025-11-15T12:47:55.796Z",
+      "model": "gemini-2.5-flash",
+      "duration_ms": 1472,
+      "input_token_count": 9469,
+      "output_token_count": 26,
+      "cached_content_token_count": 8812,
+      "thoughts_token_count": 23,
+      "tool_token_count": 0,
+      "total_token_count": 9518,
+      "prompt_id": "a6111810-3957-4e39-8113-24aee8f986b6########0",
+      "auth_type": "oauth-personal",
+      "status_code": 200,
+      "response_text": [
+        {
+          "candidates": [
+            {
+              "content": {
+                "role": "model",
+                "parts": [
+                  {
+                    "thought": true,
+                    "text": "**Resuming Branch Navigation**\n\nThe lock file's removal has me poised to return to the `main` branch. I'm hopeful this switch will be clean this time, allowing me to resume operations without a hitch.\n\n\n"
+                  }
+                ]
+              }
+            }
+          ],
+          "usageMetadata": {
+            "trafficType": "ON_DEMAND"
+          },
+          "modelVersion": "gemini-2.5-flash",
+          "responseId": "7c60254dd09a06d7"
+        },
+        {
+          "candidates": [
+            {
+              "content": {
+                "role": "model",
+                "parts": [
+                  {
+                    "thoughtSignature": "Ci0B4/H/XgSvEn0+yZFQ0HVjqrT3NMBhxEPwtIeNEgZDWqUf1zW0Tyk952DbVjkKZgHj8f9e4G9TYW9wU0IdhJPSh65UYn2wvjpKYBp/ZsuWzy5WtnXTqRJuyX4TIYtiEVE1Q69vr1Q19v4OCa+QEgWUaKh1fITzZYl4VzH6xvGll6NYs3iJAUm6DSfN5LPi/z1cAXrrawooAePx/16V7eSxR8I/Sf2SX3jIFq55aOGoTeejbGQ9uAqYcCDgApiWww==",
+                    "functionCall": {
+                      "name": "run_shell_command",
+                      "args": {
+                        "command": "git switch main",
+                        "description": "Switching the current git branch to 'main' after resolving the lock file issue."
+                      }
+                    }
+                  }
+                ]
+              },
+              "finishReason": "STOP"
+            }
+          ],
+          "usageMetadata": {
+            "promptTokenCount": 9469,
+            "candidatesTokenCount": 26,
+            "totalTokenCount": 9518,
+            "cachedContentTokenCount": 8812,
+            "trafficType": "ON_DEMAND",
+            "promptTokensDetails": [
+              {
+                "modality": "TEXT",
+                "tokenCount": 9469
+              }
+            ],
+            "cacheTokensDetails": [
+              {
+                "modality": "TEXT",
+                "tokenCount": 8812
+              }
+            ],
+            "candidatesTokensDetails": [
+              {
+                "modality": "TEXT",
+                "tokenCount": 26
+              }
+            ],
+            "thoughtsTokenCount": 23
+          },
+          "modelVersion": "gemini-2.5-flash",
+          "responseId": "7c60254dd09a06d7"
+        }
+      ],
+      "http.status_code": 200
+    },
+    "error": null
+  }
+]

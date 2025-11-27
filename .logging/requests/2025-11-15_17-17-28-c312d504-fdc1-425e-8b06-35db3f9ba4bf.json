@@ -1,0 +1,643 @@
+[
+  {
+    "request": {
+      "session.id": "c312d504-fdc1-425e-8b06-35db3f9ba4bf",
+      "installation.id": "792277eb-3021-4f9a-b550-88a0e2bf667e",
+      "interactive": true,
+      "user.email": "martheslaatta84@gmail.com",
+      "event.name": "gemini_cli.api_request",
+      "event.timestamp": "2025-11-15T17:18:51.930Z",
+      "model": "gemini-2.5-pro",
+      "prompt_id": "c312d504-fdc1-425e-8b06-35db3f9ba4bf########0",
+      "request_text": [
+        {
+          "role": "user",
+          "parts": [
+            {
+              "text": "This is the Gemini CLI. We are setting up the context for our chat.\nToday's date is lørdag 15. november 2025 (formatted according to the user's locale).\nMy operating system is: win32\nThe project's temporary directory is: C:\\Users\\marth\\.gemini\\tmp\\885302ac2ec808458a7549d4e16494b1e410a0e359452b2352d8da7dbf60a94c\nI'm currently working in the directory: C:\\Users\\marth\\OneDrive - UiT Office 365\\Documents\\CV-vitnemål\\programmering med KI\\git main mappe\\SG-Awesome-like-KI\nHere is the folder structure of the current working directories:\n\nShowing up to 200 items (files + folders). Folders or files indicated with ... contain more items not shown, were ignored, or the display limit (200 items) was reached.\n\nC:\\Users\\marth\\OneDrive - UiT Office 365\\Documents\\CV-vitnemål\\programmering med KI\\git main mappe\\SG-Awesome-like-KI\\\n├───.gitignore\n├───proposal.md\n├───README.md\n├───.gemini\\\n│   └───settings.json\n├───.git\\...\n├───.logging\\\n│   ├───.gitignore\n│   ├───api-viewer.html\n│   ├───process-api-requests.py\n│   ├───README.md\n│   ├───requirements.txt\n│   ├───server.py\n│   ├───telemetry.md\n│   ├───truncate.py\n│   └───watcher.py\n├───.vscode\\\n│   ├───launch.json\n│   ├───settings.json\n│   └───tasks.json\n├───bmad\\\n│   ├───bmm\\\n│   │   ├───config.yaml\n│   │   ├───agents\\\n│   │   │   ├───analyst.md\n│   │   │   ├───architect.md\n│   │   │   ├───dev.md\n│   │   │   ├───game-architect.md\n│   │   │   ├───game-designer.md\n│   │   │   ├───game-dev.md\n│   │   │   ├───pm.md\n│   │   │   ├───sm.md\n│   │   │   ├───tea.md\n│   │   │   ├───ux-designer.md\n│   │   │   └───ux-expert.md\n│   │   ├───sub-modules\\\n│   │   │   └───claude-code\\\n│   │   │       ├───config.yaml\n│   │   │       ├───injections.yaml\n│   │   │       ├───readme.md\n│   │   │       └───sub-agents\\\n│   │   │           ├───bmad-analysis\\\n│   │   │           ├───bmad-planning\\\n│   │   │           ├───bmad-research\\\n│   │   │           └───bmad-review\\\n│   │   ├───tasks\\\n│   │   │   ├───daily-standup.xml\n│   │   │   └───retrospective.xml\n│   │   ├───teams\\\n│   │   │   ├───team-fullstack.yaml\n│   │   │   └───team-gamedev.yaml\n│   │   ├───testarch\\\n│   │   │   ├───README.md\n│   │   │   ├───tea-index.csv\n│   │   │   └───knowledge\\\n│   │   │       ├───ci-burn-in.md\n│   │   │       ├───component-tdd.md\n│   │   │       ├───contract-testing.md\n│   │   │       ├───data-factories.md\n│   │   │       ├───email-auth.md\n│   │   │       ├───error-handling.md\n│   │   │       ├───feature-flags.md\n│   │   │       ├───fixture-architecture.md\n│   │   │       ├───network-first.md\n│   │   │       ├───nfr-criteria.md\n│   │   │       ├───playwright-config.md\n│   │   │       ├───probability-impact.md\n│   │   │       ├───risk-governance.md\n│   │   │       ├───selective-testing.md\n│   │   │       ├───selector-resilience.md\n│   │   │       ├───test-healing-patterns.md\n│   │   │       ├───test-levels-framework.md\n│   │   │       ├───test-priorities-matrix.md\n│   │   │       ├───test-quality.md\n│   │   │       ├───timing-debugging.md\n│   │   │       └───visual-debugging.md\n│   │   └───workflows\\\n│   │       ├───README.md\n│   │       ├───1-analysis\\\n│   │       │   ├───brainstorm-game\\\n│   │       │   │   ├───game-brain-methods.csv\n│   │       │   │   ├───game-context.md\n│   │       │   │   ├───instructions.md\n│   │       │   │   └───README.md\n│   │       │   │   └───...\n│   │       │   ├───brainstorm-project\\\n│   │       │   ├───document-project\\\n│   │       │   ├───game-brief\\\n│   │       │   ├───product-brief\\\n│   │       │   └───research\\\n│   │       ├───2-plan-workflows\\\n│   │       │   ├───README.md\n│   │       │   ├───create-ux-design\\\n│   │       │   ├───gdd\\\n│   │       │   ├───narrative\\\n│   │       │   ├───prd\\\n│   │       │   ├───tech-spec\\\n│   │       │   └───ux\\\n│   │       ├───3-solutioning\\\n│   │       │   ├───README.md\n│   │       │   ├───architecture\\\n│   │       │   └───solutioning-gate-check\\\n│   │       ├───4-implementation\\\n│   │       │   ├───README.md\n│   │       │   ├───correct-course\\\n│   │       │   ├───create-story\\\n│   │       │   ├───dev-story\\\n│   │       │   ├───epic-tech-context\\\n│   │       │   ├───retrospective\\\n│   │       │   ├───review-story\\\n│   │       │   ├───sprint-planning\\\n│   │       │   ├───story-context\\\n│   │       │   ├───story-done\\\n│   │       │   ├───story-ready\\\n│   │       │   └───temp-testing-files\\\n│   │       ├───helpers\\\n│   │       │   └───sprint-status\\\n│   │       ├───testarch\\\n│   │       │   ├───README.md\n│   │       │   ├───atdd\\\n│   │       │   ├───automate\\\n│   │       │   ├───ci\\\n│   │       │   ├───framework\\\n│   │       │   ├───nfr-assess\\\n│   │       │   ├───test-design\\\n│   │       │   ├───test-review\\\n│   │       │   └───trace\\\n│   │       └───workflow-status\\\n│   │           ├───instructions.md\n│   │           ├───project-levels.yaml\n│   │           ├───README.md\n│   │           ├───workflow-status-template.md\n│   │           ├───workflow.yaml\n│   │           ├───init\\\n│   │           └───paths\\\n│   ├───cis\\\n│   │   ├───config.yaml\n│   │   ├───readme.md\n│   │   ├───agents\\\n│   │   │   ├───brainstorming-coach.md\n│   │   │   ├───creative-problem-solver.md\n│   │   │   ├───design-thinking-coach.md\n│   │   │   ├───innovation-strategist.md\n│   │   │   ├───README.md\n│   │   │   └───storyteller.md\n│   │   ├───teams\\\n│   │   │   └───creative-squad.yaml\n│   │   └───workflows\\\n│   │       ├───README.md\n│   │       ├───design-thinking\\\n│   │       │   ├───design-methods.csv\n│   │       │   ├───instructions.md\n│   │       │   ├───README.md\n│   │       │   ├───template.md\n│   │       │   └───workflow.yaml\n│   │       ├───innovation-strategy\\\n│   │       │   ├───innovation-frameworks.csv\n│   │       │   ├───instructions.md\n│   │       │   ├───README.md\n│   │       │   ├───template.md\n│   │       │   └───workflow.yaml\n│   │       ├───problem-solving\\\n│   │       │   ├───instructions.md\n│   │       │   ├───README.md\n│   │       │   ├───solving-methods.csv\n│   │       │   ├───template.md\n│   │       │   └───workflow.yaml\n│   │       └───storytelling\\\n│   │           ├───instructions.md\n│   │           ├───README.md\n│   │           ├───story-types.csv\n│   │           ├───template.md\n│   │           └───workflow.yaml\n│   ├───core\\\n│   │   ├───config.yaml\n│   │   ├───agents\\\n│   │   │   ├───bmad-master.md\n│   │   │   └───bmad-web-orchestrator.agent.xml\n│   │   ├───tasks\\\n│   │   │   ├───adv-elicit-methods.csv\n│   │   │   ├───adv-elicit.xml\n│   │   │   ├───index-docs.xml\n│   │   │   ├───validate-workflow.xml\n│   │   │   └───workflow.xml\n│   │   └───workflows\\\n│   │       ├───brainstorming\\\n│   │       │   ├───brain-methods.csv\n│   │       │   ├───instructions.md\n│   │       │   ├───README.md\n│   │       │   ├───template.md\n│   │       │   └───workflow.yaml\n│   │       └───party-mode\\\n│   │           ├───instructions.md\n│   │           └───workflow.yaml\n│   └───docs\\\n│       ├───claude-code-instructions.md\n│       └───gemini-instructions.md\n└───docs\\\n    ├───bmm-workflow-status.md\n    └───stories\\\n        └───.gitkeep\n\nReminder: Do not return an empty response when a tool call is required.\n\nMy setup is complete. I will provide my first command in the next turn."
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "parts": [
+            {
+              "text": "How can I get back my work? From Git"
+            }
+          ]
+        },
+        {
+          "role": "model",
+          "parts": [
+            {
+              "thoughtSignature": "CiQB4/H/XpZE+Cl+tE8T1OpWWyNFB6eBGeVAFoVI5YVl9PDkqoQKbAHj8f9eJ2Qv8WRLGgCAg+EUHX7tBaUo91WsqQeWt+c5aGY0LKGLajHnqjmOnfdzyDRheLKL6n7BnhclA0pNBsHxtCgLz0tPcb3DWAwhG9muWDQZ+2OPPMbjbVV9ZXr1vey9D1U8SLxkXlojvQpYAePx/178XC+JFioXyWogDZ0VZbX7ui223ve9oW7IKlUyrOTjt09p3qsA5LOCadLXpiaUU7bBh1Z4DuQLDgiWqhp2bjKXG5zsJpvx3Ou6mwPttrmk8q76mAqyAQHj8f9eNS4GTUJQVN+0AnFqoARQVpg7WhYfbJx5jlnYjwrSDvfDs7mvloiDQMhQrFcReyic2fyKbBg1iQnl2SJy0U4CL/4mkJhhQugj+9VWFASGBmta289u3mVpLJAXkHCn9anEUjCK3f93DifGW8E1dSQFH3IEsuFlY2mwV1HDB5JPkvbTup96KZ/9EVNpDDZDpp4H4PXkKR+W7cyiaTluBgihD5AhyXAENaomeS/sl7oKoQEB4/H/Xkvna/7gETjYhjusTadUsP1yYMXeEb7/yLbGK+qKmSdSxBlfj6mau9DPU4KL7MsAalcaVaN4wcSuzeOO8zuxuCY0J/IwcbyBPPL2PClHIku+sDBSazHgDaiR3JHxNgaNS3Qi372E0w3GvNRjRtyYVEBZbnyMAQSDk/V7VkmcVa3h01sowDjDqj2bRGomMrWIKKR5cPScYxGPiXLPewqOAgHj8f9e4GeHAMQ1Zsj+u+0nw9tAsboK0BOfHendJ2CoMf8uIHnZRqllo45KsZhKnnFsQlirElwB88uJ1dMsZcvEMpKSMRUXcmVb+ZzCGw19vtie2c3Vbm+qgEHV2h1xahmpfUqujfdcJj6pO3ISrqO4RgUFuWz9b4T481MsSuaabpGvoItTAT2a/UHUSMfeiud6P679prPVMTPS6xaI1unRK4QQjk6HB+gob9plnEA59WDcjS4A+H/zKGimht0knyEFnmDv24s5sHjsi2eJAH42zNEEk2AfhIGS4QmdMwRF3fXvb1VapO5e/aHI6tZnGUfUf176fIvJeu0wtJGqsCLrdfEmTZwjGWOZ0vJWOQr0AQHj8f9eO46twzp75HIvjGp7qvxrA9clhWiTAZw/NPaKefSLmrl4ZbFL5CUiItwVyOTls14hkgu4eydBSPMBYwR8OxAc+1lpcBYNj724Q8EmHZC3//rhtx4Y41QzvLCUv5gdZxW1+L8BFZEe1v2MOpd1OpQHMjOb4zHJI7s1CWJKjJxRVwW2RYC7b/UQYUJk7ya1d030J8uqr3SFbAls+VAlYjvpLolTw51lDpXrSTrE6dofv/fmJKsAlUDW9CfsFh00ML1bNszWLSuTRMLV9AkCyxiTCca2sz2j0sJkS67+WCXFCv/MJ0G+bFkbP5hoKT3JFCUKmwIB4/H/XoJUl+kIUG1G5qTO4R2CPufBtnQ9scO4ItCJeEhvpXqhz6GoVkD6F09ieGnIlfKeSmsZVqWtL6IhfgOf/xOVv4EtHA5punzehH1iwqSymSLA+wZ+5naBbxu3kRJS0I4H6Q2ASVDP4wid1rfvmzlVrziuxT5mOIUFR5VUzFlw6hlsvXM8QYcSEMskmCYTWz1YPeYVZlmGJVPiLnzFNRJTIFbGtviw4oVVXuw3hBDfiB9Iv/656IGfTj9LSsJHNNZ+59U2Z+I6JAGZR24QucFfaB+RxETmXaiFLnwvv2FXa7Var2AUwZmn5yywBCgVOpJicuMGRZahRod1XHko8QcbxQUa842zWLGcWTqiuSQjPEWxrjlQTYC8CqUBAePx/14ByBbYfEDQm+1KInW9MwZ3Enm2kE4sqGQzfP98W5/ttwK8aOMwBoOHljxo8UXHhxb+KIvK44e+NcqpWbJ4/eZLI6yy7AlzpSHBSgtXUinIOKSklL7TdAHdcM+b6TXqpeCq6lvwPhhNux+alrFfA1GFTCiNa+G4HIusdsV7myLrqGP8CqH37hE6FLqeUpxZ61OLicL7rH++xtXgulHBqIm2",
+              "text": "I can help with that. First, I need to understand the current state of your repository. I'll use `git status` to get a summary of your uncommitted changes and branch information."
+            },
+            {
+              "functionCall": {
+                "name": "run_shell_command",
+                "args": {
+                  "command": "git status",
+                  "description": "This command will show the current status of the Git repository, including any uncommitted changes, the current branch, and whether it's ahead of or behind a remote branch. This will help diagnose what \"get back my work\" means."
+                }
+              }
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "parts": [
+            {
+              "functionResponse": {
+                "id": "run_shell_command-1763227081587-2f09af292b652",
+                "name": "run_shell_command",
+                "response": {
+                  "output": "Command: git status\nDirectory: (root)\nOutput: On branch fase-1                                           \nYour branch is ahead of 'origin/fase-1' by 3 commits.      \n  (use \"git push\" to publish your local commits)           \n                                                           \nChanges not staged for commit:                             \n  (use \"git add/rm <file>...\" to update what will be commit\nted)                                                       \n  (use \"git restore <file>...\" to discard changes in workin\ng directory)                                               \n        deleted:    bmad/_cfg/agents/bmm-analyst.customize.\nyaml                                                       \n        deleted:    bmad/_cfg/agents/bmm-architect.customiz\ne.yaml                                                     \n        deleted:    bmad/_cfg/agents/bmm-dev.customize.yaml\n        deleted:    bmad/_cfg/agents/bmm-game-architect.cus\ntomize.yaml                                                \n        deleted:    bmad/_cfg/agents/bmm-game-designer.cust\nomize.yaml                                                 \n        deleted:    bmad/_cfg/agents/bmm-game-dev.customize\n.yaml                                                      \n        deleted:    bmad/_cfg/agents/bmm-pm.customize.yaml \n        deleted:    bmad/_cfg/agents/bmm-sm.customize.yaml \n        deleted:    bmad/_cfg/agents/bmm-tea.customize.yaml\n        deleted:    bmad/_cfg/agents/bmm-ux-designer.custom\nize.yaml                                                   \n        deleted:    bmad/_cfg/agents/bmm-ux-expert.customiz\ne.yaml                                                     \n        deleted:    bmad/_cfg/agents/cis-brainstorming-coac\nh.customize.yaml                                           \n        deleted:    bmad/_cfg/agents/cis-creative-problem-s\nolver.customize.yaml                                       \n        deleted:    bmad/_cfg/agents/cis-design-thinking-co\nach.customize.yaml                                         \n        deleted:    bmad/_cfg/agents/cis-innovation-strateg\nist.customize.yaml                                         \n        deleted:    bmad/_cfg/agents/cis-storyteller.custom\nize.yaml                                                   \n        deleted:    bmad/_cfg/agents/core-bmad-master.custo\nmize.yaml                                                  \n        deleted:    bmad/_cfg/files-manifest.csv           \n        deleted:    bmad/_cfg/manifest.yaml                \n        deleted:    bmad/_cfg/task-manifest.csv            \n        deleted:    bmad/_cfg/workflow-manifest.csv        \n        deleted:    bmad/bmm/README.md                     \n        deleted:    docs/research-sessions/research-2.md   \n        deleted:    docs/research-sessions/research-3.1.md \n        deleted:    docs/research-sessions/research-3.2.md \n        deleted:    docs/research-sessions/research-3.3.md \n        deleted:    docs/research-sessions/research-4.md   \n        deleted:    docs/research-sessions/research-5.md   \n                                                           \nno changes added to commit (use \"git add\" and/or \"git commi\nt -a\")\nError: (none)\nExit Code: 0\nSignal: (none)\nBackground PIDs: (none)\nProcess Group PGID: 13676"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "role": "model",
+          "parts": [
+            {
+              "thoughtSignature": "CiQB4/H/XnKsedH7/u7Hkll9W3kUKNdExWw7o6UtDvdQj7tLevwKbwHj8f9e5HTNxEEtuobPe9f9GCpwAkAymTKUSVfRnIRgPtXeOq4Z/EaT02SVscI7TGyJ/HjVhdH+b6GREP9HEuK+JeAyOfG1HUQMJaH5j91aGi7lXGEb3Dy4RhPgcL0NuZL2+uaw5pFBdIet8MIX2QptAePx/16kBwNEX3uymbWv2xXxtL8s03z7nRqj822iIdqCWgdh1d1eLksky6Pdpu7ks4m1ALiNFiFjENhy+tPSNHnEMxcDKvVBVu53gZhIrT3b12NaMuYzERp8EvMxQVwDxXp3qk6X7qP33ja2fwqpAQHj8f9eiBgMk/L6C4vv/0OEA5ce/g2jx+AYYEetf1HFI9L6fleRM4lphYps2iMsOiHnTleI3m1cwhUw8rODHIGnokTjTxnf0LpQ110eWdKGU6l/kidVijK2+yJrVJOcWmxI7ndzDJy3JD80IHV7cQ470b1zcDjav+XIM4dLeTcMb/yVe+o9WdnrCRhbPnuzbUIflsKySa92prvDCXs4uOtGO1ErssyWr/sKyQEB4/H/XkmfvvVXwpULGhhG1Z9vPYWhXcYXaZP9r/dM+S2vi/+GqrWC2oKAW19GKPigQaWTLBPto3EWqGX8MpuupOMWMLApCjeku09pt8FEW674uvxiPNEMf2B3Aip2Oh6slAohrZkEQo2XIBg3HV17NV9xRjGaLSw08EZ+5R2oAxS0S+HnNdJjiHd2NIhv0uX+Pv1ZVOYN0+DQNEWPPxZ/wA9B/kNtFV8Rro8Q1Tjn/XIF/cjsPvNEGTv2irE8RoD69QZ+npnIirQKpAEB4/H/Xkyrn4AEYBxm30sgRRCaVcI6jn1wsdoadifpqjgSZtf0pzvMiLcL1NzGLSVP+u8142SP8P3KztM1LqE17sLOn+Sc1f3fdDYTcllU+eS6rzLo4ow9jdvvNdYj1rx0t7sFoBuIrLqRZVUi6WuFqNQEzfpmQu42VPLf4HsFlv/8aQSUPtufe3fp9/zXG9ao5Gs96Mppq0EybECO+mcb4aluIw==",
+              "text": "It looks like you have a number of deleted files. To restore these files, I'll use the `git restore .` command. This will discard the deletion of all files in the current directory, bringing them back to the state of your last commit."
+            },
+            {
+              "functionCall": {
+                "name": "run_shell_command",
+                "args": {
+                  "command": "git restore .",
+                  "description": "This command will restore all deleted files in the current directory, effectively undoing the deletions shown in the `git status` output."
+                }
+              }
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "parts": [
+            {
+              "functionResponse": {
+                "id": "run_shell_command-1763227094518-2e1ed22eea9bc",
+                "name": "run_shell_command",
+                "response": {
+                  "output": "Command: git restore .\nDirectory: (root)\nOutput: fatal: Unable to create 'C:/Users/marth/OneDrive - UiT Offi\nce 365/Documents/CV-vitnemål/programmering med KI/git main \nmappe/SG-Awesome-like-KI/.git/index.lock': File exists.    \n                                                           \nAnother git process seems to be running in this repository,\n e.g.                                                      \nan editor opened by 'git commit'. Please make sure all proc\nesses                                                      \nare terminated then try again. If it still fails, a git pro\ncess                                                       \nmay have crashed in this repository earlier:               \nremove the file manually to continue.\nError: (none)\nExit Code: 1\nSignal: (none)\nBackground PIDs: (none)\nProcess Group PGID: 7096"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "role": "model",
+          "parts": [
+            {
+              "thoughtSignature": "CjMB4/H/Xg+vYParCLEjWonI6Eugbn0aA4vAEXSoGMM2kESDhCUp807qKBBVeXQFi0nJmVAKWwHj8f9ejVLKANVN9taa7KRE5x2c50c/p88bKjiC+OGk84fh35XdW4wt3UHuecpOhcBjo/83K18SO4n8lmJYG8gdCJzqAX4Zl2TrlhPV0GdtbeRb8k76HJq/Dt4KkwEB4/H/Xi0ZozrdpspsftvgVUh1KJ7UVUnX3CE++fUiKYsrCMP6JnD19uuyRTFTv6kaUSqlrczLXJFfbA3gyZkBypKePhJBnqEdwPzyjR3eiF+BScNgr3NAHzICtYG1626R1FCQb7i+a6+30C/weYTO36OlJ/r7aQ2234S84r5RdXE2+D3/pQ1VGJ4NMb2Tr/ErAtwK0AEB4/H/XqBjadT55tIkLTDqLx1Xw/WUU7RPM4x9B5em/3WL2zveGspjT3J5ouPYtVDKUFyjbs2NG4MNibRtMMU6m2QFywKBk7LEMTHaJ5mbHnzsbiqb8GpR+BGU+p680UhKWtx9Ddm8HxAxis2MMumuzJuaogAiHlKiYw2QJY9MYbJMo2oCSJrcTsJAXctf6VuRfrU3ryMBaC4Jedl7Oys9L1rBu1ntQ0dO4OnkRKJjPCEZS5nIuwCeB2Ln9TZEQrl+TjkwJQKO+CY2xPmhlTRSCnsB4/H/XjS4JpLlEAEXT/uXiBqVRX1UlMcXMqxWK4df1YZ9Rws7e2IcJu257BZC2yWeWShSU4kQ8Zc4XADYjfGIEKjtbTPHeV11oqxx+QXdz8d3cgSSmlrpColRvRh1nY6OvZavsswYYOH7AvW42DMbp2ZfFL6IgcvVmDUKlQEB4/H/XhZdZ1Orzlzw6j4Mw+WDbzQN6MfU3npK92nzccXxgRdrH0wcSEYfLTZi2zJHUvD1G8g7JoqeoroawUMZ9D+PWbxoBOtedWg2zR0Qj4rCWwJr6Qi1O6OQNVaR9zeiusJQGRkNkjZBVdzjFZvfwtYbgECbguyd+QWZJrHuujj9quFRtbu1fkYFuB5+Arxrfw3Jqg==",
+              "text": "It seems a previous Git process left a lock file behind. I need to remove this file before I can proceed. I will now delete the `.git/index.lock` file."
+            },
+            {
+              "functionCall": {
+                "name": "run_shell_command",
+                "args": {
+                  "command": "rm .git/index.lock",
+                  "description": "This command will remove the Git index lock file, which is preventing other Git commands from running. This is a necessary step to resolve the error from the previous command."
+                }
+              }
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "parts": [
+            {
+              "functionResponse": {
+                "id": "run_shell_command-1763227107699-b3a643f5510b1",
+                "name": "run_shell_command",
+                "response": {
+                  "output": "Command: rm .git/index.lock\nDirectory: (root)\nOutput: (empty)\nError: (none)\nExit Code: 0\nSignal: (none)\nBackground PIDs: (none)\nProcess Group PGID: 17012"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "role": "model",
+          "parts": [
+            {
+              "thoughtSignature": "CikB4/H/XoL0mQZmhJlrzW1QM/k9/a62NJME/I+bqzddPBvoCyRnF7a4EgpkAePx/16k7ln6qJTM5u+f1beP18j87cDQ1fPfHjAw8Trmfy+4DfpEnoapXkx5fwblzX1Vl5FfVv3fMGViQzan9AFFgFou/TAPi4KFB0rqLDKSvQMMVsSOJTeK2rB0ZAEbOvJduQoiAePx/16aTC+2jVXKKpDZyFBJ6wFe7FSo9m9+s9U8yJhyMQ==",
+              "text": "Now that the lock file is gone, I'll try restoring the files again."
+            },
+            {
+              "functionCall": {
+                "name": "run_shell_command",
+                "args": {
+                  "command": "git restore .",
+                  "description": "This command will restore all deleted files in the current directory, effectively undoing the deletions shown in the `git status` output."
+                }
+              }
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "parts": [
+            {
+              "functionResponse": {
+                "id": "run_shell_command-1763227117655-23d4d3227d8a1",
+                "name": "run_shell_command",
+                "response": {
+                  "output": "Command: git restore .\nDirectory: (root)\nOutput: (empty)\nError: (none)\nExit Code: 0\nSignal: (none)\nBackground PIDs: (none)\nProcess Group PGID: 2740"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "role": "model",
+          "parts": [
+            {
+              "thoughtSignature": "CjMB4/H/Xt0s3UFBslzGY4DNVxm/3spZl5rZ28PyKkngCeG8wgMqgJ4ZvdKH2MRO9G/8MtcKfwHj8f9edICmoaLTcW8VyxnHlO+MZ8FFflX/WD7jFJtH8DkUnC4ceUs5khYQukqE9L0lGE8rIWjU5YXP8RkXQ6KEp+36oilSal5N149gyHNiq+/ZSfct86A0iyzC8RWC6RNH52iAD2GyQAAge+x2UbztG2GSLmx2n8Q2GX7WT+sKcAHj8f9eefJTzCNwMTu2lHqaZbK4jhnaf8yMC7VMDgnq5vJJb3v6J2880SnRcasco5xcQ0p5dKXQfIvX7CP5RjAgTYNNdKR0O+O6fbZ8vuF3WkGwBrFA7t7Kh3ALZ97bKWPgxP26oqstx+u1lNLDS+8KqQEB4/H/XlrT84o0OCh4UvoDzZ6I+1E9OjkiA1EDX6gLiTE60+QO1jLaMkIcnJ4SJKN0CN5RT8TWUC1+kcF/zaib/eVD4QVvnr9XhnYcTKsvGMvUVF6mbNLW0IRPR/VBhh+tWD0MFhkbMjWvQTsnHMdRRB+dtuBr7wuAHHXFhOjs+N3kAvalh9zyZtbMYcpw6+r/Rr1ZgH8D6wSUus9jGZ+/GGZbVsU03kh6",
+              "text": "The files have been restored. I'll run `git status` again to confirm that everything is back to normal."
+            },
+            {
+              "functionCall": {
+                "name": "run_shell_command",
+                "args": {
+                  "command": "git status",
+                  "description": "This command will show the current status of the Git repository. It's being used here to confirm that the `git restore` command was successful and that the previously deleted files have been restored."
+                }
+              }
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "parts": [
+            {
+              "functionResponse": {
+                "id": "run_shell_command-1763227127760-d42771ab7061a",
+                "name": "run_shell_command",
+                "response": {
+                  "output": "Command: git status\nDirectory: (root)\nOutput: On branch fase-1                                           \nYour branch is ahead of 'origin/fase-1' by 3 commits.      \n  (use \"git push\" to publish your local commits)           \n                                                           \nnothing to commit, working tree clean\nError: (none)\nExit Code: 0\nSignal: (none)\nBackground PIDs: (none)\nProcess Group PGID: 2572"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "response": {
+      "session.id": "c312d504-fdc1-425e-8b06-35db3f9ba4bf",
+      "installation.id": "792277eb-3021-4f9a-b550-88a0e2bf667e",
+      "interactive": true,
+      "user.email": "martheslaatta84@gmail.com",
+      "event.name": "gemini_cli.api_response",
+      "event.timestamp": "2025-11-15T17:18:55.174Z",
+      "model": "gemini-2.5-pro",
+      "duration_ms": 3244,
+      "input_token_count": 10831,
+      "output_token_count": 55,
+      "cached_content_token_count": 9427,
+      "thoughts_token_count": 103,
+      "tool_token_count": 0,
+      "total_token_count": 10989,
+      "prompt_id": "c312d504-fdc1-425e-8b06-35db3f9ba4bf########0",
+      "auth_type": "oauth-personal",
+      "status_code": 200,
+      "response_text": [
+        {
+          "candidates": [
+            {
+              "content": {
+                "role": "model",
+                "parts": [
+                  {
+                    "thought": true,
+                    "text": "**Assessing File Restoration Success**\n\nI've just confirmed the success of the file restoration. The `git status` command reported a clean working tree, definitively indicating that all deleted files have been recovered, and my task of retrieving the user's work is complete.\n\n\n"
+                  }
+                ]
+              }
+            }
+          ],
+          "usageMetadata": {
+            "trafficType": "ON_DEMAND"
+          },
+          "modelVersion": "gemini-2.5-pro",
+          "responseId": "4083bb5b56e9c3ac"
+        },
+        {
+          "candidates": [
+            {
+              "content": {
+                "role": "model",
+                "parts": [
+                  {
+                    "thought": true,
+                    "text": "**Verifying Recovery Completion**\n\nI am now certain that the file recovery is complete. The status check confirmed no pending commits and a clean working tree. I can now inform the user that the restoration is successful. Also, I'll provide the user with the branch status, as the `git status` output indicates, as that context might be useful for them.\n\n\n"
+                  }
+                ]
+              }
+            }
+          ],
+          "usageMetadata": {
+            "trafficType": "ON_DEMAND"
+          },
+          "modelVersion": "gemini-2.5-pro",
+          "responseId": "4083bb5b56e9c3ac"
+        },
+        {
+          "candidates": [
+            {
+              "content": {
+                "role": "model",
+                "parts": [
+                  {
+                    "thoughtSignature": "CjAB4/H/XscpFDUaYuOHDrI8LkmlkpCIMlvqmzwkijQJKQkxsoc+wIYbs+rKFKNcI9kKiAEB4/H/XnqeeqqI/29RWFp2+7yqv+1BkbZ/AEBNlXuwW+GG4M9NjUozW0dxYS0twVyx8CAjwyq+UMcej17VTUX1d3i8BPRwtyrfwO2kGWmHmzj5B9fIPuthnNM+ZHsS+/hdKnL8GIRuPe1sWskO8ztZU103pnP5bjZQvISfcFJLOMqfpgO7XgiMCnYB4/H/XtXjFo4zKLoZ4J2+HGpngli7pi3+XalQh8V6g1N19eGK/HXO+/zsyTRDJAqnlbGWl/D22EfZ3xm4v0o8a2yYPm9rrxc6/Mw2GVZ2tMLPa191nz+fgxmZ0x7oYHGlN97Gp/J4x1DOea0ynlSIPQL0duh/CtkBAePx/16Giq0wSzS8T81S7QJHETXXrSrZ/Ck4eRchy/uh3vVaS0r0KB+kSn0DBISZEN2McJ4/tSm7QCWtYUOKwOwF24b3XiZd/FfrV9G8JV8Y5KvnNaFE7jri902iM4h61C7J8+5FQSNKtjxwyAhGaCzDnuRUqkpN4fiqRNptVWEdZtFstk92FvGWT2ZT6uCT/oKmUzCDij0LDlXoGHrH8ltb8+JEKDHJfMPZ6+AuJuEHK7SCOqBGFP1cpkaYC4XqcEBBzqeAJmktlSMJNx/Ifc/FmOh2R34HrQptAePx/17c6VUoXpdm5W16mFYyc5dix6cPJEA5h0IhOJK52Sy0Wh3EFeJWC8HiXhGkmy/yj7P7ka2jIPpvP/jV/7jSzXlf4IpOZlZygh+m70HP186GhzgWyJClvprFAVVb74Qrc6HGg0uYUA3GWg==",
+                    "text": "Your files have been restored, and your working directory is now clean.\n\nYour local branch `fase-1` is 3 commits ahead of the remote branch `origin/fase-1`. You can use `git push` to"
+                  }
+                ]
+              }
+            }
+          ],
+          "usageMetadata": {
+            "trafficType": "ON_DEMAND"
+          },
+          "modelVersion": "gemini-2.5-pro",
+          "responseId": "4083bb5b56e9c3ac"
+        },
+        {
+          "candidates": [
+            {
+              "content": {
+                "role": "model",
+                "parts": [
+                  {
+                    "text": " share your changes with the remote repository."
+                  }
+                ]
+              },
+              "finishReason": "STOP"
+            }
+          ],
+          "usageMetadata": {
+            "promptTokenCount": 10831,
+            "candidatesTokenCount": 55,
+            "totalTokenCount": 10989,
+            "cachedContentTokenCount": 9427,
+            "trafficType": "ON_DEMAND",
+            "promptTokensDetails": [
+              {
+                "modality": "TEXT",
+                "tokenCount": 10831
+              }
+            ],
+            "cacheTokensDetails": [
+              {
+                "modality": "TEXT",
+                "tokenCount": 9427
+              }
+            ],
+            "candidatesTokensDetails": [
+              {
+                "modality": "TEXT",
+                "tokenCount": 55
+              }
+            ],
+            "thoughtsTokenCount": 103
+          },
+          "modelVersion": "gemini-2.5-pro",
+          "responseId": "4083bb5b56e9c3ac"
+        }
+      ],
+      "http.status_code": 200
+    },
+    "error": null
+  },
+  {
+    "request": {
+      "session.id": "c312d504-fdc1-425e-8b06-35db3f9ba4bf",
+      "installation.id": "792277eb-3021-4f9a-b550-88a0e2bf667e",
+      "interactive": true,
+      "user.email": "martheslaatta84@gmail.com",
+      "event.name": "gemini_cli.api_request",
+      "event.timestamp": "2025-11-15T17:20:03.057Z",
+      "model": "gemini-2.5-flash",
+      "prompt_id": "c312d504-fdc1-425e-8b06-35db3f9ba4bf########1",
+      "request_text": [
+        {
+          "role": "user",
+          "parts": [
+            {
+              "text": "This is the Gemini CLI. We are setting up the context for our chat.\nToday's date is lørdag 15. november 2025 (formatted according to the user's locale).\nMy operating system is: win32\nThe project's temporary directory is: C:\\Users\\marth\\.gemini\\tmp\\885302ac2ec808458a7549d4e16494b1e410a0e359452b2352d8da7dbf60a94c\nI'm currently working in the directory: C:\\Users\\marth\\OneDrive - UiT Office 365\\Documents\\CV-vitnemål\\programmering med KI\\git main mappe\\SG-Awesome-like-KI\nHere is the folder structure of the current working directories:\n\nShowing up to 200 items (files + folders). Folders or files indicated with ... contain more items not shown, were ignored, or the display limit (200 items) was reached.\n\nC:\\Users\\marth\\OneDrive - UiT Office 365\\Documents\\CV-vitnemål\\programmering med KI\\git main mappe\\SG-Awesome-like-KI\\\n├───.gitignore\n├───proposal.md\n├───README.md\n├───.gemini\\\n│   └───settings.json\n├───.git\\...\n├───.logging\\\n│   ├───.gitignore\n│   ├───api-viewer.html\n│   ├───process-api-requests.py\n│   ├───README.md\n│   ├───requirements.txt\n│   ├───server.py\n│   ├───telemetry.md\n│   ├───truncate.py\n│   └───watcher.py\n├───.vscode\\\n│   ├───launch.json\n│   ├───settings.json\n│   └───tasks.json\n├───bmad\\\n│   ├───bmm\\\n│   │   ├───config.yaml\n│   │   ├───agents\\\n│   │   │   ├───analyst.md\n│   │   │   ├───architect.md\n│   │   │   ├───dev.md\n│   │   │   ├───game-architect.md\n│   │   │   ├───game-designer.md\n│   │   │   ├───game-dev.md\n│   │   │   ├───pm.md\n│   │   │   ├───sm.md\n│   │   │   ├───tea.md\n│   │   │   ├───ux-designer.md\n│   │   │   └───ux-expert.md\n│   │   ├───sub-modules\\\n│   │   │   └───claude-code\\\n│   │   │       ├───config.yaml\n│   │   │       ├───injections.yaml\n│   │   │       ├───readme.md\n│   │   │       └───sub-agents\\\n│   │   │           ├───bmad-analysis\\\n│   │   │           ├───bmad-planning\\\n│   │   │           ├───bmad-research\\\n│   │   │           └───bmad-review\\\n│   │   ├───tasks\\\n│   │   │   ├───daily-standup.xml\n│   │   │   └───retrospective.xml\n│   │   ├───teams\\\n│   │   │   ├───team-fullstack.yaml\n│   │   │   └───team-gamedev.yaml\n│   │   ├───testarch\\\n│   │   │   ├───README.md\n│   │   │   ├───tea-index.csv\n│   │   │   └───knowledge\\\n│   │   │       ├───ci-burn-in.md\n│   │   │       ├───component-tdd.md\n│   │   │       ├───contract-testing.md\n│   │   │       ├───data-factories.md\n│   │   │       ├───email-auth.md\n│   │   │       ├───error-handling.md\n│   │   │       ├───feature-flags.md\n│   │   │       ├───fixture-architecture.md\n│   │   │       ├───network-first.md\n│   │   │       ├───nfr-criteria.md\n│   │   │       ├───playwright-config.md\n│   │   │       ├───probability-impact.md\n│   │   │       ├───risk-governance.md\n│   │   │       ├───selective-testing.md\n│   │   │       ├───selector-resilience.md\n│   │   │       ├───test-healing-patterns.md\n│   │   │       ├───test-levels-framework.md\n│   │   │       ├───test-priorities-matrix.md\n│   │   │       ├───test-quality.md\n│   │   │       ├───timing-debugging.md\n│   │   │       └───visual-debugging.md\n│   │   └───workflows\\\n│   │       ├───README.md\n│   │       ├───1-analysis\\\n│   │       │   ├───brainstorm-game\\\n│   │       │   │   ├───game-brain-methods.csv\n│   │       │   │   ├───game-context.md\n│   │       │   │   ├───instructions.md\n│   │       │   │   └───README.md\n│   │       │   │   └───...\n│   │       │   ├───brainstorm-project\\\n│   │       │   ├───document-project\\\n│   │       │   ├───game-brief\\\n│   │       │   ├───product-brief\\\n│   │       │   └───research\\\n│   │       ├───2-plan-workflows\\\n│   │       │   ├───README.md\n│   │       │   ├───create-ux-design\\\n│   │       │   ├───gdd\\\n│   │       │   ├───narrative\\\n│   │       │   ├───prd\\\n│   │       │   ├───tech-spec\\\n│   │       │   └───ux\\\n│   │       ├───3-solutioning\\\n│   │       │   ├───README.md\n│   │       │   ├───architecture\\\n│   │       │   └───solutioning-gate-check\\\n│   │       ├───4-implementation\\\n│   │       │   ├───README.md\n│   │       │   ├───correct-course\\\n│   │       │   ├───create-story\\\n│   │       │   ├───dev-story\\\n│   │       │   ├───epic-tech-context\\\n│   │       │   ├───retrospective\\\n│   │       │   ├───review-story\\\n│   │       │   ├───sprint-planning\\\n│   │       │   ├───story-context\\\n│   │       │   ├───story-done\\\n│   │       │   ├───story-ready\\\n│   │       │   └───temp-testing-files\\\n│   │       ├───helpers\\\n│   │       │   └───sprint-status\\\n│   │       ├───testarch\\\n│   │       │   ├───README.md\n│   │       │   ├───atdd\\\n│   │       │   ├───automate\\\n│   │       │   ├───ci\\\n│   │       │   ├───framework\\\n│   │       │   ├───nfr-assess\\\n│   │       │   ├───test-design\\\n│   │       │   ├───test-review\\\n│   │       │   └───trace\\\n│   │       └───workflow-status\\\n│   │           ├───instructions.md\n│   │           ├───project-levels.yaml\n│   │           ├───README.md\n│   │           ├───workflow-status-template.md\n│   │           ├───workflow.yaml\n│   │           ├───init\\\n│   │           └───paths\\\n│   ├───cis\\\n│   │   ├───config.yaml\n│   │   ├───readme.md\n│   │   ├───agents\\\n│   │   │   ├───brainstorming-coach.md\n│   │   │   ├───creative-problem-solver.md\n│   │   │   ├───design-thinking-coach.md\n│   │   │   ├───innovation-strategist.md\n│   │   │   ├───README.md\n│   │   │   └───storyteller.md\n│   │   ├───teams\\\n│   │   │   └───creative-squad.yaml\n│   │   └───workflows\\\n│   │       ├───README.md\n│   │       ├───design-thinking\\\n│   │       │   ├───design-methods.csv\n│   │       │   ├───instructions.md\n│   │       │   ├───README.md\n│   │       │   ├───template.md\n│   │       │   └───workflow.yaml\n│   │       ├───innovation-strategy\\\n│   │       │   ├───innovation-frameworks.csv\n│   │       │   ├───instructions.md\n│   │       │   ├───README.md\n│   │       │   ├───template.md\n│   │       │   └───workflow.yaml\n│   │       ├───problem-solving\\\n│   │       │   ├───instructions.md\n│   │       │   ├───README.md\n│   │       │   ├───solving-methods.csv\n│   │       │   ├───template.md\n│   │       │   └───workflow.yaml\n│   │       └───storytelling\\\n│   │           ├───instructions.md\n│   │           ├───README.md\n│   │           ├───story-types.csv\n│   │           ├───template.md\n│   │           └───workflow.yaml\n│   ├───core\\\n│   │   ├───config.yaml\n│   │   ├───agents\\\n│   │   │   ├───bmad-master.md\n│   │   │   └───bmad-web-orchestrator.agent.xml\n│   │   ├───tasks\\\n│   │   │   ├───adv-elicit-methods.csv\n│   │   │   ├───adv-elicit.xml\n│   │   │   ├───index-docs.xml\n│   │   │   ├───validate-workflow.xml\n│   │   │   └───workflow.xml\n│   │   └───workflows\\\n│   │       ├───brainstorming\\\n│   │       │   ├───brain-methods.csv\n│   │       │   ├───instructions.md\n│   │       │   ├───README.md\n│   │       │   ├───template.md\n│   │       │   └───workflow.yaml\n│   │       └───party-mode\\\n│   │           ├───instructions.md\n│   │           └───workflow.yaml\n│   └───docs\\\n│       ├───claude-code-instructions.md\n│       └───gemini-instructions.md\n└───docs\\\n    ├───bmm-workflow-status.md\n    └───stories\\\n        └───.gitkeep\n\nReminder: Do not return an empty response when a tool call is required.\n\nMy setup is complete. I will provide my first command in the next turn."
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "parts": [
+            {
+              "text": "How can I get back my work? From Git"
+            }
+          ]
+        },
+        {
+          "role": "model",
+          "parts": [
+            {
+              "thoughtSignature": "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",
+              "text": "I can help with that. First, I need to understand the current state of your repository. I'll use `git status` to get a summary of your uncommitted changes and branch information."
+            },
+            {
+              "functionCall": {
+                "name": "run_shell_command",
+                "args": {
+                  "command": "git status",
+                  "description": "This command will show the current status of the Git repository, including any uncommitted changes, the current branch, and whether it's ahead of or behind a remote branch. This will help diagnose what \"get back my work\" means."
+                }
+              }
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "parts": [
+            {
+              "functionResponse": {
+                "id": "run_shell_command-1763227081587-2f09af292b652",
+                "name": "run_shell_command",
+                "response": {
+                  "output": "Command: git status\nDirectory: (root)\nOutput: On branch fase-1                                           \nYour branch is ahead of 'origin/fase-1' by 3 commits.      \n  (use \"git push\" to publish your local commits)           \n                                                           \nChanges not staged for commit:                             \n  (use \"git add/rm <file>...\" to update what will be commit\nted)                                                       \n  (use \"git restore <file>...\" to discard changes in workin\ng directory)                                               \n        deleted:    bmad/_cfg/agents/bmm-analyst.customize.\nyaml                                                       \n        deleted:    bmad/_cfg/agents/bmm-architect.customiz\ne.yaml                                                     \n        deleted:    bmad/_cfg/agents/bmm-dev.customize.yaml\n        deleted:    bmad/_cfg/agents/bmm-game-architect.cus\ntomize.yaml                                                \n        deleted:    bmad/_cfg/agents/bmm-game-designer.cust\nomize.yaml                                                 \n        deleted:    bmad/_cfg/agents/bmm-game-dev.customize\n.yaml                                                      \n        deleted:    bmad/_cfg/agents/bmm-pm.customize.yaml \n        deleted:    bmad/_cfg/agents/bmm-sm.customize.yaml \n        deleted:    bmad/_cfg/agents/bmm-tea.customize.yaml\n        deleted:    bmad/_cfg/agents/bmm-ux-designer.custom\nize.yaml                                                   \n        deleted:    bmad/_cfg/agents/bmm-ux-expert.customiz\ne.yaml                                                     \n        deleted:    bmad/_cfg/agents/cis-brainstorming-coac\nh.customize.yaml                                           \n        deleted:    bmad/_cfg/agents/cis-creative-problem-s\nolver.customize.yaml                                       \n        deleted:    bmad/_cfg/agents/cis-design-thinking-co\nach.customize.yaml                                         \n        deleted:    bmad/_cfg/agents/cis-innovation-strateg\nist.customize.yaml                                         \n        deleted:    bmad/_cfg/agents/cis-storyteller.custom\nize.yaml                                                   \n        deleted:    bmad/_cfg/agents/core-bmad-master.custo\nmize.yaml                                                  \n        deleted:    bmad/_cfg/files-manifest.csv           \n        deleted:    bmad/_cfg/manifest.yaml                \n        deleted:    bmad/_cfg/task-manifest.csv            \n        deleted:    bmad/_cfg/workflow-manifest.csv        \n        deleted:    bmad/bmm/README.md                     \n        deleted:    docs/research-sessions/research-2.md   \n        deleted:    docs/research-sessions/research-3.1.md \n        deleted:    docs/research-sessions/research-3.2.md \n        deleted:    docs/research-sessions/research-3.3.md \n        deleted:    docs/research-sessions/research-4.md   \n        deleted:    docs/research-sessions/research-5.md   \n                                                           \nno changes added to commit (use \"git add\" and/or \"git commi\nt -a\")\nError: (none)\nExit Code: 0\nSignal: (none)\nBackground PIDs: (none)\nProcess Group PGID: 13676"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "role": "model",
+          "parts": [
+            {
+              "thoughtSignature": "CiQB4/H/XnKsedH7/u7Hkll9W3kUKNdExWw7o6UtDvdQj7tLevwKbwHj8f9e5HTNxEEtuobPe9f9GCpwAkAymTKUSVfRnIRgPtXeOq4Z/EaT02SVscI7TGyJ/HjVhdH+b6GREP9HEuK+JeAyOfG1HUQMJaH5j91aGi7lXGEb3Dy4RhPgcL0NuZL2+uaw5pFBdIet8MIX2QptAePx/16kBwNEX3uymbWv2xXxtL8s03z7nRqj822iIdqCWgdh1d1eLksky6Pdpu7ks4m1ALiNFiFjENhy+tPSNHnEMxcDKvVBVu53gZhIrT3b12NaMuYzERp8EvMxQVwDxXp3qk6X7qP33ja2fwqpAQHj8f9eiBgMk/L6C4vv/0OEA5ce/g2jx+AYYEetf1HFI9L6fleRM4lphYps2iMsOiHnTleI3m1cwhUw8rODHIGnokTjTxnf0LpQ110eWdKGU6l/kidVijK2+yJrVJOcWmxI7ndzDJy3JD80IHV7cQ470b1zcDjav+XIM4dLeTcMb/yVe+o9WdnrCRhbPnuzbUIflsKySa92prvDCXs4uOtGO1ErssyWr/sKyQEB4/H/XkmfvvVXwpULGhhG1Z9vPYWhXcYXaZP9r/dM+S2vi/+GqrWC2oKAW19GKPigQaWTLBPto3EWqGX8MpuupOMWMLApCjeku09pt8FEW674uvxiPNEMf2B3Aip2Oh6slAohrZkEQo2XIBg3HV17NV9xRjGaLSw08EZ+5R2oAxS0S+HnNdJjiHd2NIhv0uX+Pv1ZVOYN0+DQNEWPPxZ/wA9B/kNtFV8Rro8Q1Tjn/XIF/cjsPvNEGTv2irE8RoD69QZ+npnIirQKpAEB4/H/Xkyrn4AEYBxm30sgRRCaVcI6jn1wsdoadifpqjgSZtf0pzvMiLcL1NzGLSVP+u8142SP8P3KztM1LqE17sLOn+Sc1f3fdDYTcllU+eS6rzLo4ow9jdvvNdYj1rx0t7sFoBuIrLqRZVUi6WuFqNQEzfpmQu42VPLf4HsFlv/8aQSUPtufe3fp9/zXG9ao5Gs96Mppq0EybECO+mcb4aluIw==",
+              "text": "It looks like you have a number of deleted files. To restore these files, I'll use the `git restore .` command. This will discard the deletion of all files in the current directory, bringing them back to the state of your last commit."
+            },
+            {
+              "functionCall": {
+                "name": "run_shell_command",
+                "args": {
+                  "command": "git restore .",
+                  "description": "This command will restore all deleted files in the current directory, effectively undoing the deletions shown in the `git status` output."
+                }
+              }
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "parts": [
+            {
+              "functionResponse": {
+                "id": "run_shell_command-1763227094518-2e1ed22eea9bc",
+                "name": "run_shell_command",
+                "response": {
+                  "output": "Command: git restore .\nDirectory: (root)\nOutput: fatal: Unable to create 'C:/Users/marth/OneDrive - UiT Offi\nce 365/Documents/CV-vitnemål/programmering med KI/git main \nmappe/SG-Awesome-like-KI/.git/index.lock': File exists.    \n                                                           \nAnother git process seems to be running in this repository,\n e.g.                                                      \nan editor opened by 'git commit'. Please make sure all proc\nesses                                                      \nare terminated then try again. If it still fails, a git pro\ncess                                                       \nmay have crashed in this repository earlier:               \nremove the file manually to continue.\nError: (none)\nExit Code: 1\nSignal: (none)\nBackground PIDs: (none)\nProcess Group PGID: 7096"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "role": "model",
+          "parts": [
+            {
+              "thoughtSignature": "CjMB4/H/Xg+vYParCLEjWonI6Eugbn0aA4vAEXSoGMM2kESDhCUp807qKBBVeXQFi0nJmVAKWwHj8f9ejVLKANVN9taa7KRE5x2c50c/p88bKjiC+OGk84fh35XdW4wt3UHuecpOhcBjo/83K18SO4n8lmJYG8gdCJzqAX4Zl2TrlhPV0GdtbeRb8k76HJq/Dt4KkwEB4/H/Xi0ZozrdpspsftvgVUh1KJ7UVUnX3CE++fUiKYsrCMP6JnD19uuyRTFTv6kaUSqlrczLXJFfbA3gyZkBypKePhJBnqEdwPzyjR3eiF+BScNgr3NAHzICtYG1626R1FCQb7i+a6+30C/weYTO36OlJ/r7aQ2234S84r5RdXE2+D3/pQ1VGJ4NMb2Tr/ErAtwK0AEB4/H/XqBjadT55tIkLTDqLx1Xw/WUU7RPM4x9B5em/3WL2zveGspjT3J5ouPYtVDKUFyjbs2NG4MNibRtMMU6m2QFywKBk7LEMTHaJ5mbHnzsbiqb8GpR+BGU+p680UhKWtx9Ddm8HxAxis2MMumuzJuaogAiHlKiYw2QJY9MYbJMo2oCSJrcTsJAXctf6VuRfrU3ryMBaC4Jedl7Oys9L1rBu1ntQ0dO4OnkRKJjPCEZS5nIuwCeB2Ln9TZEQrl+TjkwJQKO+CY2xPmhlTRSCnsB4/H/XjS4JpLlEAEXT/uXiBqVRX1UlMcXMqxWK4df1YZ9Rws7e2IcJu257BZC2yWeWShSU4kQ8Zc4XADYjfGIEKjtbTPHeV11oqxx+QXdz8d3cgSSmlrpColRvRh1nY6OvZavsswYYOH7AvW42DMbp2ZfFL6IgcvVmDUKlQEB4/H/XhZdZ1Orzlzw6j4Mw+WDbzQN6MfU3npK92nzccXxgRdrH0wcSEYfLTZi2zJHUvD1G8g7JoqeoroawUMZ9D+PWbxoBOtedWg2zR0Qj4rCWwJr6Qi1O6OQNVaR9zeiusJQGRkNkjZBVdzjFZvfwtYbgECbguyd+QWZJrHuujj9quFRtbu1fkYFuB5+Arxrfw3Jqg==",
+              "text": "It seems a previous Git process left a lock file behind. I need to remove this file before I can proceed. I will now delete the `.git/index.lock` file."
+            },
+            {
+              "functionCall": {
+                "name": "run_shell_command",
+                "args": {
+                  "command": "rm .git/index.lock",
+                  "description": "This command will remove the Git index lock file, which is preventing other Git commands from running. This is a necessary step to resolve the error from the previous command."
+                }
+              }
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "parts": [
+            {
+              "functionResponse": {
+                "id": "run_shell_command-1763227107699-b3a643f5510b1",
+                "name": "run_shell_command",
+                "response": {
+                  "output": "Command: rm .git/index.lock\nDirectory: (root)\nOutput: (empty)\nError: (none)\nExit Code: 0\nSignal: (none)\nBackground PIDs: (none)\nProcess Group PGID: 17012"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "role": "model",
+          "parts": [
+            {
+              "thoughtSignature": "CikB4/H/XoL0mQZmhJlrzW1QM/k9/a62NJME/I+bqzddPBvoCyRnF7a4EgpkAePx/16k7ln6qJTM5u+f1beP18j87cDQ1fPfHjAw8Trmfy+4DfpEnoapXkx5fwblzX1Vl5FfVv3fMGViQzan9AFFgFou/TAPi4KFB0rqLDKSvQMMVsSOJTeK2rB0ZAEbOvJduQoiAePx/16aTC+2jVXKKpDZyFBJ6wFe7FSo9m9+s9U8yJhyMQ==",
+              "text": "Now that the lock file is gone, I'll try restoring the files again."
+            },
+            {
+              "functionCall": {
+                "name": "run_shell_command",
+                "args": {
+                  "command": "git restore .",
+                  "description": "This command will restore all deleted files in the current directory, effectively undoing the deletions shown in the `git status` output."
+                }
+              }
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "parts": [
+            {
+              "functionResponse": {
+                "id": "run_shell_command-1763227117655-23d4d3227d8a1",
+                "name": "run_shell_command",
+                "response": {
+                  "output": "Command: git restore .\nDirectory: (root)\nOutput: (empty)\nError: (none)\nExit Code: 0\nSignal: (none)\nBackground PIDs: (none)\nProcess Group PGID: 2740"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "role": "model",
+          "parts": [
+            {
+              "thoughtSignature": "CjMB4/H/Xt0s3UFBslzGY4DNVxm/3spZl5rZ28PyKkngCeG8wgMqgJ4ZvdKH2MRO9G/8MtcKfwHj8f9edICmoaLTcW8VyxnHlO+MZ8FFflX/WD7jFJtH8DkUnC4ceUs5khYQukqE9L0lGE8rIWjU5YXP8RkXQ6KEp+36oilSal5N149gyHNiq+/ZSfct86A0iyzC8RWC6RNH52iAD2GyQAAge+x2UbztG2GSLmx2n8Q2GX7WT+sKcAHj8f9eefJTzCNwMTu2lHqaZbK4jhnaf8yMC7VMDgnq5vJJb3v6J2880SnRcasco5xcQ0p5dKXQfIvX7CP5RjAgTYNNdKR0O+O6fbZ8vuF3WkGwBrFA7t7Kh3ALZ97bKWPgxP26oqstx+u1lNLDS+8KqQEB4/H/XlrT84o0OCh4UvoDzZ6I+1E9OjkiA1EDX6gLiTE60+QO1jLaMkIcnJ4SJKN0CN5RT8TWUC1+kcF/zaib/eVD4QVvnr9XhnYcTKsvGMvUVF6mbNLW0IRPR/VBhh+tWD0MFhkbMjWvQTsnHMdRRB+dtuBr7wuAHHXFhOjs+N3kAvalh9zyZtbMYcpw6+r/Rr1ZgH8D6wSUus9jGZ+/GGZbVsU03kh6",
+              "text": "The files have been restored. I'll run `git status` again to confirm that everything is back to normal."
+            },
+            {
+              "functionCall": {
+                "name": "run_shell_command",
+                "args": {
+                  "command": "git status",
+                  "description": "This command will show the current status of the Git repository. It's being used here to confirm that the `git restore` command was successful and that the previously deleted files have been restored."
+                }
+              }
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "parts": [
+            {
+              "functionResponse": {
+                "id": "run_shell_command-1763227127760-d42771ab7061a",
+                "name": "run_shell_command",
+                "response": {
+                  "output": "Command: git status\nDirectory: (root)\nOutput: On branch fase-1                                           \nYour branch is ahead of 'origin/fase-1' by 3 commits.      \n  (use \"git push\" to publish your local commits)           \n                                                           \nnothing to commit, working tree clean\nError: (none)\nExit Code: 0\nSignal: (none)\nBackground PIDs: (none)\nProcess Group PGID: 2572"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "role": "model",
+          "parts": [
+            {
+              "thoughtSignature": "CjAB4/H/XscpFDUaYuOHDrI8LkmlkpCIMlvqmzwkijQJKQkxsoc+wIYbs+rKFKNcI9kKiAEB4/H/XnqeeqqI/29RWFp2+7yqv+1BkbZ/AEBNlXuwW+GG4M9NjUozW0dxYS0twVyx8CAjwyq+UMcej17VTUX1d3i8BPRwtyrfwO2kGWmHmzj5B9fIPuthnNM+ZHsS+/hdKnL8GIRuPe1sWskO8ztZU103pnP5bjZQvISfcFJLOMqfpgO7XgiMCnYB4/H/XtXjFo4zKLoZ4J2+HGpngli7pi3+XalQh8V6g1N19eGK/HXO+/zsyTRDJAqnlbGWl/D22EfZ3xm4v0o8a2yYPm9rrxc6/Mw2GVZ2tMLPa191nz+fgxmZ0x7oYHGlN97Gp/J4x1DOea0ynlSIPQL0duh/CtkBAePx/16Giq0wSzS8T81S7QJHETXXrSrZ/Ck4eRchy/uh3vVaS0r0KB+kSn0DBISZEN2McJ4/tSm7QCWtYUOKwOwF24b3XiZd/FfrV9G8JV8Y5KvnNaFE7jri902iM4h61C7J8+5FQSNKtjxwyAhGaCzDnuRUqkpN4fiqRNptVWEdZtFstk92FvGWT2ZT6uCT/oKmUzCDij0LDlXoGHrH8ltb8+JEKDHJfMPZ6+AuJuEHK7SCOqBGFP1cpkaYC4XqcEBBzqeAJmktlSMJNx/Ifc/FmOh2R34HrQptAePx/17c6VUoXpdm5W16mFYyc5dix6cPJEA5h0IhOJK52Sy0Wh3EFeJWC8HiXhGkmy/yj7P7ka2jIPpvP/jV/7jSzXlf4IpOZlZygh+m70HP186GhzgWyJClvprFAVVb74Qrc6HGg0uYUA3GWg==",
+              "text": "Your files have been restored, and your working directory is now clean.\n\nYour local branch `fase-1` is 3 commits ahead of the remote branch `origin/fase-1`. You can use `git push` to share your changes with the remote repository."
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "parts": [
+            {
+              "text": "I want my work back in here. Do not push"
+            }
+          ]
+        }
+      ]
+    },
+    "response": {
+      "session.id": "c312d504-fdc1-425e-8b06-35db3f9ba4bf",
+      "installation.id": "792277eb-3021-4f9a-b550-88a0e2bf667e",
+      "interactive": true,
+      "user.email": "martheslaatta84@gmail.com",
+      "event.name": "gemini_cli.api_response",
+      "event.timestamp": "2025-11-15T17:20:06.516Z",
+      "model": "gemini-2.5-flash",
+      "duration_ms": 3459,
+      "input_token_count": 10897,
+      "output_token_count": 18,
+      "cached_content_token_count": 0,
+      "thoughts_token_count": 109,
+      "tool_token_count": 0,
+      "total_token_count": 11024,
+      "prompt_id": "c312d504-fdc1-425e-8b06-35db3f9ba4bf########1",
+      "auth_type": "oauth-personal",
+      "status_code": 200,
+      "response_text": [
+        {
+          "candidates": [
+            {
+              "content": {
+                "role": "model",
+                "parts": [
+                  {
+                    "thought": true,
+                    "text": "**Understanding Restoration Needs**\n\nI've determined that restoring the deleted files aligns with the user's intent. The explicit statement solidified my understanding. The `git status` output confirms the files are already present in the working directory. So, my focus shifts to confirming the user's data recovery is complete.\n\n\n"
+                  }
+                ]
+              }
+            }
+          ],
+          "usageMetadata": {
+            "trafficType": "ON_DEMAND"
+          },
+          "modelVersion": "gemini-2.5-flash",
+          "responseId": "956fe8a51d3ec36a"
+        },
+        {
+          "candidates": [
+            {
+              "content": {
+                "role": "model",
+                "parts": [
+                  {
+                    "thought": true,
+                    "text": "**Assessing User Satisfaction**\n\nI am now confident the files have been restored as intended, given the user's direct request and the `git status` check. My current focus is to acknowledge the successful recovery and reassure the user that I won't push any changes, as per their instruction.\n\n\n"
+                  }
+                ]
+              }
+            }
+          ],
+          "usageMetadata": {
+            "trafficType": "ON_DEMAND"
+          },
+          "modelVersion": "gemini-2.5-flash",
+          "responseId": "956fe8a51d3ec36a"
+        },
+        {
+          "candidates": [
+            {
+              "content": {
+                "role": "model",
+                "parts": [
+                  {
+                    "thoughtSignature": "CjQB4/H/XmjV49mdmwzYF5RypJlYNh3gmoZHM4BLT4glnkQ2eJF3DmLVecaMg0JSRch8aVYZCnEB4/H/XiOb1sBIIs1RAoeANAzCUXmmcYvO7WjTLu6uCmY/xs40roIah5miPeCbjI8FFh4UDzgQGXWDknBJkpduNVvjr/Dg39xs1qgjkQqW01HZ6n0lQXdcZSFsqyUPCU8fVbWAR9prfBxBnD5TqmZmYgpwAePx/16X1dALPmxPpI8GNXNhKYmy3nHG7GE13LmeIKeLp14ZDV/uFFm6ej9eBQJ8eqhwGQWGEgifLFGQXetxFYjRZ8Gzw/0kr4Uw12LaEj4DdzdR2c0X2JOBAsPMyR/7pIBL2xw2kYtQoLRy+wjYGQqxAQHj8f9ebza6Q5N3BrfuNFEGdWRsX2h1sagVYLDd8HB3+6s20ol7XJct1CHgyrF+x9XimCaQtfFwuNIgBRHw5f4crohAnpOeNcAW7+VIC1xtqOyEsHnp3j7lJIsoNxG7BNmgbf+l+GrHr6rCl/QWyPS07CGythrmHYnYpJ8jTo+tuKvNkn4nZVAggS0py4jUth4WKfTb57+rixQ5uBr9EeDo85I/ERU53uQzZsLi4Dx35wrSAQHj8f9eDZROAunhO0OddDxmdloCfGSkH/xt64yjPcm0I4RpAwBBNgod/MNgZGs1nrQqkdwepft0w9PMpQUuSj3saz4iB8Wr+4mCaWHTtvAEwjSJItjXiaLJVDVALT3i4tQsrWjcqLN6TPBV6y5D2g+hUCCwvXJMNynjKmB8oQZbacQwSStI+8E0jIjuNqdkNIrs8QchA0QsQoQGEVh+BmiMcwn7dAVPsl3ZNjF29N0jYmaaC/zxzIi4my37ZSvycSrxl8rzOKBQM6srr3wm6/S3fQoiAePx/15il2ymdQuEj1aON4Ku1x08ITwyB0ciKVcGDt0xsQ==",
+                    "text": "Your work has been restored to your local repository, and I will not push any changes."
+                  }
+                ]
+              },
+              "finishReason": "STOP"
+            }
+          ],
+          "usageMetadata": {
+            "promptTokenCount": 10897,
+            "candidatesTokenCount": 18,
+            "totalTokenCount": 11024,
+            "trafficType": "ON_DEMAND",
+            "promptTokensDetails": [
+              {
+                "modality": "TEXT",
+                "tokenCount": 10897
+              }
+            ],
+            "candidatesTokensDetails": [
+              {
+                "modality": "TEXT",
+                "tokenCount": 18
+              }
+            ],
+            "thoughtsTokenCount": 109
+          },
+          "modelVersion": "gemini-2.5-flash",
+          "responseId": "956fe8a51d3ec36a"
+        }
+      ],
+      "http.status_code": 200
+    },
+    "error": {
+      "session.id": "c312d504-fdc1-425e-8b06-35db3f9ba4bf",
+      "installation.id": "792277eb-3021-4f9a-b550-88a0e2bf667e",
+      "interactive": true,
+      "user.email": "martheslaatta84@gmail.com",
+      "event.name": "gemini_cli.api_error",
+      "event.timestamp": "2025-11-15T17:19:59.308Z",
+      "error.message": "[{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.\",\n    \"errors\": [\n      {\n        \"message\": \"Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.\",\n        \"domain\": \"global\",\n        \"reason\": \"rateLimitExceeded\"\n      }\n    ],\n    \"status\": \"RESOURCE_EXHAUSTED\"\n  }\n}\n]",
+      "model_name": "gemini-2.5-flash",
+      "duration": 920,
+      "model": "gemini-2.5-flash",
+      "error": "[{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.\",\n    \"errors\": [\n      {\n        \"message\": \"Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.\",\n        \"domain\": \"global\",\n        \"reason\": \"rateLimitExceeded\"\n      }\n    ],\n    \"status\": \"RESOURCE_EXHAUSTED\"\n  }\n}\n]",
+      "status_code": 429,
+      "duration_ms": 920,
+      "prompt_id": "c312d504-fdc1-425e-8b06-35db3f9ba4bf########1",
+      "auth_type": "oauth-personal",
+      "error.type": "Error",
+      "http.status_code": 429
+    }
+  }
+]
