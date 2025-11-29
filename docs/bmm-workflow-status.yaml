@@ -21,5 +21,5 @@ workflow_status:
   create-design: conditional
   create-architecture: required
   validate-architecture: optional
-  solutioning-gate-check: required
+  solutioning-gate-check: docs/implementation-readiness-report-2025-11-29-revised.md
   sprint-planning: required

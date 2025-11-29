@@ -47,7 +47,8 @@
     - [x] File: architecture.md
   - [x] /run-agent-task pm *create-epics-and-stories {prompt / user-input-file}
     - [x] File: epics.md
-  - [ ] /run-agent-task architect *solutioning-gate-check {prompt / user-input-file}
+  - [x] /run-agent-task architect *solutioning-gate-check {this command was not available, Gemini suggested *implementation-readiness instead as the closest option so we did that instead / user-input-file}
+    - [x] File: implementation-readiness-report.md
 
 ## Fase 3 (4)
 
