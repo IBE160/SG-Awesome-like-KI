@@ -42,7 +42,7 @@
 
 ## Fase 2 (3)
 
-- [ ] Solutioning
+- [x] Solutioning
   - [x] /run-agent-task architect *create-architecture {prompt / user-input-file}
     - [x] File: architecture.md
   - [x] /run-agent-task pm *create-epics-and-stories {prompt / user-input-file}
@@ -53,8 +53,8 @@
 ## Fase 3 (4)
 
 - [ ] Implementation
-  - [ ] /run-agent-task sm *sprint-planning {prompt / user-input-file}
-    - [ ] File: sprint-artifacts/sprint-status.yaml
+  - [x] /run-agent-task sm *sprint-planning {prompt / user-input-file}
+    - [x] File: sprint-artifacts/sprint-status.yaml
   - foreach epic in sprint planning:
     - [ ] /run-agent-task sm create-epic-tech-context {prompt / user-input-file}
       - [ ] File: sprint-artifacts/tech-spec-epic-{{epic_id}}.md
@@ -71,6 +71,111 @@
     - [ ] /run-agent-task sm *epic-retrospective {prompt / user-input-file}
 
 
+
 ## BMAD workflow
 
 <img src="images/bmad-workflow.svg" alt="BMAD workflow">
+
+# Oversikt Epics fase 4
+  - [ ] Epic 1 (Sofie 29.11)
+    - [x] /run-agent-task sm create-epic-tech-context {prompt / user-input-file}
+      - [x] File: sprint-artifacts/tech-spec-epic-{{epic_id}}.md
+    - [x] /run-agent-task sm validate-epic-tech-context {prompt / user-input-file}
+    - foreach story in epic:
+    - [ ] 1.1 
+      - [x] /run-agent-task sm *create-story {prompt / user-input-file}
+        - [x] File: sprint-artifacts/{{story_key}}.md
+      - [x] /run-agent-task sm *validate-create-story {prompt / user-input-file}
+      - [x] /run-agent-task sm *create-story-context {prompt / user-input-file}
+        - [x] File: sprint-artifacts/{{story_key}}.context.xml
+      - [x] /run-agent-task sm *validate-story-context {prompt / user-input-file}
+      - [ ] /run-agent-task dev *implement-story {prompt / user-input-file}
+      - [ ] /run-agent-task dev *validate-story {prompt / user-input-file}
+    - [ ] 1.2
+      - [ ] /run-agent-task sm *create-story {prompt / user-input-file}
+        - [ ] File: sprint-artifacts/{{story_key}}.md
+      - [ ] /run-agent-task sm *validate-create-story {prompt / user-input-file}
+      - [ ] /run-agent-task sm *create-story-context {prompt / user-input-file}
+        - [ ] File: sprint-artifacts/{{story_key}}.context.xml
+      - [ ] /run-agent-task sm *validate-story-context {prompt / user-input-file}
+      - [ ] /run-agent-task dev *implement-story {prompt / user-input-file}
+      - [ ] /run-agent-task dev *validate-story {prompt / user-input-file}
+    - [ ] 1.3
+      - [ ] /run-agent-task sm *create-story {prompt / user-input-file}
+        - [ ] File: sprint-artifacts/{{story_key}}.md
+      - [ ] /run-agent-task sm *validate-create-story {prompt / user-input-file}
+      - [ ] /run-agent-task sm *create-story-context {prompt / user-input-file}
+        - [ ] File: sprint-artifacts/{{story_key}}.context.xml
+      - [ ] /run-agent-task sm *validate-story-context {prompt / user-input-file}
+      - [ ] /run-agent-task dev *implement-story {prompt / user-input-file}
+      - [ ] /run-agent-task dev *validate-story {prompt / user-input-file}
+    - [ ] 1.4
+      - [ ] /run-agent-task sm *create-story {prompt / user-input-file}
+        - [ ] File: sprint-artifacts/{{story_key}}.md
+      - [ ] /run-agent-task sm *validate-create-story {prompt / user-input-file}
+      - [ ] /run-agent-task sm *create-story-context {prompt / user-input-file}
+        - [ ] File: sprint-artifacts/{{story_key}}.context.xml
+      - [ ] /run-agent-task sm *validate-story-context {prompt / user-input-file}
+      - [ ] /run-agent-task dev *implement-story {prompt / user-input-file}
+      - [ ] /run-agent-task dev *validate-story {prompt / user-input-file}
+    - [ ] /run-agent-task sm *epic-retrospective {prompt / user-input-file}
+
+- [ ] Epic 2
+    - [ ] /run-agent-task sm create-epic-tech-context {prompt / user-input-file}
+      - [ ] File: sprint-artifacts/tech-spec-epic-{{epic_id}}.md
+    - [ ] /run-agent-task sm validate-epic-tech-context {prompt / user-input-file}
+    - foreach story in epic:
+      - [ ] /run-agent-task sm *create-story {prompt / user-input-file}
+        - [ ] File: sprint-artifacts/{{story_key}}.md
+      - [ ] /run-agent-task sm *validate-create-story {prompt / user-input-file}
+      - [ ] /run-agent-task sm *create-story-context {prompt / user-input-file}
+        - [ ] File: sprint-artifacts/{{story_key}}.context.xml
+      - [ ] /run-agent-task sm *validate-story-context {prompt / user-input-file}
+      - [ ] /run-agent-task dev *implement-story {prompt / user-input-file}
+      - [ ] /run-agent-task dev *validate-story {prompt / user-input-file}
+    - [ ] /run-agent-task sm *epic-retrospective {prompt / user-input-file}
+
+- [ ] Epic 3
+    - [ ] /run-agent-task sm create-epic-tech-context {prompt / user-input-file}
+      - [ ] File: sprint-artifacts/tech-spec-epic-{{epic_id}}.md
+    - [ ] /run-agent-task sm validate-epic-tech-context {prompt / user-input-file}
+    - foreach story in epic:
+      - [ ] /run-agent-task sm *create-story {prompt / user-input-file}
+        - [ ] File: sprint-artifacts/{{story_key}}.md
+      - [ ] /run-agent-task sm *validate-create-story {prompt / user-input-file}
+      - [ ] /run-agent-task sm *create-story-context {prompt / user-input-file}
+        - [ ] File: sprint-artifacts/{{story_key}}.context.xml
+      - [ ] /run-agent-task sm *validate-story-context {prompt / user-input-file}
+      - [ ] /run-agent-task dev *implement-story {prompt / user-input-file}
+      - [ ] /run-agent-task dev *validate-story {prompt / user-input-file}
+    - [ ] /run-agent-task sm *epic-retrospective {prompt / user-input-file}
+
+- [ ] Epic 4
+    - [ ] /run-agent-task sm create-epic-tech-context {prompt / user-input-file}
+      - [ ] File: sprint-artifacts/tech-spec-epic-{{epic_id}}.md
+    - [ ] /run-agent-task sm validate-epic-tech-context {prompt / user-input-file}
+    - foreach story in epic:
+      - [ ] /run-agent-task sm *create-story {prompt / user-input-file}
+        - [ ] File: sprint-artifacts/{{story_key}}.md
+      - [ ] /run-agent-task sm *validate-create-story {prompt / user-input-file}
+      - [ ] /run-agent-task sm *create-story-context {prompt / user-input-file}
+        - [ ] File: sprint-artifacts/{{story_key}}.context.xml
+      - [ ] /run-agent-task sm *validate-story-context {prompt / user-input-file}
+      - [ ] /run-agent-task dev *implement-story {prompt / user-input-file}
+      - [ ] /run-agent-task dev *validate-story {prompt / user-input-file}
+    - [ ] /run-agent-task sm *epic-retrospective {prompt / user-input-file}
+
+- [ ] Epic 5
+    - [ ] /run-agent-task sm create-epic-tech-context {prompt / user-input-file}
+      - [ ] File: sprint-artifacts/tech-spec-epic-{{epic_id}}.md
+    - [ ] /run-agent-task sm validate-epic-tech-context {prompt / user-input-file}
+    - foreach story in epic:
+      - [ ] /run-agent-task sm *create-story {prompt / user-input-file}
+        - [ ] File: sprint-artifacts/{{story_key}}.md
+      - [ ] /run-agent-task sm *validate-create-story {prompt / user-input-file}
+      - [ ] /run-agent-task sm *create-story-context {prompt / user-input-file}
+        - [ ] File: sprint-artifacts/{{story_key}}.context.xml
+      - [ ] /run-agent-task sm *validate-story-context {prompt / user-input-file}
+      - [ ] /run-agent-task dev *implement-story {prompt / user-input-file}
+      - [ ] /run-agent-task dev *validate-story {prompt / user-input-file}
+    - [ ] /run-agent-task sm *epic-retrospective {prompt / user-input-file}

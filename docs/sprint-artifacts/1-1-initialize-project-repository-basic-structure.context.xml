@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<story_context>
+  <story>
+    <epic_id>1</epic_id>
+    <story_id>1</story_id>
+    <story_key>1-1-initialize-project-repository-basic-structure</story_key>
+    <title>Initialize Project Repository &amp; Basic Structure</title>
+    <as_a>a Developer</as_a>
+    <i_want>to set up the project repository with a clear structure and initial configuration</i_want>
+    <so_that>all team members can easily access, contribute to, and understand the codebase</so_that>
+  </story>
+  <acceptance_criteria>
+    <criterion id="1">**Given** a new project, **when** the repository is initialized, **then** it contains a `src` directory for source code, a `docs` directory for documentation, and a `tests` directory for automated tests.</criterion>
+    <criterion id="2">**And** a `.gitignore` file is configured to exclude unnecessary files.</criterion>
+    <criterion id="3">**And** a `README.md` file provides basic project information and setup instructions.</criterion>
+  </acceptance_criteria>
+  <tasks>
+    <task ac_ref="1">Create `src`, `docs`, and `tests` directories.</task>
+    <task ac_ref="2">Create and configure the `.gitignore` file.</task>
+    <task ac_ref="3">Create the `README.md` file with initial content.</task>
+  </tasks>
+  <artifacts>
+    <docs>
+      <doc path="docs/PRD.md" title="ibe160 - Product Requirements Document" section="Functional Requirements - User Interface &amp; Accessibility" snippet="This story supports Functional Requirements 5.1 (Clean &amp; Intuitive UI), 5.2 (Web Application Responsiveness), and 5.3 (Core Accessibility Features) by setting up the project to accommodate these aspects from the very beginning."/>
+      <doc path="docs/epics.md" title="ibe160 - Epic Breakdown" section="Epic 1: Foundation &amp; Core Setup" snippet="This story (1.1) is part of Epic 1, establishing the essential infrastructure, security, and project setup required to build, test, and deploy the application."/>
+      <doc path="docs/architecture.md" title="AI Study Buddy - High-Level Architecture" section="1.1 System Diagram" snippet="A well-organized repository is crucial for managing the various components and integrations outlined in the high-level system design. Although this story doesn&apos;t directly implement these, it provides the essential foundation."/>
+    </docs>
+    <code/>
+    <dependencies>
+      <nodejs>
+        <package name="@supabase/ssr" version="^0.7.0"/>
+        <package name="@supabase/supabase-js" version="^2.84.0"/>
+        <package name="@tailwindcss/postcss" version="^4.1.17"/>
+        <package name="next" version="^16.0.3"/>
+        <package name="react" version="^19.2.0"/>
+        <package name="react-dom" version="^19.2.0"/>
+        <dev-package name="@eslint/js" version="^9.39.1"/>
+        <dev-package name="@types/react" version="19.2.7"/>
+        <dev-package name="@typescript-eslint/eslint-plugin" version="^8.48.0"/>
+        <dev-package name="autoprefixer" version="^10.4.22"/>
+        <dev-package name="eslint-plugin-react" version="^7.37.5"/>
+        <dev-package name="eslint-plugin-react-hooks" version="^7.0.1"/>
+        <dev-package name="postcss" version="^8.5.6"/>
+        <dev-package name="tailwindcss" version="^4.1.17"/>
+        <dev-package name="typescript" version="5.9.3"/>
+        <dev-package name="typescript-eslint" version="^8.48.0"/>
+      </nodejs>
+    </dependencies>
+  </artifacts>
+  <constraints>
+    <constraint>All file paths must be project-relative.</constraint>
+    <constraint>Use `git init` and standard project scaffolding for repository initialization.</constraint>
+    <constraint>Consider adding a `devcontainer` configuration to standardize the development environment.</constraint>
+  </constraints>
+  <tests>
+    <standards>Automated tests should be placed in the `tests` directory.</standards>
+    <locations>
+      <location>tests/</location>
+    </locations>
+    <ideas>
+      <idea ac_ref="1">Verify the existence of `src`, `docs`, and `tests` directories.</idea>
+      <idea ac_ref="2">Verify `.gitignore` exists and excludes specified files.</idea>
+      <idea ac_ref="3">Verify `README.md` exists and contains basic project information.</idea>
+    </ideas>
+  </tests>
+</story_context>
