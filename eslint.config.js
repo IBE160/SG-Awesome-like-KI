@@ -1,51 +1,57 @@
-import globals from "globals";
-import js from "@eslint/js";
-import tseslint from "typescript-eslint";
-import react from "eslint-plugin-react";
-import reactHooks from "eslint-plugin-react-hooks";
+const globals = require("globals");
+const js = require("@eslint/js");
+const tseslint = require("typescript-eslint");
+const react = require("eslint-plugin-react");
+const reactHooks = require("eslint-plugin-react-hooks");
 
-export default [
+module.exports = [
+  // Global ignores
   {
-    files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"],
-    ignores: ["node_modules", ".next", "dist"],
+    ignores: ["node_modules/", ".next/", "dist/"],
   },
-  js.configs.recommended,
-  ...tseslint.configs.recommended,
+  // Base config for JS/MJS/CJS files
   {
-    plugins: {
-      react,
-      "react-hooks": reactHooks,
-    },
+    files: ["**/*.{js,mjs,cjs}"],
+    ...js.configs.recommended,
     languageOptions: {
-      parser: tseslint.parser,
-      parserOptions: {
-        ecmaFeatures: {
-          jsx: true,
-        },
-        project: "./tsconfig.json",
-      },
       globals: {
-        ...globals.browser,
-        // Add any other global variables here specific to your project
-      },
-    },
-    rules: {
-      // General ESLint rules
-      "no-unused-vars": "warn",
-      // React specific rules
-      "react/react-in-jsx-scope": "off", // Not needed for Next.js with React 17+
-      "react/prop-types": "off",
-      // React Hooks rules
-      "react-hooks/rules-of-hooks": "error",
-      "react-hooks/exhaustive-deps": "warn",
-      // TypeScript specific rules handled by tseslint.configs.recommended
-    },
-    settings: {
-      react: {
-        version: "detect",
+        ...globals.node,
       },
     },
   },
-  // You can add more specific configurations here, for example for Next.js
-  // if you have a separate plugin for Next.js
+  // Config for TypeScript files
+  ...tseslint.config(
+    ...tseslint.configs.recommended,
+    {
+      files: ["**/*.{ts,tsx}"],
+      plugins: {
+        react,
+        "react-hooks": reactHooks,
+      },
+      languageOptions: {
+        parser: tseslint.parser,
+        parserOptions: {
+          project: "./tsconfig.json",
+          ecmaFeatures: {
+            jsx: true,
+          },
+        },
+        globals: {
+          ...globals.browser,
+        },
+      },
+      rules: {
+        "no-unused-vars": "warn",
+        "react/react-in-jsx-scope": "off",
+        "react/prop-types": "off",
+        "react-hooks/rules-of-hooks": "error",
+        "react-hooks/exhaustive-deps": "warn",
+      },
+      settings: {
+        react: {
+          version: "detect",
+        },
+      },
+    }
+  ),
 ];
