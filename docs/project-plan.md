@@ -174,20 +174,20 @@
       - [ ] /run-agent-task dev *develop-story {for story 4.2}
       - [ ] /run-agent-task dev *validate-story {for story 4.2}
     - [ ] 4.3
-      - [ ] /run-agent-task sm *create-story {for story 4.3}
-        - [ ] File: sprint-artifacts/{{story_key}}.md
-      - [ ] /run-agent-task sm *validate-create-story {for story 4.3}
-      - [ ] /run-agent-task sm *create-story-context {for story 4.3}
-        - [ ] File: sprint-artifacts/{{story_key}}.context.xml
-      - [ ] /run-agent-task sm *validate-story-context {for story 4.3}
+      - [x] /run-agent-task sm *create-story {for story 4.3}
+        - [x] File: sprint-artifacts/{{story_key}}.md
+      - [x] /run-agent-task sm *validate-create-story {for story 4.3}
+      - [x] /run-agent-task sm *create-story-context {for story 4.3}
+        - [x] File: sprint-artifacts/{{story_key}}.context.xml
+      - [x] /run-agent-task sm *validate-story-context {for story 4.3}
       - [ ] /run-agent-task dev *implement-story {for story 4.3}
       - [ ] /run-agent-task dev *validate-story {for story 4.3}
     - [ ] 4.4
-      - [ ] /run-agent-task sm *create-story {for story 4.4}
-        - [ ] File: sprint-artifacts/{{story_key}}.md
-      - [ ] /run-agent-task sm *validate-create-story {for story 4.4}
-      - [ ] /run-agent-task sm *create-story-context {for story 4.4}
-        - [ ] File: sprint-artifacts/{{story_key}}.context.xml
+      - [x] /run-agent-task sm *create-story {for story 4.4}
+        - [x] File: sprint-artifacts/{{story_key}}.md
+      - [x] /run-agent-task sm *validate-create-story {for story 4.4}
+      - [x] /run-agent-task sm *create-story-context {for story 4.4}
+        - [x] File: sprint-artifacts/{{story_key}}.context.xml
       - [ ] /run-agent-task sm *validate-story-context {for story 4.4}
       - [ ] /run-agent-task dev *implement-story {for story 4.4}
       - [ ] /run-agent-task dev *validate-story {for story 4.4}

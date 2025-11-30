@@ -58,7 +58,7 @@ development_status:
   4-1-ai-summary-generation: ready-for-dev
   4-2-ai-quiz-generation-selectable-length: ready-for-dev
   4-3-interactive-quiz-interface: ready-for-dev
-  4-4-motivational-feedback-explanations: backlog
+  4-4-motivational-feedback-explanations: ready-for-dev
   4-5-guided-summary-generation-wizard: backlog
   4-6-guided-quiz-generation-wizard: backlog
   epic-4-retrospective: optional
