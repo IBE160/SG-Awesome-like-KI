@@ -18,14 +18,35 @@ jobs:
         with:
           node-version: '20.x'
 
+      - name: Cache Node.js modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
       - name: Install dependencies
         run: npm install
 
       - name: Build
         run: npm run build
 
+
+
       - name: Lint
         run: npm run lint
 
-      # - name: Test
-      #   run: npm test
+      - name: Test
+        run: npm test
+
+      - name: Deploy to Vercel Staging
+        uses: vercel/action-atlas@v3
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel-scope: 'staging' # Or your desired scope (e.g., 'production')
+          vercel-project-name: 'sg-awesome-like-ki' # Replace with your Vercel project name
+          vercel-deploy-branch: 'main' # Ensure this matches your deployment branch
+          vercel-api-key: ${{ secrets.VERCEL_API_TOKEN }} # Ensure this is a valid Vercel API token
+          vercel-args: '--prod' # Remove this for staging, or add --prebuilt for faster deployments if you have a build step already

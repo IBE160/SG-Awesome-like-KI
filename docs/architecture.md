@@ -113,3 +113,23 @@ The Next.js frontend will communicate with the backend using API Routes or Route
     *   **Backend:** Supabase provides a performant PostgreSQL database. Database queries will be optimized to ensure fast data retrieval.
     *   **AI Integration:** The Vercel Function for AI integration will be designed to be efficient and handle requests asynchronously to avoid blocking the frontend.
     *   **Concurrency:** The architecture is designed to handle at least 100 concurrent users for the MVP.
+
+## 7. CI/CD Pipeline
+
+The project utilizes GitHub Actions for Continuous Integration and Continuous Deployment (CI/CD) to ensure code quality, automate testing, and facilitate rapid iteration. The pipeline is configured to run on every push and pull request to the `main` branch.
+
+### 7.1. Workflow Steps
+
+*   **Checkout Code:** Fetches the repository code.
+*   **Node.js Setup:** Configures the Node.js environment (version 20.x).
+*   **Cache Node.js modules:** Caches `node_modules` to speed up dependency installation.
+*   **Install dependencies:** Installs project dependencies using `npm install`.
+*   **Build:** Builds the Next.js application using `npm run build`.
+*   **Lint:** Runs ESLint to check for code style and quality issues using `npm run lint`.
+*   **Test:** Executes unit tests using `npm test`.
+*   **Deploy to Vercel Staging:** Automatically deploys the application to a Vercel staging environment upon successful completion of all previous steps on the `main` branch. This step requires `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`, and `VERCEL_API_TOKEN` to be configured as GitHub Secrets.
+
+### 7.2. Configuration File
+
+The CI/CD workflow is defined in `.github/workflows/ci.yml`.
+
