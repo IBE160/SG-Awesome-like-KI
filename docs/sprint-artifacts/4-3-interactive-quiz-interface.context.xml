@@ -1,0 +1,118 @@
+<story-context>
+  <metadata>
+    <epicId>4</epicId>
+    <storyId>3</storyId>
+    <title>Interactive Quiz Interface</title>
+    <status>drafted</status>
+  </metadata>
+  <story>
+    <asA>user</asA>
+    <iWant>to take generated quizzes through an interactive interface</iWant>
+    <soThat>I can actively test my understanding.</soThat>
+  </story>
+  <acceptanceCriteria>
+    <criterion>Given I have a generated quiz, when I start the quiz, then I can select answers for each question.</criterion>
+    <criterion>Given I have a generated quiz, when I start the quiz, then the system provides immediate feedback on whether my answer is correct or incorrect.</criterion>
+  </acceptanceCriteria>
+  <tasks>
+    <task>Design and implement the quiz interface component.</task>
+    <task>Implement state management for the quiz.</task>
+    <task>Implement the logic for checking answers and providing feedback.</task>
+    <task>Write unit and integration tests for the quiz interface.</task>
+  </tasks>
+  <artifacts>
+    <docs>
+      <artifact>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>FR4.1 - Interactive Quizzing</section>
+        <snippet>The system shall provide an interactive interface for users to take generated quizzes. Users can select answers for quiz questions and the system shall provide immediate feedback on answer correctness.</snippet>
+      </artifact>
+      <artifact>
+        <path>docs/architecture.md</path>
+        <title>AI Study Buddy - High-Level Architecture</title>
+        <section>1.2. Component Interaction</section>
+        <snippet>The Next.js Frontend is a single-page application built with React and Next.js, styled with Tailwind CSS. It communicates with the Supabase backend for data, authentication, and storage, and with the Vercel Function for AI-powered features.</snippet>
+      </artifact>
+      <artifact>
+        <path>docs/UX-Design/ux-design-specification.md</path>
+        <title>ibe160 UX Design Specification</title>
+        <section>Custom Component: Quiz Interface</section>
+        <snippet>Purpose: To provide an engaging, clear, and interactive environment for users to take quizzes generated from their study materials. It guides them through questions, collects answers, and provides immediate or summary feedback.</snippet>
+      </artifact>
+      <artifact>
+        <path>docs/epics.md</path>
+        <title>ibe160 - Epic Breakdown</title>
+        <section>Story 4.3: Interactive Quiz Interface [FR4.1]</section>
+        <snippet>As a user, I want to take generated quizzes through an interactive interface, so that I can actively test my understanding. Acceptance Criteria: Given I have a generated quiz, When I start the quiz, Then I can select answers for each question, And the system provides immediate feedback on whether my answer is correct or incorrect.</snippet>
+      </artifact>
+      <artifact>
+        <path>docs/sprint-artifacts/tech-spec-epic-4.md</path>
+        <title>Epic Technical Specification: AI-Powered Learning Tools</title>
+        <section>Interactive Quiz Interface Workflow</section>
+        <snippet>1. User Action: User starts a generated quiz. 2. Frontend: Displays quiz questions and multiple-choice options. 3. User Action: User selects an answer. 4. Frontend: Provides immediate feedback on correctness. 5. User Action: User completes quiz. 6. Frontend: Displays overall score, motivational feedback, and explanations for each answer (correct/incorrect).</snippet>
+      </artifact>
+    </docs>
+    <code>
+      <artifact>
+        <path>src/app/layout.tsx</path>
+        <kind>component</kind>
+        <symbol>RootLayout</symbol>
+        <lines>1-20</lines>
+        <reason>Provides the main application layout and Supabase client setup, which the new quiz interface will live within.</reason>
+      </artifact>
+      <artifact>
+        <path>src/lib/supabase.ts</path>
+        <kind>utility</kind>
+        <symbol>createBrowserClient</symbol>
+        <lines>1-10</lines>
+        <reason>Shows how the Supabase client is initialized, which might be necessary for fetching quiz data.</reason>
+      </artifact>
+    </code>
+    <dependencies>
+      <npm>
+        <package name="next" version="16.0.5" />
+        <package name="react" version="19.2.0" />
+        <package name="react-dom" version="19.2.0" />
+        <package name="@supabase/ssr" version="^0.8.0" />
+        <package name="@supabase/supabase-js" version="^2.86.0" />
+      </npm>
+      <devDependencies>
+        <package name="typescript" version="^5" />
+        <package name="jest" version="^30.2.0" />
+        <package name="@testing-library/jest-dom" version="^6.9.1" />
+        <package name="tailwindcss" version="^4" />
+        <package name="eslint" version="^9" />
+      </devDependencies>
+    </dependencies>
+  </artifacts>
+  <constraints>
+    <constraint>The UI should be clean, simple, and accessible, following the established design system (shadcn/ui).</constraint>
+    <constraint>The quiz interface must be responsive and work well on different screen sizes.</constraint>
+    <constraint>All user data must be protected by Row Level Security (RLS) in Supabase.</constraint>
+    <constraint>Must adhere to WCAG 2.1 Level AA compliance.</constraint>
+  </constraints>
+  <interfaces>
+      <interface>
+        <name>QuizData</name>
+        <kind>Data Structure (JSON)</kind>
+        <signature>{ "questions": [{ "questionText": "...", "options": ["A", "B", "C"], "correctAnswer": "A", "explanation": "..." }] }</signature>
+        <path>docs/architecture.md (implied in generated_content table)</path>
+      </interface>
+  </interfaces>
+  <tests>
+    <standards>
+      Unit and integration tests will be written using Jest and React Testing Library. Tests should cover component rendering, user interactions, and state changes.
+    </standards>
+    <locations>
+      <location>tests/integration/quiz.test.ts</location>
+    </locations>
+    <ideas>
+      <idea>Render the quiz interface and verify that the first question and its answers are displayed correctly. (AC: 1)</idea>
+      <idea>Simulate a user selecting an answer and verify that the component's state updates accordingly. (AC: 1)</idea>
+      <idea>Simulate selecting a correct answer and verify that immediate positive feedback is shown. (AC: 2)</idea>
+      <idea>Simulate selecting an incorrect answer and verify that immediate corrective feedback is shown. (AC: 2)</idea>
+      <idea>Test the quiz completion flow and the display of the final score. (AC: 1, 2)</idea>
+    </ideas>
+  </tests>
+</story-context>
