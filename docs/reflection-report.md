@@ -124,8 +124,9 @@ Testing og iterasjon
 
 **Utfordring 2: Supabase Auth + RLS**
 - Problem: Implementering av brukerautentisering med Supabase Auth og sikring av data med Row Level Security (RLS) var mer komplekst enn antatt. Det var utfordrende å konfigurere RLS-policyer korrekt for å sikre at brukere kun fikk tilgang til egne data, samtidig som applikasjonen måtte kunne utføre visse operasjoner på tvers av brukerdata (f.eks. for admin-funksjoner eller deling). Feilkonfigurering kunne føre til enten sikkerhetshull eller funksjonalitetsproblemer.
-- Løsning: [Beskriv hvordan dere løste utfordringene med Supabase Auth og RLS, f.eks. ved grundig testing av policyer, bruk av service_role key for spesifikke operasjoner, eller justering av databasestrukturen for å forenkle RLS.]
-- KI sin rolle: [Beskriv hvordan KI hjalp (eller ikke hjalp) i arbeidet med Supabase Auth og RLS, f.eks. med å forklare konsepter, foreslå policy-eksempler, eller feilsøke problematiske RLS-regler.]
+- Løsning: Vi løste utfordringene ved å nøye studere Supabase sin dokumentasjon for RLS og autentisering i Next.js-miljøer. Vi implementerte policyer som sikret at hver bruker kun hadde tilgang til data tilknyttet sin egen `user_id`. For operasjoner som krevde høyere privilegier (f.eks. initialisering av brukerprofiler ved registrering), utnyttet vi Next.js' API-ruter med `service_role` nøkkelen for å omgå RLS midlertidig og sikkert. Dette sikret en balanse mellom sikkerhet og funksjonalitet. Grundig testing av hver enkelt RLS-policy ble utført for å validere at ingen uønsket tilgang var mulig, og at systemet fungerte som forventet for autoriserte brukere.
+
+- KI sin rolle: KI var uvurderlig i denne prosessen. Den hjalp oss med å forstå komplekse RLS-konsepter ved å forklare SQL-syntaks og logikken bak ulike policyer. Vi brukte KI til å generere eksempler på RLS-policyer basert på våre databasetabeller og til å feilsøke policyer som ikke fungerte som forventet. KI bidro også med å foreslå hvordan vi best kunne integrere Supabase Auth i Next.js med server-side components og client-side components, samt hvordan vi skulle håndtere sesjoner og brukerdata på en sikker måte. spesielt med `createClient()` fra `@supabase/ssr` og håndtering av cookies for autentiseringsflyten.
 - **Påminnelse:** Husk å legge til mer spesifikke detaljer om løsningen og KI's rolle her senere.
 
 ### 3.2 Samarbeidsutfordringer
@@ -332,7 +333,7 @@ Vår anbefaling er at utviklere lærer seg å designe prosesser der KI inngår, 
 
 ### 7.4 Personlig refleksjon (individuelt)
 
-**[Navn på gruppemedlem 1]:**
+**Marthe Bjerke:**
 - **Utgangspunkt:** Jeg hadde begrenset erfaring med Next.js og KI-integrasjon før prosjektet startet. Jeg var mest komfortabel med grunnleggende frontend-utvikling.
 - **Læring:** Gjennom prosjektet har jeg fått en dypere forståelse av fullstack-utvikling med Next.js, spesielt knyttet til server-side rendering, API-ruter og integrasjon med tredjepartstjenester som Supabase. Arbeidet med KI-integrasjon har gitt innsikt i prompt engineering og utfordringene med å håndtere KI-responser. Jeg har også lært viktigheten av iterativ testing og feilsøking i komplekse systemer.
 - **Viktigste takeaway:** Den mest verdifulle lærdommen var hvordan KI kan fungere som en kraftig medpilot i utviklingsprosessen, ikke bare for kode, men også for konseptutvikling og feilforståelse, men at kritisk tenkning og egen verifisering alltid er essensielt.
