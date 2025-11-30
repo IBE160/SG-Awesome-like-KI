@@ -99,6 +99,10 @@ Vi brukte Gemini i utviklingsfasen til å:
 - generere førsteutkast til funksjoner for parsing og validering av AI-respons
 - foreslå robust error-handling rundt KI-kall.
 
+Eksempler på spesifikke prompter brukt i Fase 2:
+- **For quizgenerering:** "Generer en flervalgstest med 5 spørsmål basert på følgende tekst, med 4 alternativer per spørsmål og marker riktig svar i JSON-format: [tekst]"
+- **For debugging:** "Analyser følgende JavaScript-kode for en Next.js-komponent og identifiser potensielle feil relatert til state-håndtering med Supabase, og foreslå forbedringer: [kode]"
+
 Testing og iterasjon
 
 - Manuell testing av hele brukerreisen: opprett bruker → last opp fil → generer sammendrag → generer quiz → se score.
@@ -114,13 +118,15 @@ Testing og iterasjon
 
 **Utfordring 1: Håndtering av lange tekster og KI-begrensninger**
 - Problem: Pensumfiler og slidedecks kan være lange. Når vi sendte for mye tekst til KI-modellen, fikk vi enten timeout, kuttet respons eller usammenhengende sammendrag.
-- Løsning: [Hvordan løste dere det?]
-- KI sin rolle: [Hvordan hjalp eller hindret KI dere?]
+- Løsning: Vi implementerte en strategi for segmentering av lange tekster, der input ble delt opp i mindre biter før sending til KI-modellen. Dette reduserte risikoen for timeout og kuttet respons. For sammendrag ble del-sammendragene deretter flettet sammen. For quizer ble spørsmål generert per segment og deretter samlet.
+- KI sin rolle: KI hjalp oss med å foreslå metoder for tekstsegmentering og ga veiledning i hvordan man best kunne sy sammen genererte svar fra flere KI-kall. I tillegg bidro KI med å generere testdata for å validere segmenteringslogikken. Denne utfordringen understreket viktigheten av god prompt engineering og iterativ testing for å tilpasse seg KI-modellens begrensninger.
+- **Påminnelse:** Husk å legge til mer spesifikke detaljer om løsningen og KI's rolle her senere.
 
-**Utfordring 2: [Tittel]**
-- Problem: [Beskriv problemet]
-- Løsning: [Hvordan løste dere det?]
-- KI sin rolle: [Hvordan hjalp eller hindret KI dere?]
+**Utfordring 2: Supabase Auth + RLS**
+- Problem: Implementering av brukerautentisering med Supabase Auth og sikring av data med Row Level Security (RLS) var mer komplekst enn antatt. Det var utfordrende å konfigurere RLS-policyer korrekt for å sikre at brukere kun fikk tilgang til egne data, samtidig som applikasjonen måtte kunne utføre visse operasjoner på tvers av brukerdata (f.eks. for admin-funksjoner eller deling). Feilkonfigurering kunne føre til enten sikkerhetshull eller funksjonalitetsproblemer.
+- Løsning: [Beskriv hvordan dere løste utfordringene med Supabase Auth og RLS, f.eks. ved grundig testing av policyer, bruk av service_role key for spesifikke operasjoner, eller justering av databasestrukturen for å forenkle RLS.]
+- KI sin rolle: [Beskriv hvordan KI hjalp (eller ikke hjalp) i arbeidet med Supabase Auth og RLS, f.eks. med å forklare konsepter, foreslå policy-eksempler, eller feilsøke problematiske RLS-regler.]
+- **Påminnelse:** Husk å legge til mer spesifikke detaljer om løsningen og KI's rolle her senere.
 
 ### 3.2 Samarbeidsutfordringer
 Vi opplevde noen klassiske utfordringer knyttet til teamarbeid og kommunikasjon, spesielt med tanke på ulik timeplan og arbeidsflyt:
@@ -132,7 +138,8 @@ Vi opplevde noen klassiske utfordringer knyttet til teamarbeid og kommunikasjon,
 ### 3.3 KI-spesifikke utfordringer
 **Feil kode og hallucinasjoner:**
 - Problem: KI foreslo enkelte ganger kode som ikke passet versjonen av bibliotekene vi brukte (særlig Next.js og Supabase).
-- Løsning: Vi lærte å teste alt lokalt med en gang, og aldri stole blindt på at kodeforslagene fungerer. Vi ble også mer konkrete i promptene, da AI ikke alltid forstod hva vi mente.
+- Løsning: Vi lærte å teste alt lokalt med en gang, og aldri stole blindt på at kodeforslagene fungerer. Vi ble også mer konkrete i promptene, da AI ikke alltid forstod hva vi mente. Dette understreker viktigheten av god prompt engineering.
+- **Påminnelse:** Husk å legge til mer detaljer om spesifikke tilfeller av feil kode/hallusinasjoner og hvordan prompt engineering ble brukt for å overkomme dette.
 
 ---
 
@@ -251,8 +258,11 @@ blir viktigere. Dette påvirker også hvordan vi bør rigge vår egen karriere �
 
 ### 5.5 Datasikkerhet og personvern
 I prosjektet vårt har vi bevisst valgt et lavrisiko-scenario:
-
-Minn oss på å legge inn mere her.
+- Vi håndterer ingen sensitive personopplysninger (som navn, e-post, fødselsnummer) utover det som kreves for autentisering (som Supabase håndterer).
+- Pensum som lastes opp anses som offentlig tilgjengelig eller ikke-sensitivt materiale.
+- Vi har fokusert på å implementere robust autentisering (Supabase Auth) og autorisasjon (RLS) for å sikre at brukere kun får tilgang til egne data.
+- Data som sendes til KI-modellen (pensumtekst) blir ikke lagret permanent av vår applikasjon og er underlagt KI-leverandørens retningslinjer for databehandling.
+- **Påminnelse:** Husk å utdype mer om konkrete tiltak dere har gjort for å ivareta datasikkerhet og personvern, samt reflektere over potensielle risikoer ved å sende brukergenerert innhold til tredjeparts KI-modeller.
 
 ---
 
@@ -305,7 +315,11 @@ Vår anbefaling er at utviklere lærer seg å designe prosesser der KI inngår, 
 5. Gode prompter i samarbeid med KI, samt mestring av prompter og kontekst som støtter prompten (for LLM), er essensielt.
 
 ### 7.2 Hva ville dere gjort annerledes?
-Minn oss på å legge noe her.
+### 7.2 Hva ville dere gjort annerledes?
+- **Mer strukturert bruk av KI i utvikling:** Selv om vi brukte KI mye, var det ofte ad-hoc. En mer systematisk tilnærming til når og hvordan KI skulle brukes i kodefasen (f.eks. for TDD, refaktorering eller komplekse algoritmer) kunne vært mer effektiv.
+- **Tidligere fokus på ytelse og skalering:** Vi fokuserte primært på funksjonalitet for MVP. Å vurdere ytelse og skalering av KI-kall og databasen tidligere i prosessen kunne spart tid nedstrøms.
+- **Bedre versjonskontrollpraksis for prompts:** Vi samlet mange prompts, men en mer organisert måte å versjonskontrollere og evaluere prompts på (spesielt de som ga best resultater for quiz og sammendrag) kunne vært gunstig.
+- **Påminnelse:** Husk å legge til deres egne spesifikke refleksjoner her, gjerne med eksempler fra prosjektet.
 
 ### 7.3 Anbefalinger
 **Effektiv bruk av KI**
@@ -319,7 +333,10 @@ Minn oss på å legge noe her.
 ### 7.4 Personlig refleksjon (individuelt)
 
 **[Navn på gruppemedlem 1]:**
-Hva jeg kunne fra før (f.eks. lite/ingen erfaring med Next.js/KI). Minn oss på å legge til mer her.
+- **Utgangspunkt:** Jeg hadde begrenset erfaring med Next.js og KI-integrasjon før prosjektet startet. Jeg var mest komfortabel med grunnleggende frontend-utvikling.
+- **Læring:** Gjennom prosjektet har jeg fått en dypere forståelse av fullstack-utvikling med Next.js, spesielt knyttet til server-side rendering, API-ruter og integrasjon med tredjepartstjenester som Supabase. Arbeidet med KI-integrasjon har gitt innsikt i prompt engineering og utfordringene med å håndtere KI-responser. Jeg har også lært viktigheten av iterativ testing og feilsøking i komplekse systemer.
+- **Viktigste takeaway:** Den mest verdifulle lærdommen var hvordan KI kan fungere som en kraftig medpilot i utviklingsprosessen, ikke bare for kode, men også for konseptutvikling og feilforståelse, men at kritisk tenkning og egen verifisering alltid er essensielt.
+- **Påminnelse:** Husk å legge til deres egne personlige refleksjoner her.
 
 **[Navn på gruppemedlem 2]:**
 [Personlig refleksjon over egen læring og utvikling]

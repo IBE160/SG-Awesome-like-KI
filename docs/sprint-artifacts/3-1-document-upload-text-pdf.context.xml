@@ -1,0 +1,115 @@
+<story-context id="sprint-artifacts/3-1-document-upload-text-pdf.context.xml" v="1.0">
+  <metadata>
+    <epicId>3</epicId>
+    <storyId>3.1</storyId>
+    <title>Document Upload (Text & PDF)</title>
+    <status>drafted</status>
+    <generatedAt>2025-11-30</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>sprint-artifacts/3-1-document-upload-text-pdf.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>user</asA>
+    <iWant>to upload my study materials in plain text or PDF format</iWant>
+    <soThat>I can use them to generate summaries and quizzes.</soThat>
+    <tasks>
+      <task>
+        <description>Implement UI for file selection and drag-and-drop</description>
+        <acRef>1</acRef>
+        <subtask>Integrate `Drag-and-Drop Upload Area` custom component</subtask>
+        <subtask>Implement client-side file type validation (.txt, .pdf)</subtask>
+        <subtask>Implement client-side file size validation (max 10MB)</subtask>
+      </task>
+      <task>
+        <description>Implement `POST /api/upload` endpoint</description>
+        <acRef>1, 2, 3, 4, 5, 6, 7</acRef>
+        <subtask>Handle file upload to Supabase Storage</subtask>
+        <subtask>Store file metadata in `study_materials` table</subtask>
+        <subtask>Implement server-side file type and size validation</subtask>
+        <subtask>Integrate Vercel Function for PDF text extraction</subtask>
+        <subtask>Handle errors for unsupported file types, oversized files, corrupted/password-protected PDFs</subtask>
+        <subtask>Implement retry logic for network interruptions during upload</subtask>
+      </task>
+      <task>
+        <description>Implement `Loading Screen/Modal for Generation` component for upload progress</description>
+        <acRef>6</acRef>
+      </task>
+      <task>
+        <description>Implement post-upload UI with "Generate Summary" and "Generate Quiz" options</description>
+        <acRef>1</acRef>
+      </task>
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+    <ac id="1">Users can upload `.txt` and `.pdf` files.</ac>
+    <ac id="2">The system shall enforce a strict file size limit of 10MB.</ac>
+    <ac id="3">The system shall perform basic file extension validation.</ac>
+    <ac id="4">If a user attempts to upload an unsupported file type, the system shall display an error message: 'This file type is not supported. Please try another file.'</ac>
+    <ac id="5">If an uploaded PDF is password-protected or corrupted, the system shall display an error message: 'This file is password-protected or corrupted and cannot be processed.'</ac>
+    <ac id="6">If the internet connection is interrupted during upload, the system shall display an error message and allow the user to retry the upload.</ac>
+    <ac id="7">The system enforces a strict file size limit of 10MB.</ac>
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc path="docs/PRD.md" title="Product Requirements Document" section="FR2.1 - Document Upload" snippet="The system shall allow users to upload study materials in plain text and PDF formats, with file size limits and validation."/>
+      <doc path="docs/architecture.md" title="AI Study Buddy - High-Level Architecture" section="5. File Handling" snippet="The Next.js frontend will handle file uploads, with a strict file size limit implemented on the client-side. Files will be uploaded to Supabase Storage. For PDF files, a Vercel Function will be triggered after upload. This function will use a cloud-based AI service (e.g., Google Cloud Vision AI) to parse the PDF and extract the text content."/>
+      <doc path="docs/UX-Design/ux-design-specification.md" title="ibe160 UX Design Specification" section="Custom Component: Drag-and-Drop Upload Area" snippet="To provide an intuitive and efficient interface for users to upload study materials (text/PDF files) by dragging and dropping them directly into the application. ... Content/Data Displayed: Instructional Text, Supported File Types, Maximum File Size, Visual Drop Zone, File Count/Names, Upload Progress, Error Messages."/>
+      <doc path="docs/UX-Design/ux-design-specification.md" title="ibe160 UX Design Specification" section="Custom Component: Loading Screen/Modal for Generation" snippet="To inform the user that a content generation process (quiz or summary) is actively underway, prevent further interaction with the main application during a critical background task, and manage expectations regarding waiting times. ... Content/Data Displayed: Clear Title/Message, Contextual Sub-message, Progress Indicator, Optional Fun/Engaging Message, Error Message Area."/>
+      <doc path="docs/epics.md" title="ibe160 - Epic Breakdown" section="Story 3.1: Document Upload (Text & PDF)" snippet="As a user, I want to upload my study materials in plain text or PDF format, So that I can use them to generate summaries and quizzes. ... Acceptance Criteria: Users can upload .txt and .pdf files. The system shall enforce a strict file size limit of 10MB."/>
+      <doc path="docs/sprint-artifacts/tech-spec-epic-3.md" title="Epic Technical Specification: Content Management & Organization" section="Story 3.1: Document Upload (Text & PDF)" snippet="Users can upload .txt and .pdf files. The system shall enforce a strict file size limit of 10MB. The system shall perform basic file extension validation. If a user attempts to upload an unsupported file type, the system shall display an error message: 'This file type is not supported. Please try another file.' If an uploaded PDF is password-protected or corrupted, the system shall display an error message: 'This file is password-protected or corrupted and cannot be processed.' If the internet connection is interrupted during upload, the system shall display an error message and allow the user to retry the upload. The system enforces a strict file size limit of 10MB."/>
+    </docs>
+    <code>
+      <code-ref path="src/app/upload/page.tsx" kind="component" reason="UI for file upload"/>
+      <code-ref path="src/app/api/upload/route.ts" kind="api-route" reason="API endpoint for file upload"/>
+      <code-ref path="src/components/DragAndDropUploadArea.tsx" kind="component" reason="Custom component for drag-and-drop file upload"/>
+      <code-ref path="src/components/LoadingGenerationModal.tsx" kind="component" reason="Custom component for displaying upload progress"/>
+      <code-ref path="src/lib/supabase/client.ts" kind="utility" reason="Supabase client integration for file upload and database interaction"/>
+      <code-ref path="vercel/functions/pdf-parser.ts" kind="serverless-function" reason="Vercel Function for PDF text extraction"/>
+    </code>
+    <dependencies>
+      <dependency name="Next.js" type="framework"/>
+      <dependency name="React" type="library"/>
+      <dependency name="Supabase" type="BaaS"/>
+      <dependency name="Tailwind CSS" type="styling"/>
+      <dependency name="Google Cloud Vision AI" type="AI-service"/>
+      <dependency name="@supabase/supabase-js" type="library"/>
+      <dependency name="react-dropzone" type="library"/>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint type="security">Row Level Security (RLS) on `study_materials` table to ensure user data isolation.</constraint>
+    <constraint type="performance">Efficient handling of large file uploads (up to 10MB) with progress feedback.</constraint>
+    <constraint type="file_size_limit">Strict file size limit of 10MB for uploaded documents.</constraint>
+    <constraint type="file_types">Only .txt and .pdf file types are supported for upload.</constraint>
+    <constraint type="architecture">Frontend-Backend Communication: Next.js Frontend communicates with Supabase and Vercel Functions via API routes/Route Handlers.</constraint>
+  </constraints>
+  <interfaces>
+    <interface name="POST /api/upload" kind="REST endpoint" signature="multipart/form-data with file: File, class_id?: string, class_section_id?: string" path="src/app/api/upload/route.ts"/>
+  </interfaces>
+  <tests>
+    <standards>
+      *   **Unit Tests:** Client-side validation logic, API utility functions.
+      *   **Integration Tests:** `POST /api/upload` endpoint with Supabase Storage and `study_materials` table.
+      *   **E2E Tests:** Simulate user journey for file upload, including valid files, error scenarios (unsupported type, oversized, corrupted PDF, network interrupt), and post-upload options.
+    </standards>
+    <locations>
+      <location>tests/unit/</location>
+      <location>tests/integration/</location>
+      <location>tests/e2e/</location>
+      <location>src/app/api/upload/route.test.ts</location>
+    </locations>
+    <ideas>
+      <idea acId="1">E2E: Upload valid .txt and .pdf files.</idea>
+      <idea acId="2">Unit/Integration: Verify server-side rejection for files > 10MB. E2E: Attempt to upload file > 10MB, verify error message.</idea>
+      <idea acId="3">Unit/Integration: Verify server-side rejection for unsupported types. E2E: Attempt to upload unsupported file (e.g., .docx), verify error.</idea>
+      <idea acId="4">E2E: Attempt to upload unsupported file type (e.g., `.docx`), verify specific error message.</idea>
+      <idea acId="5">E2E: Upload password-protected/corrupted PDF, verify specific error message from PDF processing.</idea>
+      <idea acId="6">E2E: Simulate network interruption during upload (e.g., by disabling network), verify error and retry option.</idea>
+      <idea acId="7">Unit/Integration: Verify server-side rejection for files > 10MB. E2E: Attempt to upload file > 10MB, verify error message.</idea>
+    </ideas>
+  </tests>
+</story-context>
