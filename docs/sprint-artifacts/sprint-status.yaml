@@ -66,6 +66,6 @@ development_status:
   5-1-implement-core-ui-design-system: ready-for-dev
   5-2-ensure-mobile-responsiveness: backlog
   5-3-implement-wcag-aa-screen-reader-support: backlog
-  5-4-implement-reduced-motion-options: backlog
-  5-5-build-custom-ux-components: backlog
+  5-4-implement-reduced-motion-options: drafted
+  5-5-build-custom-ux-components: drafted
   epic-5-retrospective: optional
