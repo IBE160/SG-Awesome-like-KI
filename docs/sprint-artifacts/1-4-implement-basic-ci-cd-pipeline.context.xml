@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<story_context>
+  <story_details>
+    <epic_id>1</epic_id>
+    <story_id>1.4</story_id>
+    <story_key>1-4-implement-basic-ci-cd-pipeline</story_key>
+    <title>Implement Basic CI/CD Pipeline</title>
+    <as_a>a Developer</as_a>
+    <i_want>to set up a basic Continuous Integration/Continuous Deployment (CI/CD) pipeline</i_want>
+    <so_that>code changes are automatically tested and deployed, ensuring quality and rapid iteration.</so_that>
+  </story_details>
+  <acceptance_criteria>
+    <criterion id="1">**Given** the Next.js application and Supabase integration are set up **When** a code change is pushed to the main branch **Then** automated tests (e.g., linting, basic unit tests) are run.</criterion>
+    <criterion id="2">**And** the application is automatically deployed to a staging environment (e.g., Vercel).</criterion>
+  </acceptance_criteria>
+  <tasks>
+    <task id="1" ac_refs="1, 2">Set up a GitHub Actions workflow or Vercel pipeline.</task>
+    <task id="2" ac_refs="1">Configure automated linting to run on pull requests/pushes.</task>
+    <task id="3" ac_refs="1">Configure basic unit tests to run on pull requests/pushes.</task>
+    <task id="4" ac_refs="2">Configure automatic deployment to a staging environment (e.g., Vercel) on successful main branch merges.</task>
+    <task id="5" ac_refs="">Ensure dependency caching is configured in the CI/CD pipeline.</task>
+    <task id="6" ac_refs="">Document the CI/CD pipeline setup and usage in `docs/architecture.md` or a new `docs/ci-cd-strategy.md`.</task>
+  </tasks>
+  <development_environment>
+    <dependencies>
+      <dependency name="@supabase/ssr" version="^0.8.0"/>
+      <dependency name="@supabase/supabase-js" version="^2.86.0"/>
+      <dependency name="next" version="16.0.5"/>
+      <dependency name="react" version="19.2.0"/>
+      <dependency name="react-dom" version="19.2.0"/>
+    </dependencies>
+    <devDependencies>
+      <dependency name="@babel/core" version="^7.28.5"/>
+      <dependency name="@babel/preset-env" version="^7.28.5"/>
+      <dependency name="@babel/preset-react" version="^7.28.5"/>
+      <dependency name="@babel/preset-typescript" version="^7.28.5"/>
+      <dependency name="@tailwindcss/postcss" version="^4"/>
+      <dependency name="@testing-library/jest-dom" version="^6.9.1"/>
+      <dependency name="@types/jest" version="^30.0.0"/>
+      <dependency name="@types/node" version="^20"/>
+      <dependency name="@types/react" version="^19"/>
+      <dependency name="@types/react-dom" version="^19"/>
+      <dependency name="babel-jest" version="^30.2.0"/>
+      <dependency name="eslint" version="^9"/>
+      <dependency name="eslint-config-next" version="16.0.5"/>
+      <dependency name="jest" version="^30.2.0"/>
+      <dependency name="jest-environment-jsdom" version="^30.2.0"/>
+      <dependency name="tailwindcss" version="^4"/>
+      <dependency name="ts-jest" version="^29.4.5"/>
+      <dependency name="typescript" version="^5"/>
+    </devDependencies>
+    <scripts>
+      <script name="dev" command="next dev"/>
+      <script name="build" command="next build"/>
+      <script name="start" command="next start"/>
+      <script name="lint" command="eslint"/>
+      <script name="test" command="jest --coverage"/>
+      <script name="test:watch" command="jest --watch --coverage"/>
+    </scripts>
+  </development_environment>
+  <project_structure>
+    <file path=".github/workflows/ci.yml"/>
+    <file path="package.json"/>
+    <file path="jest.config.mjs"/>
+    <file path="tsconfig.json"/>
+    <file path="next.config.ts"/>
+    <directory path="src"/>
+    <directory path="tests"/>
+    <directory path="docs"/>
+  </project_structure>
+  <relevant_files>
+    <file path=".github/workflows/ci.yml" reason="Existing CI workflow to be modified or used as a reference."/>
+    <file path="package.json" reason="Defines scripts for linting and testing, and manages dependencies."/>
+    <file path="jest.config.mjs" reason="Configuration for the Jest testing framework."/>
+  </relevant_files>
+  <coding_standards>
+    <standard>ESLint is used for linting. Run `npm run lint` to check for issues.</standard>
+  </coding_standards>
+  <testing_strategy>
+    <standard>Jest is the testing framework. Unit tests are expected for new functionality. The CI pipeline should run these tests automatically. Note that the previous story highlighted issues with the Jest/Supabase integration test setup, which may need to be addressed.</standard>
+    <locations>
+      <location>tests/</location>
+    </locations>
+  </testing_strategy>
+  <architectural_guidance>
+    <guidance>The architecture relies on Vercel for deployment. The CI/CD pipeline should leverage Vercel's integration with GitHub for automated deployments to a staging environment upon merges to the main branch. The pipeline should be kept simple and fast, focusing on linting, testing, and building.</guidance>
+    <source_documents>
+      <doc path="docs/architecture.md" title="AI Study Buddy - High-Level Architecture" section="1.1. System Diagram"/>
+      <doc path="docs/architecture.md" title="AI Study Buddy - High-Level Architecture" section="6. Scalability and Performance"/>
+      <doc path="docs/epics.md" title="ibe160 - Epic Breakdown" section="Epic 1: Foundation &amp; Core Setup"/>
+      <doc path="docs/PRD.md" title="ibe160 - Product Requirements Document" section="Non-Functional Requirements"/>
+    </source_documents>
+  </architectural_guidance>
+  <previous_story_learnings>
+    <learning type="technical_debt">Integration test setup for Supabase was problematic due to Jest configuration issues and needs to be revisited. Manual verification during runtime is needed.</learning>
+    <learning type="new_files">The previous story created the Jest configuration files (`jest.config.mjs`, `jest.setup.ts`) and an initial integration test (`tests/integration/supabase.test.ts`).</learning>
+  </previous_story_learnings>
+</story_context>
