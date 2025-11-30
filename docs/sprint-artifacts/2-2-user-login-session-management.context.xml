@@ -1,0 +1,168 @@
+<story-context id=".bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>2</epicId>
+    <storyId>2</storyId>
+    <title>User Login &amp; Session Management</title>
+    <status>drafted</status>
+    <generatedAt>2025-11-30</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/sprint-artifacts/2-2-user-login-session-management.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>registered user</asA>
+    <iWant>to log in to my account</iWant>
+    <soThat>I can access my personalized study materials and generated content</soThat>
+    <tasks>
+- [ ] **Task 1: Implement Login UI (AC: All)**
+  - [ ] Create a new page/component for login.
+  - [ ] Build a form with email and password fields.
+  - [ ] Add client-side validation for email format.
+  - [ ] Integrate with Supabase Auth for login functionality (`supabase.auth.signInWithPassword()`).
+  - [ ] Display appropriate feedback for successful login, incorrect credentials, and account lockout.
+  - [ ] Provide a link to "Forgot Password" (Story 2.3).
+  - [ ] Handle secure session management using `@supabase/ssr`.
+- [ ] **Task 2: Implement Login API Endpoint (AC: All)**
+  - [ ] Create a Next.js API route for login (e.g., `src/app/api/auth/login/route.ts`).
+  - [ ] Call `supabase.auth.signInWithPassword()` with provided credentials.
+  - [ ] Implement logic for handling incorrect credentials and account lockout (`Supabase Auth`).
+  - [ ] Securely manage and return session tokens/cookies.
+- [ ] **Task 3: Testing (AC: All)**
+  - [ ] Write unit tests for UI component interactions and client-side validation.
+  - [ ] Write integration tests for the `/api/auth/login` endpoint, covering success, incorrect credentials, and lockout scenarios.
+  - [ ] Write end-to-end tests for the full login flow (dependent on Story 2.1 completion).
+  - [ ] Manual testing of UI/UX on various devices and browsers.
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+1. **Given** I have an existing account, **when** I enter my correct email and password, **then** I am successfully logged in and my session is managed securely.
+2. **And** if I enter incorrect credentials, I receive an error message.
+3. **And** if I exceed 5 failed login attempts, my account is temporarily locked.
+4. **And** when my account is temporarily locked, the system shall display a clear, supportive message explaining what happened and provide an easy path to reset the password.
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <artifact>
+        <path>docs/PRD.md</path>
+        <title>ibe160 - Product Requirements Document</title>
+        <section>Functional Requirements</section>
+        <snippet>FR1.1 - User Authentication: The system shall allow users to securely register, log in, and manage their profiles using email/password authentication. It also specifies password requirements and account lockout.</snippet>
+      </artifact>
+      <artifact>
+        <path>docs/PRD.md</path>
+        <title>ibe160 - Product Requirements Document</title>
+        <section>Non-Functional Requirements</section>
+        <snippet>Security: All user data must be protected by Row Level Security (RLS). All data transmission must be encrypted using HTTPS. Passwords must be hashed using a modern, strong algorithm.</snippet>
+      </artifact>
+      <artifact>
+        <path>docs/architecture.md</path>
+        <title>AI Study Buddy - High-Level Architecture</title>
+        <section>High-Level System Design</section>
+        <snippet>The Next.js Frontend communicates with the Supabase Backend for data and authentication. This highlights the overall system interaction for user login.</snippet>
+      </artifact>
+      <artifact>
+        <path>docs/architecture.md</path>
+        <title>AI Study Buddy - High-Level Architecture</title>
+        <section>API Design</section>
+        <snippet>The API endpoint `POST /api/auth/login` is specified for logging in a user, which is central to this story.</snippet>
+      </artifact>
+      <artifact>
+        <path>docs/architecture.md</path>
+        <title>AI Study Buddy - High-Level Architecture</title>
+        <section>Authentication and Authorization</section>
+        <snippet>User authentication will be handled by Supabase Auth using email and password, and the `@supabase/ssr` library will manage secure, cookie-based sessions.</snippet>
+      </artifact>
+      <artifact>
+        <path>docs/epics.md</path>
+        <title>ibe160 - Epic Breakdown</title>
+        <section>Epic 2: User Onboarding &amp; Authentication</section>
+        <snippet>This epic focuses on enabling secure user account creation and management, providing a personalized and protected space for their study materials.</snippet>
+      </artifact>
+    </docs>
+    <code>
+      <artifact>
+        <path>src/lib/supabase.ts</path>
+        <kind>library</kind>
+        <symbol>createClient</symbol>
+        <reason>Provides the Supabase client instance for interacting with authentication services.</reason>
+      </artifact>
+    </code>
+    <dependencies>
+      <ecosystem name="Node.js">
+        <package name="next" version="16.0.5" />
+        <package name="react" version="19.2.0" />
+        <package name="react-dom" version="19.2.0" />
+        <package name="tailwindcss" version="^4" />
+        <package name="@supabase/ssr" version="^0.8.0" />
+        <package name="@supabase/supabase-js" version="^2.86.0" />
+        <package name="eslint" version="^9" />
+      </ecosystem>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint>
+      <description>Password requirements: minimum 5 letters, 1 number, 1 special symbol.</description>
+      <source>docs/PRD.md#FR1.1---User-Authentication</source>
+    </constraint>
+    <constraint>
+      <description>Account lockout after 5 consecutive failed login attempts.</description>
+      <source>docs/PRD.md#FR1.1---User-Authentication</source>
+    </constraint>
+    <constraint>
+      <description>Secure, cookie-based session management using `@supabase/ssr`.</description>
+      <source>docs/architecture.md#Authentication-and-Authorization</source>
+    </constraint>
+    <constraint>
+      <description>Utilize Supabase Auth for user management.</description>
+      <source>docs/architecture.md#Authentication-and-Authorization</source>
+    </constraint>
+    <constraint>
+      <description>Row Level Security (RLS) must be enabled on all user data tables.</description>
+      <source>docs/architecture.md#Authentication-and-Authorization</source>
+    </constraint>
+  </constraints>
+  <interfaces>
+    <interface>
+      <name>Login API Endpoint</name>
+      <kind>REST endpoint</kind>
+      <signature>POST /api/auth/login</signature>
+      <path>src/app/api/auth/login/route.ts</path>
+    </interface>
+    <interface>
+      <name>Supabase signInWithPassword</name>
+      <kind>function signature</kind>
+      <signature>supabase.auth.signInWithPassword({ email, password })</signature>
+      <path>src/lib/supabase.ts</path>
+    </interface>
+  </interfaces>
+  <tests>
+    <standards>
+      The project uses Jest for unit and integration testing with coverage reporting. Different levels of testing are expected: unit for UI/client-side logic, integration for API endpoints, and end-to-end for full user flows. Manual testing for UI/UX is also part of the standard.
+    </standards>
+    <locations>
+      <location>tests/</location>
+      <location>src/**/*.test.ts</location>
+    </locations>
+    <ideas>
+      <idea ac_id="1">
+        <description>Verify successful login through UI and API. Expect redirection and secure session.</description>
+        <type>E2E, Integration, Unit</type>
+      </idea>
+      <idea ac_id="2">
+        <description>Verify API returns error for incorrect credentials and UI displays appropriate message.</description>
+        <type>Integration, Unit</type>
+      </idea>
+      <idea ac_id="3">
+        <description>Verify account locks after 5 failed attempts via API calls.</description>
+        <type>Integration</type>
+      </idea>
+      <idea ac_id="4">
+        <description>Verify UI displays supportive message and path to reset password for locked account.</description>
+        <type>E2E, Unit</type>
+      </idea>
+    </ideas>
+  </tests>
+</story-context>

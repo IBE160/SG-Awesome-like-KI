@@ -43,9 +43,9 @@ development_status:
   epic-1-retrospective: optional
   epic-2: contexted
   2-1-user-registration: in-progress
-  2-2-user-login-session-management: backlog
-  2-3-password-reset: backlog
-  2-4-user-profile-management-rls-enforcement: backlog
+  2-2-user-login-session-management: ready-for-dev
+  2-3-password-reset: ready-for-dev
+  2-4-user-profile-management-rls-enforcement: ready-for-dev
   epic-2-retrospective: optional
   epic-3: contexted
   3-1-document-upload-text-pdf: ready-for-dev
