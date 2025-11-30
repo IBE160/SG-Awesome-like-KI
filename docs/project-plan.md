@@ -77,22 +77,22 @@
 <img src="images/bmad-workflow.svg" alt="BMAD workflow">
 
 # Oversikt Epics fase 4
-  - [ ] Epic 1 (Sofie 29.11)
+  - [ ] Epic 1 (Sofie)
     - [x] /run-agent-task sm create-epic-tech-context {prompt / user-input-file}
       - [x] File: sprint-artifacts/tech-spec-epic-{{epic_id}}.md
     - [x] /run-agent-task sm validate-epic-tech-context {prompt / user-input-file}
     - foreach story in epic:
-    - [ ] 1.1 
+    - [x] 1.1 
       - [x] /run-agent-task sm *create-story {prompt / user-input-file}
         - [x] File: sprint-artifacts/{{story_key}}.md
       - [x] /run-agent-task sm *validate-create-story {prompt / user-input-file}
       - [x] /run-agent-task sm *create-story-context {prompt / user-input-file}
         - [x] File: sprint-artifacts/{{story_key}}.context.xml
       - [x] /run-agent-task sm *validate-story-context {prompt / user-input-file}
-      - [ ] /run-agent-task dev *implement-story {prompt / user-input-file}
-      - [ ] /run-agent-task dev *validate-story {prompt / user-input-file}
+      - [x] /run-agent-task dev *implement-story {prompt / user-input-file}
+      - [x] /run-agent-task dev *validate-story {prompt / user-input-file}
     - [ ] 1.2
-      - [ ] /run-agent-task sm *create-story {prompt / user-input-file}
+      - [x] /run-agent-task sm *create-story {prompt / user-input-file} - Hannah har gjort det
         - [ ] File: sprint-artifacts/{{story_key}}.md
       - [ ] /run-agent-task sm *validate-create-story {prompt / user-input-file}
       - [ ] /run-agent-task sm *create-story-context {prompt / user-input-file}
