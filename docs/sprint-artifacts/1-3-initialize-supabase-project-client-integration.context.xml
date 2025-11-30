@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<story_context>
+  <story>
+    <epic_id>1</epic_id>
+    <story_id>3</story_id>
+    <story_key>1-3-initialize-supabase-project-client-integration</story_key>
+    <title>Initialize Supabase Project &amp; Client Integration</title>
+    <as_a>a Developer</as_a>
+    <i_want>to set up a new Supabase project and integrate the Supabase client into the Next.js application</i_want>
+    <so_that>we have a backend-as-a-service for database, authentication, and storage for user data and content management</so_that>
+  </story>
+  <acceptance_criteria>
+    <criterion id="1">Given the Next.js application is set up, when the Supabase project is initialized, then a new Supabase project is created.</criterion>
+    <criterion id="2">And the Supabase client (`@supabase/supabase-js` and `@supabase/ssr`) is configured in the Next.js application.</criterion>
+    <criterion id="3">And environment variables for Supabase URL and Anon Key are securely managed.</criterion>
+    <criterion id="4">And the `.env.local` file is included in `.gitignore`.</criterion>
+  </acceptance_criteria>
+  <tasks>
+    <task ac_ref="1">Create a new Supabase project using the Supabase CLI or web interface.</task>
+    <task ac_ref="2">Install Supabase client libraries (`@supabase/supabase-js` and `@supabase/ssr`) in the Next.js application.</task>
+    <task ac_ref="2">Configure the Supabase client in the Next.js application, ensuring secure cookie-based session management.</task>
+    <task ac_ref="3">Set up environment variables for Supabase URL and Anon Key.</task>
+    <task ac_ref="4">Ensure `.env.local` is included in `.gitignore` to prevent committing sensitive information.</task>
+  </tasks>
+  <artifacts>
+    <docs>
+      <doc path="docs/PRD.md" title="ibe160 - Product Requirements Document" section="Functional Requirements - User Authentication" snippet="This story directly supports FR1.1 (User Authentication), FR1.2 (User Data Protection), and FR2.1 (Document Upload) by laying the groundwork for secure backend services."/>
+      <doc path="docs/architecture.md" title="AI Study Buddy - High-Level Architecture" section="1.1 System Diagram" snippet="This story establishes the connection to the Supabase Backend (BaaS) and PostgreSQL Database, as outlined in the system diagram. It is fundamental for data management, authentication, and storage components."/>
+      <doc path="docs/architecture.md" title="AI Study Buddy - High-Level Architecture" section="4. Authentication and Authorization" snippet="This story implements critical aspects of authentication using Supabase Auth and secure cookie-based session management with `@supabase/ssr`. It also sets the stage for Row Level Security (RLS) enforcement."/>
+      <doc path="docs/epics.md" title="ibe160 - Epic Breakdown" section="Epic 1: Foundation &amp; Core Setup" snippet="Story 1.3 is a key part of Epic 1, establishing the essential infrastructure for data, authentication, and storage, which all subsequent epics will build upon."/>
+      <doc path="docs/sprint-artifacts/tech-spec-epic-1.md" title="Epic Technical Specification: Foundation &amp; Core Setup" section="Objectives and Scope" snippet="This story is in-scope for Epic 1, focusing on initializing the Supabase project and integrating the client, which is a core objective for establishing the backend."/>
+      <doc path="docs/sprint-artifacts/tech-spec-epic-1.md" title="Epic Technical Specification: Foundation &amp; Core Setup" section="System Architecture Alignment" snippet="This story directly aligns with setting up the Supabase Backend (BaaS) and securing environment variables, as detailed in the Epic 1 technical specification."/>
+      <doc path="docs/sprint-artifacts/tech-spec-epic-1.md" title="Epic Technical Specification: Foundation &amp; Core Setup" section="Dependencies and Integrations" snippet="This story introduces the `@supabase/supabase-js` and `@supabase/ssr` dependencies, which are critical for Supabase client integration."/>
+    </docs>
+    <code>
+      <file path="src/app/layout.tsx" kind="Next.js Layout" reason="Potential file to add Supabase client initialization (e.g., creating a Supabase client instance and making it available to the app)."></file>
+      <file path="src/app/page.tsx" kind="Next.js Page" reason="Potential file for initial testing of Supabase client integration (e.g., a simple data fetch or auth check)."></file>
+      <file path="package.json" kind="Configuration" reason="Will be modified to include `@supabase/supabase-js` and `@supabase/ssr` dependencies."></file>
+      <file path=".gitignore" kind="Configuration" reason="Will be modified to ensure `.env.local` is excluded."></file>
+    </code>
+    <dependencies>
+      <nodejs>
+        <package name="@supabase/ssr" version="^0.7.0"/>
+        <package name="@supabase/supabase-js" version="^2.84.0"/>
+        <package name="next" version="^16.0.3"/>
+        <package name="react" version="^19.2.0"/>
+        <package name="react-dom" version="^19.2.0"/>
+        <dev-package name="@eslint/js" version="^9.39.1"/>
+        <dev-package name="@types/react" version="19.2.7"/>
+        <dev-package name="@typescript-eslint/eslint-plugin" version="^8.48.0"/>
+        <dev-package name="autoprefixer" version="^10.4.22"/>
+        <dev-package name="eslint-plugin-react" version="^7.37.5"/>
+        <dev-package name="eslint-plugin-react-hooks" version="^7.0.1"/>
+        <dev-package name="postcss" version="^8.5.6"/>
+        <dev-package name="tailwindcss" version="^4.1.17"/>
+        <dev-package name="typescript" version="5.9.3"/>
+        <dev-package name="typescript-eslint" version="^8.48.0"/>
+      </nodejs>
+    </dependencies>
+  </artifacts>
+  <constraints>
+    <constraint>All file paths must be project-relative.</constraint>
+    <constraint>Use Supabase CLI or web interface for project creation.</constraint>
+    <constraint>Environment variables for Supabase URL and Anon Key must be securely managed and not exposed on the client-side.</constraint>
+    <constraint>The Supabase client must be configured for secure, cookie-based session management in Next.js.</constraint>
+    <constraint>The `.env.local` file must be explicitly included in `.gitignore`.</constraint>
+  </constraints>
+  <tests>
+    <standards>Automated tests should be placed in the `tests` directory. Integration tests are critical for verifying Supabase client setup.</standards>
+    <locations>
+      <location>tests/</location>
+    </locations>
+    <ideas>
+      <idea ac_ref="1">Verify the Supabase project is created and accessible (manual check of Supabase dashboard).</idea>
+      <idea ac_ref="2">Verify `@supabase/supabase-js` and `@supabase/ssr` are installed in `package.json`.</idea>
+      <idea ac_ref="2">Write a basic integration test to verify the Supabase client can be initialized without errors.</idea>
+      <idea ac_ref="3">Verify environment variables are correctly loaded and accessible within the application (e.g., a simple API route that logs the values, then check logs).</idea>
+      <idea ac_ref="4">Verify `.gitignore` contains the entry for `.env.local`.</idea>
+    </ideas>
+  </tests>
+</story_context>
