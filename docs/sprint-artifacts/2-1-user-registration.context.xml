@@ -1,0 +1,224 @@
+<story-context id="{bmad_folder}/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>2</epicId>
+    <storyId>2.1</storyId>
+    <title>User Registration</title>
+    <status>drafted</status>
+    <generatedAt>2025-11-30</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>C:\Hannah\SG-Awesome-like-KI\docs\sprint-artifacts/2-1-user-registration.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>new user</asA>
+    <iWant>to create an account with my email and a secure password</iWant>
+    <soThat>I can access the AI Study Buddy's features</soThat>
+    <tasks>
+      &lt;task id="1"&gt;
+        &lt;description&gt;Create Registration UI&lt;/description&gt;
+        &lt;acceptance-criteria ref="1,2" /&gt;
+        &lt;subtask&gt;Create a new page at `/register`.&lt;/subtask&gt;
+        &lt;subtask&gt;Build a form with fields for email and password.&lt;/subtask&gt;
+        &lt;subtask&gt;Implement client-side validation for email format and password strength.&lt;/subtask&gt;
+      &lt;/task&gt;
+      &lt;task id="2"&gt;
+        &lt;description&gt;Implement Registration API Endpoint&lt;/description&gt;
+        &lt;acceptance-criteria ref="1,2" /&gt;
+        &lt;subtask&gt;Create a Next.js API route at `/api/auth/register`.&lt;/subtask&gt;
+        &lt;subtask&gt;Use Supabase client to call `supabase.auth.signUp()`.&lt;/subtask&gt;
+        &lt;subtask&gt;Handle success and error cases (e.g., email already in use).&lt;/subtask&gt;
+      &lt;/task&gt;
+      &lt;task id="3"&gt;
+        &lt;description&gt;Testing&lt;/description&gt;
+        &lt;acceptance-criteria ref="1,2" /&gt;
+        &lt;subtask&gt;Write unit tests for the registration form validation.&lt;/subtask&gt;
+        &lt;subtask&gt;Write an integration test for the `/api/auth/register` endpoint.&lt;/subtask&gt;
+        &lt;subtask&gt;Manually test the end-to-end registration flow.&lt;/subtask&gt;
+      &lt;/task&gt;
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+    &lt;criterion id="1"&gt;
+      &lt;description&gt;**Given** I am on the registration page, **when** I enter a unique email and a password meeting the requirements (5 letters, 1 number, 1 special symbol), **then** my account is successfully created, and I am logged in.&lt;/description&gt;
+    &lt;/criterion&gt;
+    &lt;criterion id="2"&gt;
+      &lt;description&gt;**And** if I enter an email already in use, I receive a message and an option to reset my password.&lt;/description&gt;
+    &lt;/criterion&gt;
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/PRD.md</path>
+        <title>ibe160 - Product Requirements Document</title>
+        <section>Functional Requirements - User Management &amp; Security</section>
+        <snippet>FR1.1 - User Authentication: "The system shall allow users to securely register, log in, and manage their profiles using email/password authentication."</snippet>
+      </doc>
+      <doc>
+        <path>docs/PRD.md</path>
+        <title>ibe160 - Product Requirements Document</title>
+        <section>Functional Requirements - User Management &amp; Security</section>
+        <snippet>FR1.2 - Data Privacy Compliance: "The system shall adhere to student data privacy regulations (FERPA, COPPA) by implementing RLS and a clear privacy policy."</snippet>
+      </doc>
+      <doc>
+        <path>docs/PRD.md</path>
+        <title>ibe160 - Product Requirements Document</title>
+        <section>Non-Functional Requirements - Security</section>
+        <snippet>All user data must be protected by Row Level Security (RLS). All data transmission must be encrypted using HTTPS. Passwords must be hashed using a modern, strong algorithm (e.g., bcrypt).</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>AI Study Buddy - High-Level Architecture</title>
+        <section>1.2. Component Interaction</section>
+        <snippet>Next.js Frontend: ...communicates with the Supabase backend for data, authentication, and storage...</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>AI Study Buddy - High-Level Architecture</title>
+        <section>1.2. Component Interaction</section>
+        <snippet>Supabase Backend (BaaS): Provides the backend infrastructure, including a PostgreSQL database, user authentication, and file storage.</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>AI Study Buddy - High-Level Architecture</title>
+        <section>4. Authentication and Authorization</section>
+        <snippet>Authentication: User authentication will be handled by Supabase Auth using email and password.</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>AI Study Buddy - High-Level Architecture</title>
+        <section>4. Authentication and Authorization</section>
+        <snippet>Authorization: Row Level Security (RLS) will be enabled on all user data tables in Supabase...</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>AI Study Buddy - High-Level Architecture</title>
+        <section>3.1. Main API Endpoints</section>
+        <snippet>POST /api/auth/register: Registers a new user.</snippet>
+      </doc>
+      <doc>
+        <path>docs/epics.md</path>
+        <title>ibe160 - Epic Breakdown</title>
+        <section>Epic 2: User Onboarding &amp; Authentication</section>
+        <snippet>Allows users to securely create and manage their accounts, providing a personalized and protected space for their study materials.</snippet>
+      </doc>
+      <doc>
+        <path>docs/epics.md</path>
+        <title>ibe160 - Epic Breakdown</title>
+        <section>Story 2.1: User Registration</section>
+        <snippet>As a new user, I want to create an account with my email and a secure password, So that I can access the AI Study Buddy's features.</snippet>
+      </doc>
+      <doc>
+        <path>docs/epics.md</path>
+        <title>ibe160 - Epic Breakdown</title>
+        <section>Story 2.1: User Registration Acceptance Criteria</section>
+        <snippet>my account is successfully created, and I am logged in... if I enter an email already in use, I receive a message and an option to reset my password.</snippet>
+      </doc>
+      <doc>
+        <path>docs/sprint-artifacts/tech-spec-epic-2.md</path>
+        <title>Epic Technical Specification: User Onboarding &amp; Authentication</title>
+        <section>Overview</section>
+        <snippet>Epic, 'User Onboarding &amp; Authentication', focuses on establishing a secure and user-friendly system for user registration, login, and profile management...</snippet>
+      </doc>
+      <doc>
+        <path>docs/sprint-artifacts/tech-spec-epic-2.md</path>
+        <title>Epic Technical Specification: User Onboarding &amp; Authentication</title>
+        <section>Detailed Design - Services and Modules</section>
+        <snippet>- @supabase/auth-helpers-nextjs or @supabase/ssr: For handling server-side authentication. - Supabase Auth: Backend service for registration, login, password resets. - Next.js API Routes: /pages/api/auth/ for authentication requests.</snippet>
+      </doc>
+      <doc>
+        <path>docs/sprint-artifacts/tech-spec-epic-2.md</path>
+        <title>Epic Technical Specification: User Onboarding &amp; Authentication</title>
+        <section>Detailed Design - Data Models and Contracts</section>
+        <snippet>users table (Supabase): id, email, encrypted_password. RLS Policy: "Users can access their own profile."</snippet>
+      </doc>
+      <doc>
+        <path>docs/sprint-artifacts/tech-spec-epic-2.md</path>
+        <title>Epic Technical Specification: User Onboarding &amp; Authentication</title>
+        <section>Detailed Design - APIs and Interfaces</section>
+        <snippet>POST /api/auth/register: Request Body, Response (Success/Error).</snippet>
+      </doc>
+      <doc>
+        <path>docs/sprint-artifacts/tech-spec-epic-2.md</path>
+        <title>Epic Technical Specification: User Onboarding &amp; Authentication</title>
+        <section>Detailed Design - Workflows and Sequencing - Registration Flow</section>
+        <snippet>User fills form --&gt; Frontend POST to /api/auth/register --&gt; Next.js API route calls supabase.auth.signUp().</snippet>
+      </doc>
+      <doc>
+        <path>docs/sprint-artifacts/tech-spec-epic-2.md</path>
+        <title>Epic Technical Specification: User Onboarding &amp; Authentication</title>
+        <section>Non-Functional Requirements - Security</section>
+        <snippet>All communication HTTPS. Passwords hashed (bcrypt). RLS enforced. HTTP-only cookies for session. Account lockout policy.</snippet>
+      </doc>
+    </docs>
+    <code></code>
+    <dependencies>
+      <npm>
+        <package name="@supabase/supabase-js" version="^2.0" />
+        <package name="@supabase/ssr" version="^0.0.x" />
+        <package name="next" version="^13.0" />
+        <package name="react" version="^18.0" />
+        <package name="tailwindcss" version="^3.0" />
+        <package name="typescript" version="^5.0" />
+        <package name="eslint" version="^8.0" />
+        <package name="zod" version="^3.0" hint="Potentially for schema validation" />
+        <package name="hCaptcha" version="latest" hint="Potentially for bot prevention" />
+      </npm>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+      <constraint>
+        <description>Passwords must meet criteria: minimum 5 letters, 1 number, 1 special symbol.</description>
+        <source>docs/epics.md#Story-2.1 Acceptance Criteria</source>
+      </constraint>
+      <constraint>
+        <description>If a user attempts to register with an existing email, the system must inform them and offer a 'Forgot Password' option.</description>
+        <source>docs/epics.md#Story-2.1 Acceptance Criteria</source>
+      </constraint>
+      <constraint>
+        <description>User authentication must be handled by Supabase Auth.</description>
+        <source>docs/architecture.md#4.-Authentication-and-Authorization</source>
+      </constraint>
+      <constraint>
+        <description>Client-side and server-side validation for password strength must be implemented.</description>
+        <source>docs/epics.md#Story-2.1 Technical Notes</source>
+      </constraint>
+      <constraint>
+        <description>User data must be protected by Row Level Security (RLS).</description>
+        <source>docs/prd.md#FR1.2---Data-Privacy-Compliance</source>
+      </constraint>
+      <constraint>
+        <description>Account must be temporarily locked after 5 consecutive failed login attempts.</description>
+        <source>docs/prd.md#FR1.1---User-Authentication</source>
+      </constraint>
+  </constraints>
+  <interfaces>
+      <interface>
+        <name>Register User API</name>
+        <kind>REST endpoint</kind>
+        <signature>POST /api/auth/register</signature>
+        <path>src/app/api/auth/register/route.ts</path>
+        <description>Endpoint for new user registration.</description>
+      </interface>
+  </interfaces>
+  <tests>
+    <standards>Testing will involve a combination of unit tests for client-side validation and API routes, integration tests for the authentication flow and RLS policies, and end-to-end tests for the complete user registration process. Manual testing will also be performed for edge cases.</standards>
+    <locations>
+      <location>src/app/register/</location>
+      <location>src/app/api/auth/register/</location>
+      <location>tests/unit/</location>
+      <location>tests/integration/</location>
+      <location>tests/e2e/</location>
+    </locations>
+    <ideas>
+      <idea ac-id="1">Unit test client-side form validation for valid email and strong password.</idea>
+      <idea ac-id="1">Integration test `POST /api/auth/register` endpoint with valid new user data.</idea>
+      <idea ac-id="2">Integration test `POST /api/auth/register` endpoint with an existing email.</idea>
+      <idea ac-id="1,2">E2E test: Successfully register a new user and verify login.</idea>
+      <idea ac-id="1,2">E2E test: Attempt to register with an existing email and verify the error message and 'Forgot Password' option.</idea>
+      <idea ac-id="*">Manual test: Verify password strength requirements are enforced on the UI.</idea>
+    </ideas>
+  </tests>
+</story-context>
