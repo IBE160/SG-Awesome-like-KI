@@ -60,18 +60,18 @@ export default function Register() {
         }
       }, 1000));
 
-      // @ts-ignore
+      // @ts-expect-error-next-line
       if (response.success) {
-        // @ts-ignore
+        // @ts-expect-error-next-line
         setSuccess(response.message);
         setEmail('');
         setPassword('');
         setConfirmPassword('');
       } else {
-        // @ts-ignore
+        // @ts-expect-error-next-line
         setError(response.message);
       }
-    } catch (err) {
+    } catch {
       setError('An unexpected error occurred.');
     }
   };
