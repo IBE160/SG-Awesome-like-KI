@@ -1,0 +1,30 @@
+<storyContext>
+  <storyId>1.2</storyId>
+  <storyTitle>Set Up Next.js Application &amp; Tailwind CSS</storyTitle>
+  <status>drafted</status>
+  <userStory>
+    As a Developer,
+    I want to initialize the Next.js application with Tailwind CSS,
+    so that the frontend development can begin with a modern, responsive UI framework.
+  </userStory>
+  <acceptanceCriteria>
+    <criterion>Given the project repository is initialized, when the Next.js application is set up, then it uses the latest stable version of Next.js.</criterion>
+    <criterion>And Tailwind CSS is correctly configured for styling.</criterion>
+    <criterion>And a basic home page is rendered.</criterion>
+  </acceptanceCriteria>
+  <tasks>
+    <task>Initialize Next.js application (AC: #1)</task>
+    <task>Integrate Tailwind CSS (AC: #2)</task>
+    <task>Create a basic home page (AC: #3)</task>
+    <task>Testing (AC: #1, #2, #3)</task>
+  </tasks>
+  <devNotes>
+    <note>Relevant architecture patterns and constraints: The architecture specifies a Next.js frontend styled with Tailwind CSS. This story establishes that foundation.</note>
+    <note>Source tree components to touch: src/, package.json, tailwind.config.js, postcss.config.js, src/app/globals.css, src/app/page.tsx.</note>
+    <note>Testing standards summary: Manual verification and linting are sufficient for this foundational story.</note>
+  </devNotes>
+  <references>
+    <reference>docs/epics.md#Story-1.2</reference>
+    <reference>docs/architecture.md#1-High-Level-System-Design</reference>
+  </references>
+</storyContext>
