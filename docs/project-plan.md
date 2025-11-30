@@ -100,15 +100,15 @@
       - [x] /run-agent-task sm *validate-story-context {prompt / user-input-file}
       - [x] /run-agent-task dev *implement-story {prompt / user-input-file}
       - [x] /run-agent-task dev *validate-story {prompt / user-input-file}
-    - [ ] 1.3
+    - [x] 1.3
       - [x] /run-agent-task sm *create-story {prompt / user-input-file}
         - [x] File: sprint-artifacts/{{story_key}}.md
       - [x] /run-agent-task sm *validate-create-story {prompt / user-input-file}
       - [x] /run-agent-task sm *create-story-context {prompt / user-input-file}
         - [x] File: sprint-artifacts/{{story_key}}.context.xml
       - [x] /run-agent-task sm *validate-story-context {prompt / user-input-file}
-      - [ ] /run-agent-task dev *implement-story {prompt / user-input-file}
-      - [ ] /run-agent-task dev *validate-story {prompt / user-input-file}
+      - [x] /run-agent-task dev *implement-story {prompt / user-input-file}
+      - [x] /run-agent-task dev *validate-story {prompt / user-input-file}
     - [ ] 1.4
       - [ ] /run-agent-task sm *create-story {prompt / user-input-file}
         - [ ] File: sprint-artifacts/{{story_key}}.md
