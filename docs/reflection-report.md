@@ -162,6 +162,8 @@ Vi brukte KI aktivt som forklaringsmotor:
 
 Det gjorde at vi kom raskere over kneika på nye teknologier som learning by doing and failing.
 
+I tillegg til ren effektivitet, opplevde vi at KI fungerte som en kreativ sparringspartner. Den foreslo funksjoner, brukerhistorier og konsepter vi ikke hadde tenkt på, og fungerte som en katalysator for våre egne ideer.
+
 **Kvalitet på koden:**
 - [Hvordan påvirket KI kodekvaliteten?]
 - [Eksempler på forbedringer KI foreslo]
@@ -188,6 +190,8 @@ KI kan snevre inn tankesettet hvis man alltid starter med “foreslå en løsnin
 
 De beste ideene kom faktisk når vi først diskuterte internt, og deretter brukte KI til å teste og utfordre ideene – ikke motsatt. Vi ble kreative sammen KI da vi bygger videre på forslagene.
 
+En annen ulempe er tidskostnaden ved 'AI-management'. Selv om KI sparer tid på noen områder, introduserer den en ny type arbeid: å skrive gode prompter, kritisk vurdere output og feilsøke når KI-en 'hallusinerer'. Denne 'overheaden' med å administrere KI-en er en reell ulempe.
+
 ### 4.3 Sammenligning: Med og uten KI
 Uten KI:
 
@@ -201,10 +205,14 @@ Med KI:
 
 Konklusjonen er at KI gjorde prosjektet mulig på dette ambisjonsnivået på en gøyal måte. Vi har lært mye nytt sammen med KI inni VSCode. Og ting vi ikke hadde peiling på så spurte vi bare KI.
 
+Arbeidsflyten ble også annerledes. Uten KI ville prosessen trolig vært mer lineær (planlegge, så bygge). Med KI ble arbeidsflyten mer syklisk og eksperimentell, hvor vi umiddelbart kunne teste en idé med en prompt og få en prototype. Dette førte til en mer dynamisk, men også potensielt mer kaotisk, utviklingsprosess.
+
 ### 4.4 Samlet vurdering
 Netto effekt: klart positiv. KI var en kraftig akselerator, både faglig og praktisk.
 
 Viktigste lærdom: KI må behandles som en kunnskapsrik, men ikke stole blindt på den, men heller stille gode, presise spørsmål.
+
+**Påminnelse:** Husk å skrive en endelig samlet vurdering når prosjektet er ferdigstilt, og reflekter over KI-ens rolle i sluttfasen (optimalisering, finpuss, etc.).
 
 ---
 
@@ -220,6 +228,8 @@ Vi ser på KI-koden som forslag, ikke ferdig produkt. Det innebærer:
 
 Opphavsrett: så lenge vi bruker KI som verktøy i en studentoppgave og ikke kopierer fra spesifikke, beskyttede kilder, vurderer vi risikoen som lav – men det er viktig å være åpen om at KI er brukt.
 
+Hva skjer hvis vår KI-genererte quiz inneholder en alvorlig faktafeil, og en student pugger dette til eksamen? Ansvaret faller ikke på KI-en, men på oss som utviklere. Dette understreker at vi må ha systemer for kvalitetssikring og kanskje til og med en måte for brukere å flagge feil i det genererte innholdet.
+
 ### 5.2 Transparens
 For et reelt produkt mot brukere ville vi vært tydelige på at:
 
@@ -230,6 +240,8 @@ I prosjektet vårt dokumenterer vi KI-bidrag gjennom:
 
 - lagrede research- og brainstorming-sesjoner
 - denne refleksjonsrapporten, som eksplisitt beskriver hvor og hvordan KI er brukt.
+
+En utfordring med åpenhet er at KI-en kan være som en “svart boks”. Selv om vi kan fortelle at en quiz er KI-generert, kan vi ikke alltid forklare hvorfor den stiller et rart spørsmål. For å gjøre koden vår mer sporbar for andre utviklere, kunne vi også vært flinkere til å merke av i kommentarer eller commit-meldinger når kode var laget med KI.
 
 Manglende transparens om KI-bruk kan svekke tillit og gi falsk trygghet rundt presisjon og nøyaktighet.
 
@@ -243,6 +255,8 @@ Vi mener balansen bør være:
 - KI for å komme raskt i gang og få inspirasjon
 - bevisst tid til å refaktorere, kommentere og forklare egen kode uten KI.
 
+Vi må også reflektere etisk over produktet vårt: Oppfordrer 'AI Study Buddy' til dypere, kritisk forståelse av pensum, eller tilrettelegger den for en 'skumlese-og-quiz'-mentalitet? En etisk fallgruve er å skape et verktøy som i praksis gjør studenter dårligere rustet for langsiktig læring, selv om det hjelper dem å bestå en prøve på kort sikt.
+
 ### 5.4 Arbeidsmarkedet
 Vi forventer at KI-verktøy blir standard i utviklerverktøykassen.
 
@@ -255,15 +269,18 @@ Roller som kombinerer:
 - kvalitetssikring og sikkerhet
 - evne til å coache og styre KI,
 
-blir viktigere. Dette påvirker også hvordan vi bør rigge vår egen karriere – mer fokus på problemløsning, kritisk tenkning og systemdesign enn ren syntaks.
+blir viktigere.
+
+Forventningene til leveransehastighet vil sannsynligvis øke. Utviklere som kan utnytte KI til å raskt bygge og teste prototyper (MVP-er) for å validere forretningsideer, vil ha en stor fordel.
+
+Verdien av 'myke ferdigheter' som kommunikasjon, kreativ problemløsning og forretningsforståelse vil forsterkes. Å kunne oversette et komplekst kundebehov til en serie effektive prompter og en god systemarkitektur blir en kjernekompetanse.
+
+Dette påvirker også hvordan vi bør rigge vår egen karriere – mer fokus på problemløsning, kritisk tenkning og systemdesign enn ren syntaks.
 
 ### 5.5 Datasikkerhet og personvern
-I prosjektet vårt har vi bevisst valgt et lavrisiko-scenario:
-- Vi håndterer ingen sensitive personopplysninger (som navn, e-post, fødselsnummer) utover det som kreves for autentisering (som Supabase håndterer).
-- Pensum som lastes opp anses som offentlig tilgjengelig eller ikke-sensitivt materiale.
-- Vi har fokusert på å implementere robust autentisering (Supabase Auth) og autorisasjon (RLS) for å sikre at brukere kun får tilgang til egne data.
-- Data som sendes til KI-modellen (pensumtekst) blir ikke lagret permanent av vår applikasjon og er underlagt KI-leverandørens retningslinjer for databehandling.
-- **Påminnelse:** Husk å utdype mer om konkrete tiltak dere har gjort for å ivareta datasikkerhet og personvern, samt reflektere over potensielle risikoer ved å sende brukergenerert innhold til tredjeparts KI-modeller.
+I prosjektet vårt har vi fokusert på grunnleggende sikkerhetstiltak som autentisering (Supabase Auth) og autorisasjon (RLS) for å sikre at brukere kun får tilgang til egne data. Vi håndterer i utgangspunktet ikke sensitive personopplysninger utover det som kreves for innlogging.
+
+Vår antakelse om at opplastet pensum er 'ikke-sensitivt' er imidlertid en betydelig forenkling vi gjorde for prosjektet. I en reell verden er dette en stor etisk og juridisk utfordring. Hva om en bruker laster opp en forelesers upubliserte artikkel, en bedriftsintern manual, eller en eksamen under utarbeidelse? Ved å sende dette til en tredjeparts KI-tjeneste, mister brukeren kontroll over sitt eget data. En lansert versjon av appen vår ville krevd en vanntett personvernerklæring, eksplisitt samtykke fra brukeren, og en grundig vurdering av KI-leverandørens databehandlingsavtaler for å sikre at brukerdata ikke misbrukes.
 
 ---
 
@@ -327,17 +344,18 @@ Vår anbefaling er at utviklere lærer seg å designe prosesser der KI inngår, 
 
 - Bruk KI tidlig til idémyldring, research og førsteutkast – ikke til siste finish.
 - Vær konkret og presis i promptene; spesifiser rammeverk, versjoner og ønsket outputformat.
+- Still KI-en 'hvorfor'-spørsmål. Bruk den aktivt til å forklare komplekse konsepter, kodeblokker eller feilmeldinger for å bygge dypere forståelse, ikke bare for å få en løsning.
 
 **Fallgruver:**
 - Lange prompter når man er sliten og tom for de rette ordene.
+- Fristelsen til å 'copy-paste' løsninger uten å investere tid i å forstå den underliggende logikken. Dette hindrer egen læring og kan introdusere skjulte feil.
 
 ### 7.4 Personlig refleksjon (individuelt)
 
 **Marthe Bjerke:**
-- ***Utgangspunkt:*** Jeg hadde begrenset erfaring med Next.js og KI-integrasjon før prosjektet startet. Jeg var mest komfortabel med grunnleggende frontend-utvikling.
-- ***Læring:*** Gjennom prosjektet har jeg fått en dypere forståelse av fullstack-utvikling med Next.js, spesielt knyttet til server-side rendering, API-ruter og integrasjon med tredjepartstjenester som Supabase. Arbeidet med KI-integrasjon har gitt innsikt i prompt engineering og utfordringene med å håndtere KI-responser. Jeg har også lært viktigheten av iterativ testing og feilsøking i komplekse systemer.
-- ***Viktigste takeaway:*** Den mest verdifulle lærdommen var hvordan KI kan fungere som en kraftig medpilot i utviklingsprosessen, ikke bare for kode, men også for konseptutvikling og feilforståelse, men at kritisk tenkning og egen verifisering alltid er essensielt.
-- ***Påminnelse:*** Husk å legge til deres egne personlige refleksjoner her.
+- ***Utgangspunkt:*** Før dette prosjektet hadde jeg begrenset erfaring med praktisk KI-bruk i en utviklingskontekst. Min kjennskap til KI var primært knyttet til enklere tekstbaserte oppgaver som prompter og språkvask, og jeg startet med et ønske om å lære mer om programmering generelt.
+- ***Læring:*** Gjennom prosjektet har jeg tatt steget fra ren frontend-utvikling til å få en dypere, praktisk forståelse for hele stacken. KI var en avgjørende støttespiller i denne læringsprosessen, spesielt for å forstå nye og komplekse konsepter som server-side rendering i Next.js og database-integrasjon mot Supabase. Min kompetanse innen KI har utviklet seg fra enkel prompting og språkvask til mer avansert *prompt engineering*, hvor jeg lærte å konstruere presise instrukser for å generere funksjonell kode og strukturert data (som JSON). Kanskje den viktigste lærdommen var knyttet til feilsøking; jeg lærte å systematisk analysere kode der feilen kan ligge enten i min egen logikk eller i 'hallusinasjoner' fra KI-en, noe som har skjerpet min kritiske sans som utvikler.
+- ***Viktigste takeaway:*** Den største aha-opplevelsen var å innse at KI fungerer best som en kreativ sparringspartner, ikke en fasit. Den utfordrer ideer, automatiserer rutinearbeid og hjelper til med å belyse problemer fra nye vinkler. Samtidig lærte jeg raskt at verdien av KI er direkte knyttet til min egen evne til å stille kritiske spørsmål og verifisere resultatene. Min takeaway er derfor balansegangen: å omfavne KI for fart og idémyldring, men aldri delegere ansvaret for kvalitet og dømmekraft.
 
 **Hannah Letmolie:**
 ***utgangspunkt:*** Jeg hadde lite til ingen erfaring om programmering fra tidligere, men har brukt ulike KI-er (som ChatGPT og Copilot) til annet skolearbeid.
