@@ -135,7 +135,7 @@
       - [ ] /run-agent-task dev *validate-story {prompt / user-input-file}
     - [ ] /run-agent-task sm *epic-retrospective {prompt / user-input-file}
 
-- [x] Epic 3
+- [ ] Epic 3
     - [x] /run-agent-task sm create-epic-tech-context {prompt / user-input-file}
       - [x] File: sprint-artifacts/tech-spec-epic-{{epic_id}}.md
     - [x] /run-agent-task sm validate-epic-tech-context {prompt / user-input-file}
@@ -191,7 +191,7 @@
       - [ ] /run-agent-task sm *validate-story-context {for story 4.4}
       - [ ] /run-agent-task dev *implement-story {for story 4.4}
       - [ ] /run-agent-task dev *validate-story {for story 4.4}
-    - [x] 4.5
+    - [ ] 4.5
       - [x] /run-agent-task sm *create-story {for story 4.5}
         - [x] File: sprint-artifacts/{{story_key}}.md
       - [x] /run-agent-task sm *validate-create-story {prompt / user-input-file}
@@ -200,7 +200,7 @@
       - [x] /run-agent-task sm *validate-story-context {prompt / user-input-file}
       - [ ] /run-agent-task dev *implement-story {prompt / user-input-file}
       - [ ] /run-agent-task dev *validate-story {prompt / user-input-file}
-    - [x] 4.6
+    - [ ] 4.6
       - [x] /run-agent-task sm *create-story {prompt / user-input-file}
         - [x] File: sprint-artifacts/{{story_key}}.md
       - [x] /run-agent-task sm *validate-create-story {prompt / user-input-file}
@@ -211,7 +211,7 @@
       - [ ] /run-agent-task dev *validate-story {prompt / user-input-file}
     - [ ] /run-agent-task sm *epic-retrospective {prompt / user-input-file}
 
-- [x] Epic 5
+- [ ] Epic 5
     - [x] /run-agent-task sm create-epic-tech-context {prompt / user-input-file}
       - [x] File: sprint-artifacts/tech-spec-epic-{{epic_id}}.md
     - [x] /run-agent-task sm validate-epic-tech-context {prompt / user-input-file}
