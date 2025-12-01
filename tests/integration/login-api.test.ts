@@ -1,10 +1,10 @@
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
+import { createRouteHandlerClient } from '@supabase/ssr';
 import { NextResponse } from 'next/server';
-import { POST } from '../../app/api/auth/login/route';
+import { POST } from '@/app/api/auth/login/route';
 import { cookies } from 'next/headers';
 
 // Mock Supabase and Next.js cookies
-jest.mock('@supabase/auth-helpers-nextjs', () => ({
+jest.mock('@supabase/ssr', () => ({
   createRouteHandlerClient: jest.fn(),
 }));
 jest.mock('next/headers', () => ({
@@ -46,16 +46,16 @@ describe('Login API Endpoint', () => {
       method: 'POST',
       body: formData,
     });
-    (request as any).formData = async () => formData;
 
     await POST(request);
 
     expect(mockSignInWithPassword).toHaveBeenCalledWith({ email: 'test@example.com', password: 'password' });
-    expect(mockNextResponseRedirect).toHaveBeenCalledWith('http://localhost', { status: 301 });
+    expect(mockNextResponseRedirect).toHaveBeenCalledWith('http://localhost/', { status: 301 });
   });
 
   it('should redirect to login page with error message for invalid credentials', async () => {
-    mockSignInWithPassword.mockResolvedValueOnce({ error: { message: 'Invalid login credentials' } });
+    const errorMessage = 'Invalid login credentials';
+    mockSignInWithPassword.mockResolvedValueOnce({ error: { message: errorMessage } });
 
     const formData = new FormData();
     formData.append('email', 'test@example.com');
@@ -65,16 +65,16 @@ describe('Login API Endpoint', () => {
       method: 'POST',
       body: formData,
     });
-    (request as any).formData = async () => formData;
 
     await POST(request);
 
     expect(mockSignInWithPassword).toHaveBeenCalledWith({ email: 'test@example.com', password: 'wrongpassword' });
-    expect(mockNextResponseRedirect).toHaveBeenCalledWith('http://localhost/login?message=Invalid credentials', { status: 301 });
+    expect(mockNextResponseRedirect).toHaveBeenCalledWith(`http://localhost/login?error=${encodeURIComponent(errorMessage)}`, { status: 301 });
   });
 
   it('should redirect to login page with error message for locked account', async () => {
-    mockSignInWithPassword.mockResolvedValueOnce({ error: { message: 'Account temporarily locked' } });
+    const errorMessage = 'Account temporarily locked';
+    mockSignInWithPassword.mockResolvedValueOnce({ error: { message: errorMessage } });
 
     const formData = new FormData();
     formData.append('email', 'locked@example.com');
@@ -84,16 +84,16 @@ describe('Login API Endpoint', () => {
       method: 'POST',
       body: formData,
     });
-    (request as any).formData = async () => formData;
 
     await POST(request);
 
     expect(mockSignInWithPassword).toHaveBeenCalledWith({ email: 'locked@example.com', password: 'password' });
-    expect(mockNextResponseRedirect).toHaveBeenCalledWith('http://localhost/login?message=Account temporarily locked.', { status: 301 });
+    expect(mockNextResponseRedirect).toHaveBeenCalledWith(`http://localhost/login?error=${encodeURIComponent(errorMessage)}`, { status: 301 });
   });
 
   it('should redirect to login page with generic error for other authentication errors', async () => {
-    mockSignInWithPassword.mockResolvedValueOnce({ error: { message: 'Some other error' } });
+    const errorMessage = 'Some other error';
+    mockSignInWithPassword.mockResolvedValueOnce({ error: { message: errorMessage } });
 
     const formData = new FormData();
     formData.append('email', 'error@example.com');
@@ -103,11 +103,10 @@ describe('Login API Endpoint', () => {
       method: 'POST',
       body: formData,
     });
-    (request as any).formData = async () => formData;
 
     await POST(request);
 
     expect(mockSignInWithPassword).toHaveBeenCalledWith({ email: 'error@example.com', password: 'password' });
-    expect(mockNextResponseRedirect).toHaveBeenCalledWith('http://localhost/login?message=Could not authenticate user', { status: 301 });
+    expect(mockNextResponseRedirect).toHaveBeenCalledWith(`http://localhost/login?error=${encodeURIComponent(errorMessage)}`, { status: 301 });
   });
 });

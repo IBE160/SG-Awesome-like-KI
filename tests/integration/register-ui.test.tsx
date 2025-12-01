@@ -2,20 +2,20 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import RegisterPage from 'app/register/page';
 import '@testing-library/jest-dom';
 
-// Mock the global fetch API
-global.fetch = jest.fn(() =>
-  Promise.resolve({
-    ok: true,
-    json: () => Promise.resolve({ message: 'Registration successful! Please check your email for a confirmation link.' }),
-  }) as Promise<Response>
-);
+// Mock the useRouter hook
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: jest.fn(),
+  }),
+}));
 
 describe('RegisterPage - Client-side Validation', () => {
-  beforeEach(() => {
-    (fetch as jest.Mock).mockClear();
+  afterEach(() => {
+    jest.restoreAllMocks();
   });
 
   it('should show an error for invalid password format', async () => {
+    const fetchSpy = jest.spyOn(global, 'fetch');
     render(<RegisterPage />);
 
     const emailInput = screen.getByLabelText(/email/i);
@@ -28,10 +28,11 @@ describe('RegisterPage - Client-side Validation', () => {
 
     const errorMessage = await screen.findByText(/Password must contain at least 5 letters, 1 number, and 1 special symbol./i);
     expect(errorMessage).toBeInTheDocument();
-    expect(fetch).not.toHaveBeenCalled(); // Ensure API is not called on client-side validation failure
+    expect(fetchSpy).not.toHaveBeenCalled(); // Ensure API is not called on client-side validation failure
   });
 
   it('should show an error if email is missing', async () => {
+    const fetchSpy = jest.spyOn(global, 'fetch');
     render(<RegisterPage />);
 
     const emailInput = screen.getByLabelText(/email/i);
@@ -44,10 +45,11 @@ describe('RegisterPage - Client-side Validation', () => {
 
     const errorMessage = await screen.findByText(/Email and password are required./i);
     expect(errorMessage).toBeInTheDocument();
-    expect(fetch).not.toHaveBeenCalled(); // Ensure API is not called on client-side validation failure
+    expect(fetchSpy).not.toHaveBeenCalled(); // Ensure API is not called on client-side validation failure
   });
 
   it('should show an error if password is missing', async () => {
+    const fetchSpy = jest.spyOn(global, 'fetch');
     render(<RegisterPage />);
 
     const emailInput = screen.getByLabelText(/email/i);
@@ -60,11 +62,15 @@ describe('RegisterPage - Client-side Validation', () => {
 
     const errorMessage = await screen.findByText(/Email and password are required./i);
     expect(errorMessage).toBeInTheDocument();
-    expect(fetch).not.toHaveBeenCalled(); // Ensure API is not called on client-side validation failure
+    expect(fetchSpy).not.toHaveBeenCalled(); // Ensure API is not called on client-side validation failure
   });
 
-
   it('should call the API and show success message for a valid registration', async () => {
+    jest.spyOn(global, 'fetch').mockResolvedValueOnce({
+      ok: true,
+      json: () => Promise.resolve({ message: 'Registration successful!' }),
+    } as Response);
+
     render(<RegisterPage />);
 
     const emailInput = screen.getByLabelText(/email/i);
@@ -91,21 +97,18 @@ describe('RegisterPage - Client-side Validation', () => {
   });
 
   it('should show an error message if API call fails', async () => {
-    // Mock fetch to return an error response
-    (fetch as jest.Mock).mockImplementationOnce(() =>
-      Promise.resolve({
-        ok: false,
-        json: () => Promise.resolve({ error: 'Email already in use.' }),
-      }) as Promise<Response>
-    );
+    jest.spyOn(global, 'fetch').mockResolvedValueOnce({
+      ok: false,
+      json: () => Promise.resolve({ error: 'Email already in use.' }),
+    } as Response);
 
     render(<RegisterPage />);
 
     const emailInput = screen.getByLabelText(/email/i);
     const passwordInput = screen.getByLabelText(/password/i);
     const registerButton = screen.getByRole('button', { name: /register/i });
-
-    fireEvent.change(emailInput, { target: { value: 'existing@example.com' } });
+    
+    fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
     fireEvent.change(passwordInput, { target: { value: 'ValidP@ss1' } });
     fireEvent.click(registerButton);
 
@@ -116,6 +119,11 @@ describe('RegisterPage - Client-side Validation', () => {
   });
 
   it('should allow registration with a valid password containing 5 letters not in a row', async () => {
+    jest.spyOn(global, 'fetch').mockResolvedValueOnce({
+      ok: true,
+      json: () => Promise.resolve({ message: 'Registration successful!' }),
+    } as Response);
+
     render(<RegisterPage />);
 
     const emailInput = screen.getByLabelText(/email/i);
@@ -124,6 +132,7 @@ describe('RegisterPage - Client-side Validation', () => {
 
     fireEvent.change(emailInput, { target: { value: 'test2@example.com' } });
     fireEvent.change(passwordInput, { target: { value: 'V1a2l3i4d!P' } }); // 5 letters, 4 numbers, 1 symbol
+    
     fireEvent.click(registerButton);
 
     // Ensure fetch was called
@@ -141,4 +150,3 @@ describe('RegisterPage - Client-side Validation', () => {
     expect(successMessage).toBeInTheDocument();
   });
 });
-
