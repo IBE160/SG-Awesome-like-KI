@@ -34,8 +34,8 @@ Organisering av arbeidet
 - Vi jobbet hovedsakelig synkront i Teams, der én person delte skjerm og kodet i VS Code, mens de andre ga innspill, kvalitetssikret og foreslo endringer.
 - Vi roterte på “driver”-rollen i VS Code slik at alle fikk hands-on erfaring med kodebasen.
 - For enkelte oppgaver delte vi oss og jobbet mer sekvensielt: én tok databasedesign, én tok UI, én fokuserte på KI-integrasjon, før vi merge’et alt inn igjen.
+  
 ### 2.3 Teknologi og verktøy
-[Liste over de viktigste teknologiene og verktøyene dere brukte]
 - Frontend: Next.js, React, Tailwind CSS, shadcn/ui
 - Backend: Vercel Functions (for AI integration)
 - Database: Supabase (PostgreSQL)
@@ -334,13 +334,15 @@ Vår anbefaling er at utviklere lærer seg å designe prosesser der KI inngår, 
 ### 7.4 Personlig refleksjon (individuelt)
 
 **Marthe Bjerke:**
-- **Utgangspunkt:** Jeg hadde begrenset erfaring med Next.js og KI-integrasjon før prosjektet startet. Jeg var mest komfortabel med grunnleggende frontend-utvikling.
-- **Læring:** Gjennom prosjektet har jeg fått en dypere forståelse av fullstack-utvikling med Next.js, spesielt knyttet til server-side rendering, API-ruter og integrasjon med tredjepartstjenester som Supabase. Arbeidet med KI-integrasjon har gitt innsikt i prompt engineering og utfordringene med å håndtere KI-responser. Jeg har også lært viktigheten av iterativ testing og feilsøking i komplekse systemer.
-- **Viktigste takeaway:** Den mest verdifulle lærdommen var hvordan KI kan fungere som en kraftig medpilot i utviklingsprosessen, ikke bare for kode, men også for konseptutvikling og feilforståelse, men at kritisk tenkning og egen verifisering alltid er essensielt.
-- **Påminnelse:** Husk å legge til deres egne personlige refleksjoner her.
+- ***Utgangspunkt:*** Jeg hadde begrenset erfaring med Next.js og KI-integrasjon før prosjektet startet. Jeg var mest komfortabel med grunnleggende frontend-utvikling.
+- ***Læring:*** Gjennom prosjektet har jeg fått en dypere forståelse av fullstack-utvikling med Next.js, spesielt knyttet til server-side rendering, API-ruter og integrasjon med tredjepartstjenester som Supabase. Arbeidet med KI-integrasjon har gitt innsikt i prompt engineering og utfordringene med å håndtere KI-responser. Jeg har også lært viktigheten av iterativ testing og feilsøking i komplekse systemer.
+- ***Viktigste takeaway:*** Den mest verdifulle lærdommen var hvordan KI kan fungere som en kraftig medpilot i utviklingsprosessen, ikke bare for kode, men også for konseptutvikling og feilforståelse, men at kritisk tenkning og egen verifisering alltid er essensielt.
+- ***Påminnelse:*** Husk å legge til deres egne personlige refleksjoner her.
 
-**[Navn på gruppemedlem 2]:**
-[Personlig refleksjon over egen læring og utvikling]
+**Hannah Letmolie:**
+***utgangspunkt:*** Jeg hadde lite til ingen erfaring om programmering fra tidligere, men har brukt ulike KI-er (som ChatGPT og Copilot) til annet skolearbeid.
+***Læring:*** Jeg har fått en mye bredere forståelse for både bruk av KI generelt, og for programmering. Jeg forstår fortsatt ikke alt det tekniske helt, men forstår det bedre enn når jeg startet og har lært hvordan jeg skal bruke Gemini/KI til å finne ut av ting, og få det til å bli riktig. 
+***Annet:*** Jeg synes dette var et veldig morsomt prosjekt, selv om det ble litt små-stress på slutten for å få det ferdig til innlevering. Og føler selv jeg har bidratt godt i oppgaven. 
 
 **[Navn på gruppemedlem 3]:**
 [Personlig refleksjon over egen læring og utvikling]
