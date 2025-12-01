@@ -1,0 +1,169 @@
+<story-context id=".bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>5</epicId>
+    <storyId>4</storyId>
+    <title>Implement Reduced Motion Options</title>
+    <status>drafted</status>
+    <generatedAt>mandag 1. desember 2025</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/sprint-artifacts/5-4-implement-reduced-motion-options.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>As a user sensitive to motion,</asA>
+    <iWant>I want to minimize animations and transitions in the application,</iWant>
+    <soThat>so that I can use the tool comfortably without discomfort.</soThat>
+    <tasks>
+- [ ] **Analyze existing UI components for animations/transitions (AC: 1):**
+  - [ ] Identify all animated elements (e.g., loading spinners, navigation transitions, hover effects) in the Next.js frontend.
+  - [ ] Document their current implementation (CSS transitions, JavaScript animations).
+- [ ] **Implement `prefers-reduced-motion` CSS media query (AC: 1):**
+  - [ ] Apply `@media (prefers-reduced-motion: reduce)` to existing CSS animations/transitions to disable or simplify them.
+  - [ ] Ensure smooth transitions are replaced with instant changes or fades where appropriate, adhering to accessibility best practices.
+- [ ] **Integrate JavaScript-based animation control (if applicable) (AC: 1):**
+  - [ ] For JavaScript-driven animations, detect `prefers-reduced-motion` preference using `window.matchMedia('(prefers-reduced-motion: reduce)')`.
+  - [ ] Provide alternative, reduced-motion animation logic or disable animations entirely based on the user's preference.
+- [ ] **Verify browser compatibility (AC: 1):**
+  - [ ] Test the reduced motion implementation across target browsers (Chrome, Edge, Safari) to ensure consistent behavior and proper application of the preference.
+- [ ] **Write automated tests for reduced motion (Accessibility Testing) (AC: 1):**
+  - [ ] Create integration tests to verify animations are reduced/disabled when `prefers-reduced-motion` is active.
+  - [ ] Investigate using testing frameworks like Playwright or Cypress to simulate user preferences and assert UI behavior.
+- [ ] **Update `docs/architecture.md` (CI/CD) (AC: 1):**
+  - [ ] Add a note to the CI/CD section of the `architecture.md` document, highlighting the integration of accessibility testing, specifically for reduced motion, into the automated pipeline.
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+    *   **Given** I have enabled a "reduced motion" setting in my operating system or browser
+    *   **When** I interact with the application
+    *   **Then** all non-essential animations and transitions are either removed or significantly reduced.
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>FR5.3 - Core Accessibility Features</section>
+        <snippet>The system shall incorporate core accessibility features, including WCAG 2.1 Level AA compliance, strong screen-reader support, and reduced-motion options.</snippet>
+      </doc>
+      <doc>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>Non-Functional Requirements -> Accessibility</section>
+        <snippet>The AI Study Buddy will adhere to WCAG 2.1 Level AA compliance as a baseline... Reduced-motion options: Providing settings to minimize animations and transitions for users sensitive to motion.</snippet>
+      </doc>
+      <doc>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>Product Scope -> MVP</section>
+        <snippet>Reduced-motion options.</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>AI Study Buddy - High-Level Architecture</title>
+        <section>1.2. Component Interaction</section>
+        <snippet>The frontend is a single-page application built with React and Next.js, styled with Tailwind CSS.</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>AI Study Buddy - High-Level Architecture</title>
+        <section>7. CI/CD Pipeline</section>
+        <snippet>The project utilizes GitHub Actions for Continuous Integration and Continuous Deployment (CI/CD) to ensure code quality, automate testing, and facilitate rapid iteration.</snippet>
+      </doc>
+      <doc>
+        <path>docs/epics.md</path>
+        <title>Epic Breakdown</title>
+        <section>Epic 5: Core Experience &amp; UI Implementation</section>
+        <snippet>Ensure the application is intuitive, accessible, and enjoyable to use, fulfilling the promise of a clean, supportive, and frustration-free experience.</snippet>
+      </doc>
+      <doc>
+        <path>docs/epics.md</path>
+        <title>Epic Breakdown</title>
+        <section>Story 5.3: Implement WCAG AA &amp; Screen Reader Support</section>
+        <snippet>As a user with disabilities, I want to use the application effectively with assistive technologies like screen readers, So that I can have an inclusive and equitable learning experience.</snippet>
+      </doc>
+    </docs>
+    <code>
+      <code_artifact>
+        <path>src/app/layout.tsx</path>
+        <kind>layout</kind>
+        <symbol>RootLayout</symbol>
+        <reason>Global animations/transitions that might be present in the overall application layout will need to respect reduced motion.</reason>
+      </code_artifact>
+      <code_artifact>
+        <path>src/app/register/page.tsx</path>
+        <kind>page</kind>
+        <symbol>RegisterPage</symbol>
+        <reason>Interactive elements and form submissions on this page may have animations or transitions that need to be adjusted for reduced motion.</reason>
+      </code_artifact>
+      <code_artifact>
+        <path>src/app/upload/page.tsx</path>
+        <kind>page</kind>
+        <symbol>UploadPage</symbol>
+        <reason>Interactive elements, form submissions, and loading indicators on this page may utilize animations or transitions requiring reduced motion treatment.</reason>
+      </code_artifact>
+      <code_artifact>
+        <path>src/app/page.tsx</path>
+        <kind>page</kind>
+        <symbol>HomePage</symbol>
+        <reason>Any main UI elements or interactive components on the landing page that have animations or transitions will need to be made compatible with reduced motion settings.</reason>
+      </code_artifact>
+    </code>
+    <dependencies>
+      <npm>
+        <dependency name="@supabase/ssr" version="^0.8.0" />
+        <dependency name="@supabase/supabase-js" version="^2.86.0" />
+        <dependency name="next" version="16.0.5" />
+        <dependency name="react" version="19.2.0" />
+        <dependency name="react-dom" version="19.2.0" />
+      </npm>
+      <npm-dev>
+        <dependency name="@babel/core" version="^7.28.5" />
+        <dependency name="@babel/preset-env" version="^7.28.5" />
+        <dependency name="@babel/preset-react" version="^7.28.5" />
+        <dependency name="@babel/preset-typescript" version="^7.28.5" />
+        <dependency name="@tailwindcss/postcss" version="^4" />
+        <dependency name="@testing-library/jest-dom" version="^6.9.1" />
+        <dependency name="@testing-library/react" version="^16.3.0" />
+        <dependency name="@types/jest" version="^30.0.0" />
+        <dependency name="@types/node" version="^20" />
+        <dependency name="@types/react" version="^19" />
+        <dependency name="@types/react-dom" version="^19" />
+        <dependency name="babel-jest" version="^30.2.0" />
+        <dependency name="eslint" version="^9" />
+        <dependency name="eslint-config-next" version="16.0.5" />
+        <dependency name="jest" version="^30.2.0" />
+        <dependency name="jest-environment-jsdom" version="^30.2.0" />
+        <dependency name="node-fetch" version="^2.7.0" />
+        <dependency name="tailwindcss" version="^4" />
+        <dependency name="ts-jest" version="^29.4.5" />
+        <dependency name="typescript" version="^5" />
+      </npm-dev>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint>All non-essential animations and transitions must be either removed or significantly reduced when the user's "reduced motion" setting is enabled.</constraint>
+    <constraint>Implementation should primarily utilize CSS media queries (`@media (prefers-reduced-motion: reduce)`) for CSS-driven animations.</constraint>
+    <constraint>For JavaScript-driven animations, `window.matchMedia('(prefers-reduced-motion: reduce)')` should be used to detect user preference and provide alternative, reduced-motion logic or disable animations.</constraint>
+    <constraint>Browser compatibility testing across Chrome, Edge, and Safari is required to ensure consistent behavior of reduced motion implementation.</constraint>
+    <constraint>Accessibility best practices must be adhered to, ensuring smooth transitions are replaced with instant changes or fades where appropriate.</constraint>
+  </constraints>
+  <interfaces></interfaces>
+  <tests>
+    <standards>
+      Unit testing is performed using Jest. Automated integration tests for reduced motion using frameworks like Playwright or Cypress will be implemented. Manual testing will verify animations are reduced/disabled when `prefers-reduced-motion` is active.
+    </standards>
+    <locations>
+      <location>tests/integration</location>
+      <location>CI/CD pipeline (for automated checks/tests)</location>
+    </locations>
+    <ideas>
+      <idea>Verify all non-essential animations and transitions are either removed or significantly reduced when `prefers-reduced-motion` is active (AC: 1).</idea>
+      <idea>Test that `prefers-reduced-motion` CSS media queries are correctly applied and override default animations.</idea>
+      <idea>Test that JavaScript-based animation controls correctly detect and respect the `prefers-reduced-motion` preference.</idea>
+      <idea>Verify browser compatibility for reduced motion implementation across Chrome, Edge, and Safari.</idea>
+    </ideas>
+  </tests>
+</story-context>

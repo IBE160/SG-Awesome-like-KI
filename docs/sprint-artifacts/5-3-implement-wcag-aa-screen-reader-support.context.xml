@@ -1,0 +1,178 @@
+<story-context id=".bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>5</epicId>
+    <storyId>3</storyId>
+    <title>Implement WCAG AA &amp; Screen Reader Support</title>
+    <status>drafted</status>
+    <generatedAt>mandag 1. desember 2025</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/sprint-artifacts/5-3-implement-wcag-aa-screen-reader-support.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>As a user with disabilities,</asA>
+    <iWant>I want to use the application effectively with assistive technologies like screen readers,</iWant>
+    <soThat>So that I can have an inclusive and equitable learning experience.</soThat>
+    <tasks>
+- [ ] **Ensure Interactive Element Accessibility (AC: 1)**
+    - [ ] Review all UI components for appropriate semantic HTML usage (`<button>`, `<input>`, etc.).
+    - [ ] Implement `aria-label`, `aria-describedby`, or `aria-labelledby` attributes for interactive elements where standard HTML is insufficient.
+    - [ ] Verify and optimize keyboard navigation tab order throughout the application.
+    - [ ] Conduct manual screen reader testing (NVDA, VoiceOver) to confirm correct identification and labeling of interactive elements.
+- [ ] **Optimize Content Perceivability and Understandability (AC: 2)**
+    - [ ] Ensure all text and interactive elements meet WCAG 2.1 AA color contrast ratios.
+    - [ ] Provide descriptive `alt` text for all meaningful images and non-text content.
+    - [ ] Structure content using correct heading levels, lists, and paragraphs for screen reader comprehension.
+    - [ ] Perform automated accessibility scans (Lighthouse, axe-core) to identify and address content perceivability issues.
+- [ ] **Achieve WCAG 2.1 Level AA Compliance (AC: 3)**
+    - [ ] Conduct a comprehensive accessibility audit against WCAG 2.1 Level AA guidelines.
+    - [ ] Prioritize and implement fixes for all identified WCAG violations.
+    - [ ] Generate an accessibility compliance report.
+- [ ] **Implement ARIA Live Regions for Asynchronous Updates (AC: 4)**
+    - [ ] Identify all asynchronous actions (e.g., file uploads, content generation completions) that dynamically update the UI.
+    - [ ] Implement `aria-live` regions to announce state changes and success/error messages to screen reader users for these actions.
+    - [ ] Manually test ARIA live region announcements with screen readers to ensure correct and timely feedback.
+- [ ] **Testing & Quality Assurance**
+    - [ ] Conduct comprehensive manual screen reader testing across critical user flows.
+    - [ ] Integrate automated accessibility checks (Lighthouse, axe-core) into the CI/CD pipeline.
+    - [ ] Conduct manual testing to verify keyboard navigability and focus management.
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+    1.  **Given** any user-facing screen
+        **When** navigated using a screen reader (e.g., NVDA, VoiceOver)
+        **Then** all interactive elements are correctly identified and labeled.
+    2.  **And** all content is perceivable and understandable.
+    3.  **And** the application meets WCAG 2.1 Level AA compliance.
+    4.  **And** when an asynchronous action completes (e.g., a summary is generated), the system shall use ARIA live regions to announce the state change to screen reader users.
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>FR5.3 - Core Accessibility Features</section>
+        <snippet>The system shall incorporate core accessibility features, including WCAG 2.1 Level AA compliance, strong screen-reader support, and reduced-motion options.</snippet>
+      </doc>
+      <doc>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>Non-Functional Requirements -> Accessibility</section>
+        <snippet>The AI Study Buddy will adhere to WCAG 2.1 Level AA compliance as a baseline. Beyond standard compliance, we will prioritize cognitive accessibility to support neurodivergent learners... Strong screen-reader support... Reduced-motion options.</snippet>
+      </doc>
+      <doc>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>Product Scope -> MVP</section>
+        <snippet>Strong screen-reader support.</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>AI Study Buddy - High-Level Architecture</title>
+        <section>1.2. Component Interaction</section>
+        <snippet>The frontend is a single-page application built with React and Next.js, styled with Tailwind CSS.</snippet>
+      </doc>
+      <doc>
+        <path>docs/epics.md</path>
+        <title>Epic Breakdown</title>
+        <section>Epic 5: Core Experience &amp; UI Implementation</section>
+        <snippet>Ensure the application is intuitive, accessible, and enjoyable to use, fulfilling the promise of a clean, supportive, and frustration-free experience.</snippet>
+      </doc>
+      <doc>
+        <path>docs/epics.md</path>
+        <title>Epic Breakdown</title>
+        <section>Story 5.2: Ensure Mobile Responsiveness</section>
+        <snippet>As a user, I want the application to be fully functional and visually appealing on various screen sizes... So that I can access my study materials and tools from any device.</snippet>
+      </doc>
+      <doc>
+        <path>docs/epics.md</path>
+        <title>Epic Breakdown</title>
+        <section>Story 5.4: Implement Reduced Motion Options</section>
+        <snippet>As a user sensitive to motion, I want to minimize animations and transitions in the application, So that I can use the tool comfortably without discomfort.</snippet>
+      </doc>
+    </docs>
+    <code>
+      <code_artifact>
+        <path>src/app/layout.tsx</path>
+        <kind>layout</kind>
+        <symbol>RootLayout</symbol>
+        <reason>Defines the overall application structure, where global accessibility settings and semantic structure can be applied.</reason>
+      </code_artifact>
+      <code_artifact>
+        <path>src/app/register/page.tsx</path>
+        <kind>page</kind>
+        <symbol>RegisterPage</symbol>
+        <reason>Implements interactive forms and elements that require proper labeling and keyboard navigability for screen readers.</reason>
+      </code_artifact>
+      <code_artifact>
+        <path>src/app/upload/page.tsx</path>
+        <kind>page</kind>
+        <symbol>UploadPage</symbol>
+        <reason>Involves interactive elements, form submissions, and asynchronous updates, all of which need WCAG AA compliance and ARIA live regions.</reason>
+      </code_artifact>
+      <code_artifact>
+        <path>src/app/page.tsx</path>
+        <kind>page</kind>
+        <symbol>HomePage</symbol>
+        <reason>Main UI elements and interactive components on the landing page require WCAG AA compliance and screen reader support.</reason>
+      </code_artifact>
+    </code>
+    <dependencies>
+      <npm>
+        <dependency name="@supabase/ssr" version="^0.8.0" />
+        <dependency name="@supabase/supabase-js" version="^2.86.0" />
+        <dependency name="next" version="16.0.5" />
+        <dependency name="react" version="19.2.0" />
+        <dependency name="react-dom" version="19.2.0" />
+      </npm>
+      <npm-dev>
+        <dependency name="@babel/core" version="^7.28.5" />
+        <dependency name="@babel/preset-env" version="^7.28.5" />
+        <dependency name="@babel/preset-react" version="^7.28.5" />
+        <dependency name="@babel/preset-typescript" version="^7.28.5" />
+        <dependency name="@tailwindcss/postcss" version="^4" />
+        <dependency name="@testing-library/jest-dom" version="^6.9.1" />
+        <dependency name="@testing-library/react" version="^16.3.0" />
+        <dependency name="@types/jest" version="^30.0.0" />
+        <dependency name="@types/node" version="^20" />
+        <dependency name="@types/react" version="^19" />
+        <dependency name="@types/react-dom" version="^19" />
+        <dependency name="babel-jest" version="^30.2.0" />
+        <dependency name="eslint" version="^9" />
+        <dependency name="eslint-config-next" version="16.0.5" />
+        <dependency name="jest" version="^30.2.0" />
+        <dependency name="jest-environment-jsdom" version="^30.2.0" />
+        <dependency name="node-fetch" version="^2.7.0" />
+        <dependency name="tailwindcss" version="^4" />
+        <dependency name="ts-jest" version="^29.4.5" />
+        <dependency name="typescript" version="^5" />
+      </npm-dev>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint>All UI components developed must follow accessibility best practices, leveraging semantic HTML and ARIA attributes within the React component structure.</constraint>
+    <constraint>The application must achieve WCAG 2.1 Level AA compliance.</constraint>
+    <constraint>Extensive manual screen reader testing (e.g., NVDA, VoiceOver), automated accessibility audits (e.g., Lighthouse, axe-core), and comprehensive keyboard navigation testing are crucial.</constraint>
+    <constraint>ARIA live regions must be implemented for asynchronous updates to announce state changes to screen reader users.</constraint>
+  </constraints>
+  <interfaces></interfaces>
+  <tests>
+    <standards>
+      Unit testing is performed using Jest. Accessibility testing includes extensive manual screen reader testing (e.g., NVDA, VoiceOver), automated accessibility audits (e.g., Lighthouse, axe-core), and comprehensive keyboard navigation testing.
+    </standards>
+    <locations>
+      <location>tests/integration</location>
+      <location>CI/CD pipeline (for automated audits)</location>
+    </locations>
+    <ideas>
+      <idea>Verify all interactive elements are correctly identified and labeled by screen readers (AC: 1).</idea>
+      <idea>Confirm all content is perceivable and understandable by screen readers (AC: 2).</idea>
+      <idea>Conduct a comprehensive accessibility audit against WCAG 2.1 Level AA guidelines (AC: 3).</idea>
+      <idea>Test ARIA live regions to ensure asynchronous updates are announced correctly to screen reader users (AC: 4).</idea>
+      <idea>Perform manual testing for keyboard navigability and focus management across all interactive elements.</idea>
+    </ideas>
+  </tests>
+</story-context>

@@ -1,0 +1,254 @@
+<story-context id="5-1-implement-core-ui-design-system" v="1.0">
+  <metadata>
+    <epicId>epic-5</epicId>
+    <storyId>5.1</storyId>
+    <title>Implement Core UI Design System</title>
+    <status>drafted</status>
+    <generatedAt>søndag 30. november 2025</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/sprint-artifacts/5-1-implement-core-ui-design-system.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>Developer</asA>
+    <iWant>to implement the core UI design system based on Tailwind CSS and our UX principles</iWant>
+    <soThat>all user-facing components have a consistent, clean, and friendly aesthetic</soThat>
+    <tasks>
+    -   [ ] **Implement Core UI Components (AC: 1)**
+        -   [ ] Configure Tailwind CSS for "Guided Minimalism" principles (e.g., spacing, typography).
+        -   [ ] Integrate shadcn/ui components into the project.
+        -   [ ] Create initial styled button components.
+        -   [ ] Create initial styled form input and label components.
+        -   [ ] Define and implement basic application layout components (e.g., header, sidebar, main content area).
+        -   [ ] Establish a clear directory structure for reusable UI components.
+    -   [ ] **Apply "Calm & Focused" Color Palette (AC: 2)**
+        -   [ ] Define custom color variables within the Tailwind CSS configuration (`tailwind.config.cjs`).
+        -   [ ] Apply the defined color palette to all core UI components implemented.
+    -   [ ] **Theme shadcn/ui Components (AC: 3)**
+        -   [ ] Customize selected shadcn/ui components (e.g., Dialog, Card, Tabs, Input) to align with the "Calm & Focused" design specification.
+    -   [ ] **Testing & Quality Assurance**
+        -   [ ] Conduct manual UI review to ensure adherence to "Guided Minimalism" principles (whitespace, focus, CTAs).
+        -   [ ] Implement unit tests (Jest/React Testing Library) for core UI components to verify rendering and basic interaction.
+        -   [ ] Implement visual regression tests for critical UI components to ensure consistent styling and theming.
+        -   [ ] Perform manual UI review to verify consistent application of the "Calm & Focused" color palette.
+        -   [ ] Perform manual UI review of all themed shadcn/ui components against the design specification.
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+    <criterion id="1">
+      <description>
+        **Given** the Next.js application is set up with shadcn/ui
+        **When** core UI components (e.g., buttons, forms, layout) are implemented
+        **Then** they adhere to the principles of "Guided Minimalism" (abundant white space, single-column focus, clear CTAs).
+      </description>
+    </criterion>
+    <criterion id="2">
+      <description>
+        **And** they are styled consistently using the "Calm & Focused" color palette.
+      </description>
+    </criterion>
+    <criterion id="3">
+      <description>
+        **And** shadcn/ui components are themed to match the design specification.
+      </description>
+    </criterion>
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/PRD.md</path>
+        <title>ibe160 - Product Requirements Document</title>
+        <section>User Experience Principles</section>
+        <snippet>The AI Study Buddy's user experience should embody a supportive, easy/simple, and playful feel. The overall aesthetic will be academic, friendly, and clean, designed to reduce cognitive load and foster a sense of calm and control.</snippet>
+      </doc>
+      <doc>
+        <path>docs/PRD.md</path>
+        <title>ibe160 - Product Requirements Document</title>
+        <section>Functional Requirements - User Interface & Accessibility</section>
+        <snippet>FR5.1 - Clean & Intuitive UI: The system shall provide a simple, clean, and intuitive user interface that supports step-by-step guidance. FR5.2 - Web Application Responsiveness: The system shall be a Single Page Application (SPA) that is mobile-responsive and functions across target browsers (Chrome, Edge, Safari). FR5.3 - Core Accessibility Features: The system shall incorporate core accessibility features, including WCAG 2.1 Level AA compliance, strong screen-reader support, and reduced-motion options.</snippet>
+      </doc>
+      <doc>
+        <path>docs/sprint-artifacts/tech-spec-epic-5.md</path>
+        <title>Epic Technical Specification: UI, UX, & Accessibility Polish</title>
+        <section>Objectives and Scope</section>
+        <snippet>This epic focuses on refining the user interface and overall user experience to ensure the AI Study Buddy is intuitive, accessible, and enjoyable. In-Scope: Implement a clean, intuitive, and responsive UI... Utilize Shadcn/ui for component library, customized to the "Calm & Focused" color theme and "Guided Minimalism" design direction.</snippet>
+      </doc>
+      <doc>
+        <path>docs/sprint-artifacts/tech-spec-epic-5.md</path>
+        <title>Epic Technical Specification: UI, UX, & Accessibility Polish</title>
+        <section>Detailed Design - Services and Modules</section>
+        <snippet>This epic primarily involves the development and enhancement of frontend UI modules and components, such as Document Preview Component, Drag-and-Drop Upload Area, Loading Screen/Modal for Generation, Quiz Interface, and Summary View.</snippet>
+      </doc>
+      <doc>
+        <path>docs/sprint-artifacts/tech-spec-epic-5.md</path>
+        <title>Epic Technical Specification: UI, UX, & Accessibility Polish</title>
+        <section>Non-Functional Requirements - Performance</section>
+        <snippet>UI Responsiveness: All UI interactions... must feel instantaneous (&lt;200ms response time). Page Load Times: The Next.js frontend... optimized for fast page loads...</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>AI Study Buddy - High-Level Architecture</title>
+        <section>1.1. System Diagram</section>
+        <snippet>[User] --> [Next.js Frontend (Vercel)]</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>AI Study Buddy - High-Level Architecture</title>
+        <section>1.2. Component Interaction</section>
+        <snippet>Next.js Frontend: The frontend is a single-page application built with React and Next.js, styled with Tailwind CSS.</snippet>
+      </doc>
+      <doc>
+        <path>docs/UX-Design/ux-design-specification.md</path>
+        <title>ibe160 UX Design Specification</title>
+        <section>1.1 Design System Choice</section>
+        <snippet>We will be using shadcn/ui as our design system. This choice aligns perfectly with the project's use of React and Tailwind CSS, offering high customizability and full ownership of component code.</snippet>
+      </doc>
+      <doc>
+        <path>docs/UX-Design/ux-design-specification.md</path>
+        <title>ibe160 UX Design Specification</title>
+        <section>3.1 Color System</section>
+        <snippet>The chosen color theme is "Calm & Focused (Revised)"... to create a supportive, calm, and focused learning environment.</snippet>
+      </doc>
+      <doc>
+        <path>docs/UX-Design/ux-design-specification.md</path>
+        <title>ibe160 UX Design Specification</title>
+        <section>4.1 Chosen Design Approach</section>
+        <snippet>The chosen design approach is a combination of "Minimalist & Focused" and "Guided Workflow & Progressive," which we can call "Guided Minimalism" or "Focused Workflow."</snippet>
+      </doc>
+      <doc>
+        <path>docs/UX-Design/ux-design-specification.md</path>
+        <title>ibe160 UX Design Specification</title>
+        <section>8.1 Responsive Strategy</section>
+        <snippet>Our responsive design strategy will prioritize a mobile-first approach... leverage Tailwind CSS's utility-first framework for efficient breakpoint management.</snippet>
+      </doc>
+      <doc>
+        <path>docs/UX-Design/ux-design-specification.md</path>
+        <title>ibe160 UX Design Specification</title>
+        <section>8.2 Accessibility Strategy</section>
+        <snippet>Accessibility is a core principle... We will adhere to WCAG 2.1 AA standards. Semantic HTML, Keyboard Navigation, ARIA Attributes, Color Contrast, Alternative Text, Form Accessibility, Focus Management, Testing.</snippet>
+      </doc>
+    </docs>
+    <code>
+      <code-artifact>
+        <path>package.json</path>
+        <kind>config</kind>
+        <symbol>dependencies, devDependencies</symbol>
+        <lines>10-21, 23-37</lines>
+        <reason>Defines core project dependencies (React, Next.js) and development tools (Tailwind CSS, TypeScript, ESLint) that form the foundation for UI development.</reason>
+      </code-artifact>
+      <code-artifact>
+        <path>tailwind.config.cjs</path>
+        <kind>config</kind>
+        <symbol>theme, plugins</symbol>
+        <reason>Configuration file for Tailwind CSS, which will be updated to define the "Calm & Focused" color palette and other design tokens as per the UX specification.</reason>
+      </code-artifact>
+      <code-artifact>
+        <path>eslint.config.mjs</path>
+        <kind>config</kind>
+        <symbol>rules</symbol>
+        <reason>ESLint configuration, relevant for maintaining code quality and consistency in new UI component development.</reason>
+      </code-artifact>
+      <code-artifact>
+        <path>tsconfig.json</path>
+        <kind>config</kind>
+        <symbol>compilerOptions</symbol>
+        <reason>TypeScript configuration, ensuring type safety for React components and UI logic.</reason>
+      </code-artifact>
+      <code-artifact>
+        <path>app/globals.css</path>
+        <kind>stylesheet</kind>
+        <reason>Global CSS file, likely to contain Tailwind directives and potential custom styles.</reason>
+      </code-artifact>
+      <code-artifact>
+        <path>app/layout.tsx</path>
+        <kind>component</kind>
+        <reason>Root layout component for the Next.js application, where global styling and foundational UI components might be integrated.</reason>
+      </code-artifact>
+    </code>
+    <dependencies>
+      <dependency>
+        <name>next</name>
+        <version>16.0.5</version>
+        <type>framework</type>
+      </dependency>
+      <dependency>
+        <name>react</name>
+        <version>19.2.0</version>
+        <type>library</type>
+      </dependency>
+      <dependency>
+        <name>react-dom</name>
+        <version>19.2.0</version>
+        <type>library</type>
+      </dependency>
+      <dependency>
+        <name>tailwindcss</name>
+        <version>^4</version>
+        <type>styling-framework</type>
+      </dependency>
+      <dependency>
+        <name>shadcn/ui</name>
+        <version>N/A (component-based)</version>
+        <type>ui-library</type>
+      </dependency>
+      <dependency>
+        <name>typescript</name>
+        <version>^5</version>
+        <type>language-compiler</type>
+      </dependency>
+      <dependency>
+        <name>eslint</name>
+        <version>^9</version>
+        <type>linter</type>
+      </dependency>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint>
+      <type>Styling Framework</type>
+      <description>All UI components must be styled using Tailwind CSS, adhering to its utility-first principles.</description>
+    </constraint>
+    <constraint>
+      <type>Design System</type>
+      <description>The UI will leverage shadcn/ui components, customized and themed to match the project's design specification.</description>
+    </constraint>
+    <constraint>
+      <type>Design Principles</type>
+      <description>Components must adhere to "Guided Minimalism" principles, including abundant white space, single-column focus where appropriate, and clear Calls to Action (CTAs).</description>
+    </constraint>
+    <constraint>
+      <type>Color Palette</type>
+      <description>All visual elements must use the "Calm & Focused" color palette, as defined in the UX Design Specification.</description>
+    </constraint>
+    <constraint>
+      <type>Responsiveness</type>
+      <description>Components must be designed with a mobile-first approach, ensuring graceful adaptation across various screen sizes using Tailwind CSS responsive utilities.</description>
+    </constraint>
+    <constraint>
+      <type>Accessibility</type>
+      <description>New UI components must incorporate core accessibility features and strive for WCAG 2.1 Level AA compliance, including semantic HTML, keyboard navigability, and appropriate ARIA attributes.</description>
+    </constraint>
+  </constraints>
+  <interfaces>
+    <!-- No specific API interfaces are defined or modified by this story directly, as it focuses on the core UI design system. Future stories will implement interactions with backend APIs. -->
+  </interfaces>
+  <tests>
+    <standards>Testing for this story will primarily involve Jest and React Testing Library for unit testing UI components. Visual regression testing will be considered for critical components. Manual UI/UX and accessibility reviews are essential to ensure adherence to design principles and accessibility standards. Cross-browser and device testing will validate responsiveness.</standards>
+    <locations>
+      <location>tests/unit/</location>
+      <location>tests/integration/</location>
+      <location>tests/e2e/</location>
+      <location>src/components/**/*.test.tsx</location>
+    </locations>
+    <ideas>
+      <idea acId="1">Verify core UI components (buttons, forms, layout) render correctly and adhere to "Guided Minimalism" principles (e.g., whitespace, CTAs).</idea>
+      <idea acId="2">Confirm core UI components are styled consistently using the "Calm & Focused" color palette across various states (hover, active, disabled).</idea>
+      <idea acId="3">Ensure themed shadcn/ui components (e.g., Dialog, Card, Input) visually match the design specification.</idea>
+      <idea>Perform manual review to check keyboard navigability and screen reader announcements for core components.</idea>
+      <idea>Conduct visual regression tests on key UI components to detect unintentional style changes.</idea>
+    </ideas>
+  </tests>
+</story-context>

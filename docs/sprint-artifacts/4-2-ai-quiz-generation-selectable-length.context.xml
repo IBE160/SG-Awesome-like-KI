@@ -1,0 +1,210 @@
+<story-context id="/Users/sofiebranstad/Documents/Bachelor IT/IBE160 Programmering med KI/Gruppeoppgruppe/SG-Awesome-like-KI/.bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>4</epicId>
+    <storyId>2</storyId>
+    <title>AI Quiz Generation (Selectable Length)</title>
+    <status>drafted</status>
+    <generatedAt>2025-11-30</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>/Users/sofiebranstad/Documents/Bachelor IT/IBE160 Programmering med KI/Gruppeoppgave/SG-Awesome-like-KI/docs/sprint-artifacts/4-2-ai-quiz-generation-selectable-length.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>user</asA>
+    <iWant>to generate multiple-choice quizzes from my uploaded study materials with a selectable length (short, medium, long)</iWant>
+    <soThat>I can test my knowledge effectively and receive an informative error message if the AI is unable to generate a quiz or if I request a longer quiz than the content can support, with the system generating the longest possible quiz in the latter case.</soThat>
+    <tasks>
+1.  **Develop `POST /api/generate` endpoint for Quiz Generation (Vercel Function)** (AC: #1, #2, #3)
+    *   Implement endpoint to receive `documentId`, `type: "quiz"`, and `options` (`quizLength`).
+    *   Retrieve document content from Supabase Storage using `documentId`.
+    *   Construct an AI prompt for Claude AI, including document content and desired `quizLength`.
+    *   Call Claude AI and handle its response, including cases where content might not support requested quiz length.
+    *   Store the generated quiz in the `generated_content` table, linking to `study_materials` and `class_sections`.
+    *   Implement robust error handling for AI API calls and document retrieval.
+    *   Ensure AI API keys are securely managed within the Vercel Function, not exposed client-side.
+    *   *Testing Subtask:* Write unit tests for the Vercel Function to verify correct prompt construction, AI interaction, database storage, and error handling. (Framework: Jest)
+
+2.  **Integrate Quiz Generation in Frontend (Next.js)** (AC: #1, #2, #3)
+    *   Implement UI logic to call `POST /api/generate` with appropriate parameters for quiz generation (from Story 4.6: Guided Quiz Generation Wizard).
+    *   Display a loading screen/modal (as per UX spec: "Loading Screen/Modal for Generation") during the 30-second generation period).
+    *   Handle successful AI response: store generated quiz in local state, transition to the interactive quiz interface (Story 4.3).
+    *   Handle AI inability to generate quiz: display informative error message to the user.
+    *   Handle AI generating a shorter quiz than requested: display an informative message to the user along with the generated quiz.
+    *   *Testing Subtask:* Write integration tests for the frontend to verify correct API calls, loading state, display of generated quiz, and error/information message handling. (Framework: Jest, potentially Playwright/Cypress for E2E)
+
+3.  **Update Database Schema (Supabase PostgreSQL)** (AC: #1)
+    *   Ensure `generated_content` table schema can store quiz data (questions, options, correct answers, explanations - potentially within the `jsonb content` field).
+    *   Verify existing Row Level Security (RLS) policies for `generated_content` table adequately protect quiz data.
+    *   *Testing Subtask:* Write database migration scripts and verification steps to ensure schema supports quiz data and RLS is effective.
+
+4.  **Implement Observability for Quiz Generation** (AC: #1, #2, #3)
+    *   Implement comprehensive logging for quiz generation requests, AI API calls, and responses within the Vercel Function and Frontend.
+    *   Collect metrics on quiz generation time, success/failure rates, and AI model response times.
+    *   Consider implementing distributed tracing to track requests across Frontend, Vercel Function, and Claude AI for easier debugging.
+</tasks>
+  </story>
+
+  <acceptanceCriteria>
+1.  **Given** I have an uploaded document, **when** I request a quiz and select a desired length (short, medium, long), **then** the AI generates a relevant multiple-choice quiz within 30 seconds.
+2.  **If** the AI is unable to generate a quiz, **then** the system displays an informative error message.
+3.  **If** I request a longer quiz than the content can support, **then** the system informs me and generates the longest possible quiz.
+</acceptanceCriteria>
+
+  <artifacts>
+        <docs>
+      <artifact>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>FR3.2 - Quiz Generation</section>
+        <snippet>The system shall generate multiple-choice quizzes from uploaded study materials using AI, with user-selectable length, within 30 seconds.</snippet>
+      </artifact>
+      <artifact>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>FR4.2 - Motivational Feedback &amp; Explanations</section>
+        <snippet>The system shall provide motivational feedback and explanations for correct answers upon quiz completion.</snippet>
+      </artifact>
+      <artifact>
+        <path>docs/architecture.md</path>
+        <title>AI Study Buddy - High-Level Architecture</title>
+        <section>1. High-Level System Design</section>
+        <snippet>The Next.js frontend will interact with Supabase for data, authentication, and storage, and with the Vercel Function for AI-powered features. The Vercel Function acts as a secure intermediary between the frontend and the Claude AI model.</snippet>
+      </artifact>
+      <artifact>
+        <path>docs/architecture.md</path>
+        <title>AI Study Buddy - High-Level Architecture</title>
+        <section>2. Database Schema</section>
+        <snippet>The database will be implemented in Supabase (PostgreSQL). The schema is designed to support a hierarchical content organization and the relationships between study materials and generated content. `generated_content` table stores the AI outputs.</snippet>
+      </artifact>
+      <artifact>
+        <path>docs/architecture.md</path>
+        <title>AI Study Buddy - High-Level Architecture</title>
+        <section>3. API Design</section>
+        <snippet>`POST /api/generate`: Triggers the generation of content (summary or quiz) via the Vercel Function.</snippet>
+      </artifact>
+      <artifact>
+        <path>docs/UX-Design/ux-design-specification.md</path>
+        <title>ibe160 UX Design Specification</title>
+        <section>User Journey: Quiz Generation</section>
+        <snippet>A guided, multi-step process to configure and generate the quiz, including options for length and question types, loading screens, and success/error states.</snippet>
+      </artifact>
+      <artifact>
+        <path>docs/UX-Design/ux-design-specification.md</path>
+        <title>ibe160 UX Design Specification</title>
+        <section>Custom Component: Loading Screen/Modal for Generation</section>
+        <snippet>To inform the user that a content generation process is actively underway, prevent further interaction, and manage expectations regarding waiting times.</snippet>
+      </artifact>
+      <artifact>
+        <path>docs/UX-Design/ux-design-specification.md</path>
+        <title>ibe160 UX Design Specification</title>
+        <section>Custom Component: Quiz Interface</section>
+        <snippet>To provide an engaging, clear, and interactive environment for users to take quizzes generated from their study materials, guiding them through questions and collecting answers.</snippet>
+      </artifact>
+      <artifact>
+        <path>docs/sprint-artifacts/tech-spec-epic-4.md</path>
+        <title>Epic Technical Specification: AI-Powered Learning Tools</title>
+        <section>Overview</section>
+        <snippet>Epic 4 focuses on delivering the core 'magic' by enabling users to generate AI-powered summaries and multiple-choice quizzes from their uploaded study materials.</snippet>
+      </artifact>
+      <artifact>
+        <path>docs/sprint-artifacts/tech-spec-epic-4.md</path>
+        <title>Epic Technical Specification: AI-Powered Learning Tools</title>
+        <section>Detailed Design - AI Quiz Generation Workflow</section>
+        <snippet>User initiates quiz generation, frontend calls `/api/generate`, Vercel Function proxies to Claude AI, quiz is generated, stored, and displayed on the frontend.</snippet>
+      </artifact>
+      <artifact>
+        <path>docs/epics.md</path>
+        <title>ibe160 - Epic Breakdown</title>
+        <section>Epic 4: AI-Powered Learning Tools</section>
+        <snippet>Deliver the core "magic" of the product by transforming study materials into concise summaries and interactive quizzes, making learning more efficient and engaging. Story 4.2: AI Quiz Generation (Selectable Length) is part of this epic.</snippet>
+      </artifact>
+    </docs>
+        <code>
+      <artifact>
+        <path>src/lib/supabase.ts</path>
+        <kind>utility</kind>
+        <symbol>createBrowserClient</symbol>
+        <lines>2-7</lines>
+        <reason>Supabase client initialization, essential for database and storage interactions.</reason>
+      </artifact>
+      <artifact>
+        <path>src/app/layout.tsx</path>
+        <kind>component</kind>
+        <symbol>createClient</symbol>
+        <lines>4</lines>
+        <reason>Global Supabase client import, indicating application-wide Supabase integration.</reason>
+      </artifact>
+      <artifact>
+        <path>src/app/register/page.tsx</path>
+        <kind>component</kind>
+        <symbol>registerUser (simulated)</symbol>
+        <lines>52-54</lines>
+        <reason>Shows pattern for API interaction (simulated call to /api/auth/register), relevant for understanding how to integrate the /api/generate endpoint.</reason>
+      </artifact>
+    </code>
+        <dependencies>
+      <npm>
+        <package name="@supabase/ssr" version="^0.8.0" />
+        <package name="@supabase/supabase-js" version="^2.86.0" />
+        <package name="next" version="16.0.5" />
+        <package name="react" version="19.2.0" />
+        <package name="react-dom" version="19.2.0" />
+      </npm>
+      <devDependencies>
+        <package name="@babel/core" version="^7.28.5" />
+        <package name="@babel/preset-env" version="^7.28.5" />
+        <package name="@babel/preset-react" version="^7.28.5" />
+        <package name="@babel/preset-typescript" version="^7.28.5" />
+        <package name="@tailwindcss/postcss" version="^4" />
+        <package name="@testing-library/jest-dom" version="^6.9.1" />
+        <package name="@types/jest" version="^30.0.0" />
+        <package name="@types/node" version="^20" />
+        <package name="@types/react" version="^19" />
+        <package name="@types/react-dom" version="^19" />
+        <package name="babel-jest" version="^30.2.0" />
+        <package name="eslint" version="^9" />
+        <package name="eslint-config-next" version="16.0.5" />
+        <package name="jest" version="^30.2.0" />
+        <package name="jest-environment-jsdom" version="^30.2.0" />
+        <package name="node-fetch" version="^2.7.0" />
+        <package name="tailwindcss" version="^4" />
+        <package name="ts-jest" version="^29.4.5" />
+        <package name="typescript" version="^5" />
+      </devDependencies>
+    </dependencies>
+  </artifacts>
+
+    <constraints>
+    <constraint>AI API keys must be securely managed (Vercel Functions as proxy).</constraint>
+    <constraint>All user data must be protected by Row Level Security (RLS) in Supabase PostgreSQL.</constraint>
+    <constraint>All data transmission must be encrypted using HTTPS.</constraint>
+    <constraint>Quiz generation must complete within 30 seconds.</constraint>
+    <constraint>Robust error handling should be implemented for AI API calls, providing informative messages to the user if generation fails.</constraint>
+  </constraints>
+    <interfaces>
+    <interface>
+      <name>/api/generate</name>
+      <kind>REST endpoint</kind>
+      <signature>POST /api/generate { documentId: uuid, type: "quiz", options: { quizLength: "short" | "medium" | "long", questionTypes: ["multiple_choice"] } }</signature>
+      <path>src/app/api/generate/route.ts (planned)</path>
+    </interface>
+  </interfaces>
+    <tests>
+    <standards>
+      Unit tests using Jest for Vercel Functions. Integration tests using Jest (potentially Playwright/Cypress for E2E) for frontend interactions. Database migration scripts and verification steps for schema and RLS.
+    </standards>
+    <locations>
+      <location>src/app/**/*.test.ts (planned for Vercel Functions)</location>
+      <location>src/app/**/*.test.tsx (planned for Frontend components)</location>
+      <location>tests/integration/ (for broader E2E tests, if Cypress/Playwright implemented)</location>
+    </locations>
+    <ideas>
+      <idea>Verify AI generates a relevant multiple-choice quiz within 30 seconds for various document lengths. (AC: #1)</idea>
+      <idea>Test AI inability to generate a quiz and verify informative error message. (AC: #2)</idea>
+      <idea>Test requesting a longer quiz than content supports, verify informative message and longest possible quiz generation. (AC: #3)</idea>
+      <idea>Unit tests for Vercel Function: prompt construction, AI interaction, database storage, error handling.</idea>
+      <idea>Integration tests for Frontend: API calls, loading state, display of generated quiz, error/information message handling.</idea>
+      <idea>Database migration verification: schema supports quiz data, RLS is effective.</idea>
+    </ideas>
+  </tests>
+</story-context>

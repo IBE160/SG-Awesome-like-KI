@@ -1,0 +1,169 @@
+<story-context id=".bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>4</epicId>
+    <storyId>1</storyId>
+    <title>AI Summary Generation</title>
+    <status>drafted</status>
+    <generatedAt>Sunday, November 30, 2025</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/sprint-artifacts/4-1-ai-summary-generation.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>user</asA>
+    <iWant>to generate concise summaries from my uploaded study materials</iWant>
+    <soThat>I can quickly grasp the key concepts.</soThat>
+    <tasks>
+- [ ] **Frontend Development: Implement Summary Generation UI (AC: #1, #2)**
+  - [ ] Develop the UI for initiating summary generation from a selected document.
+  - [ ] Implement the loading screen/modal with progress information during generation. (Source: docs/epics.md#Story-4.5-Guided-Summary-Generation-Wizard)
+  - [ ] Display the generated summary content.
+  - [ ] Handle and display error messages from the backend if summary generation fails.
+- [ ] **Backend Development: Create Vercel Function for Summary API (AC: #1, #2)**
+  - [ ] Create a Vercel Function endpoint (`POST /api/generate` with `type: "summary"`).
+  - [ ] Implement logic to securely call the Claude AI Model with the document content and appropriate prompt engineering.
+  - [ ] Integrate with Supabase Storage to retrieve document content.
+  - [ ] Implement robust error handling for AI API calls and insufficient content scenarios.
+  - [ ] Store the generated summary in the `generated_content` table, linked to the `study_materials` table. (Source: docs/architecture.md#2.1-Tables)
+- [ ] **Database Schema Updates (if necessary)**
+  - [ ] Verify `generated_content` table schema supports summary content (jsonb).
+  - [ ] Ensure `study_materials` has `id`, `file_name`, `storage_path` and links to `classes` and `class_sections`.
+- [ ] **Testing (AC: #1, #2)**
+  - [ ] Write unit tests for the Vercel Function (AI proxy logic, error handling).
+  - [ ] Write integration tests for the `POST /api/generate` endpoint, including success and failure scenarios.
+  - [ ] Develop end-to-end tests for the full user flow of uploading a document and generating a summary, verifying content and timing.
+  - [ ] Test with various document sizes and content types (e.g., very short text, text with images, etc.) to ensure error handling is robust.
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+1.  Given I have an uploaded document, when I request a summary, then the AI generates a concise summary of the document's key points within 30 seconds. (Source: docs/epics.md#Story-4.1-AI-Summary-Generation--FR3.1)
+2.  If the AI is unable to generate a summary (e.g., due to insufficient text or too many images), the system displays an informative error message. (Source: docs/epics.md#Story-4.1-AI-Summary-Generation--FR3.1)
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <artifact>
+        <path>docs/PRD.md</path>
+        <title>ibe160 - Product Requirements Document</title>
+        <section>AI-Powered Content Generation</section>
+        <snippet>FR3.1 - Summary Generation: The system shall generate concise summaries from uploaded study materials using AI within 30 seconds. ... If the AI is unable to generate a summary (e.g., due to insufficient text or too many images), the system shall display an informative error message.</snippet>
+      </artifact>
+      <artifact>
+        <path>docs/epics.md</path>
+        <title>ibe160 - Epic Breakdown</title>
+        <section>Epic 4: AI-Powered Learning Tools</section>
+        <snippet>Deliver the core "magic" of the product by transforming study materials into concise summaries and interactive quizzes, making learning more efficient and engaging. Story 4.1: AI Summary Generation [FR3.1]</snippet>
+      </artifact>
+      <artifact>
+        <path>docs/sprint-artifacts/tech-spec-epic-4.md</path>
+        <title>Epic Technical Specification: AI-Powered Learning Tools</title>
+        <section>Detailed Design - Workflows and Sequencing</section>
+        <snippet>AI Summary Generation Workflow: User selects an uploaded document and initiates "Generate Summary" (via a guided wizard, Story 4.5). Frontend collects document ID and summary options. Frontend calls POST /api/generate with type: "summary". Vercel Function receives request, retrieves document content from Supabase Storage and calls Claude AI with prompt for summary. Claude AI generates summary. Vercel Function receives summary, stores it in generated_content table, links to study_materials and potentially class_sections. Frontend receives response, displays loading spinner during generation, then displays the generated summary. Handles error messages if AI generation fails.</snippet>
+      </artifact>
+      <artifact>
+        <path>docs/architecture.md</path>
+        <title>AI Study Buddy - High-Level Architecture</title>
+        <section>1.2. Component Interaction</section>
+        <snippet>Next.js Frontend: The frontend is a single-page application built with React and Next.js... It communicates with the Supabase backend for data, authentication, and storage, and with the Vercel Function for AI-powered features. Vercel Function: A serverless function deployed on Vercel that acts as a secure intermediary between the frontend and the Claude AI model. This prevents exposing the AI model's API key on the client-side. Claude AI Model: The AI model from Anthropic used for generating summaries and quizzes.</snippet>
+      </artifact>
+    </docs>
+    <code>
+      <artifact>
+        <path>src/app/page.tsx</path>
+        <kind>component</kind>
+        <symbol>N/A</symbol>
+        <lines>N/A</lines>
+        <reason>Potential location for summary generation UI or navigation to it.</reason>
+      </artifact>
+      <artifact>
+        <path>src/app/api/generate/route.ts</path>
+        <kind>Vercel Function</kind>
+        <symbol>POST</symbol>
+        <lines>N/A</lines>
+        <reason>New API route for handling AI content generation requests.</reason>
+      </artifact>
+      <artifact>
+        <path>src/lib/supabase/client.ts</path>
+        <kind>client library</kind>
+        <symbol>createClient</symbol>
+        <lines>N/A</lines>
+        <reason>Supabase client integration for database and storage operations.</reason>
+      </artifact>
+    </code>
+    <dependencies>
+      <dependency>
+        <name>next</name>
+        <version>^16.0.5</version>
+      </dependency>
+      <dependency>
+        <name>react</name>
+        <version>^19.2.0</version>
+      </dependency>
+      <dependency>
+        <name>react-dom</name>
+        <version>^19.2.0</version>
+      </dependency>
+      <dependency>
+        <name>@supabase/ssr</name>
+        <version>^0.8.0</version>
+      </dependency>
+      <dependency>
+        <name>@supabase/supabase-js</name>
+        <version>^2.86.0</version>
+      </dependency>
+      <dependency>
+        <name>tailwindcss</name>
+        <version>^4</version>
+      </dependency>
+      <dependency>
+        <name>typescript</name>
+        <version>^5</version>
+      </dependency>
+      <dependency>
+        <name>eslint</name>
+        <version>^9</version>
+      </dependency>
+      <dependency>
+        <name>jest</name>
+        <version>^30.2.0</version>
+      </dependency>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint>Utilize Vercel Functions as a secure intermediary for AI API calls to prevent client-side exposure of API keys.</constraint>
+    <constraint>Frontend (Next.js) communicates with backend via RESTful API routes.</constraint>
+    <constraint>Supabase PostgreSQL will be used for storing generated content.</constraint>
+    <constraint>Ensure RLS policies protect generated content, allowing only the owner to access.</constraint>
+  </constraints>
+  <interfaces>
+    <interface>
+      <name>Generate Content API</name>
+      <kind>REST endpoint</kind>
+      <signature>POST /api/generate</signature>
+      <path>src/app/api/generate/route.ts</path>
+    </interface>
+    <interface>
+      <name>Claude AI Model Integration</name>
+      <kind>Internal API Call</kind>
+      <signature>N/A</signature>
+      <path>src/app/api/generate/route.ts</path>
+    </interface>
+  </interfaces>
+  <tests>
+    <standards>Jest for unit and integration tests. E2E testing framework to be determined (e.g., Playwright or Cypress). All ACs must be covered by automated tests.</standards>
+    <locations>
+      <location>tests/integration/</location>
+      <location>src/app/api/generate/__tests__/</location>
+      <location>src/app/components/summary/__tests__/</location>
+    </locations>
+    <ideas>
+      <idea>Generate summary, check content and time (AC 1.1)</idea>
+      <idea>Test with insufficient text/images, check error (AC 1.2)</idea>
+      <idea>Test unit logic of AI proxy function for prompt engineering and error handling.</idea>
+      <idea>Test integration between frontend UI and /api/generate endpoint.</idea>
+      <idea>Develop E2E test for full user flow: upload, generate summary, view summary.</idea>
+    </ideas>
+  </tests>
+</story-context>

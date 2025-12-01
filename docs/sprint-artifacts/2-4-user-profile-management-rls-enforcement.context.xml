@@ -1,0 +1,168 @@
+<story-context id=".bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>2</epicId>
+    <storyId>4</storyId>
+    <title>User Profile Management &amp; RLS Enforcement</title>
+    <status>drafted</status>
+    <generatedAt>2025-11-30</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/sprint-artifacts/2-4-user-profile-management-rls-enforcement.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>registered user</asA>
+    <iWant>to manage my basic profile information</iWant>
+    <soThat>my account details are accurate and my data is protected</soThat>
+    <tasks>
+- [ ] **Task 1: Implement Profile Settings UI (AC: All)**
+  - [ ] Create a UI page/component for "Profile Settings" accessible after login.
+  - [ ] Display user's basic profile information (name, email).
+  - [ ] Implement input fields and forms for updating profile information.
+  - [ ] Display link to privacy policy.
+- [ ] **Task 2: Implement Profile Management API Endpoints (AC: All)**
+  - [ ] Create API routes for:
+      - `GET /api/profile` (Retrieve user profile)
+      - `PUT /api/profile` (Update user profile)
+  - [ ] Integrate with Supabase client to fetch and update user data (eg., from `users` table).
+  - [ ] Ensure API endpoints respect RLS policies.
+- [ ] **Task 3: Implement Supabase RLS Policies (AC: All)**
+  - [ ] Define and implement RLS policies on the `users` table to ensure users can only access/modify their own data.
+  - [ ] Implement automated tests for RLS policies.
+- [ ] **Task 4: Testing (AC: All)**
+  - [ ] Write unit tests for UI components and client-side validation.
+  - [ ] Write integration tests for profile API endpoints (retrieve, update).
+  - [ ] Write RLS integration tests to verify data isolation.
+  - [ ] Write end-to-end tests for the full profile management flow (dependent on registration and login).
+  - [ ] Manual testing of UI/UX, profile updates, and RLS behavior.
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+1. **Given** I am logged in, **when** I navigate to my profile settings, **then** I can view and update basic profile information (e.g., name, email - if allowed by Supabase Auth).
+2. **And** all my data (including profile) is protected by Row Level Security (RLS).
+3. **And** a clear privacy policy is accessible from my profile.
+4. **And** automated tests are in place to verify that RLS policies prevent one user from accessing another user's data.
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <artifact>
+        <path>docs/PRD.md</path>
+        <title>ibe160 - Product Requirements Document</title>
+        <section>Functional Requirements</section>
+        <snippet>FR1.1 - User Authentication: The system shall allow users to securely register, log in, and manage their profiles. FR1.2 - Data Privacy Compliance: The system shall adhere to student data privacy regulations (FERPA, COPPA) by implementing RLS and a clear privacy policy.</snippet>
+      </artifact>
+      <artifact>
+        <path>docs/PRD.md</path>
+        <title>ibe160 - Product Requirements Document</title>
+        <section>Non-Functional Requirements</section>
+        <snippet>Security: All user data must be protected by Row Level Security (RLS). This is a core non-functional requirement for user profile management.</snippet>
+      </artifact>
+      <artifact>
+        <path>docs/architecture.md</path>
+        <title>AI Study Buddy - High-Level Architecture</title>
+        <section>Database Schema</section>
+        <snippet>The `users` table, managed by Supabase Auth, contains user information. This table will be directly involved in user profile management.</snippet>
+      </artifact>
+      <artifact>
+        <path>docs/architecture.md</path>
+        <title>AI Study Buddy - High-Level Architecture</title>
+        <section>Authentication and Authorization</section>
+        <snippet>Row Level Security (RLS) will be enabled on all user data tables in Supabase to ensure strict data isolation. This is critical for profile data protection.</snippet>
+      </artifact>
+      <artifact>
+        <path>docs/epics.md</path>
+        <title>ibe160 - Epic Breakdown</title>
+        <section>Epic 2: User Onboarding &amp; Authentication</section>
+        <snippet>This epic focuses on enabling secure user account creation and management, providing a personalized and protected space for their study materials.</snippet>
+      </artifact>
+    </docs>
+    <code>
+      <artifact>
+        <path>src/lib/supabase.ts</path>
+        <kind>library</kind>
+        <symbol>createClient</symbol>
+        <reason>Provides the Supabase client instance for interacting with authentication services and the 'users' table.</reason>
+      </artifact>
+    </code>
+    <dependencies>
+      <ecosystem name="Node.js">
+        <package name="next" version="16.0.5" />
+        <package name="react" version="19.2.0" />
+        <package name="react-dom" version="19.2.0" />
+        <package name="tailwindcss" version="^4" />
+        <package name="@supabase/ssr" version="^0.8.0" />
+        <package name="@supabase/supabase-js" version="^2.86.0" />
+        <package name="eslint" version="^9" />
+      </ecosystem>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint>
+      <description>Row Level Security (RLS) must be defined and implemented on the `users` table to ensure users can only access/modify their own data.</description>
+      <source>docs/architecture.md#Authentication-and-Authorization</source>
+    </constraint>
+    <constraint>
+      <description>Adherence to data privacy regulations (FR1.2) for all user profile data.</description>
+      <source>docs/PRD.md#FR1.2---Data-Privacy-Compliance</source>
+    </constraint>
+    <constraint>
+      <description>Utilize Supabase Auth for user profile management.</description>
+      <source>docs/architecture.md#Authentication-and-Authorization</source>
+    </constraint>
+  </constraints>
+  <interfaces>
+    <interface>
+      <name>Retrieve User Profile API Endpoint</name>
+      <kind>REST endpoint</kind>
+      <signature>GET /api/profile</signature>
+      <path>src/app/api/profile/route.ts</path>
+    </interface>
+    <interface>
+      <name>Update User Profile API Endpoint</name>
+      <kind>REST endpoint</kind>
+      <signature>PUT /api/profile</signature>
+      <path>src/app/api/profile/route.ts</path>
+    </interface>
+    <interface>
+      <name>Supabase updateUser</name>
+      <kind>function signature</kind>
+      <signature>supabase.auth.updateUser({ data })</signature>
+      <path>src/lib/supabase.ts</path>
+    </interface>
+    <interface>
+      <name>Supabase from('users') table operations</name>
+      <kind>database API</kind>
+      <signature>supabase.from('users').select().eq('id', user_id)</signature>
+      <path>src/lib/supabase.ts</path>
+    </interface>
+  </interfaces>
+  <tests>
+    <standards>
+      The project uses Jest for unit and integration testing with coverage reporting. Different levels of testing are expected: unit for UI/client-side logic, integration for API endpoints, RLS integration tests for data isolation, and end-to-end for full user flows. Manual testing for UI/UX is also part of the standard.
+    </standards>
+    <locations>
+      <location>tests/</location>
+      <location>src/**/*.test.ts</location>
+    </locations>
+    <ideas>
+      <idea ac_id="1">
+        <description>Verify user can view and update their profile information through the UI and API.</description>
+        <type>E2E, Integration, Unit</type>
+      </idea>
+      <idea ac_id="2">
+        <description>Verify RLS policies effectively prevent unauthorized users from accessing or modifying profile data.</description>
+        <type>RLS Integration</type>
+      </idea>
+      <idea ac_id="3">
+        <description>Verify the privacy policy is accessible from the profile settings UI.</description>
+        <type>Unit</type>
+      </idea>
+      <idea ac_id="4">
+        <description>Automated tests specifically for RLS policies are in place and pass.</description>
+        <type>RLS Integration</type>
+      </idea>
+    </ideas>
+  </tests>
+</story-context>

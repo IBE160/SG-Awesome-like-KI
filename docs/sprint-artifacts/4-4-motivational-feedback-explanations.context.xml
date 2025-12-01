@@ -1,0 +1,170 @@
+<story-context id="4-4-motivational-feedback-explanations" date="2025-11-30">
+  <story>
+    <as-a>As a user,</as-a>
+    <i-want>I want to receive motivational feedback and explanations for quiz answers,</i-want>
+    <so-that>so that I can learn from my mistakes and build confidence.</so-that>
+  </story>
+  <acceptance-criteria>
+    <criterion id="1">Given I have completed a quiz, when I review my results, then I receive a score and positive reinforcement.</criterion>
+    <criterion id="2">For each question, the correct answer and an explanation are displayed.</criterion>
+    <criterion id="3">If the AI cannot provide an explanation for a correct answer, the system explicitly states this.</criterion>
+  </acceptance-criteria>
+  <tasks>
+    <task id="1" ac-refs="#2 #3">
+      <description>Backend: Modify Quiz Generation Logic</description>
+      <subtask>- Update the Vercel Function that calls the Claude AI model.</subtask>
+      <subtask>- Engineer the AI prompt to request an explanation for each quiz answer and to provide motivational feedback. The tone should be supportive and educational.</subtask>
+      <subtask>- Modify the data structure in the `generated_content` table's `content` field to store the explanation alongside each question and answer.</subtask>
+      <subtask>- Implement error handling for cases where the AI fails to provide an explanation.</subtask>
+    </task>
+    <task id="2" ac-refs="#1 #2 #3">
+      <description>Frontend: Update Quiz Interface</description>
+      <subtask>- Design and implement a UI to display the final score and motivational feedback upon quiz completion.</subtask>
+      <subtask>- In the quiz review screen, display the AI-generated explanation for each question.</subtask>
+      <subtask>- Display a message when an explanation is not available for a question.</subtask>
+    </task>
+    <task id="3">
+      <description>Testing</description>
+      <subtask>- Write unit tests for the Vercel Function to ensure the prompt is correctly formatted and the response is parsed correctly.</subtask>
+      <subtask>- Write integration tests to verify the end-to-end flow of generating a quiz with explanations and displaying them on the frontend.</subtask>
+      <subtask>- Manually test the UI to ensure it is clear, supportive, and handles all cases gracefully.</subtask>
+    </task>
+  </tasks>
+  <artifacts>
+        <docs>
+      <doc>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>MVP - Minimum Viable Product -> User Experience</section>
+        <snippet>Motivational feedback on quiz results, including explanations for correct answers to facilitate learning.</snippet>
+      </doc>
+      <doc>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>Functional Requirements -> Learning & Feedback -> FR4.2 - Motivational Feedback & Explanations</section>
+        <snippet>The system shall provide motivational feedback and explanations for correct answers upon quiz completion, including a score and positive reinforcement, and display correct answers and explanations for each question.</snippet>
+      </doc>
+      <doc>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>User Experience Principles</section>
+        <snippet>The UI will reinforce the product's core "magic" of transforming overwhelm into confidence through thoughtful visual cues and feedback mechanisms, guiding users towards clarity and understanding.</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>AI Study Buddy - High-Level Architecture</title>
+        <section>1.2. Component Interaction</section>
+        <snippet>The Next.js Frontend communicates with the Vercel Function for AI-powered features, which acts as a secure intermediary to the Claude AI model.</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>AI Study Buddy - High-Level Architecture</title>
+        <section>2.1. Tables</section>
+        <snippet>The `generated_content` table (jsonb `content` field) will store explanations alongside quiz answers.</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>AI Study Buddy - High-Level Architecture</title>
+        <section>3.1. Main API Endpoints</section>
+        <snippet>The `POST /api/generate` endpoint triggers the generation of content (summary or quiz) via the Vercel Function.</snippet>
+      </doc>
+      <doc>
+        <path>docs/epics.md</path>
+        <title>ibe160 - Epic Breakdown</title>
+        <section>Epic 4: AI-Powered Learning Tools</section>
+        <snippet>This epic delivers the core functionality of summaries and quizzes, transforming study materials into concise summaries and interactive quizzes.</snippet>
+      </doc>
+      <doc>
+        <path>docs/epics.md</path>
+        <title>ibe160 - Epic Breakdown</title>
+        <section>Story 4.4: Motivational Feedback & Explanations [FR4.2]</section>
+        <snippet>Integrate AI-generated explanations into the quiz review UI. The AI prompt should generate feedback in a supportive, encouraging, and educational tone.</snippet>
+      </doc>
+    </docs>
+    <code>
+    </code>
+    <interfaces>
+      <interface>
+        <name>AI Content Generation API</name>
+        <kind>REST endpoint</kind>
+        <signature>POST /api/generate</signature>
+        <path>src/app/api/generate/route.ts (expected)</path>
+      </interface>
+    </interfaces>
+    <constraints>
+      <constraint>
+        <type>AI Prompt Engineering</type>
+        <description>AI prompt must be carefully engineered for supportive and educational tone.</description>
+        <source>docs/sprint-artifacts/4-4-motivational-feedback-explanations.md</source>
+      </constraint>
+      <constraint>
+        <type>API Key Protection</type>
+        <description>All AI interactions must be funneled through a Vercel Function to protect the API key.</description>
+        <source>docs/architecture.md#1.2.-Component-Interaction</source>
+      </constraint>
+      <constraint>
+        <type>Database Schema</type>
+        <description>Explanations and feedback stored in `content` JSONB field of `generated_content` table.</description>
+        <source>docs/architecture.md#2.1.-Tables</source>
+      </constraint>
+      <constraint>
+        <type>Frontend Design</type>
+        <description>UI design must align with "Calm & Focused" color palette and "Guided Minimalism" principles.</description>
+        <source>docs/epics.md#Story 5.1</source>
+      </constraint>
+      <constraint>
+        <type>Testing Requirements</type>
+        <description>Unit tests for Vercel Function and integration tests for end-to-end flow are required.</description>
+        <source>docs/sprint-artifacts/4-4-motivational-feedback-explanations.md</source>
+      </constraint>
+    </constraints>
+        <dependencies>
+      <npm>
+        <package name="@supabase/ssr" version="^0.8.0" />
+        <package name="@supabase/supabase-js" version="^2.86.0" />
+        <package name="next" version="16.0.5" />
+        <package name="react" version="19.2.0" />
+        <package name="react-dom" version="19.2.0" />
+      </npm>
+      <npm-dev>
+        <package name="@babel/core" version="^7.28.5" />
+        <package name="@babel/preset-env" version="^7.28.5" />
+        <package name="@babel/preset-react" version="^7.28.5" />
+        <package name="@babel/preset-typescript" version="^7.28.5" />
+        <package name="@tailwindcss/postcss" version="^4" />
+        <package name="@testing-library/jest-dom" version="^6.9.1" />
+        <package name="@types/jest" version="^30.0.0" />
+        <package name="@types/node" version="^20" />
+        <package name="@types/react" version="^19" />
+        <package name="@types/react-dom" version="^19" />
+        <package name="babel-jest" version="^30.2.0" />
+        <package name="eslint" version="^9" />
+        <package name="eslint-config-next" version="16.0.5" />
+        <package name="jest" version="^30.2.0" />
+        <package name="jest-environment-jsdom" version="^30.2.0" />
+        <package name="node-fetch" version="^2.7.0" />
+        <package name="tailwindcss" version="^4" />
+        <package name="ts-jest" version="^29.4.5" />
+        <package name="typescript" version="^5" />
+      </npm-dev>
+    </dependencies>
+  </artifacts>
+    <tests>
+    <standards>Unit tests are required for the Vercel Function, and integration tests are required to verify the end-to-end flow.</standards>
+    <locations>
+      <location>src/app/api/generate/route.test.ts (expected for Vercel Function unit tests)</location>
+      <location>tests/integration/quiz.test.ts (for integration tests)</location>
+    </locations>
+    <ideas>
+      <idea ac-refs="#2 #3">
+        <description>Unit tests for the Vercel Function to ensure the AI prompt is correctly formatted and the response is parsed to extract explanations and motivational feedback correctly.</description>
+      </idea>
+      <idea ac-refs="#1 #2 #3">
+        <description>Integration tests to verify the end-to-end flow of generating a quiz with explanations and displaying them correctly on the frontend upon quiz completion.</description>
+      </idea>
+      <idea ac-refs="#1 #2 #3">
+        <description>Manually test the UI to ensure it is clear, supportive, and gracefully handles all cases, including when an AI explanation is not available.</description>
+      </idea>
+    </ideas>
+  </tests>
+</story-context>

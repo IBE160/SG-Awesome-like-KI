@@ -1,0 +1,162 @@
+<story-context id=".bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>Epic 3</epicId>
+    <storyId>3.4</storyId>
+    <title>Assign &amp; View Content</title>
+    <status>drafted</status>
+    <generatedAt>2025-12-01</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>C:\Hannah\SG-Awesome-like-KI\docs\sprint-artifacts\3-4-assign-view-content.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>As a user,</asA>
+    <iWant>I want to assign uploaded documents and generated content to specific classes and sections,</iWant>
+    <soThat>So that I can easily find and access my study materials.</soThat>
+    <tasks></tasks>
+  </story>
+
+  <acceptanceCriteria>
+    **Given** I have uploaded documents and created classes/sections
+    **When** I assign a document or generated content to a class/section
+    **Then** it appears within that class/section.
+    **And** I can view all documents and generated content organized by class and section.
+    **And** when a document is moved, all its associated generated content (summaries, quizzes) shall automatically move with it.
+    **And** when viewing a class/section, generated content (summaries, quizzes) is clearly linked to and displayed alongside its source document.
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <artifact>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>Content Management &amp; Organization</section>
+        <snippet>Empower users to easily upload, organize, and manage their study materials, creating a structured and clutter-free learning environment.</snippet>
+      </artifact>
+      <artifact>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>FR2.2 - Hierarchical Content Organization</section>
+        <snippet>The system shall allow users to organize their uploaded materials and generated content into a hierarchical structure (e.g., classes, class sections).</snippet>
+      </artifact>
+      <artifact>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>FR2.3 - Document Management</section>
+        <snippet>The system shall allow users to manage their uploaded documents, including soft deletion.</snippet>
+      </artifact>
+      <artifact>
+        <path>docs/architecture.md</path>
+        <title>AI Study Buddy - High-Level Architecture</title>
+        <section>2. Database Schema</section>
+        <snippet>The database will be implemented in Supabase (PostgreSQL). The schema is designed to support a hierarchical content organization and the relationships between `study_materials`, `generated_content`, `classes`, and `class_sections` tables.</snippet>
+      </artifact>
+      <artifact>
+        <path>docs/architecture.md</path>
+        <title>AI Study Buddy - High-Level Architecture</title>
+        <section>3.1. Main API Endpoints</section>
+        <snippet>Lists API endpoints related to `classes`, `class_sections`, and `study_materials` for retrieval and management of content.</snippet>
+      </artifact>
+      <artifact>
+        <path>docs/architecture.md</path>
+        <title>AI Study Buddy - High-Level Architecture</title>
+        <section>4. Authentication and Authorization</section>
+        <snippet>Row Level Security (RLS) will be enabled on all user data tables in Supabase to ensure strict data isolation. Relevant for content assignment and viewing.</snippet>
+      </artifact>
+    </docs>
+    <code>
+      <artifact>
+        <path>src/lib/supabase.ts</path>
+        <kind>utility</kind>
+        <symbol>Supabase Client Initialization</symbol>
+        <lines>2-7</lines>
+        <reason>Initializes the Supabase client, essential for interacting with the Supabase backend for managing content assignments and views.</reason>
+      </artifact>
+    </code>
+    <dependencies>
+      <ecosystem name="Node.js">
+        <package name="@supabase/auth-helpers-nextjs" version="^0.15.0" />
+        <package name="@supabase/ssr" version="^0.8.0" />
+        <package name="@supabase/supabase-js" version="^2.86.0" />
+        <package name="next" version="16.0.5" />
+        <package name="react" version="19.2.0" />
+        <package name="react-dom" version="19.2.0" />
+      </ecosystem>
+      <ecosystem name="Node.js Dev Dependencies">
+        <package name="@babel/core" version="^7.28.5" />
+        <package name="@babel/preset-env" version="^7.28.5" />
+        <package name="@babel/preset-react" version="^7.28.5" />
+        <package name="@babel/preset-typescript" version="^7.28.5" />
+        <package name="@tailwindcss/postcss" version="^4" />
+        <package name="@testing-library/jest-dom" version="^6.9.1" />
+        <package name="@testing-library/react" version="^16.3.0" />
+        <package name="@types/jest" version="^30.0.0" />
+        <package name="@types/node" version="^20" />
+        <package name="@types/react" version="^19" />
+        <package name="@types/react-dom" version="^19" />
+        <package name="babel-jest" version="^30.2.0" />
+        <package name="eslint" version="^9" />
+        <package name="eslint-config-next" version="16.0.5" />
+        <package name="jest" version="^30.2.0" />
+        <package name="jest-environment-jsdom" version="^30.2.0" />
+        <package name="node-fetch" version="^2.7.0" />
+        <package name="tailwindcss" version="^4" />
+        <package name="ts-jest" version="^29.4.5" />
+        <package name="typescript" version="^5" />
+      </ecosystem>
+    </dependencies>
+    <interfaces>
+      <interface>
+        <name>Assign Document to Class/Section API</name>
+        <kind>REST endpoint</kind>
+        <signature>POST /api/documents/{document_id}/assign</signature>
+        <path>app/api/documents/[document_id]/assign/route.ts (anticipated)</path>
+      </interface>
+      <interface>
+        <name>Assign Generated Content to Class/Section API</name>
+        <kind>REST endpoint</kind>
+        <signature>POST /api/generated-content/{content_id}/assign</signature>
+        <path>app/api/generated-content/[content_id]/assign/route.ts (anticipated)</path>
+      </interface>
+      <interface>
+        <name>View Content by Class/Section API</name>
+        <kind>REST endpoint</kind>
+        <signature>GET /api/classes/{class_id}/sections/{section_id}/content</signature>
+        <path>app/api/classes/[class_id]/sections/[section_id]/content/route.ts (anticipated)</path>
+      </interface>
+      <interface>
+        <name>Move Document API</name>
+        <kind>REST endpoint</kind>
+        <signature>PUT /api/documents/{document_id}/move</signature>
+        <path>app/api/documents/[document_id]/move/route.ts (anticipated)</path>
+      </interface>
+    </interfaces>
+    <constraints>
+      <constraint>
+        <type>Security</type>
+        <description>Row Level Security (RLS) must be enabled on `study_materials`, `generated_content`, `classes`, and `class_sections` tables to ensure strict data isolation and prevent unauthorized access to content.</description>
+      </constraint>
+      <constraint>
+        <type>Data Integrity</type>
+        <description>Database relationships between `study_materials`, `generated_content`, `classes`, and `class_sections` must be correctly implemented to support content assignment and movement. Cascading updates should ensure associated generated content moves with the source document.</description>
+      </constraint>
+      <constraint>
+        <type>Performance</type>
+        <description>Efficient queries are required to retrieve all documents and generated content organized by class and section, especially for users with large amounts of study materials.</description>
+      </constraint>
+    </constraints>
+    <tests>
+      <standards>The project utilizes Jest with `jest-environment-jsdom` and React Testing Library for comprehensive unit and integration testing. A strict "no-flaky-tests" policy is enforced to maintain test reliability. Critical security measures, such as Row Level Security (RLS) policies, are also verified through automated tests.</standards>
+      <locations>
+        <location>tests/integration/</location>
+        <location>app/**/*.test.tsx</location>
+      </locations>
+      <ideas>
+        <idea id="AC1">Verify that when a document or generated content is assigned to a class/section, it appears within that class/section.</idea>
+        <idea id="AC2">Verify that all documents and generated content can be viewed when organized by class and section.</idea>
+        <idea id="AC3">Verify that when a document is moved, all its associated generated content (summaries, quizzes) automatically move with it.</idea>
+        <idea id="AC4">Verify that when viewing a class/section, generated content (summaries, quizzes) is clearly linked to and displayed alongside its source document.</idea>
+        <idea id="AC5">Verify that only the authenticated user can assign and view their own content (RLS enforcement).</idea>
+      </ideas>
+    </tests>
+</story-context>

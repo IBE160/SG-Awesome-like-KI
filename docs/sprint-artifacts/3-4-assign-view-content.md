@@ -1,6 +1,6 @@
 # Story 3.4: Assign & View Content
 
-Status: drafted
+Status: ready-for-dev
 
 ## Story
 
@@ -72,7 +72,7 @@ so that I can easily find and access my study materials.
 
 ### Context Reference
 
-<!-- Path(s) to story context XML will be added here by context workflow -->
+- C:\Hannah\SG-Awesome-like-KI\docs\sprint-artifacts\3-4-assign-view-content.context.xml
 
 ### Agent Model Used
 
