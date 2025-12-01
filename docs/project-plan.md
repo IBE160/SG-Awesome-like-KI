@@ -188,7 +188,7 @@
       - [x] /run-agent-task sm *validate-create-story {for story 4.4}
       - [x] /run-agent-task sm *create-story-context {for story 4.4}
         - [x] File: sprint-artifacts/{{story_key}}.context.xml
-      - [ ] /run-agent-task sm *validate-story-context {for story 4.4}
+      - [x] /run-agent-task sm *validate-story-context {for story 4.4}
       - [ ] /run-agent-task dev *implement-story {for story 4.4}
       - [ ] /run-agent-task dev *validate-story {for story 4.4}
     - [ ] 4.5
