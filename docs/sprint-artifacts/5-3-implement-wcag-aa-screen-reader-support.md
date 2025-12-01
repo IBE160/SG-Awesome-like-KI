@@ -55,6 +55,7 @@ So that I can have an inclusive and equitable learning experience.
 
 ### References
 
+-   [Source: docs/epics.md#Story-5.3]
 -   [Source: docs/PRD.md]
 -   [Source: docs/architecture.md]
 -   [Source: docs/UX-Design/ux-design-specification.md]

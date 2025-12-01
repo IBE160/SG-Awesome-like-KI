@@ -1,0 +1,176 @@
+<story-context id=".bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>5</epicId>
+    <storyId>2</storyId>
+    <title>Ensure Mobile Responsiveness</title>
+    <status>drafted</status>
+    <generatedAt>mandag 1. desember 2025</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/sprint-artifacts/5-2-ensure-mobile-responsiveness.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>As a user,</asA>
+    <iWant>I want the application to be fully functional and visually appealing on various screen sizes (mobile, tablet, desktop),</iWant>
+    <soThat>So that I can access my study materials and tools from any device.</soThat>
+    <tasks>
+    - [ ] **Implement Responsive Layouts (AC: 1)**
+        - [ ] Review existing Story 5.1 UI components for responsiveness requirements.
+        - [ ] Apply Tailwind CSS responsive utilities (`sm:`, `md:`, `lg:`, `xl:`) to ensure graceful layout adjustments for all user-facing screens.
+        - [ ] Verify interactive elements (buttons, forms, navigation) remain accessible and usable across mobile, tablet, and desktop breakpoints.
+    - [ ] **Ensure Cross-Browser Compatibility (AC: 2)**
+        - [ ] Conduct functional testing of the application on the latest stable versions of Chrome, Edge, and Safari.
+        - [ ] Identify and resolve any browser-specific rendering issues or functional discrepancies.
+    - [ ] **Testing & Quality Assurance**
+        - [ ] Perform manual responsive testing on various device emulators (e.g., Chrome DevTools device mode) for common mobile and tablet sizes.
+        - [ ] Conduct manual responsive testing on actual mobile phones and tablets.
+        - [ ] Perform manual cross-browser testing for layout and functionality on target browsers.
+        - [ ] Implement visual regression tests for critical responsive layouts to detect unintended changes across breakpoints.
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+    1.  **Given** any user-facing screen
+        **When** viewed on a mobile phone, tablet, or desktop browser
+        **Then** the layout adjusts gracefully, and all interactive elements remain accessible and usable.
+    2.  **And** the application functions correctly on the latest stable versions of Chrome, Edge, and Safari.
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>FR5.2 - Web Application Responsiveness</section>
+        <snippet>The system shall be a Single Page Application (SPA) that is mobile-responsive and functions across target browsers (Chrome, Edge, Safari). ... The UI adapts gracefully to various screen sizes (mobile, tablet, desktop).</snippet>
+      </doc>
+      <doc>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>FR5.3 - Core Accessibility Features</section>
+        <snippet>The system shall incorporate core accessibility features, including WCAG 2.1 Level AA compliance, strong screen-reader support, and reduced-motion options.</snippet>
+      </doc>
+      <doc>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>User Experience Principles</section>
+        <snippet>The AI Study Buddy's user experience should embody a supportive, easy/simple, and playful feel. The overall aesthetic will be academic, friendly, and clean, designed to reduce cognitive load and foster a sense of calm and control.</snippet>
+      </doc>
+      <doc>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>Non-Functional Requirements -> Accessibility</section>
+        <snippet>The AI Study Buddy will adhere to WCAG 2.1 Level AA compliance as a baseline. Beyond standard compliance, we will prioritize cognitive accessibility... Strong screen-reader support... Reduced-motion options.</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>AI Study Buddy - High-Level Architecture</title>
+        <section>1.2. Component Interaction</section>
+        <snippet>The frontend is a single-page application built with React and Next.js, styled with Tailwind CSS. It communicates with the Supabase backend for data, authentication, and storage, and with the Vercel Function for AI-powered features.</snippet>
+      </doc>
+      <doc>
+        <path>docs/epics.md</path>
+        <title>Epic Breakdown</title>
+        <section>Epic 5: Core Experience &amp; UI Implementation</section>
+        <snippet>Ensure the application is intuitive, accessible, and enjoyable to use, fulfilling the promise of a clean, supportive, and frustration-free experience.</snippet>
+      </doc>
+      <doc>
+        <path>docs/epics.md</path>
+        <title>Epic Breakdown</title>
+        <section>Story 5.1: Implement Core UI Design System</section>
+        <snippet>As a Developer, I want to implement the core UI design system based on Tailwind CSS and our UX principles, So that all user-facing components have a consistent, clean, and friendly aesthetic.</snippet>
+      </doc>
+      <doc>
+        <path>docs/epics.md</path>
+        <title>Epic Breakdown</title>
+        <section>Story 5.3: Implement WCAG AA &amp; Screen Reader Support</section>
+        <snippet>As a user with disabilities, I want to use the application effectively with assistive technologies like screen readers, So that I can have an inclusive and equitable learning experience.</snippet>
+      </doc>
+      <doc>
+        <path>docs/epics.md</path>
+        <title>Epic Breakdown</title>
+        <section>Story 5.4: Implement Reduced Motion Options</section>
+        <snippet>As a user sensitive to motion, I want to minimize animations and transitions in the application, So that I can use the tool comfortably without discomfort.</snippet>
+      </doc>
+    </docs>
+    <code>
+      <code_artifact>
+        <path>src/app/layout.tsx</path>
+        <kind>layout</kind>
+        <symbol>RootLayout</symbol>
+        <reason>Defines the overall application structure, crucial for global responsiveness.</reason>
+      </code_artifact>
+      <code_artifact>
+        <path>src/app/register/page.tsx</path>
+        <kind>page</kind>
+        <symbol>RegisterPage</symbol>
+        <reason>Implements user registration UI, needs to be responsive across devices.</reason>
+      </code_artifact>
+      <code_artifact>
+        <path>src/app/upload/page.tsx</path>
+        <kind>page</kind>
+        <symbol>UploadPage</symbol>
+        <reason>Implements file upload UI, needs to be responsive across devices.</reason>
+      </code_artifact>
+      <code_artifact>
+        <path>src/app/page.tsx</path>
+        <kind>page</kind>
+        <symbol>HomePage</symbol>
+        <reason>Main landing page UI, needs to be responsive across devices.</reason>
+      </code_artifact>
+    </code>
+    <dependencies>
+      <npm>
+        <dependency name="@supabase/ssr" version="^0.8.0" />
+        <dependency name="@supabase/supabase-js" version="^2.86.0" />
+        <dependency name="next" version="16.0.5" />
+        <dependency name="react" version="19.2.0" />
+        <dependency name="react-dom" version="19.2.0" />
+      </npm>
+      <npm-dev>
+        <dependency name="@babel/core" version="^7.28.5" />
+        <dependency name="@babel/preset-env" version="^7.28.5" />
+        <dependency name="@babel/preset-react" version="^7.28.5" />
+        <dependency name="@babel/preset-typescript" version="^7.28.5" />
+        <dependency name="@tailwindcss/postcss" version="^4" />
+        <dependency name="@testing-library/jest-dom" version="^6.9.1" />
+        <dependency name="@testing-library/react" version="^16.3.0" />
+        <dependency name="@types/jest" version="^30.0.0" />
+        <dependency name="@types/node" version="^20" />
+        <dependency name="@types/react" version="^19" />
+        <dependency name="@types/react-dom" version="^19" />
+        <dependency name="babel-jest" version="^30.2.0" />
+        <dependency name="eslint" version="^9" />
+        <dependency name="eslint-config-next" version="16.0.5" />
+        <dependency name="jest" version="^30.2.0" />
+        <dependency name="jest-environment-jsdom" version="^30.2.0" />
+        <dependency name="node-fetch" version="^2.7.0" />
+        <dependency name="tailwindcss" version="^4" />
+        <dependency name="ts-jest" version="^29.4.5" />
+        <dependency name="typescript" version="^5" />
+      </npm-dev>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint>Responsive design patterns must be integrated into the existing component structure using Tailwind CSS utilities.</constraint>
+    <constraint>Adherence to standard Next.js project conventions and best practices for component organization, extending them to include responsive considerations.</constraint>
+    <constraint>The application must function correctly on the latest stable versions of Chrome, Edge, and Safari.</constraint>
+    <constraint>Testing across various device emulators and actual devices is required.</constraint>
+  </constraints>
+  <interfaces></interfaces>
+  <tests>
+    <standards>
+      Unit testing is performed using Jest. Responsive and cross-browser testing will involve manual testing on various device emulators/actual devices and potentially visual regression testing for critical responsive layouts.
+    </standards>
+    <locations>
+      <location>tests/integration</location>
+    </locations>
+    <ideas>
+      <idea>Verify that layouts adjust gracefully on mobile, tablet, and desktop viewports.</idea>
+      <idea>Confirm all interactive elements remain accessible and usable across different devices and screen sizes.</idea>
+      <idea>Test application functionality and UI rendering on the latest stable versions of Chrome, Edge, and Safari.</idea>
+      <idea>Implement visual regression tests for critical responsive layouts to detect unintended changes across breakpoints.</idea>
+    </ideas>
+  </tests>
+</story-context>

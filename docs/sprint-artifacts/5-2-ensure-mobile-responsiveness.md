@@ -43,6 +43,7 @@ So that I can access my study materials and tools from any device.
 
 ### References
 
+-   [Source: docs/epics.md#Story-5.2]
 -   [Source: docs/PRD.md]
 -   [Source: docs/architecture.md]
 -   [Source: docs/UX-Design/ux-design-specification.md]

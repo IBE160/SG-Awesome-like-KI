@@ -1,0 +1,196 @@
+<story-context id=".bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>5</epicId>
+    <storyId>5</storyId>
+    <title>Build Custom UX Components</title>
+    <status>drafted</status>
+    <generatedAt>mandag 1. desember 2025</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/sprint-artifacts/5-5-build-custom-ux-components.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>As a Developer,</asA>
+    <iWant>I want to build the high-effort custom components defined in the UX specification,</iWant>
+    <soThat>So that the core user workflows are intuitive and engaging.</soThat>
+    <tasks>
+- [ ] Task 1: Implement Document Preview Component (AC: #1)
+  - [ ] Create the basic structure for the component.
+  - [ ] Implement states: default, loading, error.
+  - [ ] Implement actions: view, delete, generate summary/quiz.
+- [ ] Task 2: Implement Drag-and-Drop Upload Area (AC: #2)
+  - [ ] Create the UI for the dropzone.
+  - [ ] Add file type and size validation.
+  - [ ] Implement drag-and-drop functionality using a library like `react-dropzone`.
+  - [ ] Ensure full accessibility (keyboard navigation, screen reader support).
+- [ ] Task 3: Implement Loading Screen/Modal for Generation (AC: #3)
+  - [ ] Design a reusable modal component.
+  - [ ] Display progress information (e.g., "Analyzing document...", "Generating summary...").
+  - [ ] Integrate with the summary/quiz generation workflows.
+- [ ] Task 4: Implement Quiz Interface (AC: #4)
+  - [ ] Create the component to display questions and multiple-choice answers.
+  - [ ] Implement logic to handle answer selection and feedback.
+  - [ ] Style the component according to the UX design.
+- [ ] Task 5: Implement Summary View Component (AC: #4)
+  - [ ] Create the component to display the generated summary text.
+  - [ ] Add actions like "Copy to Clipboard" or "Save".
+  - [ ] Style the component according to the UX design.
+- [ ] Task 6: Testing
+  - [ ] Write unit tests for each custom component.
+  - [ ] Write integration tests to ensure components work together correctly.
+  - [ ] Manually test all components for functionality, accessibility, and adherence to UX specifications.
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+    1.  **Given** the core UI foundation is in place, **when** the custom components are built, **then** the `Document Preview Component` is implemented with all its specified states and actions.
+    2.  **And** the `Drag-and-Drop Upload Area` is fully functional and accessible.
+    3.  **And** the `Loading Screen/Modal for Generation` provides clear user feedback.
+    4.  **And** the `Quiz Interface` and `Summary View` components are implemented as designed.
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>FR5.1 - Clean &amp; Intuitive UI</section>
+        <snippet>The system shall provide a simple, clean, and intuitive user interface that supports step-by-step guidance.</snippet>
+      </doc>
+      <doc>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>User Experience Principles</section>
+        <snippet>The AI Study Buddy's user experience should embody a supportive, easy/simple, and playful feel. The overall aesthetic will be academic, friendly, and clean, designed to reduce cognitive load and foster a sense of calm and control.</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>AI Study Buddy - High-Level Architecture</title>
+        <section>1.2. Component Interaction</section>
+        <snippet>The frontend is a single-page application built with React and Next.js, styled with Tailwind CSS.</snippet>
+      </doc>
+      <doc>
+        <path>docs/epics.md</path>
+        <title>Epic Breakdown</title>
+        <section>Epic 5: Core Experience &amp; UI Implementation</section>
+        <snippet>Ensure the application is intuitive, accessible, and enjoyable to use, fulfilling the promise of a clean, supportive, and frustration-free experience.</snippet>
+      </doc>
+      <doc>
+        <path>docs/epics.md</path>
+        <title>Epic Breakdown</title>
+        <section>Story 5.1: Implement Core UI Design System</section>
+        <snippet>As a Developer, I want to implement the core UI design system based on Tailwind CSS and our UX principles, So that all user-facing components have a consistent, clean, and friendly aesthetic.</snippet>
+      </doc>
+    </docs>
+    <code>
+      <code_artifact>
+        <path>src/components/ui/DocumentPreview.tsx</path>
+        <kind>component</kind>
+        <symbol>DocumentPreviewComponent</symbol>
+        <reason>New custom component to be built as per AC: #1, will display document previews with various states and actions.</reason>
+      </code_artifact>
+      <code_artifact>
+        <path>src/components/ui/DragDropUploadArea.tsx</path>
+        <kind>component</kind>
+        <symbol>DragDropUploadArea</symbol>
+        <reason>New custom component to be built as per AC: #2, will provide accessible drag-and-drop file upload functionality.</reason>
+      </code_artifact>
+      <code_artifact>
+        <path>src/components/ui/LoadingModal.tsx</path>
+        <kind>component</kind>
+        <symbol>LoadingScreenModal</symbol>
+        <reason>New custom component to be built as per AC: #3, will provide clear user feedback during content generation processes.</reason>
+      </code_artifact>
+      <code_artifact>
+        <path>src/components/ui/QuizInterface.tsx</path>
+        <kind>component</kind>
+        <symbol>QuizInterface</symbol>
+        <reason>New custom component to be built as per AC: #4, will implement the interactive quiz display and interaction logic.</reason>
+      </code_artifact>
+      <code_artifact>
+        <path>src/components/ui/SummaryView.tsx</path>
+        <kind>component</kind>
+        <symbol>SummaryViewComponent</symbol>
+        <reason>New custom component to be built as per AC: #4, will display generated summaries with additional actions like copy/save.</reason>
+      </code_artifact>
+      <code_artifact>
+        <path>src/app/layout.tsx</path>
+        <kind>layout</kind>
+        <reason>These new custom components will be integrated into the overall application structure defined by the layout.</reason>
+      </code_artifact>
+      <code_artifact>
+        <path>src/app/register/page.tsx</path>
+        <kind>page</kind>
+        <reason>May integrate new custom components, adhering to consistent UX.</reason>
+      </code_artifact>
+      <code_artifact>
+        <path>src/app/upload/page.tsx</path>
+        <kind>page</kind>
+        <reason>Will integrate the Drag-and-Drop Upload Area and potentially the Loading Screen/Modal.</reason>
+      </code_artifact>
+      <code_artifact>
+        <path>src/app/page.tsx</path>
+        <kind>page</kind>
+        <reason>Main entry point, will likely integrate various custom UX components.</reason>
+      </code_artifact>
+    </code>
+    <dependencies>
+      <npm>
+        <dependency name="@supabase/ssr" version="^0.8.0" />
+        <dependency name="@supabase/supabase-js" version="^2.86.0" />
+        <dependency name="next" version="16.0.5" />
+        <dependency name="react" version="19.2.0" />
+        <dependency name="react-dom" version="19.2.0" />
+      </npm>
+      <npm-dev>
+        <dependency name="@babel/core" version="^7.28.5" />
+        <dependency name="@babel/preset-env" version="^7.28.5" />
+        <dependency name="@babel/preset-react" version="^7.28.5" />
+        <dependency name="@babel/preset-typescript" version="^7.28.5" />
+        <dependency name="@tailwindcss/postcss" version="^4" />
+        <dependency name="@testing-library/jest-dom" version="^6.9.1" />
+        <dependency name="@testing-library/react" version="^16.3.0" />
+        <dependency name="@types/jest" version="^30.0.0" />
+        <dependency name="@types/node" version="^20" />
+        <dependency name="@types/react" version="^19" />
+        <dependency name="react-dom" version="^19" />
+        <dependency name="babel-jest" version="^30.2.0" />
+        <dependency name="eslint" version="^9" />
+        <dependency name="eslint-config-next" version="16.0.5" />
+        <dependency name="jest" version="^30.2.0" />
+        <dependency name="jest-environment-jsdom" version="^30.2.0" />
+        <dependency name="node-fetch" version="^2.7.0" />
+        <dependency name="tailwindcss" version="^4" />
+        <dependency name="ts-jest" version="^29.4.5" />
+        <dependency name="typescript" version="^5" />
+      </npm-dev>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint>New custom components must be built as reusable React components.</constraint>
+    <constraint>All new custom components must be fully accessible (WCAG 2.1 AA) and responsive.</constraint>
+    <constraint>New components should be placed in a logical structure within the `src/components` directory, specifically `src/components/ui/`.</constraint>
+    <constraint>Adherence to existing project conventions for component organization and styling (Tailwind CSS) is required.</constraint>
+  </constraints>
+  <interfaces></interfaces>
+  <tests>
+    <standards>
+      Unit tests for individual components using Jest. Integration tests for workflows. Manual End-to-End (E2E) testing for functionality, accessibility, and adherence to UX specifications.
+    </standards>
+    <locations>
+      <location>tests/integration</location>
+      <location>src/components/ui/ (for unit tests alongside components)</location>
+    </locations>
+    <ideas>
+      <idea>Unit tests for `Document Preview Component` covering default, loading, and error states, and all specified actions (view, delete, generate summary/quiz).</idea>
+      <idea>Unit tests for `Drag-and-Drop Upload Area` covering UI rendering, file type/size validation, and drag-and-drop functionality.</idea>
+      <idea>Accessibility tests for `Drag-and-Drop Upload Area` ensuring keyboard navigation and screen reader support.</idea>
+      <idea>Unit tests for `Loading Screen/Modal for Generation` covering progress information display and integration with content generation workflows.</idea>
+      <idea>Unit tests for `Quiz Interface` covering question display, multiple-choice answer selection, and feedback logic.</idea>
+      <idea>Unit tests for `Summary View Component` covering display of generated summary text and actions like "Copy to Clipboard" or "Save".</idea>
+      <idea>Integration tests to ensure that the custom UX components work correctly together within the core user workflows.</idea>
+      <idea>Manual E2E testing for all custom components to verify functionality, accessibility, and visual adherence to UX specifications.</idea>
+    </ideas>
+  </tests>
+</story-context>

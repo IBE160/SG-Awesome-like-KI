@@ -6,101 +6,73 @@ Status: drafted
 
 As a Developer,
 I want to build the high-effort custom components defined in the UX specification,
-so that the core user workflows are intuitive and engaging.
+So that the core user workflows are intuitive and engaging.
 
 ## Acceptance Criteria
 
-*   **Given** the core UI foundation is in place
-*   **When** the custom components are built
-*   **Then** the `Document Preview Component` is implemented with all its specified states and actions.
-*   **And** the `Drag-and-Drop Upload Area` is fully functional and accessible.
-*   **And** the `Loading Screen/Modal for Generation` provides clear user feedback.
-*   **And** the `Quiz Interface` and `Summary View` components are implemented as designed.
+1.  **Given** the core UI foundation is in place, **when** the custom components are built, **then** the `Document Preview Component` is implemented with all its specified states and actions.
+2.  **And** the `Drag-and-Drop Upload Area` is fully functional and accessible.
+3.  **And** the `Loading Screen/Modal for Generation` provides clear user feedback.
+4.  **And** the `Quiz Interface` and `Summary View` components are implemented as designed.
 
 ## Tasks / Subtasks
 
-- [ ] **Develop Document Preview Component:**
-    *   [ ] Implement UI for displaying uploaded documents (text content, PDF thumbnails/previews if applicable).
-    *   [ ] Integrate functionality for specified states (e.g., loading, error, content loaded).
-    *   [ ] Ensure accessibility for screen readers, providing proper ARIA attributes and focus management.
-- [ ] **Develop Drag-and-Drop Upload Area:**
-    *   [ ] Implement visual and functional drag-and-drop zone, handling file selection via click as well.
-    *   [ ] Integrate client-side file validation (type, size limits as per PRD FR2.1).
-    *   [ ] Connect to `POST /api/upload` endpoint for secure file upload to Supabase Storage.
-    *   [ ] Provide visual feedback during drag (e.g., highlight drop zone), drop, and upload progress (e.g., progress bar, success/error messages).
-    *   [ ] Ensure keyboard navigation and accessibility for all interactive elements within the upload area.
-- [ ] **Develop Loading Screen/Modal for Generation:**
-    *   [ ] Create a reusable component for displaying loading states, specifically during AI content generation (summaries/quizzes).
-    *   [ ] Include clear user feedback messages (e.g., "Generating summary...", "Processing PDF...", "Creating quiz...").
-    *   [ ] Handle potential error states during generation and provide user-friendly error messages.
-    *   [ ] Ensure the modal is accessible, with proper focus trapping and ARIA attributes for screen reader users.
-- [ ] **Develop Quiz Interface Component:**
-    *   [ ] Implement UI for displaying quiz questions, multiple-choice answers, and user selection.
-    *   [ ] Integrate functionality for submitting answers, receiving immediate feedback, and navigating between questions.
-    *   [ ] Ensure accessibility for interactive elements, including proper tab order and keyboard controls.
-- [ ] **Develop Summary View Component:**
-    *   [ ] Implement UI for displaying generated summaries, ensuring readability and appropriate formatting (e.g., paragraphs, bullet points).
-    *   [ ] Ensure accessibility for content consumption, considering font sizes, contrast, and screen reader compatibility.
-- [ ] **Create Integration and Unit Tests for Custom Components:**
-    *   [ ] Write unit tests for individual component logic, state management, and props handling.
-    *   [ ] Write integration tests to verify component interactions, data flow, and API calls (e.g., upload process, quiz submission).
-    *   [ ] Include accessibility testing in the test suite to ensure components meet WCAG AA standards.
-- [ ] **Update `docs/architecture.md` (Component Diagram):**
-    *   [ ] Consider adding a high-level component diagram for these new custom UX components to the `docs/architecture.md` document, illustrating their place in the overall system.
+- [ ] Task 1: Implement Document Preview Component (AC: #1)
+  - [ ] Create the basic structure for the component.
+  - [ ] Implement states: default, loading, error.
+  - [ ] Implement actions: view, delete, generate summary/quiz.
+- [ ] Task 2: Implement Drag-and-Drop Upload Area (AC: #2)
+  - [ ] Create the UI for the dropzone.
+  - [ ] Add file type and size validation.
+  - [ ] Implement drag-and-drop functionality using a library like `react-dropzone`.
+  - [ ] Ensure full accessibility (keyboard navigation, screen reader support).
+- [ ] Task 3: Implement Loading Screen/Modal for Generation (AC: #3)
+  - [ ] Design a reusable modal component.
+  - [ ] Display progress information (e.g., "Analyzing document...", "Generating summary...").
+  - [ ] Integrate with the summary/quiz generation workflows.
+- [ ] Task 4: Implement Quiz Interface (AC: #4)
+  - [ ] Create the component to display questions and multiple-choice answers.
+  - [ ] Implement logic to handle answer selection and feedback.
+  - [ ] Style the component according to the UX design.
+- [ ] Task 5: Implement Summary View Component (AC: #4)
+  - [ ] Create the component to display the generated summary text.
+  - [ ] Add actions like "Copy to Clipboard" or "Save".
+  - [ ] Style the component according to the UX design.
+- [ ] Task 6: Testing
+  - [ ] Write unit tests for each custom component.
+  - [ ] Write integration tests to ensure components work together correctly.
+  - [ ] Manually test all components for functionality, accessibility, and adherence to UX specifications.
 
 ## Dev Notes
 
-### Requirements Context Summary for Story 5.5: Build Custom UX Components
+- **Relevant architecture patterns and constraints:** Build as reusable React components. Ensure all components are fully accessible (WCAG 2.1 AA) and responsive.
+- **Source tree components to touch:** `src/components/ui/`, `src/app/`, and potentially new files for each custom component.
+- **Testing standards summary:** Unit tests for individual components, integration tests for workflows, and manual E2E testing.
 
-**Epic:** Epic 5: Core Experience & UI Implementation
-*This epic ensures the application is intuitive, accessible, and enjoyable to use, fulfilling the promise of a clean, supportive, and frustration-free experience.*
+### Project Structure Notes
 
-**User Story Statement:**
-As a Developer,
-I want to build the high-effort custom components defined in the UX specification,
-So that the core user workflows are intuitive and engaging.
-
-**Acceptance Criteria:**
-*   **Given** the core UI foundation is in place
-*   **When** the custom components are built
-*   **Then** the `Document Preview Component` is implemented with all its specified states and actions.
-*   **And** the `Drag-and-Drop Upload Area` is fully functional and accessible.
-*   **And** the `Loading Screen/Modal for Generation` provides clear user feedback.
-*   **And** the `Quiz Interface` and `Summary View` components are implemented as designed.
-
-**Prerequisites:** Story 5.1 (Implement Core UI Design System).
-
-**Technical Notes from Epics:**
-*   Build these as reusable React components, ensuring they meet all behavior, state, and accessibility requirements from the UX specification.
-
-**Relevant Architecture/Standards (from architecture.md):**
-*   **Next.js Frontend (Vercel):** All custom UX components will be developed as part of the Next.js frontend, leveraging React for component-based architecture and styled with Tailwind CSS (as per Story 5.1).
-*   **API Design:** Components such as the `Drag-and-Drop Upload Area` will interact with the `POST /api/upload` endpoint, and the `Loading Screen/Modal for Generation` will reflect the status of calls to the `POST /api/generate` endpoint.
-*   **Supabase Backend (BaaS):** File uploads via the `Drag-and-Drop Upload Area` will utilize Supabase Storage.
-*   **CI/CD Pipeline:** The existing CI/CD pipeline (defined in `.github/workflows/ci.yml`) should be configured to run tests that ensure the functionality and visual integrity of these new custom components.
-
-### Project Structure Alignment and Lessons Learned
-
-**Learnings from Previous Story:** Previous story (Story 5.4: Implement Reduced Motion Options) was in 'drafted' status. No implementation-specific learnings are available from its development yet.
-
-**Project Structure Alignment:** No `unified-project-structure.md` was found to align against. Implementation will proceed based on existing project conventions and best practices, building upon the core UI foundation established in Story 5.1.
+- This story builds on the foundation from Story 5.1. The new components should be placed in a logical structure within the `src/components` directory.
 
 ### References
 
-- [Source: docs/epics.md#Story-5.5-Build-Custom-UX-Components]
-- [Source: docs/architecture.md#3.1.-Main-API-Endpoints]
-- [Source: docs/architecture.md#5.-File-Handling]
-- [Source: docs/architecture.md#7.-CI/CD-Pipeline]
+- [Source: docs/epics.md#Story-5.5]
+- [Source: docs/UX-Design/spec.md] 
+- [Source: docs/architecture.md]
+
+### Learnings from Previous Story
+
+**From Story 5.4 Implement Reduced Motion Options (Status: drafted)**
+- **Development Status**: This story is currently in drafted and has not been implemented yet. Therefore, there are no direct implementation learnings or architectural decisions from its development to incorporate into the current story.
 
 ## Dev Agent Record
 
 ### Context Reference
 
-<!-- Path(s) to story context XML will be added here by context workflow -->
+- `C:\Hannah\SG-Awesome-like-KI\docs\sprint-artifacts/5-5-build-custom-ux-components.context.xml`
 
 ### Agent Model Used
 
-Gemini
+{{agent_model_name_version}}
 
 ### Debug Log References
 
@@ -108,4 +80,4 @@ Gemini
 
 ### File List
 
-- NEW: docs/sprint-artifacts/5-5-build-custom-ux-components.md
+## Change Log

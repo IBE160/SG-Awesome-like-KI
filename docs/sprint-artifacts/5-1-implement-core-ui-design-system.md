@@ -50,10 +50,15 @@ So that all user-facing components have a consistent, clean, and friendly aesthe
 
 ### References
 
+-   [Source: docs/epics.md#Story-5.1]
 -   [Source: docs/PRD.md]
 -   [Source: docs/architecture.md]
 -   [Source: docs/UX-Design/ux-design-specification.md]
 -   [Source: docs/sprint-artifacts/tech-spec-epic-5.md]
+
+### Learnings from Previous Story
+
+As the first story in Epic 5, there are no implementation learnings from a previous story in this epic.
 
 ## Dev Agent Record
 

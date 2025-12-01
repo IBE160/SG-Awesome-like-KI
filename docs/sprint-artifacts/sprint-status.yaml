@@ -42,7 +42,7 @@ development_status:
   1-4-implement-basic-ci-cd-pipeline: done
   epic-1-retrospective: completed
   epic-2: contexted
-  2-1-user-registration: in-progress
+  2-1-user-registration: review
   2-2-user-login-session-management: ready-for-dev
   2-3-password-reset: ready-for-dev
   2-4-user-profile-management-rls-enforcement: ready-for-dev

@@ -16,21 +16,21 @@ so that I can use the tool comfortably without discomfort.
 
 ## Tasks / Subtasks
 
-- [ ] **Analyze existing UI components for animations/transitions:**
+- [ ] **Analyze existing UI components for animations/transitions (AC: 1):**
   - [ ] Identify all animated elements (e.g., loading spinners, navigation transitions, hover effects) in the Next.js frontend.
   - [ ] Document their current implementation (CSS transitions, JavaScript animations).
-- [ ] **Implement `prefers-reduced-motion` CSS media query:**
+- [ ] **Implement `prefers-reduced-motion` CSS media query (AC: 1):**
   - [ ] Apply `@media (prefers-reduced-motion: reduce)` to existing CSS animations/transitions to disable or simplify them.
   - [ ] Ensure smooth transitions are replaced with instant changes or fades where appropriate, adhering to accessibility best practices.
-- [ ] **Integrate JavaScript-based animation control (if applicable):**
+- [ ] **Integrate JavaScript-based animation control (if applicable) (AC: 1):**
   - [ ] For JavaScript-driven animations, detect `prefers-reduced-motion` preference using `window.matchMedia('(prefers-reduced-motion: reduce)')`.
   - [ ] Provide alternative, reduced-motion animation logic or disable animations entirely based on the user's preference.
-- [ ] **Verify browser compatibility:**
+- [ ] **Verify browser compatibility (AC: 1):**
   - [ ] Test the reduced motion implementation across target browsers (Chrome, Edge, Safari) to ensure consistent behavior and proper application of the preference.
-- [ ] **Write automated tests for reduced motion (Accessibility Testing):**
+- [ ] **Write automated tests for reduced motion (Accessibility Testing) (AC: 1):**
   - [ ] Create integration tests to verify animations are reduced/disabled when `prefers-reduced-motion` is active.
   - [ ] Investigate using testing frameworks like Playwright or Cypress to simulate user preferences and assert UI behavior.
-- [ ] **Update `docs/architecture.md` (CI/CD):**
+- [ ] **Update `docs/architecture.md` (CI/CD) (AC: 1):**
   - [ ] Add a note to the CI/CD section of the `architecture.md` document, highlighting the integration of accessibility testing, specifically for reduced motion, into the automated pipeline.
 
 ## Dev Notes
