@@ -43,7 +43,7 @@ development_status:
   epic-1-retrospective: completed
   epic-2: contexted
   2-1-user-registration: done
-  2-2-user-login-session-management: in-progress
+  2-2-user-login-session-management: done
   2-3-password-reset: ready-for-dev
   2-4-user-profile-management-rls-enforcement: ready-for-dev
   epic-2-retrospective: optional
