@@ -16,11 +16,12 @@ jest.mock('next/headers', () => ({
   cookies: jest.fn(),
 }));
 
-const mockResetPasswordForEmail = (createRouteHandlerClient as jest.Mock).mockReturnValue({
+const mockResetPasswordForEmail = jest.fn();
+(createRouteHandlerClient as jest.Mock).mockReturnValue({
   auth: {
-    resetPasswordForEmail: jest.fn(),
+    resetPasswordForEmail: mockResetPasswordForEmail,
   },
-}).auth.resetPasswordForEmail;
+});
 
 describe('POST /api/auth/reset-password/request', () => {
   beforeEach(() => {

@@ -1,7 +1,7 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import LoginPage from '../../src/app/login/page';
+import LoginPage from 'app/login/page';
 import { useRouter } from 'next/navigation';
 
 // Mock Supabase and Next.js router
@@ -104,6 +104,6 @@ describe('LoginPage', () => {
 
   it('links to the forgot password page', () => {
     render(<LoginPage />);
-    expect(screen.getByRole('link', { name: /forgot password?/i })).toHaveAttribute('href', '/password-reset');
+    expect(screen.getByRole('link', { name: /forgot password?/i })).toHaveAttribute('href', '/login/forgot-password');
   });
 });

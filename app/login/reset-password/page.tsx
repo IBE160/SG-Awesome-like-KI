@@ -8,12 +8,14 @@ export default function ResetPasswordPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get('token'); // Assuming the reset token is passed as a URL parameter
+  console.log('Token:', token);
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
+    console.log('handleSubmit called');
     e.preventDefault();
     setMessage('');
     setError('');
@@ -32,27 +34,27 @@ export default function ResetPasswordPage() {
     console.log('Resetting password with token:', token);
     console.log('New password:', password);
 
-    // Mock API response for now
     try {
-      const response = await new Promise((resolve) => setTimeout(() => {
-        if (password.length >= 5 && /[0-9]/.test(password) && /[!@#$%^&*]/.test(password)) { // Basic strength check (5 letters, 1 number, 1 special)
-          resolve({ success: true });
-        } else {
-          throw new Error('Password does not meet strength requirements (min 5 letters, 1 number, 1 special character).');
-        }
-      }, 1000));
+      const response = await fetch('/api/auth/reset-password/confirm', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ token, password }),
+      });
 
-      if ((response as any).success) {
-        setMessage('Your password has been reset successfully. You can now log in.');
-        // Optionally redirect to login page after a delay
+      const data = await response.json();
+
+      if (response.ok) {
+        setMessage(data.message || 'Your password has been reset successfully. You can now log in.');
         setTimeout(() => {
           router.push('/login');
         }, 3000);
       } else {
-        setError('Failed to reset password. Please try again or request a new link.');
+        setError(data.message || 'Failed to reset password. Please try again or request a new link.');
       }
     } catch (err: any) {
-      setError(err.message || 'An unexpected error occurred.');
+      setError('An unexpected error occurred.');
     }
   };
 
