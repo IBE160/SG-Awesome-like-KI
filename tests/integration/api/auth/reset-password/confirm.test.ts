@@ -16,11 +16,12 @@ jest.mock('next/headers', () => ({
   cookies: jest.fn(),
 }));
 
-const mockUpdateUser = (createRouteHandlerClient as jest.Mock).mockReturnValue({
+const mockUpdateUser = jest.fn();
+(createRouteHandlerClient as jest.Mock).mockReturnValue({
   auth: {
-    updateUser: jest.fn(),
+    updateUser: mockUpdateUser,
   },
-}).auth.updateUser;
+});
 
 describe('POST /api/auth/reset-password/confirm', () => {
   beforeEach(() => {

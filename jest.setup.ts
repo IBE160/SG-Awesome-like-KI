@@ -16,11 +16,12 @@ if (!global.fetch) {
   global.Response = Response as any
 }
 
-// Mock next/headers
-jest.mock('next/headers', () => ({
-  cookies: jest.fn(() => ({
-    get: jest.fn(),
-    set: jest.fn(),
-    delete: jest.fn(),
-  })),
+jest.mock('next/server', () => ({
+  NextResponse: {
+    json: jest.fn((data, options) => ({
+      json: () => Promise.resolve(data),
+      status: options?.status || 200,
+    })),
+    redirect: jest.fn(),
+  },
 }));

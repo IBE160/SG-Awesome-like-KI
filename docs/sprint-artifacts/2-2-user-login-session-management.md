@@ -1,6 +1,6 @@
 # Story 2.2: Story 2.2
 
-Status: ready-for-dev
+Status: Approved
 
 ## Story
 

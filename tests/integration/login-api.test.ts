@@ -38,13 +38,15 @@ describe('Login API Endpoint', () => {
   it('should redirect to home page on successful login', async () => {
     mockSignInWithPassword.mockResolvedValueOnce({ error: null });
 
+    const formData = new FormData();
+    formData.append('email', 'test@example.com');
+    formData.append('password', 'password');
+
     const request = new Request('http://localhost/api/auth/login', {
       method: 'POST',
-      body: new URLSearchParams({ email: 'test@example.com', password: 'password' }),
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
+      body: formData,
     });
+    (request as any).formData = async () => formData;
 
     await POST(request);
 
@@ -55,13 +57,15 @@ describe('Login API Endpoint', () => {
   it('should redirect to login page with error message for invalid credentials', async () => {
     mockSignInWithPassword.mockResolvedValueOnce({ error: { message: 'Invalid login credentials' } });
 
+    const formData = new FormData();
+    formData.append('email', 'test@example.com');
+    formData.append('password', 'wrongpassword');
+
     const request = new Request('http://localhost/api/auth/login', {
       method: 'POST',
-      body: new URLSearchParams({ email: 'test@example.com', password: 'wrongpassword' }),
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
+      body: formData,
     });
+    (request as any).formData = async () => formData;
 
     await POST(request);
 
@@ -72,13 +76,15 @@ describe('Login API Endpoint', () => {
   it('should redirect to login page with error message for locked account', async () => {
     mockSignInWithPassword.mockResolvedValueOnce({ error: { message: 'Account temporarily locked' } });
 
+    const formData = new FormData();
+    formData.append('email', 'locked@example.com');
+    formData.append('password', 'password');
+
     const request = new Request('http://localhost/api/auth/login', {
       method: 'POST',
-      body: new URLSearchParams({ email: 'locked@example.com', password: 'password' }),
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
+      body: formData,
     });
+    (request as any).formData = async () => formData;
 
     await POST(request);
 
@@ -89,13 +95,15 @@ describe('Login API Endpoint', () => {
   it('should redirect to login page with generic error for other authentication errors', async () => {
     mockSignInWithPassword.mockResolvedValueOnce({ error: { message: 'Some other error' } });
 
+    const formData = new FormData();
+    formData.append('email', 'error@example.com');
+    formData.append('password', 'password');
+
     const request = new Request('http://localhost/api/auth/login', {
       method: 'POST',
-      body: new URLSearchParams({ email: 'error@example.com', password: 'password' }),
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
+      body: formData,
     });
+    (request as any).formData = async () => formData;
 
     await POST(request);
 
