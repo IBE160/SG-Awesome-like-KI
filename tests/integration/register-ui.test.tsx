@@ -114,5 +114,31 @@ describe('RegisterPage - Client-side Validation', () => {
     expect(errorMessage).toBeInTheDocument();
     expect(fetch).toHaveBeenCalledTimes(1);
   });
+
+  it('should allow registration with a valid password containing 5 letters not in a row', async () => {
+    render(<RegisterPage />);
+
+    const emailInput = screen.getByLabelText(/email/i);
+    const passwordInput = screen.getByLabelText(/password/i);
+    const registerButton = screen.getByRole('button', { name: /register/i });
+
+    fireEvent.change(emailInput, { target: { value: 'test2@example.com' } });
+    fireEvent.change(passwordInput, { target: { value: 'V1a2l3i4d!P' } }); // 5 letters, 4 numbers, 1 symbol
+    fireEvent.click(registerButton);
+
+    // Ensure fetch was called
+    expect(fetch).toHaveBeenCalledTimes(1);
+    expect(fetch).toHaveBeenCalledWith(
+      '/api/auth/register',
+      expect.objectContaining({
+        method: 'POST',
+        body: JSON.stringify({ email: 'test2@example.com', password: 'V1a2l3i4d!P' }),
+      })
+    );
+
+    // Wait for the success message to appear
+    const successMessage = await screen.findByText(/Registration successful!/i);
+    expect(successMessage).toBeInTheDocument();
+  });
 });
 

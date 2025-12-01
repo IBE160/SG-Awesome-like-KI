@@ -19,7 +19,7 @@ export default function RegisterPage() {
     }
 
     // Basic client-side password strength validation (matching AC: 5 letters, 1 number, 1 special symbol)
-    const passwordRegex = /^(?=.*[A-Za-z]{5,})(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).*$/;
+    const passwordRegex = /^(?=(?:[^A-Za-z]*[A-Za-z]){5})(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).*$/;
     if (!passwordRegex.test(password)) {
         setError("Password must contain at least 5 letters, 1 number, and 1 special symbol.");
         return;
