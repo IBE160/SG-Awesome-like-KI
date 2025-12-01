@@ -1,0 +1,192 @@
+<story-context id=".bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>4</epicId>
+    <storyId>5</storyId>
+    <title>Guided Summary Generation Wizard</title>
+    <status>drafted</status>
+    <generatedAt>mandag 1. desember 2025</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/sprint-artifacts/4-5-guided-summary-generation-wizard.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>As a user,</asA>
+    <iWant>I want to be guided through the process of generating a summary,</iWant>
+    <soThat>so that I can easily configure and create a summary from any context.</soThat>
+    <tasks>
+- [ ] Design and implement the multi-step wizard UI (AC: #1)
+  - [ ] Define wizard steps and navigation logic.
+  - [ ] Implement component for wizard container.
+- [ ] Implement document selection/pre-selection logic (AC: #2, #3)
+  - [ ] Handle initiation from document view (pre-select).
+  - [ ] Handle initiation from dashboard (prompt for selection).
+  - [ ] Integrate with existing document listing/selection functionality.
+- [ ] Implement summary options configuration (AC: #4)
+  - [ ] Design UI for summary format options (paragraph, bullet points).
+  - [ ] Implement state management for selected options.
+- [ ] Integrate loading screen with progress information (AC: #5)
+  - [ ] Display loading state during summary generation.
+  - [ ] Show progress updates if available from AI generation API.
+- [ ] Connect wizard to AI Summary Generation API
+  - [ ] Call `POST /api/generate` with summary options.
+  - [ ] Handle API response and errors.
+- [ ] Testing
+  - [ ] Write unit tests for wizard components and logic.
+  - [ ] Write integration tests for API calls and UI updates.
+  - [ ] Perform manual E2E testing of the wizard flow.
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+    1.  **Given** I am on a document view or the main dashboard, **when** I initiate "Generate Summary", **then** a multi-step wizard opens.
+    2.  **And** if initiated from a document, that document is pre-selected.
+    3.  **And** if initiated from the dashboard, I am prompted to select a document.
+    4.  **And** I can configure options for the summary (e.g., "Paragraph" vs. "Bullet Points").
+    5.  **And** I see a loading screen with progress information during generation.
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>Product Scope -> MVP -> Core AI Functionality</section>
+        <snippet>Generate concise summaries from uploaded text/PDF documents.</snippet>
+      </doc>
+      <doc>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>Product Scope -> MVP -> User Experience</section>
+        <snippet>A simple, clean, and intuitive user interface; Clear, step-by-step guidance through the process of uploading and generating content.</snippet>
+      </doc>
+      <doc>
+        <path>docs/sprint-artifacts/tech-spec-epic-4.md</path>
+        <title>Epic Technical Specification: AI-Powered Learning Tools</title>
+        <section>Objectives and Scope -> In-scope for Epic 4</section>
+        <snippet>Frontend Wizards: Guided summary generation wizard for configuring summary options.</snippet>
+      </doc>
+      <doc>
+        <path>docs/sprint-artifacts/tech-spec-epic-4.md</path>
+        <title>Epic Technical Specification: AI-Powered Learning Tools</title>
+        <section>Workflows and Sequencing -> AI Summary Generation Workflow</section>
+        <snippet>User selects an uploaded document and initiates "Generate Summary" (via a guided wizard, Story 4.5). ... Frontend calls `POST /api/generate` with `type: "summary"`.</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>AI Study Buddy - High-Level Architecture</title>
+        <section>1.2. Component Interaction</section>
+        <snippet>The frontend is a single-page application built with React and Next.js, styled with Tailwind CSS.</snippet>
+      </doc>
+      <doc>
+        <path>docs/epics.md</path>
+        <title>Epic Breakdown</title>
+        <section>Epic 4: AI-Powered Learning Tools</section>
+        <snippet>Deliver the core "magic" of the product by transforming study materials into concise summaries and interactive quizzes, making learning more efficient and engaging.</snippet>
+      </doc>
+      <doc>
+        <path>docs/epics.md</path>
+        <title>Epic Breakdown</title>
+        <section>Story 4.1: AI Summary Generation</section>
+        <snippet>As a user, I want to generate concise summaries from my uploaded study materials, So that I can quickly grasp the key concepts.</snippet>
+      </doc>
+    </docs>
+    <code>
+      <code_artifact>
+        <path>src/components/summary-wizard/SummaryWizard.tsx</path>
+        <kind>component</kind>
+        <symbol>SummaryWizard</symbol>
+        <reason>Core component for the multi-step summary generation wizard.</reason>
+      </code_artifact>
+      <code_artifact>
+        <path>src/components/summary-wizard/SummaryOptionsStep.tsx</path>
+        <kind>component</kind>
+        <symbol>SummaryOptionsStep</symbol>
+        <reason>Component for configuring summary options (e.g., paragraph/bullet points).</reason>
+      </code_artifact>
+      <code_artifact>
+        <path>src/components/summary-wizard/DocumentSelectionStep.tsx</path>
+        <kind>component</kind>
+        <symbol>DocumentSelectionStep</symbol>
+        <reason>Component for selecting a document within the wizard.</reason>
+      </code_artifact>
+      <code_artifact>
+        <path>src/app/page.tsx</path>
+        <kind>page</kind>
+        <reason>Entry point for initiating the wizard from the dashboard.</reason>
+      </code_artifact>
+      <code_artifact>
+        <path>src/app/upload/page.tsx</path>
+        <kind>page</kind>
+        <reason>Possible entry point for initiating the wizard from a document view.</reason>
+      </code_artifact>
+      <code_artifact>
+        <path>src/app/api/generate/route.ts</path>
+        <kind>API endpoint</kind>
+        <symbol>POST /api/generate</symbol>
+        <reason>The API endpoint to be called by the wizard to trigger AI Summary Generation.</reason>
+      </code_artifact>
+    </code>
+    <dependencies>
+      <npm>
+        <dependency name="@supabase/ssr" version="^0.8.0" />
+        <dependency name="@supabase/supabase-js" version="^2.86.0" />
+        <dependency name="next" version="16.0.5" />
+        <dependency name="react" version="19.2.0" />
+        <dependency name="react-dom" version="19.2.0" />
+      </npm>
+      <npm-dev>
+        <dependency name="@babel/core" version="^7.28.5" />
+        <dependency name="@babel/preset-env" version="^7.28.5" />
+        <dependency name="@babel/preset-react" version="^7.28.5" />
+        <dependency name="@babel/preset-typescript" version="^7.28.5" />
+        <dependency name="@tailwindcss/postcss" version="^4" />
+        <dependency name="@testing-library/jest-dom" version="^6.9.1" />
+        <dependency name="@testing-library/react" version="^16.3.0" />
+        <dependency name="@types/jest" version="^30.0.0" />
+        <dependency name="@types/node" version="^20" />
+        <dependency name="@types/react" version="^19" />
+        <dependency name="react-dom" version="^19" />
+        <dependency name="babel-jest" version="^30.2.0" />
+        <dependency name="eslint" version="^9" />
+        <dependency name="eslint-config-next" version="16.0.5" />
+        <dependency name="jest" version="^30.2.0" />
+        <dependency name="jest-environment-jsdom" version="^30.2.0" />
+        <dependency name="node-fetch" version="^2.7.0" />
+        <dependency name="tailwindcss" version="^4" />
+        <dependency name="ts-jest" version="^29.4.5" />
+        <dependency name="typescript" version="^5" />
+      </npm-dev>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint>Build as reusable React components following the existing UI design system (Tailwind CSS, clean/intuitive aesthetic).</constraint>
+    <constraint>Integrate with the Vercel Function for AI Summary Generation via the `POST /api/generate` endpoint.</constraint>
+    <constraint>Implement robust error handling for API calls to the AI Summary Generation service.</constraint>
+  </constraints>
+  <interfaces>
+    <interface>
+      <name>AI Summary Generation API</name>
+      <kind>REST endpoint</kind>
+      <signature>POST /api/generate</signature>
+      <path>src/app/api/generate/route.ts</path>
+    </interface>
+  </interfaces>
+  <tests>
+    <standards>
+      Unit testing for wizard components and logic using Jest. Integration tests for API calls and UI updates. Manual End-to-End (E2E) testing of the wizard flow for functionality and user experience.
+    </standards>
+    <locations>
+      <location>tests/integration</location>
+      <location>src/components/summary-wizard/ (for unit tests alongside components)</location>
+    </locations>
+    <ideas>
+      <idea>Unit tests for wizard step components, navigation logic, and rendering of each step.</idea>
+      <idea>Integration tests to verify correct document selection and pre-selection logic based on wizard initiation point (document view vs. dashboard).</idea>
+      <idea>Integration tests for summary options configuration (e.g., paragraph/bullet points) and state management.</idea>
+      <idea>Integration tests to confirm loading screen display with progress information during summary generation and its dismissal upon completion or error.</idea>
+      <idea>Integration tests for the `POST /api/generate` API call, including successful summary generation and robust error handling.</idea>
+      <idea>Manual E2E testing of the complete guided summary generation wizard flow, verifying all UI interactions, API calls, and display of generated summaries.</idea>
+    </ideas>
+  </tests>
+</story-context>

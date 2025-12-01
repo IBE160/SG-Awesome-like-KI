@@ -283,3 +283,170 @@ Epic 4's features heavily rely on the established architecture for AI integratio
     *   Test quiz generation with various length selections, including requests for quizzes longer than content supports.
     *   Test error handling for network interruptions during AI calls.
     *   Test with documents containing complex formatting or images that might challenge PDF parsing.
+
+---
+
+## Story Validation Reports
+
+### Validation Report: Story 4.5 - Guided Summary Generation Wizard (Context)
+
+**Document:** C:\Hannah\SG-Awesome-like-KI\docs\sprint-artifacts/4-5-guided-summary-generation-wizard.context.xml
+**Checklist:** C:\Hannah\SG-Awesome-like-KI/.bmad/bmm/workflows/4-implementation/story-context/checklist.md
+**Date:** mandag 1. desember 2025
+
+#### Summary
+- Overall: 10/10 passed (100%)
+- Critical Issues: 0
+
+#### Section Results
+
+##### Story Context Assembly Checklist
+Pass Rate: 10/10 (100%)
+
+✓ Story fields (asA/iWant/soThat) captured
+Evidence: `<asA>As a user,</asA>`, `<iWant>I want to be guided through the process of generating a summary,</iWant>`, `<soThat>so that I can easily configure and create a summary from any context.</soThat>`
+
+✓ Acceptance criteria list matches story draft exactly (no invention)
+Evidence: The acceptance criteria in the context file match the story file exactly.
+
+✓ Tasks/subtasks captured as task list
+Evidence: The tasks/subtasks in the context file match the story file exactly.
+
+✓ Relevant docs (5-15) included with path and snippets
+Evidence: 7 entries found in `<docs>` section, all containing path, title, section, and snippet.
+
+✓ Relevant code references included with reason and line hints
+Evidence: 6 code artifacts (conceptual and existing) are included with required fields.
+
+✓ Interfaces/API contracts extracted if applicable
+Evidence: The `POST /api/generate` interface is correctly extracted.
+
+✓ Constraints include applicable dev rules and patterns
+Evidence: 3 constraints are listed.
+
+✓ Dependencies detected from manifests and frameworks
+Evidence: npm and npm-dev dependencies are correctly listed.
+
+✓ Testing standards and locations populated
+Evidence: All three sub-sections (`<standards>`, `<locations>`, and `<ideas>`) are populated.
+
+✓ XML structure follows story-context template format
+Evidence: The XML structure adheres to the template.
+
+#### Failed Items
+(none)
+
+#### Partial Items
+(none)
+
+#### Recommendations
+(none)
+
+### Validation Report: Story 4.5 - Guided Summary Generation Wizard (Quality)
+
+Story: 4-5-guided-summary-generation-wizard - Guided Summary Generation Wizard
+Outcome: PASS with issues (Critical: 0, Major: 0, Minor: 1)
+
+#### Critical Issues (Blockers)
+
+(None)
+
+#### Major Issues (Should Fix)
+
+(None)
+
+#### Minor Issues (Nice to Have)
+
+-   **Missing Change Log:** The story file is missing a "Change Log" section.
+
+#### Successes
+
+*   **Previous Story Continuity:** Correctly identified that no specific learnings needed to be carried over from the previous story (4.4) as it had no outstanding completion notes or review items.
+*   **Source Document Coverage:** All relevant source documents (epics.md, PRD.md, architecture.md, tech-spec-epic-4.md) are correctly cited in the Dev Notes' References section.
+*   **Acceptance Criteria Quality:** The Acceptance Criteria are well-defined, testable, specific, and atomic, and match the definition in `epics.md` and `tech-spec-epic-4.md`.
+*   **Task-AC Mapping:** All tasks clearly reference their corresponding Acceptance Criteria with `(AC: #)` and testing subtasks are included.
+*   **Dev Notes Quality:** Dev notes are specific, providing relevant architecture patterns, constraints, source tree components, and testing standards summary, along with appropriate citations.
+*   **Story Structure:** The story adheres to the expected structure, including status, story statement format, and initialized Dev Agent Record sections.
+*   **Unresolved Review Items Alert:** No unresolved review items were found from the previous story.
+
+### Validation Report: Story 4.6 - Guided Quiz Generation Wizard (Context)
+
+**Document:** C:\Hannah\SG-Awesome-like-KI\docs\sprint-artifacts/4-6-guided-quiz-generation-wizard.context.xml
+**Checklist:** C:\Hannah\SG-Awesome-like-KI/.bmad/bmm/workflows/4-implementation/story-context/checklist.md
+**Date:** mandag 1. desember 2025
+
+#### Summary
+- Overall: 10/10 passed (100%)
+- Critical Issues: 0
+
+#### Section Results
+
+##### Story Context Assembly Checklist
+Pass Rate: 10/10 (100%)
+
+✓ Story fields (asA/iWant/soThat) captured
+Evidence: `<asA>As a user,</asA>`, `<iWant>I want to be guided through the process of generating a quiz,</iWant>`, `<soThat>so that I can easily customize and create a quiz from any context.</soThat>`
+
+✓ Acceptance criteria list matches story draft exactly (no invention)
+Evidence: The acceptance criteria in the context file match the story file exactly.
+
+✓ Tasks/subtasks captured as task list
+Evidence: The tasks/subtasks in the context file match the story file exactly.
+
+✓ Relevant docs (5-15) included with path and snippets
+Evidence: 7 entries found in `<docs>` section, all containing path, title, section, and snippet.
+
+✓ Relevant code references included with reason and line hints
+Evidence: 6 code artifacts (conceptual and existing) are included with required fields.
+
+✓ Interfaces/API contracts extracted if applicable
+Evidence: The `POST /api/generate` interface is correctly extracted.
+
+✓ Constraints include applicable dev rules and patterns
+Evidence: 3 constraints are listed.
+
+✓ Dependencies detected from manifests and frameworks
+Evidence: npm and npm-dev dependencies are correctly listed.
+
+✓ Testing standards and locations populated
+Evidence: All three sub-sections (`<standards>`, `<locations>`, and `<ideas>`) are populated.
+
+✓ XML structure follows story-context template format
+Evidence: The XML structure adheres to the template.
+
+#### Failed Items
+(none)
+
+#### Partial Items
+(none)
+
+#### Recommendations
+(none)
+
+### Validation Report: Story 4.6 - Guided Quiz Generation Wizard (Quality)
+
+Story: 4-6-guided-quiz-generation-wizard - Guided Quiz Generation Wizard
+Outcome: PASS with issues (Critical: 0, Major: 0, Minor: 2)
+
+#### Critical Issues (Blockers)
+
+(None)
+
+#### Major Issues (Should Fix)
+
+(None)
+
+#### Minor Issues (Nice to Have)
+
+-   **Missing Change Log:** The story file is missing a "Change Log" section.
+-   **Missing "Learnings from Previous Story" subsection:** The "Dev Notes" section is missing the "Learnings from Previous Story" subsection. While the previous story (4.5) had no outstanding completion notes or review items, it is good practice to include this section and explicitly state that there were no learnings to carry over.
+
+#### Successes
+
+*   **Previous Story Continuity:** Correctly identified that no specific learnings needed to be carried over from the previous story (4.5) as it had no outstanding completion notes or review items.
+*   **Source Document Coverage:** All relevant source documents (epics.md, PRD.md, architecture.md, tech-spec-epic-4.md) are correctly cited in the Dev Notes' References section.
+*   **Acceptance Criteria Quality:** The Acceptance Criteria are well-defined, testable, specific, and atomic, and match the definition in `epics.md` and `tech-spec-epic-4.md`.
+*   **Task-AC Mapping:** All tasks clearly reference their corresponding Acceptance Criteria with `(AC: #)` and testing subtasks are included.
+*   **Dev Notes Quality:** Dev notes are specific, providing relevant architecture patterns, constraints, source tree components, and testing standards summary, along with appropriate citations.
+*   **Story Structure:** The story adheres to the expected structure, including status, story statement format, and initialized Dev Agent Record sections.
+*   **Unresolved Review Items Alert:** No unresolved review items were found from the previous story.

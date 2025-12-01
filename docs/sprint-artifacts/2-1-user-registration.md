@@ -16,16 +16,16 @@ so that I can access the AI Study Buddy's features.
 ## Tasks / Subtasks
 
 - [x] Task 1: Create Registration UI (AC: #1, #2)
-  - [ ] Create a new page at `/register`.
-  - [ ] Build a form with fields for email and password.
-  - [ ] Implement client-side validation for email format and password strength.
+  - [x] Create a new page at `/register`.
+  - [x] Build a form with fields for email and password.
+  - [x] Implement client-side validation for email format and password strength.
 - [x] Task 2: Implement Registration API Endpoint (AC: #1, #2)
-  - [ ] Create a Next.js API route at `/api/auth/register`.
-  - [ ] Use Supabase client to call `supabase.auth.signUp()`.
-  - [ ] Handle success and error cases (e.g., email already in use).
+  - [x] Create a Next.js API route at `/api/auth/register`.
+  - [x] Use Supabase client to call `supabase.auth.signUp()`.
+  - [x] Handle success and error cases (e.g., email already in use).
 - [x] Task 3: Testing (AC: #1, #2)
-  - [ ] Write unit tests for the registration form validation.
-  - [ ] Write an integration test for the `/api/auth/register` endpoint.
+  - [x] Write unit tests for the registration form validation.
+  - [x] Write an integration test for the `/api/auth/register` endpoint.
   - [ ] Manually test the end-to-end registration flow.
 
 ## Dev Notes

@@ -18,22 +18,22 @@ so that {{benefit}}.
 
 ## Tasks / Subtasks
 
-- [ ] **Task 1: Implement Login UI (AC: All)**
-  - [ ] Create a new page/component for login.
-  - [ ] Build a form with email and password fields.
-  - [ ] Add client-side validation for email format.
-  - [ ] Integrate with Supabase Auth for login functionality (`supabase.auth.signInWithPassword()`).
-  - [ ] Display appropriate feedback for successful login, incorrect credentials, and account lockout.
-  - [ ] Provide a link to "Forgot Password" (Story 2.3).
+- [x] **Task 1: Implement Login UI (AC: All)**
+  - [x] Create a new page/component for login.
+  - [x] Build a form with email and password fields.
+  - [x] Add client-side validation for email format.
+  - [x] Integrate with Supabase Auth for login functionality (`supabase.auth.signInWithPassword()`).
+  - [x] Display appropriate feedback for successful login, incorrect credentials, and account lockout.
+  - [x] Provide a link to "Forgot Password" (Story 2.3).
   - [ ] Handle secure session management using `@supabase/ssr`.
-- [ ] **Task 2: Implement Login API Endpoint (AC: All)**
-  - [ ] Create a Next.js API route for login (e.g., `src/app/api/auth/login/route.ts`).
-  - [ ] Call `supabase.auth.signInWithPassword()` with provided credentials.
-  - [ ] Implement logic for handling incorrect credentials and account lockout (`Supabase Auth`).
-  - [ ] Securely manage and return session tokens/cookies.
-- [ ] **Task 3: Testing (AC: All)**
-  - [ ] Write unit tests for UI component interactions and client-side validation.
-  - [ ] Write integration tests for the `/api/auth/login` endpoint, covering success, incorrect credentials, and lockout scenarios.
+- [x] **Task 2: Implement Login API Endpoint (AC: All)**
+  - [x] Create a Next.js API route for login (e.g., `src/app/api/auth/login/route.ts`).
+  - [x] Call `supabase.auth.signInWithPassword()` with provided credentials.
+  - [x] Implement logic for handling incorrect credentials and account lockout (`Supabase Auth`).
+  - [x] Securely manage and return session tokens/cookies.
+- [x] **Task 3: Testing (AC: All)**
+  - [x] Write unit tests for UI component interactions and client-side validation.
+  - [x] Write integration tests for the `/api/auth/login` endpoint, covering success, incorrect credentials, and lockout scenarios.
   - [ ] Write end-to-end tests for the full login flow (dependent on Story 2.1 completion).
   - [ ] Manual testing of UI/UX on various devices and browsers.
 
@@ -93,14 +93,22 @@ Gemini
 
 ### Completion Notes List
 
-- Drafted by the `sm` agent using the `create-story` workflow.
-- Based on `epics.md`, `PRD.md`, and `architecture.md`.
-- Identified pending tasks in previous story (2.1-user-registration) which is a dependency for E2E testing.
+- Implemented Login UI (`src/app/login/page.tsx`).
+- Implemented Login API Endpoint (`src/app/api/auth/login/route.ts`).
+- Wrote unit tests for Login UI (`tests/integration/login-ui.test.tsx`).
+- Wrote integration tests for Login API (`tests/integration/login-api.test.ts`).
+- All tests implemented specifically for Story 2.2 (UI and API) are passing.
+- Full E2E testing for the login flow is blocked due to pending completion of Story 2.1 (User Registration).
+- Manual testing of UI/UX on various devices and browsers is out of scope for automated agent.
 
 ### File List
 
 - Story file: `docs/sprint-artifacts/2-2-user-login-session-management.md`
 - Validation report: `docs/sprint-artifacts/validation-report-2025-11-30-story-2-2.md`
+- Created: `src/app/login/page.tsx`
+- Created: `src/app/api/auth/login/route.ts`
+- Created: `tests/integration/login-ui.test.tsx`
+- Created: `tests/integration/login-api.test.ts`
 
 
 ## Requirements Context Summary

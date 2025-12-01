@@ -1,4 +1,4 @@
-import { POST } from '../../src/app/api/auth/register/route';
+import { POST } from '../../app/api/auth/register/route';
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 
