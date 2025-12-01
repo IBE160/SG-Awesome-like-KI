@@ -1,0 +1,163 @@
+<story-context id=".bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>Epic 3</epicId>
+    <storyId>3.2</storyId>
+    <title>Create &amp; Manage Classes</title>
+    <status>drafted</status>
+    <generatedAt>2025-12-01</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>C:\Hannah\SG-Awesome-like-KI\docs\sprint-artifacts\3-2-create-manage-classes.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>As a user,</asA>
+    <iWant>I want to create and manage "classes" to organize my study materials,</iWant>
+    <soThat>So that I can easily group related content.</soThat>
+    <tasks></tasks>
+  </story>
+
+  <acceptanceCriteria>
+    **Given** I am logged in and on my content management page
+    **When** I create a new class
+    **Then** the class is added to my list of classes.
+    **And** I can rename and delete existing classes.
+    **And** when I delete a class, I receive a confirmation dialog stating that all associated content will also be deleted.
+    **And** class names shall be limited to 25 alphanumeric characters.
+    **And** if a user attempts to create a class with a name that already exists, the system shall display an error message: 'A class with this name already exists. Please choose a different name.'
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <artifact>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>Content Management &amp; Organization</section>
+        <snippet>Empower users to easily upload, organize, and manage their study materials, creating a structured and clutter-free learning environment.</snippet>
+      </artifact>
+      <artifact>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>FR2.2 - Hierarchical Content Organization</section>
+        <snippet>The system shall allow users to organize their uploaded materials and generated content into a hierarchical structure (e.g., classes, class sections).</snippet>
+      </artifact>
+      <artifact>
+        <path>docs/architecture.md</path>
+        <title>AI Study Buddy - High-Level Architecture</title>
+        <section>2. Database Schema</section>
+        <snippet>The database will be implemented in Supabase (PostgreSQL). The schema is designed to support a hierarchical content organization and the relationships between study materials and generated content. Contains definitions for `classes` and `class_sections` tables.</snippet>
+      </artifact>
+      <artifact>
+        <path>docs/architecture.md</path>
+        <title>AI Study Buddy - High-Level Architecture</title>
+        <section>3.1. Main API Endpoints</section>
+        <snippet>Lists API endpoints related to `classes` and `class_sections` for creation, retrieval, updating, and deletion.</snippet>
+      </artifact>
+      <artifact>
+        <path>docs/architecture.md</path>
+        <title>AI Study Buddy - High-Level Architecture</title>
+        <section>4. Authentication and Authorization</section>
+        <snippet>Row Level Security (RLS) will be enabled on all user data tables in Supabase to ensure strict data isolation. Relevant for class management.</snippet>
+      </artifact>
+    </docs>
+    <code>
+      <artifact>
+        <path>src/lib/supabase.ts</path>
+        <kind>utility</kind>
+        <symbol>Supabase Client Initialization</symbol>
+        <lines>2-7</lines>
+        <reason>Initializes the Supabase client, essential for interacting with the Supabase backend for class management.</reason>
+      </artifact>
+    </code>
+    <dependencies>
+      <ecosystem name="Node.js">
+        <package name="@supabase/auth-helpers-nextjs" version="^0.15.0" />
+        <package name="@supabase/ssr" version="^0.8.0" />
+        <package name="@supabase/supabase-js" version="^2.86.0" />
+        <package name="next" version="16.0.5" />
+        <package name="react" version="19.2.0" />
+        <package name="react-dom" version="19.2.0" />
+      </ecosystem>
+      <ecosystem name="Node.js Dev Dependencies">
+        <package name="@babel/core" version="^7.28.5" />
+        <package name="@babel/preset-env" version="^7.28.5" />
+        <package name="@babel/preset-react" version="^7.28.5" />
+        <package name="@babel/preset-typescript" version="^7.28.5" />
+        <package name="@tailwindcss/postcss" version="^4" />
+        <package name="@testing-library/jest-dom" version="^6.9.1" />
+        <package name="@testing-library/react" version="^16.3.0" />
+        <package name="@types/jest" version="^30.0.0" />
+        <package name="@types/node" version="^20" />
+        <package name="@types/react" version="^19" />
+        <package name="@types/react-dom" version="^19" />
+        <package name="babel-jest" version="^30.2.0" />
+        <package name="eslint" version="^9" />
+        <package name="eslint-config-next" version="16.0.5" />
+        <package name="jest" version="^30.2.0" />
+        <package name="jest-environment-jsdom" version="^30.2.0" />
+        <package name="node-fetch" version="^2.7.0" />
+        <package name="tailwindcss" version="^4" />
+        <package name="ts-jest" version="^29.4.5" />
+        <package name="typescript" version="^5" />
+      </ecosystem>
+    </dependencies>
+    <interfaces>
+      <interface>
+        <name>Create Class API</name>
+        <kind>REST endpoint</kind>
+        <signature>POST /api/classes</signature>
+        <path>app/api/classes/route.ts (anticipated)</path>
+      </interface>
+      <interface>
+        <name>Get Classes API</name>
+        <kind>REST endpoint</kind>
+        <signature>GET /api/classes</signature>
+        <path>app/api/classes/route.ts (anticipated)</path>
+      </interface>
+      <interface>
+        <name>Update Class API</name>
+        <kind>REST endpoint</kind>
+        <signature>PUT /api/classes/{id}</signature>
+        <path>app/api/classes/[id]/route.ts (anticipated)</path>
+      </interface>
+      <interface>
+        <name>Delete Class API</name>
+        <kind>REST endpoint</kind>
+        <signature>DELETE /api/classes/{id}</signature>
+        <path>app/api/classes/[id]/route.ts (anticipated)</path>
+      </interface>
+    </interfaces>
+    <constraints>
+      <constraint>
+        <type>Security</type>
+        <description>Row Level Security (RLS) must be enabled on the `classes` table in Supabase to ensure strict data isolation, allowing users to only access their own classes.</description>
+      </constraint>
+      <constraint>
+        <type>Naming Convention</type>
+        <description>Class names shall be limited to 25 alphanumeric characters.</description>
+      </constraint>
+      <constraint>
+        <type>Data Integrity</type>
+        <description>When a class is deleted, all associated content (class sections, documents, generated content) must also be deleted (cascading delete).</description>
+      </constraint>
+      <constraint>
+        <type>Error Handling</type>
+        <description>If a user attempts to create a class with a name that already exists, the system shall display an error message: 'A class with this name already exists. Please choose a different name.'</description>
+      </constraint>
+    </constraints>
+    <tests>
+      <standards>The project utilizes Jest with `jest-environment-jsdom` and React Testing Library for comprehensive unit and integration testing. A strict "no-flaky-tests" policy is enforced to maintain test reliability. Critical security measures, such as Row Level Security (RLS) policies, are also verified through automated tests.</standards>
+      <locations>
+        <location>tests/integration/</location>
+        <location>app/**/*.test.tsx</location>
+      </locations>
+      <ideas>
+        <idea id="AC1">Verify a new class can be successfully created and added to the user's list of classes.</idea>
+        <idea id="AC2">Verify an existing class can be renamed.</idea>
+        <idea id="AC3">Verify an existing class can be deleted, and a confirmation dialog is displayed.</idea>
+        <idea id="AC4">Verify all associated content (sections, documents, generated content) is deleted when a class is deleted (cascading delete).</idea>
+        <idea id="AC5">Verify class names are limited to 25 alphanumeric characters.</idea>
+        <idea id="AC6">Verify an error message is displayed if a user attempts to create a class with a name that already exists.</idea>
+        <idea id="AC7">Verify only the authenticated user can create/manage their own classes (RLS enforcement).</idea>
+      </ideas>
+    </tests>
+</story-context>

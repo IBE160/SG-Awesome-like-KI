@@ -1,0 +1,163 @@
+<story-context id=".bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>Epic 3</epicId>
+    <storyId>3.3</storyId>
+    <title>Create &amp; Manage Class Sections</title>
+    <status>drafted</status>
+    <generatedAt>2025-12-01</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>C:\Hannah\SG-Awesome-like-KI\docs\sprint-artifacts\3-3-create-manage-class-sections.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>As a user,</asA>
+    <iWant>I want to create and manage "class sections" within my classes,</iWant>
+    <soThat>So that I can further organize my study materials by topic or module.</soThat>
+    <tasks></tasks>
+  </story>
+
+  <acceptanceCriteria>
+    **Given** I have created a class
+    **When** I create a new section within that class
+    **Then** the section is added to my class.
+    **And** I can rename and delete existing sections.
+    **And** when I delete a section, I receive a confirmation dialog stating that all associated content will also be deleted.
+    **And** section names shall be limited to 25 alphanumeric characters.
+    **And** if a user attempts to create a section with a name that already exists within the same class, the system shall display an error message: 'A section with this name already exists in this class. Please choose a different name.'
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <artifact>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>Content Management &amp; Organization</section>
+        <snippet>Empower users to easily upload, organize, and manage their study materials, creating a structured and clutter-free learning environment.</snippet>
+      </artifact>
+      <artifact>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>FR2.2 - Hierarchical Content Organization</section>
+        <snippet>The system shall allow users to organize their uploaded materials and generated content into a hierarchical structure (e.g., classes, class sections).</snippet>
+      </artifact>
+      <artifact>
+        <path>docs/architecture.md</path>
+        <title>AI Study Buddy - High-Level Architecture</title>
+        <section>2. Database Schema</section>
+        <snippet>The database will be implemented in Supabase (PostgreSQL). The schema is designed to support a hierarchical content organization and the relationships between study materials and generated content. Contains definitions for `class_sections` table.</snippet>
+      </artifact>
+      <artifact>
+        <path>docs/architecture.md</path>
+        <title>AI Study Buddy - High-Level Architecture</title>
+        <section>3.1. Main API Endpoints</section>
+        <snippet>Lists API endpoints related to `class_sections` for creation, retrieval, updating, and deletion.</snippet>
+      </artifact>
+      <artifact>
+        <path>docs/architecture.md</path>
+        <title>AI Study Buddy - High-Level Architecture</title>
+        <section>4. Authentication and Authorization</section>
+        <snippet>Row Level Security (RLS) will be enabled on all user data tables in Supabase to ensure strict data isolation. Relevant for class section management.</snippet>
+      </artifact>
+    </docs>
+    <code>
+      <artifact>
+        <path>src/lib/supabase.ts</path>
+        <kind>utility</kind>
+        <symbol>Supabase Client Initialization</symbol>
+        <lines>2-7</lines>
+        <reason>Initializes the Supabase client, essential for interacting with the Supabase backend for class section management.</reason>
+      </artifact>
+    </code>
+    <dependencies>
+      <ecosystem name="Node.js">
+        <package name="@supabase/auth-helpers-nextjs" version="^0.15.0" />
+        <package name="@supabase/ssr" version="^0.8.0" />
+        <package name="@supabase/supabase-js" version="^2.86.0" />
+        <package name="next" version="16.0.5" />
+        <package name="react" version="19.2.0" />
+        <package name="react-dom" version="19.2.0" />
+      </ecosystem>
+      <ecosystem name="Node.js Dev Dependencies">
+        <package name="@babel/core" version="^7.28.5" />
+        <package name="@babel/preset-env" version="^7.28.5" />
+        <package name="@babel/preset-react" version="^7.28.5" />
+        <package name="@babel/preset-typescript" version="^7.28.5" />
+        <package name="@tailwindcss/postcss" version="^4" />
+        <package name="@testing-library/jest-dom" version="^6.9.1" />
+        <package name="@testing-library/react" version="^16.3.0" />
+        <package name="@types/jest" version="^30.0.0" />
+        <package name="@types/node" version="^20" />
+        <package name="@types/react" version="^19" />
+        <package name="@types/react-dom" version="^19" />
+        <package name="babel-jest" version="^30.2.0" />
+        <package name="eslint" version="^9" />
+        <package name="eslint-config-next" version="16.0.5" />
+        <package name="jest" version="^30.2.0" />
+        <package name="jest-environment-jsdom" version="^30.2.0" />
+        <package name="node-fetch" version="^2.7.0" />
+        <package name="tailwindcss" version="^4" />
+        <package name="ts-jest" version="^29.4.5" />
+        <package name="typescript" version="^5" />
+      </ecosystem>
+    </dependencies>
+    <interfaces>
+      <interface>
+        <name>Create Class Section API</name>
+        <kind>REST endpoint</kind>
+        <signature>POST /api/classes/{id}/sections</signature>
+        <path>app/api/classes/[id]/sections/route.ts (anticipated)</path>
+      </interface>
+      <interface>
+        <name>Get Class Sections API</name>
+        <kind>REST endpoint</kind>
+        <signature>GET /api/classes/{id}/sections</signature>
+        <path>app/api/classes/[id]/sections/route.ts (anticipated)</path>
+      </interface>
+      <interface>
+        <name>Update Class Section API</name>
+        <kind>REST endpoint</kind>
+        <signature>PUT /api/sections/{id}</signature>
+        <path>app/api/sections/[id]/route.ts (anticipated)</path>
+      </interface>
+      <interface>
+        <name>Delete Class Section API</name>
+        <kind>REST endpoint</kind>
+        <signature>DELETE /api/sections/{id}</signature>
+        <path>app/api/sections/[id]/route.ts (anticipated)</path>
+      </interface>
+    </interfaces>
+    <constraints>
+      <constraint>
+        <type>Security</type>
+        <description>Row Level Security (RLS) must be enabled on the `class_sections` table in Supabase to ensure strict data isolation, allowing users to only access their own class sections.</description>
+      </constraint>
+      <constraint>
+        <type>Naming Convention</type>
+        <description>Section names shall be limited to 25 alphanumeric characters.</description>
+      </constraint>
+      <constraint>
+        <type>Data Integrity</type>
+        <description>When a class section is deleted, all associated content (documents, generated content) must also be deleted (cascading delete).</description>
+      </constraint>
+      <constraint>
+        <type>Error Handling</type>
+        <description>If a user attempts to create a section with a name that already exists within the same class, the system shall display an error message: 'A section with this name already exists in this class. Please choose a different name.'</description>
+      </constraint>
+    </constraints>
+    <tests>
+      <standards>The project utilizes Jest with `jest-environment-jsdom` and React Testing Library for comprehensive unit and integration testing. A strict "no-flaky-tests" policy is enforced to maintain test reliability. Critical security measures, such as Row Level Security (RLS) policies, are also verified through automated tests.</standards>
+      <locations>
+        <location>tests/integration/</location>
+        <location>app/**/*.test.tsx</location>
+      </locations>
+      <ideas>
+        <idea id="AC1">Verify a new section can be successfully created within a class.</idea>
+        <idea id="AC2">Verify an existing section can be renamed.</idea>
+        <idea id="AC3">Verify an existing section can be deleted, and a confirmation dialog is displayed.</idea>
+        <idea id="AC4">Verify all associated content (documents, generated content) is deleted when a section is deleted (cascading delete).</idea>
+        <idea id="AC5">Verify section names are limited to 25 alphanumeric characters.</idea>
+        <idea id="AC6">Verify an error message is displayed if a user attempts to create a section with a name that already exists within the same class.</idea>
+        <idea id="AC7">Verify only the authenticated user can create/manage their own sections (RLS enforcement).</idea>
+      </ideas>
+    </tests>
+</story-context>

@@ -1,6 +1,4 @@
-# Story 3.5: Post-Upload Actions
-
-Status: drafted
+Status: ready-for-dev
 
 ## Story
 
@@ -65,7 +63,7 @@ so that I can quickly get value from the tool without having to organize my cont
 
 ### Context Reference
 
-<!-- Path(s) to story context XML will be added here by context workflow -->
+- C:\Hannah\SG-Awesome-like-KI\docs\sprint-artifacts\3-5-post-upload-actions.context.xml
 
 ### Agent Model Used
 

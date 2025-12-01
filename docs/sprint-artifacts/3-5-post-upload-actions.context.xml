@@ -1,0 +1,176 @@
+<story-context id=".bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>Epic 3</epicId>
+    <storyId>3.5</storyId>
+    <title>Post-Upload Actions</title>
+    <status>drafted</status>
+    <generatedAt>2025-12-01</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>C:\Hannah\SG-Awesome-like-KI\docs\sprint-artifacts\3-5-post-upload-actions.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>As a user,</asA>
+    <iWant>I want to have the option to generate a summary or quiz immediately after uploading a document,</iWant>
+    <soThat>So that I can quickly get value from the tool without having to organize my content first.</soThat>
+    <tasks></tasks>
+  </story>
+
+  <acceptanceCriteria>
+    **Given** a document has been successfully uploaded
+    **When** the upload is complete
+    **Then** the UI presents immediate options to "Generate Summary" or "Generate Quiz".
+    **And** generated content from unorganized documents shall be temporarily stored in an 'Unorganized' area, accessible to the user for later assignment.
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <artifact>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>Content Management &amp; Organization</section>
+        <snippet>Empower users to easily upload, organize, and manage their study materials, creating a structured and clutter-free learning environment.</snippet>
+      </artifact>
+      <artifact>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>FR2.1 - Document Upload (Text &amp; PDF)</section>
+        <snippet>The system shall allow users to upload study materials in plain text and PDF formats, with file size limits and validation.</snippet>
+      </artifact>
+      <artifact>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>FR3.1 - Summary Generation</section>
+        <snippet>The system shall generate concise summaries from uploaded study materials using AI within 30 seconds.</snippet>
+      </artifact>
+      <artifact>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>FR3.2 - Quiz Generation</section>
+        <snippet>The system shall generate multiple-choice quizzes from uploaded study materials using AI, with user-selectable length, within 30 seconds.</snippet>
+      </artifact>
+      <artifact>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>FR5.1 - Clean &amp; Intuitive UI</section>
+        <snippet>The system shall provide a simple, clean, and intuitive user interface that supports step-by-step guidance.</snippet>
+      </artifact>
+      <artifact>
+        <path>docs/architecture.md</path>
+        <title>AI Study Buddy - High-Level Architecture</title>
+        <section>1.1. System Diagram</section>
+        <snippet>Illustrates the flow from Frontend to Vercel Function to Claude AI Model for content generation, and to Cloud-based AI Service for PDF Parsing.</snippet>
+      </artifact>
+      <artifact>
+        <path>docs/architecture.md</path>
+        <title>AI Study Buddy - High-Level Architecture</title>
+        <section>1.2. Component Interaction</section>
+        <snippet>Describes Frontend communication with Vercel Function for AI integration.</snippet>
+      </artifact>
+      <artifact>
+        <path>docs/architecture.md</path>
+        <title>AI Study Buddy - High-Level Architecture</title>
+        <section>2. Database Schema</section>
+        <snippet>Relevant for `study_materials` and `generated_content` tables for storing unorganized content and linking to users.</snippet>
+      </artifact>
+      <artifact>
+        <path>docs/architecture.md</path>
+        <title>AI Study Buddy - High-Level Architecture</title>
+        <section>3.1. Main API Endpoints</section>
+        <snippet>Mentions `POST /api/upload` and `POST /api/generate` which are crucial for post-upload actions.</snippet>
+      </artifact>
+    </docs>
+    <code>
+      <artifact>
+        <path>src/lib/supabase.ts</path>
+        <kind>utility</kind>
+        <symbol>Supabase Client Initialization</symbol>
+        <lines>2-7</lines>
+        <reason>Initializes the Supabase client, essential for interacting with the Supabase backend for document uploads and generated content storage.</reason>
+      </artifact>
+    </code>
+    <dependencies>      <ecosystem name="Node.js">
+        <package name="@supabase/auth-helpers-nextjs" version="^0.15.0" />
+        <package name="@supabase/ssr" version="^0.8.0" />
+        <package name="@supabase/supabase-js" version="^2.86.0" />
+        <package name="next" version="16.0.5" />
+        <package name="react" version="19.2.0" />
+        <package name="react-dom" version="19.2.0" />
+      </ecosystem>
+      <ecosystem name="Node.js Dev Dependencies">
+        <package name="@babel/core" version="^7.28.5" />
+        <package name="@babel/preset-env" version="^7.28.5" />
+        <package name="@babel/preset-react" version="^7.28.5" />
+        <package name="@babel/preset-typescript" version="^7.28.5" />
+        <package name="@tailwindcss/postcss" version="^4" />
+        <package name="@testing-library/jest-dom" version="^6.9.1" />
+        <package name="@testing-library/react" version="^16.3.0" />
+        <package name="@types/jest" version="^30.0.0" />
+        <package name="@types/node" version="^20" />
+        <package name="@types/react" version="^19" />
+        <package name="@types/react-dom" version="^19" />
+        <package name="babel-jest" version="^30.2.0" />
+        <package name="eslint" version="^9" />
+        <package name="eslint-config-next" version="16.0.5" />
+        <package name="jest" version="^30.2.0" />
+        <package name="jest-environment-jsdom" version="^30.2.0" />
+        <package name="node-fetch" version="^2.7.0" />
+        <package name="tailwindcss" version="^4" />
+        <package name="ts-jest" version="^29.4.5" />
+        <package name="typescript" version="^5" />
+      </ecosystem></dependencies>
+    <constraints>
+      <constraint>
+        <type>UI/UX</type>
+        <description>The UI flow must be flexible to handle immediate generation options post-upload and allow for later assignment of unorganized content.</description>
+      </constraint>
+      <constraint>
+        <type>Data Storage</type>
+        <description>Generated content from unorganized documents must be temporarily stored in a designated 'Unorganized' area with proper user linkage and RLS.</description>
+      </constraint>
+      <constraint>
+        <type>Performance</type>
+        <description>Content generation (summary/quiz) must be initiated efficiently after upload, with appropriate feedback to the user during the process.</description>
+      </constraint>
+    </constraints>
+    <interfaces>
+      <interface>
+        <name>Document Upload API</name>
+        <kind>REST endpoint</kind>
+        <signature>POST /api/upload</signature>
+        <path>app/api/upload/route.ts (anticipated)</path>
+      </interface>
+      <interface>
+        <name>Content Generation API</name>
+        <kind>REST endpoint</kind>
+        <signature>POST /api/generate</signature>
+        <path>app/api/generate/route.ts (anticipated)</path>
+      </interface>
+      <interface>
+        <name>Unorganized Content Management API</name>
+        <kind>REST endpoint</kind>
+        <signature>GET /api/unorganized-content</signature>
+        <path>app/api/unorganized-content/route.ts (anticipated)</path>
+      </interface>
+      <interface>
+        <name>Assign Unorganized Content API</name>
+        <kind>REST endpoint</kind>
+        <signature>POST /api/unorganized-content/{content_id}/assign</signature>
+        <path>app/api/unorganized-content/[content_id]/assign/route.ts (anticipated)</path>
+      </interface>
+    </interfaces>
+  </artifacts>
+    <tests>
+      <standards>The project utilizes Jest with `jest-environment-jsdom` and React Testing Library for comprehensive unit and integration testing. A strict "no-flaky-tests" policy is enforced to maintain test reliability. Critical security measures, such as Row Level Security (RLS) policies, are also verified through automated tests.</standards>
+      <locations>
+        <location>tests/integration/</location>
+        <location>app/**/*.test.tsx</location>
+      </locations>
+      <ideas>
+        <idea id="AC1">Verify that after a document is successfully uploaded, the UI presents immediate options to "Generate Summary" or "Generate Quiz".</idea>
+        <idea id="AC2">Verify that generated content from unorganized documents is temporarily stored in an 'Unorganized' area, accessible to the user.</idea>
+        <idea id="AC3">Verify that unorganized generated content can be assigned to a class/section later.</idea>
+        <idea id="AC4">Verify the UI flow is flexible and handles content generation for both organized and unorganized documents.</idea>
+      </ideas>
+    </tests>
+</story-context>

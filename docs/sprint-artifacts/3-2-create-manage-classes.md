@@ -1,6 +1,6 @@
 # Story 3.2: Create & Manage Classes
 
-Status: drafted
+Status: ready-for-dev
 
 ## Story
 
@@ -70,7 +70,7 @@ so that I can easily group related content.
 
 ### Context Reference
 
-<!-- Path(s) to story context XML will be added here by context workflow -->
+- C:\Hannah\SG-Awesome-like-KI\docs\sprint-artifacts\3-2-create-manage-classes.context.xml
 
 ### Agent Model Used
 
