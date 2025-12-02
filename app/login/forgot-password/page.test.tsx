@@ -1,9 +1,9 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import ForgotPasswordPage from 'app/login/forgot-password/page';
+import ForgotPasswordPage from './page';
 
-// Mock useRouter and Link from next/navigation and next/link
+// Mock next/navigation
 jest.mock('next/navigation', () => ({
   useRouter: () => ({
     push: jest.fn(),
@@ -11,83 +11,78 @@ jest.mock('next/navigation', () => ({
   }),
 }));
 
-jest.mock('next/link', () => {
-  return ({ children, href }: { children: React.ReactNode, href: string }) => {
-    return <a href={href}>{children}</a>;
-  };
-});
-
-// Mock fetch API
-const mockFetch = jest.fn();
-global.fetch = mockFetch;
+global.fetch = jest.fn();
 
 describe('ForgotPasswordPage', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    (fetch as jest.Mock).mockClear();
   });
 
   it('renders the forgot password form', () => {
     render(<ForgotPasswordPage />);
-    expect(screen.getByRole('heading', { name: /Forgot Your Password?/i })).toBeInTheDocument();
-    expect(screen.getByLabelText(/Email address/i)).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /Forgot Password/i })).toBeInTheDocument();
+    expect(screen.getByLabelText(/Email/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Send Reset Link/i })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /Remembered your password\? Log In/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /Back to Login/i })).toBeInTheDocument();
   });
 
-  it('updates email state on input change', () => {
+  it('updates email input value', () => {
     render(<ForgotPasswordPage />);
-    const emailInput = screen.getByLabelText(/Email address/i) as HTMLInputElement;
+    const emailInput = screen.getByLabelText(/Email/i);
     fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
-    expect(emailInput.value).toBe('test@example.com');
+    expect(emailInput).toHaveValue('test@example.com');
   });
 
-  it('displays a success message on successful reset request', async () => {
-    mockFetch.mockResolvedValueOnce({
+  it('displays error if email is empty on submission', async () => {
+    render(<ForgotPasswordPage />);
+    fireEvent.submit(screen.getByTestId('forgot-password-form'));
+    await waitFor(() => {
+      expect(screen.getByText('Email is required.')).toBeInTheDocument();
+    });
+    expect(fetch).not.toHaveBeenCalled();
+  });
+
+  it('calls the API on successful submission', async () => {
+    (fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
-      json: async () => ({ message: 'If an account with that email exists, you will receive a password reset link.' }),
+      json: async () => ({ message: 'Check your email for a password reset link, including your spam folder.' }),
     });
 
     render(<ForgotPasswordPage />);
-    const emailInput = screen.getByLabelText(/Email address/i);
-    const submitButton = screen.getByRole('button', { name: /Send Reset Link/i });
-
+    const emailInput = screen.getByLabelText(/Email/i);
     fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
-    fireEvent.click(submitButton);
+    fireEvent.click(screen.getByRole('button', { name: /Send Reset Link/i }));
 
     await waitFor(() => {
-      expect(screen.getByText(/If an account with that email exists, you will receive a password reset link./i)).toBeInTheDocument();
-    }, { timeout: 5000 });
+      expect(fetch).toHaveBeenCalledWith('/api/auth/reset-password/request', {
+        method: 'POST',
+        body: expect.any(FormData),
+      });
+      expect(screen.getByText(/Check your email for a password reset link, including your spam folder./i)).toBeInTheDocument();
+    });
   });
 
-  it('displays an error message on failed reset request', async () => {
-    mockFetch.mockResolvedValueOnce({
+  it('displays error message from the API on failed submission', async () => {
+    const errorMessage = 'User not found.';
+    (fetch as jest.Mock).mockResolvedValueOnce({
       ok: false,
-      json: async () => ({ message: 'Failed to send reset link.' }),
+      json: async () => ({ message: errorMessage }),
     });
 
     render(<ForgotPasswordPage />);
-    const emailInput = screen.getByLabelText(/Email address/i);
-    const submitButton = screen.getByRole('button', { name: /Send Reset Link/i });
-
-    fireEvent.change(emailInput, { target: { value: 'invalid@example.com' } });
-    fireEvent.click(submitButton);
+    const emailInput = screen.getByLabelText(/Email/i);
+    fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
+    fireEvent.click(screen.getByRole('button', { name: /Send Reset Link/i }));
 
     await waitFor(() => {
-      expect(screen.getByText(/Failed to send reset link\. Please try again\./i)).toBeInTheDocument();
+      expect(fetch).toHaveBeenCalledTimes(1);
+      expect(screen.getByText(errorMessage)).toBeInTheDocument();
     });
   });
 
-  it('displays an error message for an invalid email format (client-side mock)', async () => {
-    // This tests the mock client-side validation logic
+  it('has a link to the login page', () => {
     render(<ForgotPasswordPage />);
-    const emailInput = screen.getByLabelText(/Email address/i);
-    const submitButton = screen.getByRole('button', { name: /Send Reset Link/i });
-
-    fireEvent.change(emailInput, { target: { value: 'invalid-email' } });
-    fireEvent.click(submitButton);
-
-    await waitFor(() => {
-      expect(screen.getByText(/An unexpected error occurred/i)).toBeInTheDocument();
-    });
+    const link = screen.getByRole('link', { name: /Back to Login/i });
+    expect(link).toHaveAttribute('href', '/login');
   });
 });

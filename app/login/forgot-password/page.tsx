@@ -1,94 +1,82 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import Link from 'next/link';
+import { useState } from "react";
 
 export default function ForgotPasswordPage() {
-  const [email, setEmail] = useState('');
-  const [message, setMessage] = useState('');
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleResetPassword = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setMessage('');
-    setError('');
+    setError(null);
+    setMessage(null);
+    setLoading(true);
 
-    // TODO: Implement actual password reset request API call
-    console.log('Forgot password request for:', email);
-
-    // Mock API response for now
-    try {
-      const response = await new Promise((resolve) => setTimeout(() => {
-        if (email.includes('@')) {
-          resolve({ success: true });
-        } else {
-          throw new Error('Invalid email format');
-        }
-      }, 1000));
-
-      if ((response as any).success) {
-        setMessage('If an account with that email exists, you will receive a password reset link.');
-      } else {
-        setError('Failed to send reset link. Please try again.');
-      }
-    } catch (err: any) {
-      setError(err.message || 'An unexpected error occurred.');
+    if (!email) {
+      setError("Email is required.");
+      setLoading(false);
+      return;
     }
+
+    const formData = new FormData();
+    formData.append('email', email);
+
+    const response = await fetch('/api/auth/reset-password/request', {
+      method: 'POST',
+      body: formData,
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      setError(data.message);
+    } else {
+      setMessage(data.message);
+    }
+
+    setLoading(false);
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Forgot Your Password?
-          </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            Enter your email address below and we'll send you a link to reset your password.
-          </p>
-        </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="rounded-md shadow-sm -space-y-px">
-            <div>
-              <label htmlFor="email-address" className="sr-only">
-                Email address
-              </label>
-              <input
-                id="email-address"
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Email address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
+        <h1 className="text-2xl font-bold text-center">Forgot Password</h1>
+        {error && <p className="text-red-500">{error}</p>}
+        {message && <p className="text-green-500">{message}</p>}
+        <form onSubmit={handleResetPassword} className="space-y-6" data-testid="forgot-password-form">
+          <div>
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Email
+            </label>
+            <input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="block w-full px-3 py-2 mt-1 placeholder-gray-400 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            />
           </div>
-
           <div>
             <button
               type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              disabled={loading}
+              className="w-full px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
-              Send Reset Link
+              {loading ? "Sending..." : "Send Reset Link"}
             </button>
           </div>
-
-          {message && (
-            <p className="mt-2 text-center text-sm text-green-600">{message}</p>
-          )}
-          {error && (
-            <p className="mt-2 text-center text-sm text-red-600">{error}</p>
-          )}
-
-          <div className="text-sm text-center">
-            <Link href="/login" className="font-medium text-indigo-600 hover:text-indigo-500">
-              Remembered your password? Log In
-            </Link>
-          </div>
         </form>
+        <div className="text-sm text-center">
+          <a href="/login" className="font-medium text-indigo-600 hover:text-indigo-500">
+            Back to Login
+          </a>
+        </div>
       </div>
     </div>
   );
