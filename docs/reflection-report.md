@@ -136,11 +136,36 @@ Vi opplevde noen klassiske utfordringer knyttet til teamarbeid og kommunikasjon,
 - **KI-ens “eget liv”:** Gemini ga oss til tider utfordringer ved å handle uventet eller kreve justeringer, noe som tok tid å håndtere.
 - **Tid og tilgjengelighet:** Gruppesamarbeidet fungerte ellers bra, men en utfordring var at noen gruppemedlemmer hadde mest tid til å jobbe på dagtid i ukedagene, mens andre, med full jobb og barn, primært kunne bidra kveldstid og i helger. Dette krevde fleksibilitet i planlegging og gjennomføring.
 
+I tillegg til de rent tekniske problemene, støtte vi på utfordringer knyttet til samspillet mellom verktøy, KI og team-arbeidsflyt:
+
+- **Uforutsette verktøykonflikter:** Å kjøre en CLI-agent (Gemini) inne i en terminal, som igjen kjører i VS Code på Windows, skapte uventede problemer. Spesielt i sluttfasen opplevde vi at Ctrl + F-snarveien for å fokusere terminalen i Gemini, ofte ble fanget opp av VS Codes egen søkefunksjon. Dette førte til forvirring og små, men hyppige, avbrudd i arbeidsflyten.
+
+- **Uforutsigbarhet med KI-agenten:** Selv om Gemini var en kraftig medhjelper, hadde den tidvis "sitt eget liv". Den kunne for eksempel foreslå eller forsøke å kjøre kommandoer (som git commit) før vi i teamet var enige, eller misforstå en instruksjon som krevde at vi måtte stoppe opp, korrigere og veilede den på nytt. Dette introduserte et nytt lag med "AI-management" som vi måtte lære oss å håndtere.
+
+- **Git-arbeidsflyt og merge-konflikter:** Som i mange team-prosjekter, var versjonskontroll med Git en utfordring. Selv med en i hovedsak synkron arbeidsmetode, oppsto det tidvis forvirring rundt hvilken branch som var den korrekte å jobbe på, og vi støtte på mindre merge-konflikter. Dette krevde ekstra kommunikasjon for å sikre at alles endringer ble riktig integrert og at vi i
+
+I tillegg til de rent tekniske problemene, støtte vi på utfordringer knyttet til samspillet mellom verktøy, KI og team-arbeidsflyt:
+
+- **Uforutsette verktøykonflikter:** Å kjøre en CLI-agent (Gemini) inne i en terminal, som igjen kjører i VS Code på Windows, skapte uventede problemer. Spesielt i sluttfasen opplevde vi at Ctrl + F-snarveien for å fokusere terminalen i Gemini, ofte ble fanget opp av VS Codes egen søkefunksjon. Dette førte til forvirring og små, men hyppige, avbrudd i arbeidsflyten.
+- **Uforutsigbarhet med KI-agenten:** Selv om Gemini var en kraftig medhjelper, hadde den tidvis "sitt eget liv". Den kunne for eksempel foreslå eller forsøke å kjøre kommandoer (som git commit) før vi i teamet var enige, eller misforstå en instruksjon som krevde at vi måtte stoppe opp, korrigere og veilede den på nytt. Dette introduserte et nytt lag med "AI-management" som vi måtte lære oss å håndtere.
+- **Git-arbeidsflyt og merge-konflikter:** Som i mange team-prosjekter, var versjonskontroll med Git en utfordring. Selv med en i hovedsak synkron arbeidsmetode, oppsto det tidvis forvirring rundt hvilken branch som var den korrekte å jobbe på, og vi støtte på mindre merge-konflikter. Dette krevde ekstra kommunikasjon for å sikre at alles endringer ble riktig integrert og at vi i
+
 ### 3.3 KI-spesifikke utfordringer
 **Feil kode og hallucinasjoner:**
 - Problem: KI foreslo enkelte ganger kode som ikke passet versjonen av bibliotekene vi brukte (særlig Next.js og Supabase).
 - Løsning: Vi lærte å teste alt lokalt med en gang, og aldri stole blindt på at kodeforslagene fungerer. Vi ble også mer konkrete i promptene, da AI ikke alltid forstod hva vi mente. Dette understreker viktigheten av god prompt engineering.
 - **Påminnelse:** Husk å legge til mer detaljer om spesifikke tilfeller av feil kode/hallusinasjoner og hvordan prompt engineering ble brukt for å overkomme dette.
+
+### 3.4 Verktøy- og arbeidsflyt-utfordringer
+I tillegg til de rent tekniske problemene, støtte vi på utfordringer knyttet til samspillet mellom verktøy, KI og team-arbeidsflyt:
+
+- **Uforutsette verktøykonflikter:** Å kjøre en CLI-agent (Gemini) inne i en terminal, som igjen kjører i VS Code på Windows, skapte uventede problemer. Spesielt i sluttfasen opplevde vi at `Ctrl + F`-snarveien for å fokusere terminalen i Gemini, ofte ble fanget opp av VS Codes egen søkefunksjon. Dette førte til forvirring og små, men hyppige, avbrudd i arbeidsflyten.
+
+- **Uforutsigbarhet med KI-agenten:** Selv om Gemini var en kraftig medhjelper, hadde den tidvis "sitt eget liv". Den kunne for eksempel foreslå eller forsøke å kjøre kommandoer (som `git commit`) før vi i teamet var enige, eller misforstå en instruksjon som krevde at vi måtte stoppe opp, korrigere og veilede den på nytt. Dette introduserte et nytt lag med "AI-management" som vi måtte lære oss å håndtere.
+
+- **Git-arbeidsflyt og merge-konflikter:** Som i mange team-prosjekter, var versjonskontroll med Git en utfordring. Selv med en i hovedsak synkron arbeidsmetode, oppsto det tidvis forvirring rundt hvilken branch som var den korrekte å jobbe på, og vi støtte på mindre merge-konflikter som krevde ekstra kommunikasjon for å løse.
+
+- **Kontinuerlig integrasjon (CI) og build-feil:** Flere ganger opplevde vi at kode som fungerte perfekt lokalt, likevel feilet i den automatiske byggeprosessen på serveren etter en `git push`. Vi ble møtt med feilmeldinger som: `All checks have failed. 1 failing check. CI / build (push) Failing after 17s`. Dette tvang oss til å dykke ned i serverlogger for å feilsøke problemer som ikke var synlige i vårt lokale utviklingsmiljø, en vanlig, men tidkrevende, del av moderne programvareutvikling.
 
 ---
 
