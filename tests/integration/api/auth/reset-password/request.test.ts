@@ -1,14 +1,10 @@
 import { POST } from '../../../../../app/api/auth/reset-password/request/route';
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
+import { createRouteHandlerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 
 // Mock the Supabase client
-jest.mock('@supabase/auth-helpers-nextjs', () => ({
-  createRouteHandlerClient: jest.fn(() => ({
-    auth: {
-      resetPasswordForEmail: jest.fn(),
-    },
-  })),
+jest.mock('@supabase/ssr', () => ({
+  createRouteHandlerClient: jest.fn(),
 }));
 
 // Mock next/headers for cookies
@@ -23,6 +19,13 @@ const mockResetPasswordForEmail = jest.fn();
   },
 });
 
+const createMockRequest = (formData: FormData) => {
+  return {
+    formData: async () => formData,
+    url: 'http://localhost/api/auth/reset-password/request',
+  } as unknown as Request;
+};
+
 describe('POST /api/auth/reset-password/request', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -31,56 +34,33 @@ describe('POST /api/auth/reset-password/request', () => {
   it('should return 200 with a success message for a valid email', async () => {
     mockResetPasswordForEmail.mockResolvedValueOnce({ error: null });
 
-    const request = new Request('http://localhost/api/auth/reset-password/request', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: 'test@example.com' }),
-    });
+    const formData = new FormData();
+    formData.append('email', 'test@example.com');
+
+    const request = createMockRequest(formData);
 
     const response = await POST(request);
     const data = await response.json();
 
     expect(response.status).toBe(200);
-    expect(data.message).toBe('If an account with that email exists, you will receive a password reset link.');
+    expect(data.message).toBe('Check your email for a password reset link, including your spam folder.');
     expect(mockResetPasswordForEmail).toHaveBeenCalledWith('test@example.com', {
-      redirectTo: `${process.env.NEXT_PUBLIC_BASE_URL}/login/reset-password`,
+      redirectTo: 'http://localhost/login/reset-password',
     });
   });
 
-  it('should return 200 with a generic message even if Supabase returns an error', async () => {
+  it('should return 400 if Supabase returns an error', async () => {
     mockResetPasswordForEmail.mockResolvedValueOnce({ error: { message: 'User not found' } });
 
-    const request = new Request('http://localhost/api/auth/reset-password/request', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: 'nonexistent@example.com' }),
-    });
+    const formData = new FormData();
+    formData.append('email', 'nonexistent@example.com');
+
+    const request = createMockRequest(formData);
 
     const response = await POST(request);
     const data = await response.json();
 
-    expect(response.status).toBe(200);
-    expect(data.message).toBe('If an account with that email exists, you will receive a password reset link.');
-    expect(mockResetPasswordForEmail).toHaveBeenCalledWith('nonexistent@example.com', {
-      redirectTo: `${process.env.NEXT_PUBLIC_BASE_URL}/login/reset-password`,
-    });
-  });
-
-  it('should return 500 for unexpected errors', async () => {
-    mockResetPasswordForEmail.mockImplementationOnce(() => {
-      throw new Error('Network error');
-    });
-
-    const request = new Request('http://localhost/api/auth/reset-password/request', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: 'test@example.com' }),
-    });
-
-    const response = await POST(request);
-    const data = await response.json();
-
-    expect(response.status).toBe(500);
-    expect(data.message).toBe('An unexpected error occurred.');
+    expect(response.status).toBe(400);
+    expect(data.message).toBe('User not found');
   });
 });

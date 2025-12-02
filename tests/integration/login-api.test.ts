@@ -1,38 +1,38 @@
-import { createRouteHandlerClient } from '@supabase/ssr';
-import { NextResponse } from 'next/server';
 import { POST } from '@/app/api/auth/login/route';
-import { cookies } from 'next/headers';
+import { NextResponse } from 'next/server';
+import { createClient } from '@supabase/supabase-js';
 
-// Mock Supabase and Next.js cookies
-jest.mock('@supabase/ssr', () => ({
-  createRouteHandlerClient: jest.fn(),
+// Mock Supabase client
+jest.mock('@supabase/supabase-js', () => ({
+  createClient: jest.fn(),
 }));
-jest.mock('next/headers', () => ({
-  cookies: jest.fn(),
-}));
+
+// Mock next/server
 jest.mock('next/server', () => ({
   NextResponse: {
     redirect: jest.fn(),
   },
 }));
 
+const createMockRequest = (formData: FormData) => {
+  return {
+    formData: async () => formData,
+    url: 'http://localhost:3000/api/auth/login',
+  } as unknown as Request;
+};
+
 describe('Login API Endpoint', () => {
   const mockSignInWithPassword = jest.fn();
-  const mockCookies = jest.fn();
-  const mockNextResponseRedirect = NextResponse.redirect as jest.Mock;
+  const mockRedirect = NextResponse.redirect as jest.Mock;
 
   beforeEach(() => {
-    (createRouteHandlerClient as jest.Mock).mockReturnValue({
+    (createClient as jest.Mock).mockReturnValue({
       auth: {
         signInWithPassword: mockSignInWithPassword,
       },
     });
-    (cookies as jest.Mock).mockReturnValue({
-      get: mockCookies,
-    });
-    mockSignInWithPassword.mockReset();
-    mockCookies.mockReset();
-    mockNextResponseRedirect.mockReset();
+    mockSignInWithPassword.mockClear();
+    mockRedirect.mockClear();
   });
 
   it('should redirect to home page on successful login', async () => {
@@ -41,16 +41,17 @@ describe('Login API Endpoint', () => {
     const formData = new FormData();
     formData.append('email', 'test@example.com');
     formData.append('password', 'password');
-
-    const request = new Request('http://localhost/api/auth/login', {
-      method: 'POST',
-      body: formData,
-    });
+    const request = createMockRequest(formData);
 
     await POST(request);
 
-    expect(mockSignInWithPassword).toHaveBeenCalledWith({ email: 'test@example.com', password: 'password' });
-    expect(mockNextResponseRedirect).toHaveBeenCalledWith('http://localhost/', { status: 301 });
+    expect(mockSignInWithPassword).toHaveBeenCalledWith({
+      email: 'test@example.com',
+      password: 'password',
+    });
+    expect(mockRedirect).toHaveBeenCalledWith('http://localhost:3000', {
+      status: 301,
+    });
   });
 
   it('should redirect to login page with error message for invalid credentials', async () => {
@@ -60,16 +61,18 @@ describe('Login API Endpoint', () => {
     const formData = new FormData();
     formData.append('email', 'test@example.com');
     formData.append('password', 'wrongpassword');
-
-    const request = new Request('http://localhost/api/auth/login', {
-      method: 'POST',
-      body: formData,
-    });
+    const request = createMockRequest(formData);
 
     await POST(request);
 
-    expect(mockSignInWithPassword).toHaveBeenCalledWith({ email: 'test@example.com', password: 'wrongpassword' });
-    expect(mockNextResponseRedirect).toHaveBeenCalledWith(`http://localhost/login?error=${encodeURIComponent(errorMessage)}`, { status: 301 });
+    expect(mockSignInWithPassword).toHaveBeenCalledWith({
+      email: 'test@example.com',
+      password: 'wrongpassword',
+    });
+    expect(mockRedirect).toHaveBeenCalledWith(
+      `http://localhost:3000/login?error=${errorMessage}`,
+      { status: 301 }
+    );
   });
 
   it('should redirect to login page with error message for locked account', async () => {
@@ -79,16 +82,18 @@ describe('Login API Endpoint', () => {
     const formData = new FormData();
     formData.append('email', 'locked@example.com');
     formData.append('password', 'password');
-
-    const request = new Request('http://localhost/api/auth/login', {
-      method: 'POST',
-      body: formData,
-    });
+    const request = createMockRequest(formData);
 
     await POST(request);
 
-    expect(mockSignInWithPassword).toHaveBeenCalledWith({ email: 'locked@example.com', password: 'password' });
-    expect(mockNextResponseRedirect).toHaveBeenCalledWith(`http://localhost/login?error=${encodeURIComponent(errorMessage)}`, { status: 301 });
+    expect(mockSignInWithPassword).toHaveBeenCalledWith({
+      email: 'locked@example.com',
+      password: 'password',
+    });
+    expect(mockRedirect).toHaveBeenCalledWith(
+      `http://localhost:3000/login?error=${errorMessage}`,
+      { status: 301 }
+    );
   });
 
   it('should redirect to login page with generic error for other authentication errors', async () => {
@@ -98,15 +103,17 @@ describe('Login API Endpoint', () => {
     const formData = new FormData();
     formData.append('email', 'error@example.com');
     formData.append('password', 'password');
-
-    const request = new Request('http://localhost/api/auth/login', {
-      method: 'POST',
-      body: formData,
-    });
+    const request = createMockRequest(formData);
 
     await POST(request);
 
-    expect(mockSignInWithPassword).toHaveBeenCalledWith({ email: 'error@example.com', password: 'password' });
-    expect(mockNextResponseRedirect).toHaveBeenCalledWith(`http://localhost/login?error=${encodeURIComponent(errorMessage)}`, { status: 301 });
+    expect(mockSignInWithPassword).toHaveBeenCalledWith({
+      email: 'error@example.com',
+      password: 'password',
+    });
+    expect(mockRedirect).toHaveBeenCalledWith(
+      `http://localhost:3000/login?error=${errorMessage}`,
+      { status: 301 }
+    );
   });
 });
