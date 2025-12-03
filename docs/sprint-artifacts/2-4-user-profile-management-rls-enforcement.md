@@ -17,17 +17,34 @@ so that {{benefit}}.
 
 ## Tasks / Subtasks
 
-- [ ] **Task 1: Implement Profile Settings UI (AC: All)**
-  - [ ] Create a UI page/component for "Profile Settings" accessible after login.
-  - [ ] Display user's basic profile information (name, email).
-  - [ ] Implement input fields and forms for updating profile information.
-  - [ ] Display link to privacy policy.
-- [ ] **Task 2: Implement Profile Management API Endpoints (AC: All)**
-  - [ ] Create API routes for:
+- [x] **Task 1: Implement Profile Settings UI (AC: All)**
+  - [x] Create a UI page/component for "Profile Settings" accessible after login.
+  - [x] Display user's basic profile information (name, email).
+  - [x] Implement input fields and forms for updating profile information.
+  - [x] Display link to privacy policy.
+
+### File List
+
+- `src/app/profile/page.tsx`
+- `src/components/ui/input.tsx`
+- `src/components/ui/button.tsx`
+- `src/lib/utils.ts`
+- `src/app/privacy-policy/page.tsx`
+- `docs/privacy-policy.md`
+- `src/app/api/profile/route.ts`
+
+### Change Log
+
+- Implemented Profile Settings UI, including fetching and displaying user data, update functionality for name, and a link to the privacy policy. Created necessary UI components and utility files.
+- Created API endpoints for fetching and updating user profiles.
+
+
+- [x] **Task 2: Implement Profile Management API Endpoints (AC: All)**
+  - [x] Create API routes for:
       - `GET /api/profile` (Retrieve user profile)
       - `PUT /api/profile` (Update user profile)
-  - [ ] Integrate with Supabase client to fetch and update user data (eg., from `users` table).
-  - [ ] Ensure API endpoints respect RLS policies.
+  - [x] Integrate with Supabase client to fetch and update user data (eg., from `users` table).
+  - [x] Ensure API endpoints respect RLS policies.
 - [ ] **Task 3: Implement Supabase RLS Policies (AC: All)**
   - [ ] Define and implement RLS policies on the `users` table to ensure users can only access/modify their own data.
   - [ ] Implement automated tests for RLS policies.
