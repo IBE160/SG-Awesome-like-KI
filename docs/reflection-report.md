@@ -7,7 +7,7 @@
 **Gruppemedlemmer:**
 - Hannah Letmolie - Halet4544@himolde.no/Hannah.Letmolie02@gmail.com
 - Marthe Bjerke - 251753-marthe.bjerke@live.no /mabje4340@himolde.no
-- Sofie Brandstad - [Student-ID/E-post]
+- Sofie Brandstad - 230741/sofie.i.branstad@himolde.no
 
 **Dato:** [DD.MM.ÅÅÅÅ]
 
@@ -358,7 +358,6 @@ Vår anbefaling er at utviklere lærer seg å designe prosesser der KI inngår, 
 5. Gode prompter i samarbeid med KI, samt mestring av prompter og kontekst som støtter prompten (for LLM), er essensielt.
 
 ### 7.2 Hva ville dere gjort annerledes?
-### 7.2 Hva ville dere gjort annerledes?
 - **Mer strukturert bruk av KI i utvikling:** Selv om vi brukte KI mye, var det ofte ad-hoc. En mer systematisk tilnærming til når og hvordan KI skulle brukes i kodefasen (f.eks. for TDD, refaktorering eller komplekse algoritmer) kunne vært mer effektiv.
 - **Tidligere fokus på ytelse og skalering:** Vi fokuserte primært på funksjonalitet for MVP. Å vurdere ytelse og skalering av KI-kall og databasen tidligere i prosessen kunne spart tid nedstrøms.
 - **Bedre versjonskontrollpraksis for prompts:** Vi samlet mange prompts, men en mer organisert måte å versjonskontrollere og evaluere prompts på (spesielt de som ga best resultater for quiz og sammendrag) kunne vært gunstig.
@@ -387,9 +386,10 @@ Vår anbefaling er at utviklere lærer seg å designe prosesser der KI inngår, 
 ***Læring:*** Jeg har fått en mye bredere forståelse for både bruk av KI generelt, og for programmering. Jeg forstår fortsatt ikke alt det tekniske helt, men forstår det bedre enn når jeg startet og har lært hvordan jeg skal bruke Gemini/KI til å finne ut av ting, og få det til å bli riktig. 
 ***Annet:*** Jeg synes dette var et veldig morsomt prosjekt, selv om det ble litt små-stress på slutten for å få det ferdig til innlevering. Og føler selv jeg har bidratt godt i oppgaven. 
 
-**[Navn på gruppemedlem 3]:**
-[Personlig refleksjon over egen læring og utvikling]
-
+**Sofie Branstad:**
+- ***utgangspunkt:*** Som student på 2. året av bachelor i IT og digitalisering hadde jeg allerede hatt emner som innføring i programmering, videregående programmering, databaser, og webutvikling. Jeg startet derfor med en grunnleggende forståelse av mange av elementene i en applikasjon, men ingen dyptgående kunnskap eller praktiske ferdigheter innen disse områdene. Jeg hadde ingen god forståelse av oppbyggingen av en applikasjon eller samspillet mellom ulike elementer i den, så jeg ønsket å lære mer om dette. Jeg var allerede vant med å bruke KI i akole-og jobbsammenheng, men hovedsakelig til idémyldring og hjelp til å lage gode eksempler.
+- ***Læring:*** 
+- ***Annet:*** 
 ---
 
 ## 8. Vedlegg (valgfritt)
