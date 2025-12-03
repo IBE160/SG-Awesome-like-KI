@@ -16,7 +16,7 @@
 ## 2. Utviklingsprosessen
 
 ### 2.1 Oversikt over prosjektet
-Vi har utviklet en nettbasert applikasjon, AI Study Buddy, som skal hjelpe studenter å håndtere store mengder pensum på en mer effektiv og motiverende måte. Den overordnede strategien har vært å skape et hjelpemiddel som imøtekommer et reelt behov i studiehverdagen, med en visjon om at alle typer studenter skal kunne dra nytte av verktøyet. Applikasjonen er derfor designet for å tilpasse seg ulike studievaner og legge til rette for rask og motiverende læring.
+Vi har utviklet en applikasjon ved navn AI Study Buddy som skal hjelpe studenter å håndtere store mengder pensum på en mer effektiv og motiverende måte ved å bruke KI til å generere oppsummeringer og quizer. Den overordnede strategien har vært å skape et hjelpemiddel som imøtekommer et reelt behov i studiehverdagen, med en visjon om at alle typer studenter skal kunne dra nytte av verktøyet. Applikasjonen er derfor designet for å tilpasse seg ulike studievaner og legge til rette for rask og motiverende læring.
 
 Hovedmålet var å gi brukerne et verktøy som kan:
 
@@ -387,9 +387,8 @@ Vår anbefaling er at utviklere lærer seg å designe prosesser der KI inngår, 
 ***Annet:*** Jeg synes dette var et veldig morsomt prosjekt, selv om det ble litt små-stress på slutten for å få det ferdig til innlevering. Og føler selv jeg har bidratt godt i oppgaven. 
 
 **Sofie Branstad:**
-- ***utgangspunkt:*** Som student på 2. året av bachelor i IT og digitalisering hadde jeg allerede hatt emner som innføring i programmering, videregående programmering, databaser, og webutvikling. Jeg startet derfor med en grunnleggende forståelse av mange av elementene i en applikasjon, men ingen dyptgående kunnskap eller praktiske ferdigheter innen disse områdene. Jeg hadde ingen god forståelse av oppbyggingen av en applikasjon eller samspillet mellom ulike elementer i den, så jeg ønsket å lære mer om dette. Jeg var allerede vant med å bruke KI i akole-og jobbsammenheng, men hovedsakelig til idémyldring og hjelp til å lage gode eksempler.
-- ***Læring:*** 
-- ***Annet:*** 
+- ***Utgangspunkt:*** Som student på 2. året av bachelor i IT og digitalisering hadde jeg allerede hatt emner som innføring i programmering, videregående programmering, databaser, og webutvikling. Jeg startet derfor med en grunnleggende forståelse av mange av elementene i en applikasjon, men ingen dyptgående kunnskap eller praktiske ferdigheter innen disse områdene. Jeg hadde ingen god forståelse av oppbyggingen av en applikasjon eller samspillet mellom ulike elementer i den, så jeg ønsket å lære mer om dette. Jeg var allerede vant med å bruke KI i skole-og jobbsammenheng, men hovedsakelig til idémyldring og hjelp til å lage eksempler og illustrasjoner. 
+- ***Læring og utvikling:*** Jeg har lært å bruke Github til å samarbeide med et team om å utvikle noe sammen. Jeg har også lært en del om hvordan å samhandle med eller styre KI i utviklingsarbeid. Blant annet, hvordan best presentere feilmeldinger eller bugs til KI for å raskt få den til å forstå rotårsaken og gjøre riktige justeringer, og hvordan bygge opp et prompt for å sørge for at KI-en blir styrt i riktig retning. Jeg er usikker på om jeg har lært noe mer om programmering, da jeg ikke har jobber "tett på" koden og, som en konsekvens, ikke egentlig vet hva som står i koden vår fordi den er KI-generert og -redigert. På den annen side har jeg lært en del om byggesteinene til en applikasjon som denne, og hvordan man bruker tjenester som blant annet Supabase for å gjøre det mulig. I den forstand har jeg fått oppfylt noe av det jeg ønsket å lære i utgangspunktet. Jeg har en langt bedre forståelse av hva begrepet "applikasjon" egentlig innebærer på et teknisk nivå og hvor mange ulike elementer som inngår i dette. 
 ---
 
 ## 8. Vedlegg (valgfritt)
