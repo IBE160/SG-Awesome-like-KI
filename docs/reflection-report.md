@@ -7,7 +7,7 @@
 **Gruppemedlemmer:**
 - Hannah Letmolie - Halet4544@himolde.no/Hannah.Letmolie02@gmail.com
 - Marthe Bjerke - 251753-marthe.bjerke@live.no/mabje4340@himolde.no
-- Sofie Brandstad - 230741/sofie.i.branstad@himolde.no
+- Sofie Branstad - 230741/sofie.i.branstad@himolde.no
 
 **Dato:** [04.12.2025]
 
@@ -29,7 +29,7 @@ Prosjektet er særlig rettet mot studenter som opplever informasjons-overload, f
 ### 2.2 Arbeidsmetodikk
 Vi valgte en pragmatisk, lettvektsvariant av smidig utvikling:
 
-Organisering av arbeidet
+Organisering av arbeidet:
 
 - Vi jobbet hovedsakelig synkront i Teams, der én person delte skjerm og kodet i VS Code, mens de andre ga innspill, kvalitetssikret og foreslo endringer.
 - Vi roterte på “driver”-rollen i VS Code slik at alle fikk prøve seg praktisk.
@@ -42,124 +42,68 @@ Organisering av arbeidet
 - KI-verktøy: Gemini CLI og ChatGPT
 - Andre verktøy: BMAD, Github og VSCode
 
-### 2.4 Utviklingsfaser (Må fikses!)
-[Beskriv de ulike fasene i utviklingen]
+### 2.4 Utviklingsfaser
+Utviklingsprosessen vår var delt inn i fire tydelige faser, der vi benyttet KI som en integrert partner fra de første idéene til den endelige implementeringen. Hver fase hadde et klart formål og definerte leveranser som bygget systematisk på hverandre.
 
-**Fase 1: Planlegging**
-I planleggingsfasen hadde vi som mål å forankre prosjektet i reelle brukerbehov og definere en tydelig MVP.
+**Fase 1: Analyse**
 
-Vi brukte KI-agenten “analyst” i Gemini til flere runder med:
+I denne innledende fasen var hovedmålet å utforske og definere problemområdet. Vi startet med flere brainstorming-sesjoner for å identifisere rotårsaker til studenters utfordringer med store pensummengder. Dette la grunnlaget for å forstå de reelle behovene applikasjonen skulle løse. Parallelt gjennomførte vi teknisk research for å evaluere ulike KI-biblioteker som kunne egne seg for å orkestrere LLM-interaksjoner. 
 
-- brainstorming-sessions: kartlegging av mulige konsepter, funksjoner og målgrupper
-- research-sessions: identifisering av relevante brukerproblemer (informasjonsoverload, stress, neurodiversitet) og eksisterende løsninger.
+All innsikt fra denne fasen ble deretter konsolidert i et produktbrief, som fungerte som det første formelle styringsdokumentet for prosjektet. Etter at vi haddde gjennomført syv brainstormingsesjoner og seks research-sesjoner, brukte vi dette promptet for å sørge for at proposal-fila var så god som mulig: "We need to update the @proposal.md file with all our findings from the brainstorming and research sessions. Read the proposal.md file and all files in @docs/brainstorming-sessions/ and @docs/research-sessions/ folders. Then, modify the proposal.md file to reflect all the decisions we made in the brainstorming and research sessions in the relevant sections. Make sure to indicate in the proposal file which brainstorming or research file you used as background information. For example it you write that we will use vercel,make sure to add "see research/brainstorm in file @ .." Be throrough and make sure that the proposal file contains all the necessary information to create a good product brief later. DO NOT make the product brief yet."
 
-Første runde gjorde vi sammen på skjermdeling, der vi:
+KI ble brukt som en aktiv sparringspartner i idémyldringen og som en research-assistent for å sammenstille tekniske alternativer.
 
-- formulerte overordnede prompts om “studenter som er overveldet av pensum”
-- ba KI om å identifisere typiske smertepunkter, personaer og brukerhistorier.
+**Fase 2: Planlegging**
 
-Deretter lot vi KI foreslå en liste over nye sesjoner vi burde kjøre (f.eks. “risikoanalyse”, “funksjonsprioritering”, “data- og sikkerhetsbehov”). Disse fordelte vi mellom oss og kjørte hver vår runde med prompts.
+Med en klarere forståelse av *hva* vi skulle bygge, gikk vi over til å planlegge *hvordan*. Denne fasen startet med utarbeidelsen av et Product Requirements Document (PRD), som detaljerte funksjonalitet, brukerflyt og tekniske krav. For å sikre at vi var på rett spor, ble PRD-en validert. Samtidig jobbet vi med brukererfaringen ved å utvikle en UX-designspesifikasjon, inkludert fargepaletter og overordnede design-retninger. Til slutt ble det tekniske fundamentet lagt ved å definere rammeverk for kontinuerlig integrasjon (CI) og test-design. 
 
-Totalt landet vi på rundt 7 brainstorming-sesjoner og 7 research-sesjoner, som ble dokumentert i prosjektmappen (/docs/brainstorming-sessions og /docs/research-sessions).
+I denne fasen ble KI brukt til å generere førsteutkast til både PRD og UX-dokumenter, noe som ga oss et solid utgangspunkt å iterere på.
 
-Utfallet av fase 1 var:
+**Fase 3: Solutioning**
 
-- et tydelig problemstatement (informasjonsoverload hos studenter)
-- tre konkrete personas (Alex, Ben, Sarah)
-- en prioritert MVP-liste (autentisering, filopplasting, sammendrag, quiz, motivasjonsfeedback, enkel UI)
-- en grov tidsplan for fire uker.
+I solutioning-fasen ble planene omsatt til en konkret teknisk løsning. Vi utarbeidet en detaljert systemarkitektur som beskrev hvordan frontend, backend og databasen skulle samhandle. Med arkitekturen på plass, brøt vi ned de overordnede kravene fra PRD-en til håndterbare epics og brukerhistorier. Dette ga oss en klar og prioritert backlog for utviklingen. Før vi gikk videre til implementering, gjennomførte vi en "readiness"-sjekk for å forsikre oss om at alle tekniske og funksjonelle forutsetninger var på plass. 
 
-**Fase 2: Utvikling**
-I utviklingsfasen gikk vi stegvis fra idé til fungerende MVP:
+KI var her et sentralt verktøy for å visualisere arkitekturen, samt for å bryte ned funksjonalitet i mindre, logiske enheter (epics og stories).
 
-Oppsett og infrastruktur
+**Fase 4: Implementering**
 
-- Opprettet Supabase-prosjekt, satte opp databasen basert på forslaget i proposal (users, classes, class_sections, study_materials, generated_content, junction tables).
-- Implementerte Row Level Security (RLS) og testet at brukere kun ser egne data.
-- Konfigurerte Next.js-appen og integrerte Supabase via @supabase/ssr.
+Den siste fasen handlet om å bygge selve applikasjonen. Vi startet med sprint-planlegging for å organisere arbeidet i en smidig arbeidsflyt. For hver epic og story ble det opprettet tekniske spesifikasjoner som ga utviklerne en klar kontekst for implementeringen. 
 
-Frontend og brukerflyt
+Deretter fulgte selve kodingen, hvor hver brukerhistorie ble implementert og validert. Etter Geminis validering av hver implementerte story valgte vi å gjøre manuell testing av funksjonaliteten i brukergrensesnittet. Da lagde vi et prompt som gikk slik: "I want to do a manual test of the features we just implemented in this story. Please guide me through how I can open the application in a browser without opening the interactive shell in this conversation, i.e. opening a different terminal and typing npm run dev. And then explain the steps to verify the features."
 
-- Implementerte innlogging/registrering og en enkel “dashboard”-visning med klasser og seksjoner.
-- Lagde UI for filopplasting (tekst/PDF) og visning av opplastet materiale.
-- Designet sider for genererte sammendrag og to typer quiz (daily quizzes og bootcamp, som dekker hele kapittel), inkludert visning av score og motiverende meldinger.
-
-KI-integrasjon
-
-- Skisset ut en Vercel Function som:
-  - tar inn tekst fra opplastet pensum
-  - sender dette til KI-modellen med instruksjon om å lage sammendrag eller flervalgstest
-  - returnerer strukturert JSON (spørsmål, alternativer, fasit).
-- Testet flere prompt-varianter for å få:
-  - korte, presise sammendrag
-  - relevante quizspørsmål med forståelige alternativer.
-
-Vi brukte Gemini i utviklingsfasen til å:
-
-- generere førsteutkast til funksjoner for parsing og validering av AI-respons
-- foreslå robust error-handling rundt KI-kall.
-
-Eksempler på spesifikke prompter brukt i Fase 2:
-- **For quizgenerering:** "Generer en flervalgstest med 5 spørsmål basert på følgende tekst, med 4 alternativer per spørsmål og marker riktig svar i JSON-format: [tekst]"
-- **For debugging:** "Analyser følgende JavaScript-kode for en Next.js-komponent og identifiser potensielle feil relatert til state-håndtering med Supabase, og foreslå forbedringer: [kode]"
-
-Testing og iterasjon
-
-- Manuell testing av hele brukerreisen: opprett bruker → last opp fil → generer sammendrag → generer quiz → se score.
-- Justerte promptene når sammendragene ble for generelle eller quizene ble for enkle.
-- Fikset flere mindre bugs knyttet til state-håndtering i Next.js og synkronisering mot Supabase.
+KI spilte en avgjørende rolle i denne fasen ved å bistå i generering av kode, utforming av tekniske spesifikasjoner og som en hjelper under testing og feilsøking.
 
 ---
 
 ## 3. Utfordringer og løsninger
 
 ### 3.1 Tekniske utfordringer
-[Beskriv 2-3 konkrete tekniske problemer dere møtte]
 
-**Utfordring 1: Håndtering av lange tekster og KI-begrensninger**
-- Problem: Pensumfiler og slidedecks kan være lange. Når vi sendte for mye tekst til KI-modellen, fikk vi enten timeout, kuttet respons eller usammenhengende sammendrag.
-- Løsning: Vi implementerte en strategi for segmentering av lange tekster, der input ble delt opp i mindre biter før sending til KI-modellen. Dette reduserte risikoen for timeout og kuttet respons. For sammendrag ble del-sammendragene deretter flettet sammen. For quizer ble spørsmål generert per segment og deretter samlet.
-- KI sin rolle: KI hjalp oss med å foreslå metoder for tekstsegmentering og ga veiledning i hvordan man best kunne sy sammen genererte svar fra flere KI-kall. I tillegg bidro KI med å generere testdata for å validere segmenteringslogikken. Denne utfordringen understreket viktigheten av god prompt engineering og iterativ testing for å tilpasse seg KI-modellens begrensninger.
-- **Påminnelse:** Husk å legge til mer spesifikke detaljer om løsningen og KI's rolle her senere.
+**Utfordring 1: Verktøykonflikter og arbeidsflytavbrudd**
+- **Problem:** En vedvarende teknisk utfordring oppsto fra samspillet mellom verktøyene vi brukte. Å kjøre Gemini CLI-agenten inne i en terminal, som igjen ble kjørt i VS Code på Windows, skapte en uventet konflikt. Snarveien `Ctrl + F`, som er essensiell for å fokusere på terminalen og gi input til Gemini, ble systematisk fanget opp av VS Codes globale søkefunksjon. Dette førte til at søkevinduet i VS Code åpnet seg i stedet for at terminalen ble aktiv. Denne konflikten førte til konstante små, men hyppige, avbrudd i arbeidsflyten.
+- **Løsning:** Medlemmene som opplevde denne utfordringen fant ikke en direkte løsning på dette, så alle oppgaver som krevde denne handlingen måtte gjøres av gruppemedlemmet som hadde MacBook, hvor 'Ctrl + F' funket.
+- **KI sin rolle:** I denne situasjonen kunne ikke KI direkte løse verktøykonflikten, da den var et resultat av hvordan VS Code håndterer tastatursnarveier på systemnivå. KI-en var uvitende om vertsmiljøet sitt og kunne derfor ikke diagnostisere eller foreslå en løsning på problemet. Dette illustrerer en begrensning ved KI-agenter: deres manglende evne til å feilsøke problemer som ligger utenfor deres eget kjøremiljø, som for eksempel konflikter i selve utviklingsverktøyet. Problemet måtte løses manuelt av oss som brukere.
 
 **Utfordring 2: Model overload og oppbrukte kvoter**
 - Problem: Bruken av KI var helt sentral i dette prosjektet og mye av fremdriften var derfor avhengig av at Gemini var tilgjengelig når vi trengte den og ikke stoppet opp under arbeidet. Dessverre opplevde vi svært ofte at vi fikk feilmeldinger som "The model is overloaded. Please try again later" og "You have exceeded your quota for today. Please try again later". Dette gjorde at arbeidet stoppet opp, ofte midt i viktige prosesser, noe som hindret effektiv fremdrift. Dette ble et økende problem jo nærmere vi kom innleveringsfristen og tiden begynte å renne ut, samtidig som de aller viktigste og mest tidkrevense oppgavene gjensto. 
 - Løsning: Det var flere måter å løse disse problemene på. Ved "Model overload"-problemer hadde vi to alternativer: vente et par timer og prøve igjen senere på at annet tidspunkt, eller å forsøke å "spamme" Gemini med kommandoer til den gikk gjennom. Ingen av delene hadde særlig gode resultater. For å komme seg rundt dagskvote-problemet var løsningen å opprette en hel haug med Gemini API-nøkler, og bytte API-nøkkel for hver gang kvoten ble fylt opp. Dette fungerte i praksis men gjorde også at man måtte skrive kommandoer på nytt og kunne bli avbrutt midt i en viktig prosess, og mye tid gikk med på å skrive gode promt som myknet overgangen etter å ha byttet API-nøkkel.
+- KI sin rolle: I dette tilfellet var KI-en både årsaken til problemet og en hindring for løsningen. Siden hele prosjektet var avhengig av tilgang til Gemini-modellen, fungerte nedetid og kvotebegrensninger som en hard stopp for all fremdrift. KI-en kunne ikke hjelpe oss med å løse problemet, ettersom det var selve tjenesten som var utilgjengelig. Dette skapte en avhengighetssituasjon der vi ble tvunget til å jobbe rundt KI-en i stedet for med den. Ironisk nok ble KI en barriere for et KI-sentrisk prosjekt, noe som understreker sårbarheten ved å basere en hel arbeidsflyt på en ekstern tjeneste med begrensninger vi ikke kunne kontrollere.
 
 
 ### 3.2 Samarbeidsutfordringer (To av disse er ikke samarbeidsutfordringer)
-Vi opplevde noen klassiske utfordringer knyttet til teamarbeid og kommunikasjon, spesielt med tanke på ulik timeplan og arbeidsflyt:
+Vi opplevde noen klassiske utfordringer knyttet til teamarbeid, blant annet med tanke på ulik timeplan og arbeidsflyt:
 
-- **Faser og rekkefølge:** Vi oppdaget ulikheter mellom rekkefølgen på fasene i presentasjonsmateriellet og den faktiske prosjektplanen, noe som krevde koordinering.
-- **KI-ens “eget liv”:** Gemini ga oss til tider utfordringer ved å handle uventet eller kreve justeringer, noe som tok tid å håndtere.
 - **Tid og tilgjengelighet:** Gruppesamarbeidet fungerte ellers bra, men en utfordring var at noen gruppemedlemmer hadde mest tid til å jobbe på kvelden etter jobb, mens andre, med barn, primært kunne bidra i helger. Dette krevde fleksibilitet i planlegging og gjennomføring.
 
-I tillegg til de rent tekniske problemene, støtte vi på utfordringer knyttet til samspillet mellom verktøy, KI og team-arbeidsflyt:
-
-(her er det noe duplikat)
-
-- **Uforutsette verktøykonflikter:** Å kjøre en CLI-agent (Gemini) inne i en terminal, som igjen kjører i VS Code på Windows, skapte uventede problemer. Spesielt i sluttfasen opplevde vi at Ctrl + F-snarveien for å fokusere terminalen i Gemini, ofte ble fanget opp av VS Codes egen søkefunksjon. Dette førte til forvirring og små, men hyppige, avbrudd i arbeidsflyten.
-
-- **Uforutsigbarhet med KI-agenten:** Selv om Gemini var en kraftig medhjelper, hadde den tidvis "sitt eget liv". Den kunne for eksempel foreslå eller forsøke å kjøre kommandoer (som git commit) før vi i teamet var enige, eller misforstå en instruksjon som krevde at vi måtte stoppe opp, korrigere og veilede den på nytt. Dette introduserte et nytt lag med "AI-management" som vi måtte lære oss å håndtere.
-
-- **Git-arbeidsflyt og merge-konflikter:** Som i mange team-prosjekter, var versjonskontroll med Git en utfordring. Selv med en i hovedsak synkron arbeidsmetode, oppsto det tidvis forvirring rundt hvilken branch som var den korrekte å jobbe på, og vi støtte på mindre merge-konflikter. Dette krevde ekstra kommunikasjon for å sikre at alles endringer ble riktig integrert og at vi i
+- **Git-arbeidsflyt og merge-konflikter:** Som i mange team-prosjekter, var versjonskontroll med Git en utfordring. Selv med en i hovedsak synkron arbeidsmetode, oppsto det tidvis forvirring rundt hvilken branch som var den korrekte å jobbe på, og vi støtte på mindre merge-konflikter som krevde ekstra kommunikasjon for å løse.
 
 ### 3.3 KI-spesifikke utfordringer
 **Feil kode og hallucinasjoner:**
 - Problem: KI foreslo enkelte ganger kode som ikke passet versjonen av bibliotekene vi brukte (særlig Next.js og Supabase).
 - Løsning: Vi lærte å teste alt lokalt med en gang, og aldri stole blindt på at kodeforslagene fungerer. Vi ble også mer konkrete i promptene, da AI ikke alltid forstod hva vi mente. Dette understreker viktigheten av god prompt engineering.
-- **Påminnelse:** Husk å legge til mer detaljer om spesifikke tilfeller av feil kode/hallusinasjoner og hvordan prompt engineering ble brukt for å overkomme dette.
-
-### 3.4 Verktøy- og arbeidsflyt-utfordringer
-I tillegg til de rent tekniske problemene, støtte vi på utfordringer knyttet til samspillet mellom verktøy, KI og team-arbeidsflyt:
-
-- **Uforutsette verktøykonflikter:** Å kjøre en CLI-agent (Gemini) inne i en terminal, som igjen kjører i VS Code på Windows, skapte uventede problemer. Spesielt i sluttfasen opplevde vi at `Ctrl + F`-snarveien for å fokusere terminalen i Gemini, ofte ble fanget opp av VS Codes egen søkefunksjon. Dette førte til forvirring og små, men hyppige, avbrudd i arbeidsflyten.
-
 - **Uforutsigbarhet med KI-agenten:** Selv om Gemini var en kraftig medhjelper, hadde den tidvis "sitt eget liv". Den kunne for eksempel foreslå eller forsøke å kjøre kommandoer (som `git commit`) før vi i teamet var enige, eller misforstå en instruksjon som krevde at vi måtte stoppe opp, korrigere og veilede den på nytt. Dette introduserte et nytt lag med "AI-management" som vi måtte lære oss å håndtere.
+- **KI-ens “eget liv”:** Gemini ga oss til tider utfordringer ved å handle uventet eller kreve justeringer, noe som tok tid å håndtere.
 
-- **Git-arbeidsflyt og merge-konflikter:** Som i mange team-prosjekter, var versjonskontroll med Git en utfordring. Selv med en i hovedsak synkron arbeidsmetode, oppsto det tidvis forvirring rundt hvilken branch som var den korrekte å jobbe på, og vi støtte på mindre merge-konflikter som krevde ekstra kommunikasjon for å løse.
-
-- **Kontinuerlig integrasjon (CI) og build-feil:** Flere ganger opplevde vi at kode som fungerte perfekt lokalt, likevel feilet i den automatiske byggeprosessen på serveren etter en `git push`. Vi ble møtt med feilmeldinger som: `All checks have failed. 1 failing check. CI / build (push) Failing after 17s`. Dette tvang oss til å dykke ned i serverlogger for å feilsøke problemer som ikke var synlige i vårt lokale utviklingsmiljø, en vanlig, men tidkrevende, del av moderne programvareutvikling.
 
 ---
 
@@ -184,11 +128,11 @@ Det gjorde at vi kom raskere over kneika på nye teknologier som learning by doi
 I tillegg til ren effektivitet, opplevde vi at KI fungerte som en kreativ sparringspartner. Den foreslo funksjoner, brukerhistorier og konsepter vi ikke hadde tenkt på, og fungerte som en katalysator for våre egne ideer.
 
 **Kvalitet på koden:**
-- [Hvordan påvirket KI kodekvaliteten?]
-- [Eksempler på forbedringer KI foreslo]
+KI hadde en positiv innvirkning på kodekvaliteten ved å sikre en konsistent og logisk struktur, samt ved å hjelpe oss med å overholde etablerte kodekonvensjoner. Den foreslo også refaktoreringer som forbedret lesbarheten og effektiviteten i koden.
+
+Blant de konkrete forbedringene KI foreslo, var generering av grunnstrukturer for React-komponenter, veiledning for implementering av sikkerhetstiltak som Row Level Security (RLS) i Supabase, og forslag til Tailwind CSS-klasser for å oppnå et responsivt design.
 
 ### 4.2 Begrensninger og ulemper
-[Reflekter over de negative aspektene]
 
 **Kvalitet og pålitelighet:**
 KI gir ofte svar med høy selvtillit, selv når de er feil. Vi opplevde:
@@ -306,14 +250,7 @@ Vår antakelse om at opplastet pensum er 'ikke-sensitivt' er imidlertid en betyd
 ## 6. Teknologiske implikasjoner
 
 ### 6.1 Kodekvalitet og vedlikehold
-KI-kode kan være effektiv i øyeblikket, men:
-
-- navngiving, struktur og mønstre er ikke alltid konsistente
-- det er lett å ende opp med “spaghetti” hvis man bare lapper på nye snippets fra KI. (Hva betyr dette???)
-
-Vedlikehold blir krevende hvis man ikke rydder fortløpende. Vi har derfor:
-
-- ryddet i komponenter (har vi?)
+KI-kode kan være effektiv i øyeblikket, men navngiving, struktur og mønstre er ikke alltid konsistente. Vedlikehold blir krevende hvis man ikke rydder fortløpende. Vi har derfor ryddet i mappestrukturen fortløpende.
 
 ### 6.2 Standarder og beste praksis
 KI følger ikke alltid beste praksis:
@@ -352,14 +289,11 @@ Vår anbefaling er at utviklere lærer seg å designe prosesser der KI inngår, 
 5. Gode prompter i samarbeid med KI, samt mestring av prompter og kontekst som støtter prompten (for LLM), er essensielt.
 
 ### 7.2 Hva ville dere gjort annerledes?
-- **Mer strukturert bruk av KI i utvikling:** Selv om vi brukte KI mye, var det ofte ad-hoc. En mer systematisk tilnærming til når og hvordan KI skulle brukes i kodefasen (f.eks. for TDD, refaktorering eller komplekse algoritmer) kunne vært mer effektiv. (vi brukte jo KI til alt?)
 - **Tidligere fokus på ytelse og skalering:** Vi fokuserte primært på funksjonalitet for MVP. Å vurdere ytelse og skalering av KI-kall og databasen tidligere i prosessen kunne spart tid nedstrøms.
-- **Bedre versjonskontrollpraksis for prompts:** Vi samlet mange prompts, men en mer organisert måte å versjonskontrollere og evaluere prompts på (spesielt de som ga best resultater for quiz og sammendrag) kunne vært gunstig.
-- **Påminnelse:** Husk å legge til deres egne spesifikke refleksjoner her, gjerne med eksempler fra prosjektet.
+- **Bedre versjonskontrollpraksis for prompts:** Vi samlet noen prompts, men en mer organisert måte å versjonskontrollere og evaluere prompts på  kunne vært gunstig.
 
 ### 7.3 Anbefalinger
 **Effektiv bruk av KI**
-
 - Bruk KI tidlig til idémyldring, research og førsteutkast – ikke til siste finish.
 - Forstå hva du vil og hvor du vil før du tar i bruk KI, slik at du er i stand til å plukke opp feil raskt og styre den i riktig retning dersom den graver seg ned i en grop.
 - Vær konkret og presis i promptene; spesifiser rammeverk, versjoner og ønsket outputformat.
@@ -394,6 +328,6 @@ Vår anbefaling er at utviklere lærer seg å designe prosesser der KI inngår, 
 
 ---
 
-**Ordantall:** [Ca. antall ord]
+**Ordantall:** Ca. 4 500 ord
 
 **Forventet lengde:** 3000-5000 ord (avhengig av gruppestørrelse og prosjektets kompleksitet)

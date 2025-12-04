@@ -6,7 +6,7 @@
 2. Hvis jeg har skrevet noe der allerede, f.eks. "Root Cause Analysis and Solution Design for Player Inactivity", så kan dere bytte ut min prompt med deres egen.
 
 
-## Fase 0 (1)
+## Fase 1 Analysis
 
 - [x] /run-agent-task analyst *workflow-init
   - [x] File: bmm-workflow-status.yaml
@@ -24,7 +24,7 @@
   - [x] /run-agent-task analyst *product-brief "Read the two brainstorming sessions the research session and the @proposal.md file, and create a product brief for the project."
     - [x] File: product-brief.md
 
-## Fase 1 (2)
+## Fase 2 Planning
 
 - [x] Planning
   - [x] /run-agent-task pm *prd
@@ -40,7 +40,7 @@
   - [x] /run-agent-task tea *ci {prompt / user-input-file}
   - [x] /run-agent-task tea *test-design {prompt / user-input-file}
 
-## Fase 2 (3)
+## Fase 3 Solutioning
 
 - [x] Solutioning
   - [x] /run-agent-task architect *create-architecture {prompt / user-input-file}
@@ -50,7 +50,7 @@
   - [x] /run-agent-task architect *solutioning-gate-check {this command was not available, Gemini suggested *implementation-readiness instead as the closest option so we did that instead / user-input-file}
     - [x] File: implementation-readiness-report.md
 
-## Fase 3 (4)
+## Fase 4 Implementation
 
 - [ ] Implementation
   - [x] /run-agent-task sm *sprint-planning {prompt / user-input-file}
@@ -68,6 +68,7 @@
       - [x] /run-agent-task sm *validate-story-context {prompt / user-input-file}
       - [ ] /run-agent-task dev *implement-story {prompt / user-input-file}
       - [ ] /run-agent-task dev *validate-story {prompt / user-input-file}
+      - [ ] Manuell test i brukergrensesnittet, prompt: "I want to do a manual test of the features we just implemented in this story. Please guide me through how I can open the application in a browser without opening the interactive shell in this conversation, i.e. opening a different terminal and typing npm run dev. And then explain the steps to verify the features."
     - [ ] /run-agent-task sm *epic-retrospective {prompt / user-input-file}
 
 
