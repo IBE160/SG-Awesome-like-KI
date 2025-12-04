@@ -1,4 +1,4 @@
-import { createRouteHandlerClient } from '@supabase/ssr';
+import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
@@ -8,7 +8,23 @@ export async function POST(request: Request) {
   const email = String(formData.get('email'));
 
   const cookieStore = cookies();
-  const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        async get(name: string) {
+          return (await cookieStore).get(name)?.value
+        },
+        async set(name: string, value: string, options: CookieOptions) {
+          (await cookieStore).set(name, value, options)
+        },
+        async remove(name: string, options: CookieOptions) {
+          (await cookieStore).set(name, '', options)
+        },
+      },
+    }
+  );
 
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
     redirectTo: `${requestUrl.origin}/login/reset-password`,
