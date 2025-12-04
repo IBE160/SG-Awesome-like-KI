@@ -1,36 +1,5 @@
-import { createServerClient, type CookieOptions } from '@supabase/ssr';
-import { cookies } from 'next/headers';
-import { NextResponse } from 'next/server';
 
-export async function GET(request: Request) {
-  const cookieStore = cookies();
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        async get(name: string) {
-          return (await cookieStore).get(name)?.value
-        },
-        async set(name: string, value: string, options: CookieOptions) {
-          (await cookieStore).set(name, value, options)
-        },
-        async remove(name: string, options: CookieOptions) {
-          (await cookieStore).set(name, '', options)
-        },
-      },
-    }
-  );
 
-  const { data: { user }, error } = await supabase.auth.getUser();
-
-  if (error || !user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-
-  // Supabase Auth user object already contains the profile data we need
-  return NextResponse.json(user);
-}
 
 export async function PUT(request: Request) {
   const cookieStore = cookies();
@@ -52,22 +21,29 @@ export async function PUT(request: Request) {
     }
   );
 
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { user }, error: userError } = await supabase.auth.getUser();
 
-  if (!user) {
+  if (userError || !user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   const { name } = await request.json();
 
-  // Update user metadata which is where profile info like name is stored
-  const { data, error } = await supabase.auth.updateUser({
-    data: { name },
-  });
+  // Update full_name in the public.profiles table
+  const { data: updatedProfile, error: updateError } = await supabase
+    .from('profiles')
+    .update({ full_name: name, updated_at: new Date().toISOString() }) // Use full_name
+    .eq('id', user.id)
+    .select()
+    .single();
 
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 400 });
+  if (updateError) {
+    console.error('Error updating profile:', updateError);
+    return NextResponse.json({ error: updateError.message }, { status: 500 });
   }
 
-  return NextResponse.json(data.user);
+  // Return the updated profile combined with user data for consistency
+  const combinedUser = { ...user, profile: updatedProfile };
+
+  return NextResponse.json(combinedUser);
 }

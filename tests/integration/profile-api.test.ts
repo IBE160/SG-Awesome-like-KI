@@ -27,7 +27,7 @@ mockFrom.mockReturnValue({ select: mockSelect })
 mockSelect.mockReturnValue({ eq: mockEq })
 mockEq.mockReturnValue({ single: mockSingle, update: mockUpdate, select: mockSelect })
 mockUpdate.mockReturnValue({ eq: mockEq })
-mockSingle.mockReturnValue({ data: { id: '123', name: 'Test User' }, error: null })
+mockSingle.mockReturnValue({ data: { id: '123', full_name: 'Test User' }, error: null })
 mockInsert.mockReturnValue({ select: mockSelect })
 
 
@@ -49,7 +49,7 @@ describe('/api/profile', () => {
       const response = await GET()
       expect(response.status).toBe(200)
       const body = await response.json()
-      expect(body.name).toBe('Test User')
+      expect(body.profile.full_name).toBe('Test User')
     })
 
     it('should create and return profile if it does not exist', async () => {
@@ -59,8 +59,8 @@ describe('/api/profile', () => {
         const response = await GET()
         expect(response.status).toBe(200)
         const body = await response.json()
-        expect(body.name).toBe('test@example.com')
-        expect(mockInsert).toHaveBeenCalledWith({ id: '123', name: 'test@example.com' })
+        expect(body.profile.full_name).toBe('test@example.com')
+        expect(mockInsert).toHaveBeenCalledWith({ id: '123', full_name: 'test@example.com' })
     })
   })
 
@@ -77,16 +77,16 @@ describe('/api/profile', () => {
 
     it('should update and return profile if user is authenticated', async () => {
         mockGetUser.mockResolvedValue({ data: { user: { id: '123' } } })
-        mockSingle.mockResolvedValue({ data: { id: '123', name: 'New Name' }, error: null })
+        mockSingle.mockResolvedValue({ data: { id: '123', full_name: 'New Name' }, error: null })
         const request = new NextRequest('http://localhost/api/profile', {
             method: 'PUT',
-            body: JSON.stringify({ name: 'New Name' }),
+            body: JSON.stringify({ full_name: 'New Name' }),
         })
         const response = await PUT(request)
         expect(response.status).toBe(200)
         const body = await response.json()
-        expect(body.name).toBe('New Name')
-        expect(mockUpdate).toHaveBeenCalledWith({ name: 'New Name' })
+        expect(body.profile.full_name).toBe('New Name')
+        expect(mockUpdate).toHaveBeenCalledWith({ full_name: 'New Name' })
     })
   })
 })

@@ -6,7 +6,7 @@
 
 **Gruppemedlemmer:**
 - Hannah Letmolie - Halet4544@himolde.no/Hannah.Letmolie02@gmail.com
-- Marthe Bjerke - 251753-marthe.bjerke@live.no /mabje4340@himolde.no
+- Marthe Bjerke - 251753-marthe.bjerke@live.no/mabje4340@himolde.no
 - Sofie Brandstad - 230741/sofie.i.branstad@himolde.no
 
 **Dato:** [DD.MM.ÅÅÅÅ]

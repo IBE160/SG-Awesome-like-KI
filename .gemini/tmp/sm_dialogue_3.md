@@ -1,0 +1,1 @@
+Bob (Scrum Master): "Smart call, BIP. Let's finish those stories first and then have a proper retrospective."
