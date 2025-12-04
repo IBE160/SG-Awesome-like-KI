@@ -52,7 +52,6 @@ so that {{benefit}}.
   - [x] Write unit tests for UI components and client-side validation.
   - [x] Write integration tests for profile API endpoints (retrieve, update).
   - [x] Write RLS integration tests to verify data isolation.
-  - [c] Write end-to-end tests for the full profile management flow (dependent on registration and login).
   - [x] Manual testing of UI/UX, profile updates, and RLS behavior.
 
 

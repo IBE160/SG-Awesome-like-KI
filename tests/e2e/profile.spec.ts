@@ -10,25 +10,26 @@ test.describe('Profile Management Flow', () => {
   // For E2E, this often means creating a fresh user.
 
   test('should allow a user to register, log in, update their profile, and log out', async ({ page }) => {
-    // 1. Register a new user
-    await page.goto('/register');
-    await page.fill('input[type="email"]', userEmail);
-    await page.fill('input[type="password"]', userPassword);
-    await page.click('button[type="submit"]');
-
-    // Assuming a successful registration redirects to login or dashboard
-    // Wait for successful registration message or redirect
-    await expect(page.locator('text=Registration successful')).toBeVisible(); // Adjust based on actual UI message
-    await page.waitForURL('/login'); // Assuming it redirects to login after registration
-
-    // 2. Log in with the new user
-    await page.fill('input[type="email"]', userEmail);
-    await page.fill('input[type="password"]', userPassword);
-    await page.click('button[type="submit"]');
-
-    // Assuming successful login redirects to a dashboard or profile page
-    await page.waitForURL('/'); // Adjust based on actual post-login redirect
-
+        // 1. Register a new user
+        await page.goto('/register');
+        await page.fill('input[type="email"]', userEmail);
+        await page.fill('input[type="password"]', userPassword);
+        await page.click('button[type="submit"]');
+    
+        // Wait for successful registration message on the current page (or a success page, NOT /login)
+        // The user states "will NOT be redirected to the login-page."
+        await expect(page.getByText(/Registration successful! Please check your email for a confirmation link./i)).toBeVisible();
+    
+        // Now, navigate to the login page manually
+        await page.goto('/login');
+    
+        // 2. Log in with the new user
+        await page.fill('input[type="email"]', userEmail);
+        await page.fill('input[type="password"]', userPassword);
+        await page.click('button[type="submit"]');
+    
+        // Assuming successful login redirects to a dashboard or profile page
+        await page.waitForURL('/'); // Adjust based on actual post-login redirect
     // 3. Navigate to the profile page
     // Assuming there's a navigation link to profile
     await page.click('text=Profile'); // Adjust selector as needed

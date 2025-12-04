@@ -45,7 +45,7 @@ development_status:
   2-1-user-registration: done
   2-2-user-login-session-management: done
   2-3-password-reset: done
-  2-4-user-profile-management-rls-enforcement: in-progress
+  2-4-user-profile-management-rls-enforcement: done
   epic-2-retrospective: optional
   epic-3: contexted
   3-1-document-upload-text-pdf: ready-for-dev

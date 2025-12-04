@@ -7,7 +7,7 @@
     - generic [ref=e5]:
       - generic [ref=e6]:
         - generic [ref=e7]: Email
-        - textbox "Email" [ref=e8]: test-fc56fb3f-434a-4489-b6eb-1aaf784057ae@example.com
+        - textbox "Email" [ref=e8]: test-57965156-184f-4456-8609-3286f5e84574@example.com
       - generic [ref=e9]:
         - generic [ref=e10]: Password
         - textbox "Password" [ref=e11]: password123
