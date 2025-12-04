@@ -45,9 +45,9 @@ so that {{benefit}}.
       - `PUT /api/profile` (Update user profile)
   - [x] Integrate with Supabase client to fetch and update user data (eg., from `users` table).
   - [x] Ensure API endpoints respect RLS policies.
-- [ ] **Task 3: Implement Supabase RLS Policies (AC: All)**
-  - [ ] Define and implement RLS policies on the `users` table to ensure users can only access/modify their own data.
-  - [ ] Implement automated tests for RLS policies.
+- [x] **Task 3: Implement Supabase RLS Policies (AC: All)**
+  - [x] Define and implement RLS policies on the `users` table to ensure users can only access/modify their own data.
+  - [x] Implement automated tests for RLS policies.
 - [ ] **Task 4: Testing (AC: All)**
   - [ ] Write unit tests for UI components and client-side validation.
   - [ ] Write integration tests for profile API endpoints (retrieve, update).

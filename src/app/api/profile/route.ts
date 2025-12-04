@@ -1,9 +1,14 @@
 
 
 
-export async function PUT(request: Request) {
-  const cookieStore = cookies();
-  const supabase = createServerClient(
+import { createServerClient, type CookieOptions } from '@supabase/ssr'
+import { cookies } from 'next/headers'
+import { NextResponse } from 'next/server'
+
+// Utility function to create a Supabase client
+const createSupabaseClient = () => {
+  const cookieStore = cookies()
+  return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
@@ -19,31 +24,99 @@ export async function PUT(request: Request) {
         },
       },
     }
-  );
+  )
+}
 
-  const { data: { user }, error: userError } = await supabase.auth.getUser();
+// Shared function to get the authenticated user
+const getAuthenticatedUser = async (supabase: any) => {
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser()
 
-  if (userError || !user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  if (error || !user) {
+    return null
+  }
+  return user
+}
+
+export async function GET() {
+  const supabase = createSupabaseClient()
+  const user = await getAuthenticatedUser(supabase)
+
+  if (!user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const { name } = await request.json();
-
-  // Update full_name in the public.profiles table
-  const { data: updatedProfile, error: updateError } = await supabase
+  // Fetch the profile from the public.profiles table
+  const { data: profile, error } = await supabase
     .from('profiles')
-    .update({ full_name: name, updated_at: new Date().toISOString() }) // Use full_name
+    .select('full_name')
     .eq('id', user.id)
-    .select()
-    .single();
+    .single()
 
-  if (updateError) {
-    console.error('Error updating profile:', updateError);
-    return NextResponse.json({ error: updateError.message }, { status: 500 });
+  // Gracefully handle cases where a profile doesn't exist yet
+  if (error && error.code !== 'PGRST116') {
+    console.error('Error fetching profile:', error.message)
+    return NextResponse.json(
+      { error: 'An unexpected error occurred' },
+      { status: 500 }
+    )
+  }
+
+  // Combine user and profile data, returning only necessary fields
+  const responseData = {
+    id: user.id,
+    email: user.email,
+    full_name: profile?.full_name || '',
+  }
+
+  return NextResponse.json(responseData)
+}
+
+export async function PUT(request: Request) {
+  const supabase = createSupabaseClient()
+  const user = await getAuthenticatedUser(supabase)
+
+  if (!user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  const { full_name } = await request.json()
+
+  // Validate input
+  if (typeof full_name !== 'string' || full_name.trim() === '') {
+    return NextResponse.json(
+      { error: 'Full name is required' },
+      { status: 400 }
+    )
+  }
+
+  // Upsert the profile data
+  const { data: updatedProfile, error: upsertError } = await supabase
+    .from('profiles')
+    .upsert({
+      id: user.id,
+      full_name: full_name.trim(),
+      updated_at: new Date().toISOString(),
+    })
+    .select('full_name')
+    .single()
+
+  if (upsertError) {
+    console.error('Error upserting profile:', upsertError.message)
+    return NextResponse.json(
+      { error: 'An unexpected error occurred' },
+      { status: 500 }
+    )
   }
 
   // Return the updated profile combined with user data for consistency
-  const combinedUser = { ...user, profile: updatedProfile };
+  const responseData = {
+    id: user.id,
+    email: user.email,
+    full_name: updatedProfile.full_name,
+  }
 
-  return NextResponse.json(combinedUser);
+  return NextResponse.json(responseData)
 }

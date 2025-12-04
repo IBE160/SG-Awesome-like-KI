@@ -107,6 +107,12 @@ export default function LoginPage() {
           <a href="/login/forgot-password" className="font-medium text-indigo-600 hover:text-indigo-500">
             Forgot your password?
           </a>
+          <p className="mt-2">
+            Don't have an account?{' '}
+            <a href="/register" className="font-medium text-indigo-600 hover:text-indigo-500">
+              Sign up
+            </a>
+          </p>
         </div>
       </div>
     </div>
