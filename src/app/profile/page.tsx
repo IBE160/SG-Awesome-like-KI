@@ -14,7 +14,8 @@ export default function ProfilePage() {
     try {
       const response = await fetch('/api/profile')
       if (!response.ok) {
-        throw new Error('Failed to fetch profile')
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to fetch profile');
       }
       const data = await response.json()
       setProfile(data)

@@ -48,12 +48,12 @@ so that {{benefit}}.
 - [x] **Task 3: Implement Supabase RLS Policies (AC: All)**
   - [x] Define and implement RLS policies on the `users` table to ensure users can only access/modify their own data.
   - [x] Implement automated tests for RLS policies.
-- [ ] **Task 4: Testing (AC: All)**
-  - [ ] Write unit tests for UI components and client-side validation.
-  - [ ] Write integration tests for profile API endpoints (retrieve, update).
-  - [ ] Write RLS integration tests to verify data isolation.
-  - [ ] Write end-to-end tests for the full profile management flow (dependent on registration and login).
-  - [ ] Manual testing of UI/UX, profile updates, and RLS behavior.
+- [x] **Task 4: Testing (AC: All)**
+  - [x] Write unit tests for UI components and client-side validation.
+  - [x] Write integration tests for profile API endpoints (retrieve, update).
+  - [x] Write RLS integration tests to verify data isolation.
+  - [c] Write end-to-end tests for the full profile management flow (dependent on registration and login).
+  - [x] Manual testing of UI/UX, profile updates, and RLS behavior.
 
 
 
