@@ -9,7 +9,7 @@
 - Marthe Bjerke - 251753-marthe.bjerke@live.no/mabje4340@himolde.no
 - Sofie Brandstad - 230741/sofie.i.branstad@himolde.no
 
-**Dato:** [DD.MM.ÅÅÅÅ]
+**Dato:** [04.12.2025]
 
 ---
 
@@ -20,7 +20,7 @@ Vi har utviklet en applikasjon ved navn AI Study Buddy som skal hjelpe studenter
 
 Hovedmålet var å gi brukerne et verktøy som kan:
 
-- oppsummere tunge tekster og forelesningsslidene til korte, forståelige sammendrag
+- oppsummere tunge tekster og forelesningslysbilder til korte, forståelige sammendrag
 - generere tilpassede flervalgstester basert på eget pensum
 - gi positiv og motiverende tilbakemelding for å redusere stress og opplevelsen av å “ligge bakpå”.
 
@@ -32,17 +32,17 @@ Vi valgte en pragmatisk, lettvektsvariant av smidig utvikling:
 Organisering av arbeidet
 
 - Vi jobbet hovedsakelig synkront i Teams, der én person delte skjerm og kodet i VS Code, mens de andre ga innspill, kvalitetssikret og foreslo endringer.
-- Vi roterte på “driver”-rollen i VS Code slik at alle fikk hands-on erfaring med kodebasen.
-- For enkelte oppgaver delte vi oss og jobbet mer sekvensielt: én tok databasedesign, én tok UI, én fokuserte på KI-integrasjon, før vi merge’et alt inn igjen.
+- Vi roterte på “driver”-rollen i VS Code slik at alle fikk prøve seg praktisk.
+- For enkelte oppgaver delte vi oss og jobbet mer sekvensielt: blant annet fordelte vi ulike brainstorming- og researchtemaer mellom oss slik at vi kunne dekke et større omfang. Det samme gjorde vi under fase 4 der vi fordelte epics mellom oss.
   
 ### 2.3 Teknologi og verktøy
 - Frontend: Next.js, React, Tailwind CSS, shadcn/ui
 - Backend: Vercel Functions (for AI integration)
 - Database: Supabase (PostgreSQL)
-- KI-verktøy: Gemini CLI
-- Andre verktøy: Git, VS Code
+- KI-verktøy: Gemini CLI og ChatGPT
+- Andre verktøy: BMAD, Github og VSCode
 
-### 2.4 Utviklingsfaser
+### 2.4 Utviklingsfaser (Må fikses!)
 [Beskriv de ulike fasene i utviklingen]
 
 **Fase 1: Planlegging**
@@ -122,32 +122,26 @@ Testing og iterasjon
 - KI sin rolle: KI hjalp oss med å foreslå metoder for tekstsegmentering og ga veiledning i hvordan man best kunne sy sammen genererte svar fra flere KI-kall. I tillegg bidro KI med å generere testdata for å validere segmenteringslogikken. Denne utfordringen understreket viktigheten av god prompt engineering og iterativ testing for å tilpasse seg KI-modellens begrensninger.
 - **Påminnelse:** Husk å legge til mer spesifikke detaljer om løsningen og KI's rolle her senere.
 
-**Utfordring 2: Supabase Auth + RLS**
-- Problem: Implementering av brukerautentisering med Supabase Auth og sikring av data med Row Level Security (RLS) var mer komplekst enn antatt. Det var utfordrende å konfigurere RLS-policyer korrekt for å sikre at brukere kun fikk tilgang til egne data, samtidig som applikasjonen måtte kunne utføre visse operasjoner på tvers av brukerdata (f.eks. for admin-funksjoner eller deling). Feilkonfigurering kunne føre til enten sikkerhetshull eller funksjonalitetsproblemer.
-- Løsning: Vi løste utfordringene ved å nøye studere Supabase sin dokumentasjon for RLS og autentisering i Next.js-miljøer. Vi implementerte policyer som sikret at hver bruker kun hadde tilgang til data tilknyttet sin egen `user_id`. For operasjoner som krevde høyere privilegier (f.eks. initialisering av brukerprofiler ved registrering), utnyttet vi Next.js' API-ruter med `service_role` nøkkelen for å omgå RLS midlertidig og sikkert. Dette sikret en balanse mellom sikkerhet og funksjonalitet. Grundig testing av hver enkelt RLS-policy ble utført for å validere at ingen uønsket tilgang var mulig, og at systemet fungerte som forventet for autoriserte brukere.
+**Utfordring 2: Model overload og oppbrukte kvoter**
+- Problem: Bruken av KI var helt sentral i dette prosjektet og mye av fremdriften var derfor avhengig av at Gemini var tilgjengelig når vi trengte den og ikke stoppet opp under arbeidet. Dessverre opplevde vi svært ofte at vi fikk feilmeldinger som "The model is overloaded. Please try again later" og "You have exceeded your quota for today. Please try again later". Dette gjorde at arbeidet stoppet opp, ofte midt i viktige prosesser, noe som hindret effektiv fremdrift. Dette ble et økende problem jo nærmere vi kom innleveringsfristen og tiden begynte å renne ut, samtidig som de aller viktigste og mest tidkrevense oppgavene gjensto. 
+- Løsning: Det var flere måter å løse disse problemene på. Ved "Model overload"-problemer hadde vi to alternativer: vente et par timer og prøve igjen senere på at annet tidspunkt, eller å forsøke å "spamme" Gemini med kommandoer til den gikk gjennom. Ingen av delene hadde særlig gode resultater. For å komme seg rundt dagskvote-problemet var løsningen å opprette en hel haug med Gemini API-nøkler, og bytte API-nøkkel for hver gang kvoten ble fylt opp. Dette fungerte i praksis men gjorde også at man måtte skrive kommandoer på nytt og kunne bli avbrutt midt i en viktig prosess, og mye tid gikk med på å skrive gode promt som myknet overgangen etter å ha byttet API-nøkkel.
 
-- KI sin rolle: KI var uvurderlig i denne prosessen. Den hjalp oss med å forstå komplekse RLS-konsepter ved å forklare SQL-syntaks og logikken bak ulike policyer. Vi brukte KI til å generere eksempler på RLS-policyer basert på våre databasetabeller og til å feilsøke policyer som ikke fungerte som forventet. KI bidro også med å foreslå hvordan vi best kunne integrere Supabase Auth i Next.js med server-side components og client-side components, samt hvordan vi skulle håndtere sesjoner og brukerdata på en sikker måte. spesielt med `createClient()` fra `@supabase/ssr` og håndtering av cookies for autentiseringsflyten.
-- **Påminnelse:** Husk å legge til mer spesifikke detaljer om løsningen og KI's rolle her senere.
 
-### 3.2 Samarbeidsutfordringer
+### 3.2 Samarbeidsutfordringer (To av disse er ikke samarbeidsutfordringer)
 Vi opplevde noen klassiske utfordringer knyttet til teamarbeid og kommunikasjon, spesielt med tanke på ulik timeplan og arbeidsflyt:
 
 - **Faser og rekkefølge:** Vi oppdaget ulikheter mellom rekkefølgen på fasene i presentasjonsmateriellet og den faktiske prosjektplanen, noe som krevde koordinering.
 - **KI-ens “eget liv”:** Gemini ga oss til tider utfordringer ved å handle uventet eller kreve justeringer, noe som tok tid å håndtere.
-- **Tid og tilgjengelighet:** Gruppesamarbeidet fungerte ellers bra, men en utfordring var at noen gruppemedlemmer hadde mest tid til å jobbe på dagtid i ukedagene, mens andre, med full jobb og barn, primært kunne bidra kveldstid og i helger. Dette krevde fleksibilitet i planlegging og gjennomføring.
+- **Tid og tilgjengelighet:** Gruppesamarbeidet fungerte ellers bra, men en utfordring var at noen gruppemedlemmer hadde mest tid til å jobbe på kvelden etter jobb, mens andre, med barn, primært kunne bidra i helger. Dette krevde fleksibilitet i planlegging og gjennomføring.
 
 I tillegg til de rent tekniske problemene, støtte vi på utfordringer knyttet til samspillet mellom verktøy, KI og team-arbeidsflyt:
+
+(her er det noe duplikat)
 
 - **Uforutsette verktøykonflikter:** Å kjøre en CLI-agent (Gemini) inne i en terminal, som igjen kjører i VS Code på Windows, skapte uventede problemer. Spesielt i sluttfasen opplevde vi at Ctrl + F-snarveien for å fokusere terminalen i Gemini, ofte ble fanget opp av VS Codes egen søkefunksjon. Dette førte til forvirring og små, men hyppige, avbrudd i arbeidsflyten.
 
 - **Uforutsigbarhet med KI-agenten:** Selv om Gemini var en kraftig medhjelper, hadde den tidvis "sitt eget liv". Den kunne for eksempel foreslå eller forsøke å kjøre kommandoer (som git commit) før vi i teamet var enige, eller misforstå en instruksjon som krevde at vi måtte stoppe opp, korrigere og veilede den på nytt. Dette introduserte et nytt lag med "AI-management" som vi måtte lære oss å håndtere.
 
-- **Git-arbeidsflyt og merge-konflikter:** Som i mange team-prosjekter, var versjonskontroll med Git en utfordring. Selv med en i hovedsak synkron arbeidsmetode, oppsto det tidvis forvirring rundt hvilken branch som var den korrekte å jobbe på, og vi støtte på mindre merge-konflikter. Dette krevde ekstra kommunikasjon for å sikre at alles endringer ble riktig integrert og at vi i
-
-I tillegg til de rent tekniske problemene, støtte vi på utfordringer knyttet til samspillet mellom verktøy, KI og team-arbeidsflyt:
-
-- **Uforutsette verktøykonflikter:** Å kjøre en CLI-agent (Gemini) inne i en terminal, som igjen kjører i VS Code på Windows, skapte uventede problemer. Spesielt i sluttfasen opplevde vi at Ctrl + F-snarveien for å fokusere terminalen i Gemini, ofte ble fanget opp av VS Codes egen søkefunksjon. Dette førte til forvirring og små, men hyppige, avbrudd i arbeidsflyten.
-- **Uforutsigbarhet med KI-agenten:** Selv om Gemini var en kraftig medhjelper, hadde den tidvis "sitt eget liv". Den kunne for eksempel foreslå eller forsøke å kjøre kommandoer (som git commit) før vi i teamet var enige, eller misforstå en instruksjon som krevde at vi måtte stoppe opp, korrigere og veilede den på nytt. Dette introduserte et nytt lag med "AI-management" som vi måtte lære oss å håndtere.
 - **Git-arbeidsflyt og merge-konflikter:** Som i mange team-prosjekter, var versjonskontroll med Git en utfordring. Selv med en i hovedsak synkron arbeidsmetode, oppsto det tidvis forvirring rundt hvilken branch som var den korrekte å jobbe på, og vi støtte på mindre merge-konflikter. Dette krevde ekstra kommunikasjon for å sikre at alles endringer ble riktig integrert og at vi i
 
 ### 3.3 KI-spesifikke utfordringer
@@ -221,14 +215,14 @@ En annen ulempe er tidskostnaden ved 'AI-management'. Selv om KI sparer tid på 
 Uten KI:
 
 - Planleggingen ville vært langt tyngre og tatt betydelig lenger tid.
-- Vi hadde brukt mer tid på å lese oss opp på alt av databaser og hvilkne som passer.
+- Vi hadde brukt mer tid på å lære oss applikasjonsutvikling, undersøke og vurdere ulike teknologialternativer, og feilsøke underveis i utviklingen.
 
 Med KI:
 
 - Vi reduserte tiden på grunnarbeid, men måtte investere tid i validering og kvalitetssikring.
 - Prosjektet ble mer ambisiøst enn vi realistisk hadde turt uten KI (flere features innenfor samme tidsramme).
 
-Konklusjonen er at KI gjorde prosjektet mulig på dette ambisjonsnivået på en gøyal måte. Vi har lært mye nytt sammen med KI inni VSCode. Og ting vi ikke hadde peiling på så spurte vi bare KI.
+Konklusjonen er at KI gjorde prosjektet mulig på dette ambisjonsnivået på en gøyal måte. Vi har lært mye nytt med KI og kunne spørre KI om hjelp dersom det var noe vi ikke forstod eller trengte hjelp med.
 
 Arbeidsflyten ble også annerledes. Uten KI ville prosessen trolig vært mer lineær (planlegge, så bygge). Med KI ble arbeidsflyten mer syklisk og eksperimentell, hvor vi umiddelbart kunne teste en idé med en prompt og få en prototype. Dette førte til en mer dynamisk, men også potensielt mer kaotisk, utviklingsprosess.
 
@@ -283,9 +277,7 @@ Vi mener balansen bør være:
 Vi må også reflektere etisk over produktet vårt: Oppfordrer 'AI Study Buddy' til dypere, kritisk forståelse av pensum, eller tilrettelegger den for en 'skumlese-og-quiz'-mentalitet? En etisk fallgruve er å skape et verktøy som i praksis gjør studenter dårligere rustet for langsiktig læring, selv om det hjelper dem å bestå en prøve på kort sikt.
 
 ### 5.4 Arbeidsmarkedet
-Vi forventer at KI-verktøy blir standard i utviklerverktøykassen.
-
-Roller som kun handler om ren “mekking av boilerplate-kode” vil bli mindre viktige.
+Vi forventer at KI-verktøy blir standard i utviklerverktøykasse og at roller som kun handler om ren skriving av kode vil bli mindre fremtredende.
 
 Roller som kombinerer:
 
@@ -305,6 +297,8 @@ Dette påvirker også hvordan vi bør rigge vår egen karriere – mer fokus på
 ### 5.5 Datasikkerhet og personvern
 I prosjektet vårt har vi fokusert på grunnleggende sikkerhetstiltak som autentisering (Supabase Auth) og autorisasjon (RLS) for å sikre at brukere kun får tilgang til egne data. Vi håndterer i utgangspunktet ikke sensitive personopplysninger utover det som kreves for innlogging.
 
+Grunnet omfanget av oppgaven samt at applikasjonen ikke er tilgjengelig fra internett har ikke sikkerhet vært det største fokuset under uviklingen. Dersom vi hadde hatt mer tid og dette var et reelt prosjekt, kunne det for eksempel vært aktuelt å gjøre noen enkle penetrasjonstester for å sikre at ingen åpenlyse sikkerhetshull er tilstede som kan gi uautoriserte personer tilgang til brukerkontoer eller data.
+
 Vår antakelse om at opplastet pensum er 'ikke-sensitivt' er imidlertid en betydelig forenkling vi gjorde for prosjektet. I en reell verden er dette en stor etisk og juridisk utfordring. Hva om en bruker laster opp en forelesers upubliserte artikkel, en bedriftsintern manual, eller en eksamen under utarbeidelse? Ved å sende dette til en tredjeparts KI-tjeneste, mister brukeren kontroll over sitt eget data. En lansert versjon av appen vår ville krevd en vanntett personvernerklæring, eksplisitt samtykke fra brukeren, og en grundig vurdering av KI-leverandørens databehandlingsavtaler for å sikre at brukerdata ikke misbrukes.
 
 ---
@@ -315,11 +309,11 @@ Vår antakelse om at opplastet pensum er 'ikke-sensitivt' er imidlertid en betyd
 KI-kode kan være effektiv i øyeblikket, men:
 
 - navngiving, struktur og mønstre er ikke alltid konsistente
-- det er lett å ende opp med “spaghetti” hvis man bare lapper på nye snippets fra KI.
+- det er lett å ende opp med “spaghetti” hvis man bare lapper på nye snippets fra KI. (Hva betyr dette???)
 
 Vedlikehold blir krevende hvis man ikke rydder fortløpende. Vi har derfor:
 
-- ryddet i komponenter
+- ryddet i komponenter (har vi?)
 
 ### 6.2 Standarder og beste praksis
 KI følger ikke alltid beste praksis:
@@ -344,7 +338,7 @@ Viktige ferdigheter fremover:
 - evne til å evaluere og forbedre KI-forslag
 - forståelse av dataflyt, sikkerhet og personvern.
 
-Vår anbefaling er at utviklere lærer seg å designe prosesser der KI inngår, ikke bare å bruke KI som et fancy autocompletion-verktøy. Og ikke minst det vi lærte i første forelesning "INGEN TING ER SIKKERT"  og at det som var i går er nok gammelt i dag.
+Vår anbefaling er at utviklere lærer seg å designe prosesser der KI inngår, ikke bare å bruke KI som et fancy autocompletion-verktøy. Og ikke minst det vi lærte i første forelesning "INGEN TING ER SIKKERT" og at det som var i går er nok gammelt i dag.
 
 ---
 
@@ -358,7 +352,7 @@ Vår anbefaling er at utviklere lærer seg å designe prosesser der KI inngår, 
 5. Gode prompter i samarbeid med KI, samt mestring av prompter og kontekst som støtter prompten (for LLM), er essensielt.
 
 ### 7.2 Hva ville dere gjort annerledes?
-- **Mer strukturert bruk av KI i utvikling:** Selv om vi brukte KI mye, var det ofte ad-hoc. En mer systematisk tilnærming til når og hvordan KI skulle brukes i kodefasen (f.eks. for TDD, refaktorering eller komplekse algoritmer) kunne vært mer effektiv.
+- **Mer strukturert bruk av KI i utvikling:** Selv om vi brukte KI mye, var det ofte ad-hoc. En mer systematisk tilnærming til når og hvordan KI skulle brukes i kodefasen (f.eks. for TDD, refaktorering eller komplekse algoritmer) kunne vært mer effektiv. (vi brukte jo KI til alt?)
 - **Tidligere fokus på ytelse og skalering:** Vi fokuserte primært på funksjonalitet for MVP. Å vurdere ytelse og skalering av KI-kall og databasen tidligere i prosessen kunne spart tid nedstrøms.
 - **Bedre versjonskontrollpraksis for prompts:** Vi samlet mange prompts, men en mer organisert måte å versjonskontrollere og evaluere prompts på (spesielt de som ga best resultater for quiz og sammendrag) kunne vært gunstig.
 - **Påminnelse:** Husk å legge til deres egne spesifikke refleksjoner her, gjerne med eksempler fra prosjektet.
@@ -367,6 +361,7 @@ Vår anbefaling er at utviklere lærer seg å designe prosesser der KI inngår, 
 **Effektiv bruk av KI**
 
 - Bruk KI tidlig til idémyldring, research og førsteutkast – ikke til siste finish.
+- Forstå hva du vil og hvor du vil før du tar i bruk KI, slik at du er i stand til å plukke opp feil raskt og styre den i riktig retning dersom den graver seg ned i en grop.
 - Vær konkret og presis i promptene; spesifiser rammeverk, versjoner og ønsket outputformat.
 - Still KI-en 'hvorfor'-spørsmål. Bruk den aktivt til å forklare komplekse konsepter, kodeblokker eller feilmeldinger for å bygge dypere forståelse, ikke bare for å få en løsning.
 
@@ -388,13 +383,13 @@ Vår anbefaling er at utviklere lærer seg å designe prosesser der KI inngår, 
 
 **Sofie Branstad:**
 - ***Utgangspunkt:*** Som student på 2. året av bachelor i IT og digitalisering hadde jeg allerede hatt emner som innføring i programmering, videregående programmering, databaser, og webutvikling. Jeg startet derfor med en grunnleggende forståelse av mange av elementene i en applikasjon, men ingen dyptgående kunnskap eller praktiske ferdigheter innen disse områdene. Jeg hadde ingen god forståelse av oppbyggingen av en applikasjon eller samspillet mellom ulike elementer i den, så jeg ønsket å lære mer om dette. Jeg var allerede vant med å bruke KI i skole-og jobbsammenheng, men hovedsakelig til idémyldring og hjelp til å lage eksempler og illustrasjoner. 
-- ***Læring og utvikling:*** Jeg har lært å bruke Github til å samarbeide med et team om å utvikle noe sammen. Jeg har også lært en del om hvordan å samhandle med eller styre KI i utviklingsarbeid. Blant annet, hvordan best presentere feilmeldinger eller bugs til KI for å raskt få den til å forstå rotårsaken og gjøre riktige justeringer, og hvordan bygge opp et prompt for å sørge for at KI-en blir styrt i riktig retning. Jeg er usikker på om jeg har lært noe mer om programmering, da jeg ikke har jobber "tett på" koden og, som en konsekvens, ikke egentlig vet hva som står i koden vår fordi den er KI-generert og -redigert. På den annen side har jeg lært en del om byggesteinene til en applikasjon som denne, og hvordan man bruker tjenester som blant annet Supabase for å gjøre det mulig. I den forstand har jeg fått oppfylt noe av det jeg ønsket å lære i utgangspunktet. Jeg har en langt bedre forståelse av hva begrepet "applikasjon" egentlig innebærer på et teknisk nivå og hvor mange ulike elementer som inngår i dette. 
+- ***Læring og utvikling:*** Jeg har lært å bruke Github til å samarbeide med et team om å utvikle noe sammen. Jeg har også lært en del om hvordan å samhandle med eller styre KI i utviklingsarbeid. Blant annet, hvordan best presentere feilmeldinger eller bugs til KI for å raskt få den til å forstå rotårsaken og gjøre riktige justeringer, og hvordan bygge opp et prompt for å sørge for at KI-en blir styrt i riktig retning. Jeg er usikker på om jeg har lært noe mer om programmering, da jeg ikke har skrevet koden selv og, som en konsekvens, ikke egentlig vet hva som står i den vår fordi den er KI-generert og -redigert. På den annen side har jeg lært en del om byggesteinene og arkitekturen til en applikasjon som den vi har utviklet, og hvordan man bruker tjenester som blant annet Supabase for å gjøre det mulig. I den forstand har jeg fått oppfylt noe av det jeg ønsket å lære i utgangspunktet. Jeg har en langt bedre forståelse av hva begrepet "applikasjon" egentlig innebærer på et teknisk nivå og hvor mange ulike elementer som inngår i dette. 
 ---
 
 ## 8. Vedlegg (valgfritt)
 
 - Skjermbilder av applikasjonen
-- Lenke til GitHub repository
+- Lenke til GitHub repository: https://github.com/IBE160/SG-Awesome-like-KI
 - Annen relevant dokumentasjon
 
 ---
