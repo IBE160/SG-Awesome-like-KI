@@ -75,8 +75,16 @@ gemini-1.5-flash
 - MODIFIED: src/app/layout.tsx
 
 ## Change Log
-
+- Added initial user registration form layout.
+- Implemented Supabase signUp functionality.
+- Added validation for email and password fields.
+- Integrated success/error messaging after registration.
+- Updated UI text based on feedback from manual testing.
+- Adjusted registration flow to reflect email confirmation requirement.
 - Added @testing-library/react to devDependencies.
+
+## References
+- architecture.md
 
 ## Senior Developer Review (AI)
 
