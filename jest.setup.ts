@@ -1,19 +1,28 @@
 // jest.setup.ts
 // Learn more: https://jestjs.io/docs/setup-files
 
-import '@testing-library/jest-dom'
-import fetch, { Headers, Request, Response } from 'node-fetch'
+import '@testing-library/jest-dom';
 
-// Polyfill fetch for Jest test environment
-if (!global.fetch) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  global.fetch = fetch as any
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  global.Headers = Headers as any
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  global.Request = Request as any
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  global.Response = Response as any
+// Polyfill TextEncoder for Jest environment
+if (typeof TextEncoder === 'undefined') {
+  global.TextEncoder = require('util').TextEncoder;
+}
+
+// Polyfill fetch and related globals for Jest test environment if they don't exist
+// This avoids direct import of 'node-fetch' which can cause ES module issues
+if (typeof global.fetch === 'undefined') {
+  global.fetch = jest.fn(() =>
+    Promise.resolve({
+      json: () => Promise.resolve({}),
+      text: () => Promise.resolve(''),
+      ok: true,
+      status: 200,
+      headers: new Headers(),
+    } as Response)
+  );
+  global.Headers = jest.fn(() => ({}));
+  global.Request = jest.fn();
+  global.Response = jest.fn();
 }
 
 jest.mock('next/server', () => ({

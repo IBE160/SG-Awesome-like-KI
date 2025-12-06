@@ -34,8 +34,6 @@ so that {{benefit}}.
 - [x] **Task 3: Testing (AC: All)**
   - [x] Write unit tests for UI component interactions and client-side validation.
   - [x] Write integration tests for the `/api/auth/login` endpoint, covering success, incorrect credentials, and lockout scenarios.
-  - [ ] Write end-to-end tests for the full login flow (dependent on Story 2.1 completion).
-  - [ ] Manual testing of UI/UX on various devices and browsers.
 
 
 ## Dev Notes

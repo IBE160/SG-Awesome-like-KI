@@ -97,12 +97,16 @@ so that {{benefit}}.
 
 ### Agent Model Used
 
-{{agent_model_name_version}}
+Gemini 1.5 Pro
 
 ### Debug Log References
 
+- N/A
+
 ### Completion Notes List
 
+- Story draft completed.
+- Populated Dev Agent Record.
 
 ## Requirements Context Summary
 
