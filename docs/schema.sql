@@ -42,8 +42,12 @@ CREATE TABLE public.generated_content (
     type text NOT NULL,
     content jsonb NOT NULL,
     study_material_id uuid NOT NULL,
+    class_id uuid NULL,
+    class_section_id uuid NULL,
     CONSTRAINT generated_content_pkey PRIMARY KEY (id),
-    CONSTRAINT generated_content_study_material_id_fkey FOREIGN KEY (study_material_id) REFERENCES public.study_materials (id) ON DELETE CASCADE ON UPDATE CASCADE
+    CONSTRAINT generated_content_study_material_id_fkey FOREIGN KEY (study_material_id) REFERENCES public.study_materials (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_generated_content_class_id FOREIGN KEY (class_id) REFERENCES public.classes(id) ON DELETE SET NULL,
+    CONSTRAINT fk_generated_content_class_section_id FOREIGN KEY (class_section_id) REFERENCES public.class_sections(id) ON DELETE SET NULL
 );
 
 -- Drop redundant junction tables

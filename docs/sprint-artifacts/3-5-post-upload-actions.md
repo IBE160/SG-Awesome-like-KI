@@ -13,13 +13,13 @@ so that I can quickly get value from the tool without having to organize my cont
 
 ## Tasks / Subtasks
 
-- [ ] Implement UI for post-upload options (AC: 1)
-  - [ ] Integrate this UI into the document upload flow (`src/app/upload/page.tsx` or similar).
-  - [ ] Ensure options are clearly presented and actionable.
-- [ ] Implement backend logic for generated content from unorganized documents (AC: 2)
-  - [ ] Modify `generated_content` table to allow nullable `class_id` and `class_section_id`.
-  - [ ] Implement a mechanism to store/retrieve generated content not yet assigned to a class/section (e.g., an 'Unorganized' logical area in the UI).
-- [ ] Update frontend to display 'Unorganized' content and provide assignment options (AC: 2)
+- [x] Implement UI for post-upload options (AC: 1)
+  - [x] Integrate this UI into the document upload flow (`src/app/upload/page.tsx` or similar).
+  - [x] Ensure options are clearly presented and actionable.
+- [x] Implement backend logic for generated content from unorganized documents (AC: 2)
+  - [x] Modify `generated_content` table to allow nullable `class_id` and `class_section_id`.
+  - [x] Implement a mechanism to store/retrieve generated content not yet assigned to a class/section (e.g., an 'Unorganized' logical area in the UI).
+- [x] Update frontend to display 'Unorganized' content and provide assignment options (AC: 2)
 
 ## Dev Notes
 
@@ -40,9 +40,9 @@ so that I can quickly get value from the tool without having to organize my cont
 
 ### Testing standards summary
 
-*   **Unit Tests:** Backend logic for handling `generated_content` with nullable `class_id`/`class_section_id`.
-*   **Integration Tests:** Post-upload UI interactions with generation API endpoints.
-*   **E2E Tests:** Simulate user journey for document upload, verifying post-upload options, and checking that unorganized generated content appears in the designated 'Unorganized' area and can be assigned.
+*   [x] Unit Tests: Backend logic for handling `generated_content` with nullable `class_id`/`class_section_id`.
+*   [x] Integration Tests: Post-upload UI interactions with generation API endpoints.
+*   [x] E2E Tests: Simulate user journey for document upload, verifying post-upload options, and checking that unorganized generated content appears in the designated 'Unorganized' area and can be assigned.
 
 ### Project Structure Notes
 

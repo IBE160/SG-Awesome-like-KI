@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { DragAndDropUploadArea } from '@/components/DragAndDropUploadArea';
 import { useRouter } from 'next/navigation';
+import { PostUploadActionsUI } from '@/components/PostUploadActionsUI'; // Import the new component
 
 const MAX_RETRIES = 3;
 
@@ -13,6 +14,7 @@ export default function UploadPage() {
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [uploadSuccess, setUploadSuccess] = useState<string | null>(null);
+  const [uploadedDocumentId, setUploadedDocumentId] = useState<string | null>(null); // New state for uploaded document ID
   const [retryCount, setRetryCount] = useState<number>(0);
 
   // States for class and section assignment
@@ -63,11 +65,27 @@ export default function UploadPage() {
     }
   }, [selectedClassId]);
 
+  // Handle generation actions
+  const handleGenerateSummary = () => {
+    if (uploadedDocumentId) {
+      console.log(`Generating summary for document: ${uploadedDocumentId}`);
+      // TODO: Implement actual summary generation logic (Epic 4)
+    }
+  };
+
+  const handleGenerateQuiz = () => {
+    if (uploadedDocumentId) {
+      console.log(`Generating quiz for document: ${uploadedDocumentId}`);
+      // TODO: Implement actual quiz generation logic (Epic 4)
+    }
+  };
+
   const handleFileUpload = (file: File) => {
     setSelectedFile(file);
     setValidationError(null);
     setUploadError(null);
     setUploadSuccess(null);
+    setUploadedDocumentId(null); // Reset when a new file is selected
     setRetryCount(0);
     console.log('Selected file:', file.name);
   };
@@ -120,6 +138,7 @@ export default function UploadPage() {
         }
       } else {
         setUploadSuccess('File uploaded and processed successfully!');
+        setUploadedDocumentId(data.uploadedFile.id); // Store the uploaded document ID
         setSelectedFile(null);
         setValidationError(null);
         setRetryCount(0);
@@ -236,6 +255,101 @@ export default function UploadPage() {
           {isUploading ? 'Uploading...' : 'Upload Document'}
         </button>
       </div>
+
+      {uploadedDocumentId ? (
+        <PostUploadActionsUI
+          documentId={uploadedDocumentId}
+          onGenerateSummary={handleGenerateSummary}
+          onGenerateQuiz={handleGenerateQuiz}
+        />
+      ) : (
+        <>
+          {validationError && (
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+              <span className="block sm:inline">{validationError}</span>
+            </div>
+          )}
+
+          {uploadError && (
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+              <span className="block sm:inline">{uploadError}</span>
+              {retryCount === MAX_RETRIES && (
+                  <button
+                      onClick={handleRetryUpload}
+                      className="ml-4 px-3 py-1 bg-red-600 text-white font-semibold rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                  >
+                      Retry Now
+                  </button>
+              )}
+            </div>
+          )}
+
+          {uploadSuccess && (
+            <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+              <span className="block sm:inline">{uploadSuccess}</span>
+            </div>
+          )}
+
+          <DragAndDropUploadArea
+            onFileUpload={handleFileUpload}
+            onValidationError={handleValidationError}
+          />
+
+          {selectedFile && (
+            <div className="mt-4 p-4 border rounded-lg bg-blue-50 text-blue-800">
+              <p className="font-semibold">File ready for upload:</p>
+              <p>Name: {selectedFile.name}</p>
+              <p>Type: {selectedFile.type}</p>
+              <p>Size: {(selectedFile.size / (1024 * 1024)).toFixed(2)} MB</p>
+            </div>
+          )}
+
+          {/* Class Assignment */}
+          <div className="mt-4 mb-4">
+            <label htmlFor="class-select" className="block text-gray-700 text-sm font-bold mb-2">Assign to Class (Optional):</label>
+            <select
+              id="class-select"
+              className="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              value={selectedClassId || ''}
+              onChange={(e) => {
+                setSelectedClassId(e.target.value || null);
+                setSelectedSectionId(null); // Reset section when class changes
+              }}
+            >
+              <option value="">No Class</option>
+              {classes.map((cls) => (
+                <option key={cls.id} value={cls.id}>{cls.name}</option>
+              ))}
+            </select>
+          </div>
+
+          {selectedClassId && (
+            <div className="mb-4">
+              <label htmlFor="section-select" className="block text-gray-700 text-sm font-bold mb-2">Assign to Section (Optional):</label>
+              <select
+                id="section-select"
+                className="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                value={selectedSectionId || ''}
+                onChange={(e) => setSelectedSectionId(e.target.value || null)}
+                disabled={sections.length === 0}
+              >
+                <option value="">No Section</option>
+                {sections.map((sec) => (
+                  <option key={sec.id} value={sec.id}>{sec.name}</option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          <button
+            className="mt-6 w-full px-4 py-2 bg-blue-600 text-white font-semibold rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:bg-blue-300"
+            disabled={!selectedFile || isUploading}
+            onClick={handleUploadDocument}
+          >
+            {isUploading ? 'Uploading...' : 'Upload Document'}
+          </button>
+        </>
+      )}
     </div>
   );
 }

@@ -59,11 +59,12 @@ export const DragAndDropUploadArea: React.FC<DragAndDropUploadAreaProps> = ({
   return (
     <div
       {...getRootProps()}
+      data-testid="dropzone-area"
       className={`flex flex-col items-center justify-center p-6 border-2 border-dashed rounded-lg text-center cursor-pointer
         ${isDragActive ? 'border-blue-500 bg-blue-50' : 'border-gray-300 bg-gray-50'}
       `}
     >
-      <input {...getInputProps()} />
+      <input {...getInputProps()} data-testid="dropzone-input" />
       {isDragActive ? (
         <p className="text-blue-600">Drop the files here ...</p>
       ) : (
