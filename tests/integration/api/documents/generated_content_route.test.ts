@@ -1,6 +1,6 @@
 // tests/integration/api/documents/generated_content_route.test.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { GET } from '@/src/app/api/documents/[id]/generated-content/route';
+import { GET } from '@/app/api/documents/[id]/generated-content/route';
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { v4 as uuidv4 } from 'uuid';
@@ -102,7 +102,7 @@ describe('GET /api/documents/[id]/generated-content', () => {
     }));
 
     const req = {} as NextRequest;
-    const response = await GET(req, { params: { id: MOCK_STUDY_MATERIAL_ID } });
+    const response = await GET(req, { params: Promise.resolve({ id: MOCK_STUDY_MATERIAL_ID }) });
     const json = await response.json();
 
     expect(response.status).toBe(401);
@@ -131,7 +131,7 @@ describe('GET /api/documents/[id]/generated-content', () => {
     }));
 
     const req = {} as NextRequest;
-    const response = await GET(req, { params: { id: MOCK_STUDY_MATERIAL_ID } });
+    const response = await GET(req, { params: Promise.resolve({ id: MOCK_STUDY_MATERIAL_ID }) });
     const json = await response.json();
 
     expect(response.status).toBe(404);
@@ -140,7 +140,7 @@ describe('GET /api/documents/[id]/generated-content', () => {
 
   it('should return generated content for a study material', async () => {
     const req = {} as NextRequest;
-    const response = await GET(req, { params: { id: MOCK_STUDY_MATERIAL_ID } });
+    const response = await GET(req, { params: Promise.resolve({ id: MOCK_STUDY_MATERIAL_ID }) });
     const json = await response.json();
 
     expect(response.status).toBe(200);
@@ -177,7 +177,7 @@ describe('GET /api/documents/[id]/generated-content', () => {
     }));
 
     const req = {} as NextRequest;
-    const response = await GET(req, { params: { id: MOCK_STUDY_MATERIAL_ID } });
+    const response = await GET(req, { params: Promise.resolve({ id: MOCK_STUDY_MATERIAL_ID }) });
     const json = await response.json();
 
     expect(response.status).toBe(200);

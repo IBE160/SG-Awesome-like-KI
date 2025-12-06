@@ -19,6 +19,7 @@ export async function GET(req: NextRequest) {
       {
         // @ts-ignore
         cookies: cookies,
+
       }
     );
 

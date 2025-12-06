@@ -1,6 +1,6 @@
 import { POST } from '../../src/app/api/auth/register/route';
 import { createClient } from '@supabase/supabase-js';
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server'; // Added NextRequest
 
 // Mock the Supabase client
 jest.mock('@supabase/supabase-js', () => ({
@@ -55,6 +55,24 @@ describe('Register API Endpoint', () => {
     });
   });
 
+  const createMockRequest = (formData: FormData): NextRequest => {
+  return {
+    json: async () => formData,
+    url: 'http://localhost/api/auth/register', // Corrected URL
+    // Add required NextRequest properties
+    cookies: {
+      get: jest.fn(),
+      set: jest.fn(),
+      delete: jest.fn(),
+      has: jest.fn(),
+      getAll: jest.fn(),
+    } as any, // Cast to any to avoid deep type issues with cookies
+    nextUrl: new URL('http://localhost/api/auth/register'),
+    page: {}, // Placeholder
+    ua: 'mock-ua', // User Agent
+  } as unknown as NextRequest;
+};
+
   it('should register a user successfully', async () => {
     mockSignUp.mockResolvedValueOnce({
       data: { user: { id: 'some-uuid' } },
@@ -63,7 +81,7 @@ describe('Register API Endpoint', () => {
 
     const mockRequest = {
       json: async () => ({ email: 'test@example.com', password: 'Password1!' }),
-    } as Request;
+    } as NextRequest;
 
     const response = await POST(mockRequest);
 
@@ -76,13 +94,13 @@ describe('Register API Endpoint', () => {
       { message: 'Registration successful! Please check your email for a confirmation link.', user: 'some-uuid' },
       { status: 200 }
     );
-    expect(response.init.status).toBe(200);
+    expect(response.status).toBe(200);
   });
 
   it('should return 400 if email or password is missing', async () => {
     const mockRequest = {
       json: async () => ({ email: 'test@example.com' }), // Missing password
-    } as Request;
+    } as NextRequest;
 
     const response = await POST(mockRequest);
 
@@ -90,7 +108,7 @@ describe('Register API Endpoint', () => {
       { error: 'Email and password are required.' },
       { status: 400 }
     );
-    expect(response.init.status).toBe(400);
+    expect(response.status).toBe(400);
   });
 
   it('should return 409 if email is already in use', async () => {
@@ -101,7 +119,7 @@ describe('Register API Endpoint', () => {
 
     const mockRequest = {
       json: async () => ({ email: 'existing@example.com', password: 'Password1!' }),
-    } as Request;
+    } as NextRequest;
 
     const response = await POST(mockRequest);
 
@@ -110,7 +128,7 @@ describe('Register API Endpoint', () => {
       { error: 'Email already in use. Please try to log in or reset your password.' },
       { status: 409 }
     );
-    expect(response.init.status).toBe(409);
+    expect(response.status).toBe(409);
   });
 
   it('should return 500 for other Supabase errors', async () => {
@@ -121,7 +139,7 @@ describe('Register API Endpoint', () => {
 
     const mockRequest = {
       json: async () => ({ email: 'test@example.com', password: 'Password1!' }),
-    } as Request;
+    } as NextRequest;
 
     const response = await POST(mockRequest);
 
@@ -130,7 +148,7 @@ describe('Register API Endpoint', () => {
       { error: 'Network error' },
       { status: 500 }
     );
-    expect(response.init.status).toBe(500);
+    expect(response.status).toBe(500);
   });
 
   it('should return 500 if Supabase environment variables are not set', async () => {
@@ -142,7 +160,7 @@ describe('Register API Endpoint', () => {
 
     const mockRequest = {
       json: async () => ({ email: 'test@example.com', password: 'Password1!' }),
-    } as Request;
+    } as NextRequest;
 
     const response = await POST(mockRequest);
 
@@ -150,7 +168,7 @@ describe('Register API Endpoint', () => {
       { error: 'Supabase URL or Anon Key is not configured.' },
       { status: 500 }
     );
-    expect(response.init.status).toBe(500);
+    expect(response.status).toBe(500);
 
     // Restore environment variables
     process.env.NEXT_PUBLIC_SUPABASE_URL = originalSupabaseUrl;

@@ -144,7 +144,7 @@ describe('PUT /api/study-materials/[id]/assign', () => {
     }));
 
     const req = { json: jest.fn() } as unknown as NextRequest;
-    const response = await PUT(req, { params: { id: MOCK_STUDY_MATERIAL_ID } });
+    const response = await PUT(req, { params: Promise.resolve({ id: MOCK_STUDY_MATERIAL_ID }) });
     const json = await response.json();
 
     expect(response.status).toBe(401);
@@ -153,7 +153,7 @@ describe('PUT /api/study-materials/[id]/assign', () => {
 
   it('should return 400 if class_id is invalid', async () => {
     const req = { json: jest.fn(() => Promise.resolve({ class_id: 123 })) } as unknown as NextRequest;
-    const response = await PUT(req, { params: { id: MOCK_STUDY_MATERIAL_ID } });
+    const response = await PUT(req, { params: Promise.resolve({ id: MOCK_STUDY_MATERIAL_ID }) });
     const json = await response.json();
 
     expect(response.status).toBe(400);
@@ -162,7 +162,7 @@ describe('PUT /api/study-materials/[id]/assign', () => {
 
   it('should return 400 if class_section_id is invalid', async () => {
     const req = { json: jest.fn(() => Promise.resolve({ class_section_id: 123 })) } as unknown as NextRequest;
-    const response = await PUT(req, { params: { id: MOCK_STUDY_MATERIAL_ID } });
+    const response = await PUT(req, { params: Promise.resolve({ id: MOCK_STUDY_MATERIAL_ID }) });
     const json = await response.json();
 
     expect(response.status).toBe(400);
@@ -171,7 +171,7 @@ describe('PUT /api/study-materials/[id]/assign', () => {
 
   it('should return 400 if section_id is provided without class_id', async () => {
     const req = { json: jest.fn(() => Promise.resolve({ class_section_id: MOCK_SECTION_ID })) } as unknown as NextRequest;
-    const response = await PUT(req, { params: { id: MOCK_STUDY_MATERIAL_ID } });
+    const response = await PUT(req, { params: Promise.resolve({ id: MOCK_STUDY_MATERIAL_ID }) });
     const json = await response.json();
 
     expect(response.status).toBe(400);
@@ -195,7 +195,7 @@ describe('PUT /api/study-materials/[id]/assign', () => {
     }));
 
     const req = { json: jest.fn(() => Promise.resolve({ class_id: MOCK_CLASS_ID })) } as unknown as NextRequest;
-    const response = await PUT(req, { params: { id: MOCK_STUDY_MATERIAL_ID } });
+    const response = await PUT(req, { params: Promise.resolve({ id: MOCK_STUDY_MATERIAL_ID }) });
     const json = await response.json();
 
     expect(response.status).toBe(404);
@@ -234,7 +234,7 @@ describe('PUT /api/study-materials/[id]/assign', () => {
     }));
 
     const req = { json: jest.fn(() => Promise.resolve({ class_id: uuidv4() })) } as unknown as NextRequest;
-    const response = await PUT(req, { params: { id: MOCK_STUDY_MATERIAL_ID } });
+    const response = await PUT(req, { params: Promise.resolve({ id: MOCK_STUDY_MATERIAL_ID }) });
     const json = await response.json();
 
     expect(response.status).toBe(404);
@@ -283,7 +283,7 @@ describe('PUT /api/study-materials/[id]/assign', () => {
     }));
 
     const req = { json: jest.fn(() => Promise.resolve({ class_id: MOCK_CLASS_ID, class_section_id: uuidv4() })) } as unknown as NextRequest;
-    const response = await PUT(req, { params: { id: MOCK_STUDY_MATERIAL_ID } });
+    const response = await PUT(req, { params: Promise.resolve({ id: MOCK_STUDY_MATERIAL_ID }) });
     const json = await response.json();
 
     expect(response.status).toBe(404);
@@ -292,7 +292,7 @@ describe('PUT /api/study-materials/[id]/assign', () => {
 
   it('should successfully assign content to a class and section', async () => {
     const req = { json: jest.fn(() => Promise.resolve({ class_id: MOCK_CLASS_ID, class_section_id: MOCK_SECTION_ID })) } as unknown as NextRequest;
-    const response = await PUT(req, { params: { id: MOCK_STUDY_MATERIAL_ID } });
+    const response = await PUT(req, { params: Promise.resolve({ id: MOCK_STUDY_MATERIAL_ID }) });
     const json = await response.json();
 
     expect(response.status).toBe(200);
@@ -302,7 +302,7 @@ describe('PUT /api/study-materials/[id]/assign', () => {
 
   it('should successfully assign content to a class only', async () => {
     const req = { json: jest.fn(() => Promise.resolve({ class_id: MOCK_CLASS_ID, class_section_id: null })) } as unknown as NextRequest;
-    const response = await PUT(req, { params: { id: MOCK_STUDY_MATERIAL_ID } });
+    const response = await PUT(req, { params: Promise.resolve({ id: MOCK_STUDY_MATERIAL_ID }) });
     const json = await response.json();
 
     expect(response.status).toBe(200);
@@ -312,7 +312,7 @@ describe('PUT /api/study-materials/[id]/assign', () => {
 
   it('should successfully unassign content', async () => {
     const req = { json: jest.fn(() => Promise.resolve({ class_id: null, class_section_id: null })) } as unknown as NextRequest;
-    const response = await PUT(req, { params: { id: MOCK_STUDY_MATERIAL_ID } });
+    const response = await PUT(req, { params: Promise.resolve({ id: MOCK_STUDY_MATERIAL_ID }) });
     const json = await response.json();
 
     expect(response.status).toBe(200);

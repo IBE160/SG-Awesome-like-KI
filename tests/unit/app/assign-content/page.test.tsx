@@ -2,7 +2,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import AssignContentPage from '../../src/app/assign-content/page';
+import AssignContentPage from '@/app/assign-content/page';
 
 // Mock ContentAssignmentUI component
 jest.mock('@/components/ContentAssignmentUI', () => ({

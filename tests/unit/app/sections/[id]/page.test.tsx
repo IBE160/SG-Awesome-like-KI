@@ -2,7 +2,7 @@
 import React from 'react';
 import { render, screen, waitFor, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import SectionDetailsPage from '../../../src/app/sections/[id]/page';
+import SectionDetailsPage from '@/app/sections/[id]/page';
 
 // Mock useParams
 jest.mock('next/navigation', () => ({

@@ -1,6 +1,6 @@
 // tests/integration/api/sections/documents_route.test.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { GET } from '../../../../../src/app/api/sections/[id]/documents/route';
+import { GET } from '@/app/api/sections/[id]/documents/route';
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { v4 as uuidv4 } from 'uuid';
@@ -127,7 +127,7 @@ describe('GET /api/sections/[id]/documents', () => {
     }));
 
     const req = {} as NextRequest;
-    const response = await GET(req, { params: { id: MOCK_SECTION_ID } });
+    const response = await GET(req, { params: Promise.resolve({ id: MOCK_SECTION_ID }) });
     const json = await response.json();
 
     expect(response.status).toBe(401);
@@ -154,7 +154,7 @@ describe('GET /api/sections/[id]/documents', () => {
     }));
 
     const req = {} as NextRequest;
-    const response = await GET(req, { params: { id: uuidv4() } });
+    const response = await GET(req, { params: Promise.resolve({ id: uuidv4() }) });
     const json = await response.json();
 
     expect(response.status).toBe(404);
@@ -163,7 +163,7 @@ describe('GET /api/sections/[id]/documents', () => {
 
   it('should return study materials and generated content for a section', async () => {
     const req = {} as NextRequest;
-    const response = await GET(req, { params: { id: MOCK_SECTION_ID } });
+    const response = await GET(req, { params: Promise.resolve({ id: MOCK_SECTION_ID }) });
     const json = await response.json();
 
     expect(response.status).toBe(200);
@@ -208,7 +208,7 @@ describe('GET /api/sections/[id]/documents', () => {
     }));
 
     const req = {} as NextRequest;
-    const response = await GET(req, { params: { id: MOCK_SECTION_ID } });
+    const response = await GET(req, { params: Promise.resolve({ id: MOCK_SECTION_ID }) });
     const json = await response.json();
 
     expect(response.status).toBe(200);

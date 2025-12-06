@@ -2,7 +2,7 @@
 import React from 'react';
 import { render, screen, waitFor, act, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import UploadPage from '../../src/app/upload/page';
+import UploadPage from '@/app/upload/page';
 
 // Mock useRouter
 jest.mock('next/navigation', () => ({

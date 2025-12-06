@@ -1,8 +1,9 @@
 // tests/integration/api/classes/route.test.ts
 import { GET, POST } from '@/app/api/classes/route';
 import { PUT, DELETE } from '@/app/api/classes/[id]/route';
-import { createRouteHandlerClient } from '@supabase/ssr';
+import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
+import { NextRequest } from 'next/server';
 
 // Mock Supabase and Next.js cookies
 jest.mock('next/headers', () => ({
@@ -10,7 +11,7 @@ jest.mock('next/headers', () => ({
 }));
 
 jest.mock('@supabase/ssr', () => ({
-  createRouteHandlerClient: jest.fn(),
+  createServerClient: jest.fn(),
 }));
 
 describe('/api/classes', () => {
@@ -60,19 +61,29 @@ describe('/api/classes', () => {
       from: jest.fn(() => mockBuilderMethods),
     };
 
-    (createRouteHandlerClient as jest.Mock).mockReturnValue(mockSupabase);
+    (createServerClient as jest.Mock).mockReturnValue(mockSupabase);
     mockCookies = (cookies as jest.Mock).mockReturnValue({});
   });
 
   // Helper to create a mock Request object
-  const createMockRequest = (method: string, url: string, body?: any): Request => {
+  const createMockRequest = (method: string, url: string, body?: any): NextRequest => {
     return {
       json: async () => body,
       // @ts-ignore
       headers: new Headers(),
       method: method,
       url: url,
-    };
+      cookies: {
+        get: jest.fn(),
+        set: jest.fn(),
+        delete: jest.fn(),
+        has: jest.fn(),
+        getAll: jest.fn(),
+      } as any, // Cast to any to avoid deep type issues with cookies
+      nextUrl: new URL(url),
+      page: {}, // Placeholder
+      ua: 'mock-ua', // User Agent
+    } as unknown as NextRequest;
   };
 
   // Test GET /api/classes
@@ -181,19 +192,29 @@ describe('/api/classes/[id]', () => {
           from: jest.fn(() => mockBuilderMethods),
         };
     
-        (createRouteHandlerClient as jest.Mock).mockReturnValue(mockSupabase);
+        (createServerClient as jest.Mock).mockReturnValue(mockSupabase);
         mockCookies = (cookies as jest.Mock).mockReturnValue({});
       });
 
     // Helper to create a mock Request object
-    const createMockRequest = (method: string, url: string, body?: any): Request => {
+    const createMockRequest = (method: string, url: string, body?: any): NextRequest => {
         return {
           json: async () => body,
           // @ts-ignore
           headers: new Headers(),
           method: method,
           url: url,
-        };
+          cookies: {
+            get: jest.fn(),
+            set: jest.fn(),
+            delete: jest.fn(),
+            has: jest.fn(),
+            getAll: jest.fn(),
+          } as any, // Cast to any to avoid deep type issues with cookies
+          nextUrl: new URL(url),
+          page: {}, // Placeholder
+          ua: 'mock-ua', // User Agent
+        } as unknown as NextRequest;
       };
 
     // Test PUT /api/classes/[id]
@@ -209,7 +230,7 @@ describe('/api/classes/[id]', () => {
 
             const request = createMockRequest('PUT', 'http://localhost/api/classes/class-1', { name: 'Advanced Math' });
 
-            const response = await PUT(request, { params: { id: 'class-1' } });
+            const response = await PUT(request, { params: Promise.resolve({ id: 'class-1' }) });
             const body = await response.json();
 
             expect(response.status).toBe(200);
@@ -227,7 +248,7 @@ describe('/api/classes/[id]', () => {
 
             const request = createMockRequest('DELETE', 'http://localhost/api/classes/class-1');
 
-            const response = await DELETE(request, { params: { id: 'class-1' } });
+            const response = await DELETE(request, { params: Promise.resolve({ id: 'class-1' }) });
 
             expect(response.status).toBe(204);
         });

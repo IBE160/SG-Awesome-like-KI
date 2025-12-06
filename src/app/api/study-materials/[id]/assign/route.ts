@@ -20,6 +20,7 @@ export async function PUT(req: NextRequest, { params: paramsPromise }: { params:
       {
         // @ts-ignore
         cookies: cookies,
+
       }
     );
 

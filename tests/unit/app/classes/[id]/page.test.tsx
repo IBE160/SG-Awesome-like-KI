@@ -2,7 +2,7 @@
 import React from 'react';
 import { render, screen, waitFor, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import ClassDetailsPage from '../../../src/app/classes/[id]/page';
+import ClassDetailsPage from '@/app/classes/[id]/page';
 
 // Mock useParams
 jest.mock('next/navigation', () => ({

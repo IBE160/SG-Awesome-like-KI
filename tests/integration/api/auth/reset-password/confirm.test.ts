@@ -1,10 +1,10 @@
-import { POST } from '@/src/app/api/auth/reset-password/confirm/route';
-import { createRouteHandlerClient } from '@supabase/ssr';
+import { POST } from '../../../../../src/app/api/auth/reset-password/confirm/route';
+import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 
 // Mock the Supabase client
 jest.mock('@supabase/ssr', () => ({
-  createRouteHandlerClient: jest.fn(),
+  createServerClient: jest.fn(),
 }));
 
 // Mock next/headers for cookies
@@ -15,7 +15,7 @@ jest.mock('next/headers', () => ({
 const mockUpdateUser = jest.fn();
 const mockGetSession = jest.fn();
 
-(createRouteHandlerClient as jest.Mock).mockReturnValue({
+(createServerClient as jest.Mock).mockReturnValue({
   auth: {
     updateUser: mockUpdateUser,
     getSession: mockGetSession,

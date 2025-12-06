@@ -1,8 +1,9 @@
 // tests/integration/api/class_sections/route.test.ts
-import { GET as getSections, POST as postSection } from '@/app/api/classes/[id]/sections/route';
-import { PUT as putSection, DELETE as deleteSection } from '@/app/api/sections/[id]/route';
-import { createRouteHandlerClient } from '@supabase/ssr';
+import { GET as getSections, POST as postSection } from '../../../../src/app/api/classes/[id]/sections/route';
+import { PUT as putSection, DELETE as deleteSection } from '../../../../src/app/api/sections/[id]/route';
+import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
+import { NextRequest } from 'next/server';
 
 // Mock Supabase and Next.js cookies
 jest.mock('next/headers', () => ({
@@ -10,32 +11,19 @@ jest.mock('next/headers', () => ({
 }));
 
 jest.mock('@supabase/ssr', () => ({
-  createRouteHandlerClient: jest.fn(),
+  createServerClient: jest.fn(),
 }));
 
-jest.mock('next/server', () => {
-  // Mock the default export (the constructor)
-  const MockNextResponse = jest.fn((body, init) => ({
-    body, // for new NextResponse(body, ...)
-    status: init?.status || 200,
-    headers: init?.headers || {},
-    json: () => Promise.resolve(body), // Add json method for constructor usage
-  }));
-
-  // Mock the static .json method
-  MockNextResponse.json = jest.fn((body, init) => ({
-    jsonBody: body, // for NextResponse.json(body, ...)
-    status: init?.status || 200,
-    headers: init?.headers || {},
-    json: () => Promise.resolve(body), // Add json method for static .json() usage
-  }));
-
-  return {
-    NextResponse: MockNextResponse,
-    // Keep other exports from 'next/server' if needed, for example, NextRequest
-    NextRequest: jest.fn(),
-  };
-});
+jest.mock('next/server', () => ({
+  NextResponse: {
+    json: jest.fn((body, init) => ({
+      status: init?.status || 200,
+      json: async () => body,
+    })),
+    // Add other static methods of NextResponse if used in the tests
+  },
+  NextRequest: jest.fn(),
+}));
 
 
 describe('/api/classes/[id]/sections', () => {
@@ -85,19 +73,29 @@ describe('/api/classes/[id]/sections', () => {
       from: jest.fn(() => mockBuilderMethods),
     };
 
-    (createRouteHandlerClient as jest.Mock).mockReturnValue(mockSupabase);
+    (createServerClient as jest.Mock).mockReturnValue(mockSupabase);
     mockCookies = (cookies as jest.Mock).mockReturnValue({});
   });
 
   // Helper to create a mock Request object
-  const createMockRequest = (method: string, url: string, body?: any): Request => {
+  const createMockRequest = (method: string, url: string, body?: any): NextRequest => {
     return {
       json: async () => body,
       // @ts-ignore
       headers: new Headers(),
       method: method,
       url: url,
-    };
+      cookies: {
+        get: jest.fn(),
+        set: jest.fn(),
+        delete: jest.fn(),
+        has: jest.fn(),
+        getAll: jest.fn(),
+      } as any, // Cast to any to avoid deep type issues with cookies
+      nextUrl: new URL(url),
+      page: {}, // Placeholder
+      ua: 'mock-ua', // User Agent
+    } as unknown as NextRequest;
   };
 
   // Test GET /api/classes/[id]/sections
@@ -106,7 +104,7 @@ describe('/api/classes/[id]/sections', () => {
       mockSupabase.auth.getUser.mockResolvedValueOnce({ data: { user: null }, error: null });
 
       const request = createMockRequest('GET', 'http://localhost/api/classes/class-1/sections');
-      const response = await getSections(request, { params: { id: 'class-1' } });
+      const response = await getSections(request, { params: Promise.resolve({ id: 'class-1' }) });
 
       expect(response.status).toBe(401);
     });
@@ -119,7 +117,7 @@ describe('/api/classes/[id]/sections', () => {
       mockBuilderMethods.eq.mockResolvedValueOnce({ data: sections, error: null });
       
       const request = createMockRequest('GET', `http://localhost/api/classes/${classId}/sections`);
-      const response = await getSections(request, { params: { id: classId } });
+      const response = await getSections(request, { params: Promise.resolve({ id: classId }) });
       const body = await response.json();
 
       expect(response.status).toBe(200);
@@ -133,7 +131,7 @@ describe('/api/classes/[id]/sections', () => {
       mockSupabase.auth.getUser.mockResolvedValueOnce({ data: { user: null }, error: null });
 
       const request = createMockRequest('POST', 'http://localhost/api/classes/class-1/sections', { name: 'New Section' });
-      const response = await postSection(request, { params: { id: 'class-1' } });
+      const response = await postSection(request, { params: Promise.resolve({ id: 'class-1' }) });
 
       expect(response.status).toBe(401);
     });
@@ -151,7 +149,7 @@ describe('/api/classes/[id]/sections', () => {
         mockBuilderMethods.single.mockResolvedValueOnce({ data: newSection, error: null });
 
         const request = createMockRequest('POST', `http://localhost/api/classes/${classId}/sections`, { name: 'New Section' });
-        const response = await postSection(request, { params: { id: classId } });
+        const response = await postSection(request, { params: Promise.resolve({ id: classId }) });
         const body = await response.json();
 
         expect(response.status).toBe(201);
@@ -168,7 +166,7 @@ describe('/api/classes/[id]/sections', () => {
         mockBuilderMethods.single.mockResolvedValueOnce({ data: { id: 'section-1' }, error: null });
 
         const request = createMockRequest('POST', `http://localhost/api/classes/${classId}/sections`, { name: 'Existing Section' });
-        const response = await postSection(request, { params: { id: classId } });
+        const response = await postSection(request, { params: Promise.resolve({ id: classId }) });
         
         expect(response.status).toBe(409);
     });
@@ -222,19 +220,29 @@ describe('/api/sections/[id]', () => {
           from: jest.fn(() => mockBuilderMethods),
         };
     
-        (createRouteHandlerClient as jest.Mock).mockReturnValue(mockSupabase);
+        (createServerClient as jest.Mock).mockReturnValue(mockSupabase);
         mockCookies = (cookies as jest.Mock).mockReturnValue({});
       });
 
     // Helper to create a mock Request object
-    const createMockRequest = (method: string, url: string, body?: any): Request => {
+    const createMockRequest = (method: string, url: string, body?: any): NextRequest => {
         return {
           json: async () => body,
           // @ts-ignore
           headers: new Headers(),
           method: method,
           url: url,
-        };
+          cookies: {
+            get: jest.fn(),
+            set: jest.fn(),
+            delete: jest.fn(),
+            has: jest.fn(),
+            getAll: jest.fn(),
+          } as any, // Cast to any to avoid deep type issues with cookies
+          nextUrl: new URL(url),
+          page: {}, // Placeholder
+          ua: 'mock-ua', // User Agent
+        } as unknown as NextRequest;
       };
 
     // Test PUT /api/sections/[id]
@@ -243,7 +251,7 @@ describe('/api/sections/[id]', () => {
             mockSupabase.auth.getUser.mockResolvedValueOnce({ data: { user: null }, error: null });
 
             const request = createMockRequest('PUT', 'http://localhost/api/sections/section-1', { name: 'Updated Section' });
-            const response = await putSection(request, { params: { id: 'section-1' } });
+            const response = await putSection(request, { params: Promise.resolve({ id: 'section-1' }) });
 
             expect(response.status).toBe(401);
         });
@@ -261,7 +269,7 @@ describe('/api/sections/[id]', () => {
             mockBuilderMethods.single.mockResolvedValueOnce({ data: updatedSection, error: null });
 
             const request = createMockRequest('PUT', `http://localhost/api/sections/${sectionId}`, { name: 'Updated Section' });
-            const response = await putSection(request, { params: { id: sectionId } });
+            const response = await putSection(request, { params: Promise.resolve({ id: sectionId }) });
             const body = await response.json();
 
             expect(response.status).toBe(200);
@@ -276,7 +284,7 @@ describe('/api/sections/[id]', () => {
             mockBuilderMethods.single.mockResolvedValueOnce({ data: null, error: null });
 
             const request = createMockRequest('PUT', `http://localhost/api/sections/${sectionId}`, { name: 'Updated Section' });
-            const response = await putSection(request, { params: { id: sectionId } });
+            const response = await putSection(request, { params: Promise.resolve({ id: sectionId }) });
 
             expect(response.status).toBe(404);
         });
@@ -291,7 +299,7 @@ describe('/api/sections/[id]', () => {
             mockBuilderMethods.single.mockResolvedValueOnce({ data: { id: 'another-section' }, error: null });
 
             const request = createMockRequest('PUT', `http://localhost/api/sections/${sectionId}`, { name: 'Existing Section' });
-            const response = await putSection(request, { params: { id: sectionId } });
+            const response = await putSection(request, { params: Promise.resolve({ id: sectionId }) });
 
             expect(response.status).toBe(409);
         });
@@ -303,7 +311,7 @@ describe('/api/sections/[id]', () => {
             mockSupabase.auth.getUser.mockResolvedValueOnce({ data: { user: null }, error: null });
 
             const request = createMockRequest('DELETE', 'http://localhost/api/sections/section-1');
-            const response = await deleteSection(request, { params: { id: 'section-1' } });
+            const response = await deleteSection(request, { params: Promise.resolve({ id: 'section-1' }) });
 
             expect(response.status).toBe(401);
         });
@@ -318,7 +326,7 @@ describe('/api/sections/[id]', () => {
             mockBuilderMethods.delete().eq.mockResolvedValueOnce({ error: null });
 
             const request = createMockRequest('DELETE', `http://localhost/api/sections/${sectionId}`);
-            const response = await deleteSection(request, { params: { id: sectionId } });
+            const response = await deleteSection(request, { params: Promise.resolve({ id: sectionId }) });
 
             expect(response.status).toBe(204);
         });
@@ -331,7 +339,7 @@ describe('/api/sections/[id]', () => {
             mockBuilderMethods.single.mockResolvedValueOnce({ data: null, error: null });
 
             const request = createMockRequest('DELETE', `http://localhost/api/sections/${sectionId}`);
-            const response = await deleteSection(request, { params: { id: sectionId } });
+            const response = await deleteSection(request, { params: Promise.resolve({ id: sectionId }) });
 
             expect(response.status).toBe(404);
         });

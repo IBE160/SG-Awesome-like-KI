@@ -95,11 +95,10 @@ export async function DELETE(req: NextRequest, { params: paramsPromise }: { para
       const supabase = createServerClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
         process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-        {
-          // @ts-ignore
-          cookies: cookies,
-        }
-      );
+                    {
+                      // @ts-ignore
+                      cookies: cookies,
+                    }      );
   
       const { data: { user } } = await supabase.auth.getUser();
   

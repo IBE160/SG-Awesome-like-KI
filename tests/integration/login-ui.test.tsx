@@ -1,6 +1,6 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+
 import { createClient } from '@/lib/supabase/client';
 import LoginPage from '@/app/login/page';
 import { useRouter } from 'next/navigation';
