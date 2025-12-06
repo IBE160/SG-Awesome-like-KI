@@ -20,12 +20,20 @@ CREATE TABLE public.class_sections (
 CREATE TABLE public.study_materials (
     id uuid NOT NULL DEFAULT gen_random_uuid(),
     file_name text NOT NULL,
+    original_name text NOT NULL,
     storage_path text NOT NULL,
-    class_id uuid NOT NULL,
+    file_type text NOT NULL,
+    file_size integer NOT NULL,
+    extracted_text text NULL,
+    class_id uuid NULL, -- Changed to NULLable based on tech-spec
     class_section_id uuid NULL,
+    user_id uuid NOT NULL,
+    created_at timestamp with time zone NOT NULL DEFAULT now(),
+    is_archived boolean NOT NULL DEFAULT false,
     CONSTRAINT study_materials_pkey PRIMARY KEY (id),
     CONSTRAINT study_materials_class_id_fkey FOREIGN KEY (class_id) REFERENCES public.classes (id) ON DELETE CASCADE,
-    CONSTRAINT study_materials_class_section_id_fkey FOREIGN KEY (class_section_id) REFERENCES public.class_sections (id) ON DELETE SET NULL
+    CONSTRAINT study_materials_class_section_id_fkey FOREIGN KEY (class_section_id) REFERENCES public.class_sections (id) ON DELETE SET NULL,
+    CONSTRAINT study_materials_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users (id) ON DELETE CASCADE
 );
 
 -- Create the `generated_content` table

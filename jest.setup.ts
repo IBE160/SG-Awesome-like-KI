@@ -3,6 +3,11 @@
 
 import '@testing-library/jest-dom';
 
+// Polyfill TextEncoder for Jest environment
+if (typeof TextEncoder === 'undefined') {
+  global.TextEncoder = require('util').TextEncoder;
+}
+
 // Polyfill fetch and related globals for Jest test environment if they don't exist
 // This avoids direct import of 'node-fetch' which can cause ES module issues
 if (typeof global.fetch === 'undefined') {
