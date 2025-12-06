@@ -98,4 +98,11 @@ All API routes implement secure authentication and ownership checks using Supaba
 
 *   API routes in `src/app/api/...`.
 *   UI components in `src/components/`.
+
+## Post-Review Follow-ups
+
+*   Note: The `epics` directory and a general `index.md` for project documentation were not found. This suggests that some overarching project documentation is still absent. Consider creating these for better project context and discoverability. (Story 3.4)
+*   Note: The `Completion Notes List` has been updated in this review. The `File List` has been explicitly defined. The `Tasks / Subtasks` has been marked complete to reflect that all tasks are now implemented. (Story 3.4)
+*   [ ] [Low] Implement E2E tests for content assignment, reassignment, and viewing user journeys to provide more comprehensive testing coverage. (Story 3.4) [file: `docs/sprint-artifacts/3-4-assign-view-content.md`]
+
 *   Supabase client configuration in `src/lib/supabase/client.ts`.

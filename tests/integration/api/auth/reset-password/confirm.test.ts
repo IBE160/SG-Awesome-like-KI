@@ -1,4 +1,4 @@
-import { POST } from '../../../../../app/api/auth/reset-password/confirm/route';
+import { POST } from '@/src/app/api/auth/reset-password/confirm/route';
 import { createRouteHandlerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 

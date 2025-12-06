@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import RegisterPage from 'app/register/page';
+import RegisterPage from '@/src/app/register/page';
 import '@testing-library/jest-dom';
 
 // Mock the useRouter hook

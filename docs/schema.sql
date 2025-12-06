@@ -41,25 +41,12 @@ CREATE TABLE public.generated_content (
     id uuid NOT NULL DEFAULT gen_random_uuid(),
     type text NOT NULL,
     content jsonb NOT NULL,
-    class_id uuid NOT NULL,
-    CONSTRAINT generated_content_pkey PRIMARY KEY (id),
-    CONSTRAINT generated_content_class_id_fkey FOREIGN KEY (class_id) REFERENCES public.classes (id) ON DELETE CASCADE
-);
-
--- Create the `generated_content_materials` junction table
-CREATE TABLE public.generated_content_materials (
-    generated_content_id uuid NOT NULL,
     study_material_id uuid NOT NULL,
-    CONSTRAINT generated_content_materials_pkey PRIMARY KEY (generated_content_id, study_material_id),
-    CONSTRAINT generated_content_materials_generated_content_id_fkey FOREIGN KEY (generated_content_id) REFERENCES public.generated_content (id) ON DELETE CASCADE,
-    CONSTRAINT generated_content_materials_study_material_id_fkey FOREIGN KEY (study_material_id) REFERENCES public.study_materials (id) ON DELETE CASCADE
+    CONSTRAINT generated_content_pkey PRIMARY KEY (id),
+    CONSTRAINT generated_content_study_material_id_fkey FOREIGN KEY (study_material_id) REFERENCES public.study_materials (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
--- Create the `generated_content_sections` junction table
-CREATE TABLE public.generated_content_sections (
-    generated_content_id uuid NOT NULL,
-    class_section_id uuid NOT NULL,
-    CONSTRAINT generated_content_sections_pkey PRIMARY KEY (generated_content_id, class_section_id),
-    CONSTRAINT generated_content_sections_generated_content_id_fkey FOREIGN KEY (generated_content_id) REFERENCES public.generated_content (id) ON DELETE CASCADE,
-    CONSTRAINT generated_content_sections_class_section_id_fkey FOREIGN KEY (class_section_id) REFERENCES public.class_sections (id) ON DELETE CASCADE
-);
+-- Drop redundant junction tables
+DROP TABLE IF EXISTS public.generated_content_materials;
+DROP TABLE IF EXISTS public.generated_content_sections;
+

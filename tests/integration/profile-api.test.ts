@@ -1,10 +1,10 @@
-import { GET, PUT } from '@/app/api/profile/route'
-import { createServerClient } from '@supabase/auth-helpers-nextjs'
+import { GET, PUT } from '../../src/app/api/profile/route'
+import { createServerClient } from '@supabase/ssr'
 import { NextRequest } from 'next/server'
 
 // Mock Supabase
-jest.mock('@supabase/auth-helpers-nextjs', () => ({
-  createRouteHandlerClient: jest.fn(),
+jest.mock('@supabase/ssr', () => ({
+  createServerClient: jest.fn(),
 }))
 
 const mockGetUser = jest.fn()
@@ -34,7 +34,7 @@ mockInsert.mockReturnValue({ select: mockSelect })
 describe('/api/profile', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    (createRouteHandlerClient as jest.Mock).mockReturnValue(supabaseMock)
+    (createServerClient as jest.Mock).mockReturnValue(supabaseMock)
   })
 
   describe('GET', () => {
@@ -55,12 +55,14 @@ describe('/api/profile', () => {
     it('should create and return profile if it does not exist', async () => {
         mockGetUser.mockResolvedValue({ data: { user: { id: '123', email: 'test@example.com' } } })
         mockSingle.mockResolvedValueOnce({ data: null, error: { code: 'PGRST116' } }) // First call fails
-        mockSingle.mockResolvedValueOnce({ data: { id: '123', name: 'test@example.com' }, error: null }) // Second call succeeds
+        mockFrom.mockReturnValueOnce({ insert: jest.fn(() => ({ select: jest.fn(() => ({ single: mockSingle }))})) }) // Mock insert call
+        mockSingle.mockResolvedValueOnce({ data: { id: '123', full_name: 'test@example.com' }, error: null }) // Second call succeeds
         const response = await GET()
         expect(response.status).toBe(200)
         const body = await response.json()
         expect(body.profile.full_name).toBe('test@example.com')
-        expect(mockInsert).toHaveBeenCalledWith({ id: '123', full_name: 'test@example.com' })
+        expect(mockFrom).toHaveBeenCalledWith('profiles')
+        expect(mockFrom().insert).toHaveBeenCalledWith({ id: '123', full_name: 'test@example.com' })
     })
   })
 
@@ -86,7 +88,8 @@ describe('/api/profile', () => {
         expect(response.status).toBe(200)
         const body = await response.json()
         expect(body.profile.full_name).toBe('New Name')
-        expect(mockUpdate).toHaveBeenCalledWith({ full_name: 'New Name' })
+        expect(mockFrom).toHaveBeenCalledWith('profiles')
+        expect(mockFrom().update).toHaveBeenCalledWith({ full_name: 'New Name' })
     })
   })
 })

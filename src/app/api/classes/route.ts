@@ -13,26 +13,12 @@ type CookieOptions = {
 
 export async function GET(req: NextRequest) {
   try {
-    const cookieStore = cookies();
-    console.log('Type of cookieStore:', typeof cookieStore, 'Value:', cookieStore);
-
     const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
       {
-        cookies: {
-          get(name: string) {
-            return cookieStore.get(name)?.value;
-          },
-          set(name: string, value: string, options: CookieOptions) {
-            // This is a dummy implementation to satisfy TypeScript.
-            // Actual cookie setting needs to be handled via NextResponse.cookies.set()
-          },
-          remove(name: string, options: CookieOptions) {
-            // This is a dummy implementation to satisfy TypeScript.
-            // Actual cookie removal needs to be handled via NextResponse.cookies.set()
-          },
-        },
+        // @ts-ignore
+        cookies: cookies,
       }
     );
 
@@ -61,26 +47,12 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const cookieStore = cookies();
-    console.log('Type of cookieStore:', typeof cookieStore, 'Value:', cookieStore);
-
     const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
       {
-        cookies: {
-          get(name: string) {
-            return cookieStore.get(name)?.value;
-          },
-          set(name: string, value: string, options: CookieOptions) {
-            // This is a dummy implementation to satisfy TypeScript.
-            // Actual cookie setting needs to be handled via NextResponse.cookies.set()
-          },
-          remove(name: string, options: CookieOptions) {
-            // This is a dummy implementation to satisfy TypeScript.
-            // Actual cookie removal needs to be handled via NextResponse.cookies.set()
-          },
-        },
+        // @ts-ignore
+        cookies: cookies,
       }
     );
 
