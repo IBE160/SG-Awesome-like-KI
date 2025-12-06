@@ -1,195 +1,109 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
+import { useEffect, useState } from "react";
+import { createClient } from "@/lib/supabase/client";
 
-// Define the Class type
 interface Class {
   id: string;
   name: string;
   user_id: string;
 }
 
-export const ClassManagementUI: React.FC = () => {
+export function ClassManagementUI() {
+  const supabase = createClient();
   const [classes, setClasses] = useState<Class[]>([]);
-  const [newClassName, setNewClassName] = useState<string>('');
-  const [editingClass, setEditingClass] = useState<Class | null>(null);
-  const [renamedClassName, setRenamedClassName] = useState<string>('');
-  const [error, setError] = useState<string | null>(null);
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState<Class | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [editing, setEditing] = useState<string | null>(null);
+  const [newName, setNewName] = useState("");
 
-  // Fetch classes on component mount
   useEffect(() => {
-    const fetchClasses = async () => {
-      try {
-        const response = await fetch('/api/classes');
-        if (!response.ok) {
-          throw new Error('Failed to fetch classes');
-        }
-        const data = await response.json();
-        setClasses(data.classes);
-      } catch (err) {
-        setError((err as Error).message);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchClasses();
+    async function load() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const { data } = await supabase
+        .from("classes")
+        .select("*")
+        .eq("user_id", user.id);
+
+      setClasses(data || []);
+    }
+    load();
   }, []);
 
-  // Handle creating a new class
-  const handleCreateClass = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
+  async function renameClass(id: string) {
+    const { error } = await supabase
+      .from("classes")
+      .update({ name: newName })
+      .eq("id", id);
 
-    if (!/^[a-zA-Z0-9\s]+$/.test(newClassName)) {
-      setError('Class name must be alphanumeric.');
-      return;
+    if (!error) {
+      setClasses(classes.map((c) =>
+        c.id === id ? { ...c, name: newName } : c
+      ));
+      setEditing(null);
     }
+  }
 
-    try {
-      const response = await fetch('/api/classes', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: newClassName }),
-      });
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.error || 'Failed to create class');
-      }
-      const data = await response.json();
-      setClasses([...classes, data.class]);
-      setNewClassName('');
-    } catch (err) {
-      setError((err as Error).message);
+  async function deleteClass(id: string) {
+    const { error } = await supabase
+      .from("classes")
+      .delete()
+      .eq("id", id);
+
+    if (!error) {
+      setClasses(classes.filter((c) => c.id !== id));
     }
-  };
-
-  // Handle renaming a class
-  const handleRenameClass = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-    if (!editingClass) return;
-
-    if (!/^[a-zA-Z0-9\s]+$/.test(renamedClassName)) {
-      setError('Class name must be alphanumeric.');
-      return;
-    }
-
-    try {
-      const response = await fetch(`/api/classes/${editingClass.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: renamedClassName }),
-      });
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.error || 'Failed to rename class');
-      }
-      const data = await response.json();
-      setClasses(classes.map(c => (c.id === editingClass.id ? data.class : c)));
-      setEditingClass(null);
-      setRenamedClassName('');
-    } catch (err) {
-      setError((err as Error).message);
-    }
-  };
-
-  // Handle deleting a class
-  const handleDeleteClass = async (classToDelete: Class) => {
-    setError(null);
-    try {
-      const response = await fetch(`/api/classes/${classToDelete.id}`, {
-        method: 'DELETE',
-      });
-      if (!response.ok) {
-        throw new Error('Failed to delete class');
-      }
-      setClasses(classes.filter(c => c.id !== classToDelete.id));
-      setShowDeleteConfirm(null);
-    } catch (err) {
-      setError((err as Error).message);
-    }
-  };
-
-  if (loading) {
-    return <div>Loading classes...</div>;
   }
 
   return (
-    <div className="p-4">
-      <h2 className="text-xl font-bold mb-4">Manage Classes</h2>
-      {error && <div className="text-red-500 mb-4">{error}</div>}
+    <div>
+      <h2 className="text-2xl font-bold mb-4">Manage Classes</h2>
 
-      {/* Create Class Form */}
-      <form onSubmit={handleCreateClass} className="mb-6">
-        <input
-          type="text"
-          value={newClassName}
-          onChange={(e) => setNewClassName(e.target.value)}
-          placeholder="New class name"
-          className="border p-2 mr-2"
-          maxLength={25}
-          required
-        />
-        <button type="submit" className="bg-blue-500 text-white p-2 rounded">
-          Create Class
-        </button>
-      </form>
-
-      {/* List of Classes */}
-      <ul>
-        {classes.map((c) => (
-          <li key={c.id} className="mb-2 flex items-center justify-between">
-            {editingClass?.id === c.id ? (
-              <form onSubmit={handleRenameClass}>
-                <input
-                  type="text"
-                  value={renamedClassName}
-                  onChange={(e) => setRenamedClassName(e.target.value)}
-                  className="border p-2"
-                  maxLength={25}
-                  required
-                />
-                <button type="submit" className="bg-green-500 text-white p-2 ml-2 rounded">Save</button>
-                <button type="button" onClick={() => setEditingClass(null)} className="bg-gray-500 text-white p-2 ml-2 rounded">Cancel</button>
-              </form>
-            ) : (
-              <>
-                <span>{c.name}</span>
-                <div>
-                  <button
-                    onClick={() => { setEditingClass(c); setRenamedClassName(c.name); }}
-                    className="bg-yellow-500 text-white p-2 mr-2 rounded"
-                  >
-                    Rename
-                  </button>
-                  <button
-                    onClick={() => setShowDeleteConfirm(c)}
-                    className="bg-red-500 text-white p-2 rounded"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </>
-            )}
-          </li>
-        ))}
-      </ul>
-
-      {/* Delete Confirmation Dialog */}
-      {showDeleteConfirm && (
-        <div role="dialog" aria-labelledby="confirm-deletion-title" className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-lg">
-            <h3 id="confirm-deletion-title" className="text-lg font-bold mb-4">Confirm Deletion</h3>
-            <p>Are you sure you want to delete the class "{showDeleteConfirm.name}"? All associated content will be deleted.</p>
-            <div className="mt-4 flex justify-end">
-              <button onClick={() => setShowDeleteConfirm(null)} className="bg-gray-500 text-white p-2 mr-2 rounded">Cancel</button>
-              <button onClick={() => handleDeleteClass(showDeleteConfirm)} className="bg-red-500 text-white p-2 rounded">Delete</button>
+      {classes.map((c) => (
+        <div key={c.id} className="border p-4 mb-3 rounded">
+          {editing === c.id ? (
+            <div>
+              <input
+                value={newName}
+                onChange={(e) => setNewName(e.target.value)}
+                className="border p-2 rounded mr-3"
+              />
+              <button
+                onClick={() => renameClass(c.id)}
+                className="bg-green-600 text-white px-3 py-1 rounded mr-2"
+              >
+                Save
+              </button>
+              <button
+                onClick={() => setEditing(null)}
+                className="bg-gray-600 text-white px-3 py-1 rounded"
+              >
+                Cancel
+              </button>
             </div>
-          </div>
+          ) : (
+            <div className="flex justify-between">
+              <span>{c.name}</span>
+
+              <div>
+                <button
+                  onClick={() => { setEditing(c.id); setNewName(c.name); }}
+                  className="bg-yellow-500 text-white px-3 py-1 rounded mr-2"
+                >
+                  Rename
+                </button>
+
+                <button
+                  onClick={() => deleteClass(c.id)}
+                  className="bg-red-600 text-white px-3 py-1 rounded"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          )}
         </div>
-      )}
+      ))}
     </div>
   );
-};
+}

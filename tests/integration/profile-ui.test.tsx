@@ -1,7 +1,4 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
-import ProfilePage from '@/app/profile/page'
-import '@testing-library/jest-dom'
-import { act } from 'react-dom/test-utils'
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
 
 // Mock Next.js router
 jest.mock('next/navigation', () => ({

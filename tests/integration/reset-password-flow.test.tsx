@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
-import ForgotPasswordPage from '../../src/app/login/forgot-password/page';
+import ForgotPasswordPage from '../../src/app/forgot-password/page';
 import ResetPasswordPage from '../../src/app/login/reset-password/page';
 import { useRouter, useSearchParams } from 'next/navigation';
 

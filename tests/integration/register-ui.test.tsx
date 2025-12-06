@@ -71,15 +71,17 @@ describe('RegisterPage - Client-side Validation', () => {
       json: () => Promise.resolve({ message: 'Registration successful!' }),
     } as Response);
 
-    render(<RegisterPage />);
+    await act(async () => {
+      render(<RegisterPage />);
 
-    const emailInput = screen.getByLabelText(/email/i);
-    const passwordInput = screen.getByLabelText(/password/i);
-    const registerButton = screen.getByRole('button', { name: /register/i });
+      const emailInput = screen.getByLabelText(/email/i);
+      const passwordInput = screen.getByLabelText(/password/i);
+      const registerButton = screen.getByRole('button', { name: /register/i });
 
-    fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
-    fireEvent.change(passwordInput, { target: { value: 'ValidP@ss1' } }); // Valid password
-    fireEvent.click(registerButton);
+      fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
+      fireEvent.change(passwordInput, { target: { value: 'ValidP@ss1' } }); // Valid password
+      fireEvent.click(registerButton);
+    });
 
     // Ensure fetch was called
     expect(fetch).toHaveBeenCalledTimes(1);
@@ -102,15 +104,17 @@ describe('RegisterPage - Client-side Validation', () => {
       json: () => Promise.resolve({ error: 'Email already in use.' }),
     } as Response);
 
-    render(<RegisterPage />);
+    await act(async () => {
+      render(<RegisterPage />);
 
-    const emailInput = screen.getByLabelText(/email/i);
-    const passwordInput = screen.getByLabelText(/password/i);
-    const registerButton = screen.getByRole('button', { name: /register/i });
-    
-    fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
-    fireEvent.change(passwordInput, { target: { value: 'ValidP@ss1' } });
-    fireEvent.click(registerButton);
+      const emailInput = screen.getByLabelText(/email/i);
+      const passwordInput = screen.getByLabelText(/password/i);
+      const registerButton = screen.getByRole('button', { name: /register/i });
+      
+      fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
+      fireEvent.change(passwordInput, { target: { value: 'ValidP@ss1' } });
+      fireEvent.click(registerButton);
+    });
 
     // Wait for the error message to appear
     const errorMessage = await screen.findByText(/Email already in use./i);
@@ -124,16 +128,18 @@ describe('RegisterPage - Client-side Validation', () => {
       json: () => Promise.resolve({ message: 'Registration successful!' }),
     } as Response);
 
-    render(<RegisterPage />);
+    await act(async () => {
+      render(<RegisterPage />);
 
-    const emailInput = screen.getByLabelText(/email/i);
-    const passwordInput = screen.getByLabelText(/password/i);
-    const registerButton = screen.getByRole('button', { name: /register/i });
+      const emailInput = screen.getByLabelText(/email/i);
+      const passwordInput = screen.getByLabelText(/password/i);
+      const registerButton = screen.getByRole('button', { name: /register/i });
 
-    fireEvent.change(emailInput, { target: { value: 'test2@example.com' } });
-    fireEvent.change(passwordInput, { target: { value: 'V1a2l3i4d!P' } }); // 5 letters, 4 numbers, 1 symbol
-    
-    fireEvent.click(registerButton);
+      fireEvent.change(emailInput, { target: { value: 'test2@example.com' } });
+      fireEvent.change(passwordInput, { target: { value: 'V1a2l3i4d!P' } }); // 5 letters, 4 numbers, 1 symbol
+      
+      fireEvent.click(registerButton);
+    });
 
     // Ensure fetch was called
     expect(fetch).toHaveBeenCalledTimes(1);

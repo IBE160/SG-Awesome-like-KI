@@ -8,6 +8,16 @@ if (typeof TextEncoder === 'undefined') {
   global.TextEncoder = require('util').TextEncoder;
 }
 
+// Polyfill ReadableStream for Jest environment
+if (typeof global.ReadableStream === 'undefined') {
+  require('web-streams-polyfill'); // Polyfill global ReadableStream
+}
+
+// Polyfill TransformStream for Jest environment
+if (typeof global.TransformStream === 'undefined') {
+  require('web-streams-polyfill'); // Polyfill global TransformStream
+}
+
 // Polyfill fetch and related globals for Jest test environment if they don't exist
 // This avoids direct import of 'node-fetch' which can cause ES module issues
 class SimpleMockHeaders {

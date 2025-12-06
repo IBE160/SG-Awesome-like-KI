@@ -31,7 +31,7 @@ const customJestConfig = {
   transformIgnorePatterns: [
     // Ensure all node_modules are transformed, except the ones we explicitly want to ignore
     // This effectively makes Jest transform the problematic ES modules like 'node-fetch'
-    'node_modules/(?!(node-fetch|data-uri-to-buffer|fetch-blob|formdata-polyfill)/)',
+    'node_modules/(?!(node-fetch|data-uri-to-buffer|fetch-blob|formdata-polyfill|web-streams-polyfill)/)',
   ],
 }
 

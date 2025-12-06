@@ -2,75 +2,77 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 
-type CookieOptions = {
-  path?: string;
-  maxAge?: number;
-  expires?: Date;
-  httpOnly?: boolean;
-  secure?: boolean;
-  sameSite?: 'strict' | 'lax' | 'none';
-};
+// Correct Supabase SSR cookies config
+async function createSupabaseClient() {
+  const cookieStore = await cookies();
 
-export async function GET(req: NextRequest, { params: paramsPromise }: { params: Promise<{ id: string }> }) {
-  try {
-    const params = await paramsPromise;
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        // @ts-ignore
-        cookies: cookies,
+  return createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        get: (name: string) => cookieStore.get(name)?.value,
+        set: (name: string, value: string, options: any) => {
+          try { cookieStore.set({ name, value, ...options }); } catch {}
+        },
+        remove: (name: string, options: any) => {
+          try { cookieStore.delete({ name, ...options }); } catch {}
+        }
       }
-    );
+    }
+  );
+}
+
+export async function GET(
+  req: NextRequest,
+  { params: paramsPromise }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await paramsPromise; // MUST await in Next.js 15/16
+
+    const supabase = await createSupabaseClient();
 
     const { data: { user } } = await supabase.auth.getUser();
-
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const classId = params.id;
-
-    // Verify ownership of the class
-    const { data: targetClass, error: classError } = await supabase
+    // Verify the class belongs to the user
+    const { data: cls, error: classError } = await supabase
       .from('classes')
       .select('id, user_id')
-      .eq('id', classId)
+      .eq('id', id)
       .eq('user_id', user.id)
       .single();
 
-    if (classError || !targetClass) {
-      console.error('Error fetching target class or unauthorized:', classError);
-      return NextResponse.json({ error: 'Class not found or unauthorized.' }, { status: 404 });
+    if (classError || !cls) {
+      return NextResponse.json(
+        { error: 'Class not found or unauthorized' },
+        { status: 404 }
+      );
     }
 
-    // Retrieve study materials and their associated generated content for the class
-    const { data: studyMaterials, error: studyMaterialsError } = await supabase
-      .from('study_materials')
-      .select(`
-        id,
-        original_name,
-        file_type,
-        file_size,
-        created_at,
-        extracted_text,
-        generated_content (
-          id,
-          type,
-          content
-        )
-      `)
-      .eq('class_id', classId)
-      .eq('user_id', user.id);
+    // Fetch documents belonging to that class
+    const { data: documents, error: docError } = await supabase
+      .from('documents')
+      .select('*')
+      .eq('class_id', id);
 
-    if (studyMaterialsError) {
-      console.error('Error fetching study materials for class:', studyMaterialsError);
-      return NextResponse.json({ error: 'Failed to retrieve study materials for class.' }, { status: 500 });
+    if (docError) {
+      return NextResponse.json(
+        { error: 'Failed to fetch documents' },
+        { status: 500 }
+      );
     }
 
-    return NextResponse.json({ studyMaterials }, { status: 200 });
-  } catch (error) {
-    console.error('Error in GET /api/classes/[id]/documents:', error);
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    return NextResponse.json({ documents }, { status: 200 });
+
+  } catch (err) {
+    console.error("GET /api/classes/[id]/documents error:", err);
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 }
+    );
   }
 }
+

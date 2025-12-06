@@ -85,11 +85,13 @@ describe('LoginPage', () => {
       error: null,
     });
 
-    render(<LoginPage />);
-
-    fireEvent.change(screen.getByLabelText(/email/i), { target: { value: 'user@example.com' } });
-    fireEvent.change(screen.getByLabelText(/password/i), { target: { value: 'correctpassword' } });
-    fireEvent.click(screen.getByRole('button', { name: /Login/i }));
+    // Wrap render and subsequent user interactions in act
+    await act(async () => {
+      render(<LoginPage />);
+      fireEvent.change(screen.getByLabelText(/email/i), { target: { value: 'user@example.com' } });
+      fireEvent.change(screen.getByLabelText(/password/i), { target: { value: 'correctpassword' } });
+      fireEvent.click(screen.getByRole('button', { name: /Login/i }));
+    });
 
     await waitFor(() => {
       expect(mockRefresh).toHaveBeenCalledTimes(1);

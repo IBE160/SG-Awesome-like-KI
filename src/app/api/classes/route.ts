@@ -2,29 +2,45 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 
-type CookieOptions = {
-  path?: string;
-  maxAge?: number;
-  expires?: Date;
-  httpOnly?: boolean;
-  secure?: boolean;
-  sameSite?: 'strict' | 'lax' | 'none';
-};
+// ---------- CREATE SUPABASE CLIENT ----------
+async function createSupabaseClient() {
+  const cookieStore = await cookies(); // MUST await in Next.js 15/16
 
+  return createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        get(name: string) {
+          return cookieStore.get(name)?.value;
+        },
+        set(name: string, value: string, options: any) {
+          try {
+            cookieStore.set({ name, value, ...options });
+          } catch (err) {
+            console.warn('Cookie set error:', err);
+          }
+        },
+        remove(name: string, options: any) {
+          try {
+            cookieStore.delete({ name, ...options });
+          } catch (err) {
+            console.warn('Cookie delete error:', err);
+          }
+        },
+      },
+    }
+  );
+}
+
+// ---------------------------- GET /api/classes ----------------------------
 export async function GET(req: NextRequest) {
   try {
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        // @ts-ignore
-        cookies: cookies,
-      }
-    );
+    const supabase = await createSupabaseClient();
 
-    const { data: { user } } = await supabase.auth.getUser();
+    const { data: { user }, error: userError } = await supabase.auth.getUser();
 
-    if (!user) {
+    if (!user || userError) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -45,31 +61,29 @@ export async function GET(req: NextRequest) {
   }
 }
 
+// ---------------------------- POST /api/classes ----------------------------
 export async function POST(req: NextRequest) {
   try {
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        // @ts-ignore
-        cookies: cookies,
-      }
-    );
+    const supabase = await createSupabaseClient();
 
-    const { data: { user } } = await supabase.auth.getUser();
+    const { data: { user }, error: userError } = await supabase.auth.getUser();
 
-    if (!user) {
+    if (!user || userError) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const { name } = await req.json();
 
+    // Validate
     if (!name || typeof name !== 'string' || name.length > 25 || !/^[a-zA-Z0-9\s]+$/.test(name)) {
-      return NextResponse.json({ error: 'Invalid class name. Must be alphanumeric and max 25 characters.' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'Invalid class name. Must be alphanumeric and max 25 characters.' },
+        { status: 400 }
+      );
     }
 
-    // Check for uniqueness
-    const { data: existingClass, error: existingClassError } = await supabase
+    // Check duplicates
+    const { data: existingClass } = await supabase
       .from('classes')
       .select('id')
       .eq('user_id', user.id)
@@ -77,16 +91,16 @@ export async function POST(req: NextRequest) {
       .single();
 
     if (existingClass) {
-      return NextResponse.json({ error: 'A class with this name already exists. Please choose a different name.' }, { status: 409 });
+      return NextResponse.json(
+        { error: 'A class with this name already exists.' },
+        { status: 409 }
+      );
     }
 
-    // Create the new class
+    // Insert
     const { data: newClass, error: createError } = await supabase
       .from('classes')
-      .insert({
-        name: name,
-        user_id: user.id,
-      })
+      .insert({ name, user_id: user.id })
       .select()
       .single();
 
