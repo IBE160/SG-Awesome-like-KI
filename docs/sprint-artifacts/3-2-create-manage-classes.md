@@ -1,6 +1,6 @@
 # Story 3.2: Create & Manage Classes
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -17,18 +17,18 @@ so that I can easily group related content.
 
 ## Tasks / Subtasks
 
-- [ ] Implement UI for creating, renaming, and deleting classes (AC: 1)
-  - [ ] Implement form for creating new classes (input field for name, create button)
-  - [ ] Implement UI for listing existing classes with options to rename and delete
-  - [ ] Implement confirmation dialog for class deletion (AC: 2)
-  - [ ] Implement client-side validation for class name (25 alphanumeric characters, AC: 3)
-- [ ] Implement API endpoints for class management (AC: 1, 3, 4)
-  - [ ] `POST /api/classes` for creating classes
-  - [ ] `PUT /api/classes/{id}` for renaming classes
-  - [ ] `DELETE /api/classes/{id}` for deleting classes
-  - [ ] Implement server-side validation for class name (25 alphanumeric characters, uniqueness)
-  - [ ] Implement logic for cascading deletion of associated content (AC: 2)
-- [ ] Implement `GET /api/classes` endpoint for retrieving user's classes (AC: 1)
+- [x] Implement UI for creating, renaming, and deleting classes (AC: 1)
+  - [x] Implement form for creating new classes (input field for name, create button)
+  - [x] Implement UI for listing existing classes with options to rename and delete
+  - [x] Implement confirmation dialog for class deletion (AC: 2)
+  - [x] Implement client-side validation for class name (25 alphanumeric characters, AC: 3)
+- [x] Implement API endpoints for class management (AC: 1, 3, 4)
+  - [x] `POST /api/classes` for creating classes
+  - [x] `PUT /api/classes/{id}` for renaming classes
+  - [x] `DELETE /api/classes/{id}` for deleting classes
+  - [x] Implement server-side validation for class name (25 alphanumeric characters, uniqueness)
+  - [x] Implement logic for cascading deletion of associated content (AC: 2)
+- [x] Implement `GET /api/classes` endpoint for retrieving user's classes (AC: 1)
 
 ## Dev Notes
 
@@ -80,11 +80,20 @@ gemini-1.5-flash
 
 ### Completion Notes List
 
+*   Implemented API endpoints for class management (`GET`, `POST`, `PUT`, `DELETE`) in `src/app/api/classes/route.ts` and `src/app/api/classes/[id]/route.ts`.
+*   Implemented UI for class management in `src/components/ClassManagementUI.tsx` and integrated into `src/app/classes/page.tsx`. This includes forms for creating new classes, UI for listing existing classes with rename and delete options, and a confirmation dialog for class deletion.
+*   Implemented client-side validation for class names (25 alphanumeric characters) in `src/components/ClassManagementUI.tsx`.
+*   Created and updated integration tests for class management API endpoints in `tests/integration/api/classes/route.test.ts`.
+*   Created unit tests for the `ClassManagementUI` component in `tests/unit/ClassManagementUI.test.tsx`.
+
 ### File List
 *   `src/app/classes/page.tsx` (NEW) - for the classes UI
 *   `src/app/api/classes/route.ts` (NEW) - for the classes API endpoint
+*   `src/app/api/classes/[id]/route.ts` (NEW) - for the classes API endpoint (PUT/DELETE)
 *   `src/components/ClassManagementUI.tsx` (NEW) - custom component for class management
 *   `src/lib/supabase/client.ts` (MODIFIED) - for Supabase client integration (classes table operations)
+*   `tests/integration/api/classes/route.test.ts` (NEW) - Integration tests for the classes API route
+*   `tests/unit/ClassManagementUI.test.tsx` (NEW) - Unit tests for the ClassManagementUI component
 
 ### Learnings from Previous Story
 

@@ -1,48 +1,80 @@
-import { createServerClient, type CookieOptions } from '@supabase/ssr'
-import { cookies } from 'next/headers'
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server';
+import { createRouteHandlerClient } from '@supabase/ssr';
+import { cookies } from 'next/headers';
 
-export async function POST(request: Request) {
+export async function GET(req: NextRequest) {
   try {
-    const { name } = await request.json()
-    const cookieStore = cookies()
-    const supabase = createServerClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-        {
-            cookies: {
-                async get(name: string) {
-                    return (await cookieStore).get(name)?.value
-                },
-                async set(name: string, value: string, options: CookieOptions) {
-                    (await cookieStore).set(name, value, options)
-                },
-                async remove(name: string, options: CookieOptions) {
-                    (await cookieStore).set(name, '', options)
-                },
-            }
-        }
-    )
+    const supabase = createRouteHandlerClient({ cookies });
 
-    const { data: { user } } = await supabase.auth.getUser()
+    const { data: { user } } = await supabase.auth.getUser();
 
     if (!user) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { data, error } = await supabase
+    const { data: classes, error } = await supabase
       .from('classes')
-      .insert({ name, user_id: user.id })
-      .select()
-      .single()
+      .select('*')
+      .eq('user_id', user.id);
 
     if (error) {
-      return NextResponse.json({ message: `Supabase error: ${error.message}` }, { status: 500 })
+      console.error('Error fetching classes:', error);
+      return NextResponse.json({ error: 'Failed to fetch classes.' }, { status: 500 });
     }
 
-    return NextResponse.json(data)
-  } catch (e: any) {
-    console.error('Error in /api/classes:', e);
-    return NextResponse.json({ message: `An unexpected error occurred: ${e.message}` }, { status: 500 });
+    return NextResponse.json({ classes }, { status: 200 });
+  } catch (error) {
+    console.error('Error in GET /api/classes:', error);
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+  }
+}
+
+export async function POST(req: NextRequest) {
+  try {
+    const supabase = createRouteHandlerClient({ cookies });
+
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const { name } = await req.json();
+
+    if (!name || typeof name !== 'string' || name.length > 25 || !/^[a-zA-Z0-9\s]+$/.test(name)) {
+      return NextResponse.json({ error: 'Invalid class name. Must be alphanumeric and max 25 characters.' }, { status: 400 });
+    }
+
+    // Check for uniqueness
+    const { data: existingClass, error: existingClassError } = await supabase
+      .from('classes')
+      .select('id')
+      .eq('user_id', user.id)
+      .eq('name', name)
+      .single();
+
+    if (existingClass) {
+      return NextResponse.json({ error: 'A class with this name already exists. Please choose a different name.' }, { status: 409 });
+    }
+
+    // Create the new class
+    const { data: newClass, error: createError } = await supabase
+      .from('classes')
+      .insert({
+        name: name,
+        user_id: user.id,
+      })
+      .select()
+      .single();
+
+    if (createError) {
+      console.error('Error creating class:', createError);
+      return NextResponse.json({ error: 'Failed to create class.' }, { status: 500 });
+    }
+
+    return NextResponse.json({ class: newClass }, { status: 201 });
+  } catch (error) {
+    console.error('Error in POST /api/classes:', error);
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
