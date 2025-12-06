@@ -1,10 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createRouteHandlerClient } from '@supabase/ssr';
+import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+type CookieOptions = {
+  path?: string;
+  maxAge?: number;
+  expires?: Date;
+  httpOnly?: boolean;
+  secure?: boolean;
+  sameSite?: 'strict' | 'lax' | 'none';
+};
+
+export async function GET(req: NextRequest, { params: paramsPromise }: { params: Promise<{ id: string }> }) {
   try {
-    const supabase = createRouteHandlerClient({ cookies });
+    const params = await paramsPromise;
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        // @ts-ignore
+        cookies: cookies,
+      }
+    );
 
     const { data: { user } } = await supabase.auth.getUser();
 
@@ -31,9 +48,17 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
   }
 }
 
-export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(req: NextRequest, { params: paramsPromise }: { params: Promise<{ id: string }> }) {
     try {
-      const supabase = createRouteHandlerClient({ cookies });
+      const params = await paramsPromise;
+      const supabase = createServerClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+        {
+          // @ts-ignore
+          cookies: cookies,
+        }
+      );
   
       const { data: { user } } = await supabase.auth.getUser();
   

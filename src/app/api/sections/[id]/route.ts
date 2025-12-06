@@ -1,10 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createRouteHandlerClient } from '@supabase/ssr';
+import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+type CookieOptions = {
+  path?: string;
+  maxAge?: number;
+  expires?: Date;
+  httpOnly?: boolean;
+  secure?: boolean;
+  sameSite?: 'strict' | 'lax' | 'none';
+};
+
+export async function PUT(req: NextRequest, { params: paramsPromise }: { params: Promise<{ id: string }> }) {
   try {
-    const supabase = createRouteHandlerClient({ cookies });
+    const params = await paramsPromise;
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        // @ts-ignore
+        cookies: cookies,
+      }
+    );
 
     const { data: { user } } = await supabase.auth.getUser();
 
@@ -34,7 +51,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
         .eq('id', sectionId)
         .single();
 
-    if (fetchSectionError || !sectionData || sectionData.classes?.user_id !== user.id) {
+    if (fetchSectionError || !sectionData || sectionData.classes?.[0]?.user_id !== user.id) {
         console.error('Error verifying section ownership:', fetchSectionError);
         return NextResponse.json({ error: 'Section not found or not owned by user.' }, { status: 404 });
     }
@@ -72,9 +89,17 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
   }
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, { params: paramsPromise }: { params: Promise<{ id: string }> }) {
     try {
-      const supabase = createRouteHandlerClient({ cookies });
+      const params = await paramsPromise;
+      const supabase = createServerClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+        {
+          // @ts-ignore
+          cookies: cookies,
+        }
+      );
   
       const { data: { user } } = await supabase.auth.getUser();
   
@@ -96,7 +121,7 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
           .eq('id', sectionId)
           .single();
   
-      if (fetchSectionError || !sectionData || sectionData.classes?.user_id !== user.id) {
+      if (fetchSectionError || !sectionData || sectionData.classes?.[0]?.user_id !== user.id) {
           console.error('Error verifying section ownership:', fetchSectionError);
           return NextResponse.json({ error: 'Section not found or not owned by user.' }, { status: 404 });
       }
