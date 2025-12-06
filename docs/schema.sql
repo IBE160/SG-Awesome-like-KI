@@ -32,7 +32,7 @@ CREATE TABLE public.study_materials (
     is_archived boolean NOT NULL DEFAULT false,
     CONSTRAINT study_materials_pkey PRIMARY KEY (id),
     CONSTRAINT study_materials_class_id_fkey FOREIGN KEY (class_id) REFERENCES public.classes (id) ON DELETE CASCADE,
-    CONSTRAINT study_materials_class_section_id_fkey FOREIGN KEY (class_section_id) REFERENCES public.class_sections (id) ON DELETE SET NULL,
+    CONSTRAINT study_materials_class_section_id_fkey FOREIGN KEY (class_section_id) REFERENCES public.class_sections (id) ON DELETE CASCADE,
     CONSTRAINT study_materials_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users (id) ON DELETE CASCADE
 );
 

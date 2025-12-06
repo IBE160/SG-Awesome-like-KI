@@ -16,24 +16,38 @@ jest.mock('@supabase/ssr', () => ({
 describe('/api/classes', () => {
   let mockSupabase: any;
   let mockCookies: any;
-  let mockBuilderMethods: any; // Declared here
+  let mockBuilderMethods: any;
+
+  let mockSelect: jest.Mock;
+  let mockInsert: jest.Mock;
+  let mockUpdate: jest.Mock;
+  let mockDeleteFn: jest.Mock;
+  let mockEq: jest.Mock;
+  let mockNot: jest.Mock;
+  let mockSingle: jest.Mock;
 
   beforeEach(() => {
     jest.clearAllMocks();
 
-    const mockSelect = jest.fn();
-    const mockInsert = jest.fn();
-    const mockUpdate = jest.fn();
-    const mockDelete = jest.fn();
-    const mockEq = jest.fn();
-    const mockNot = jest.fn();
-    const mockSingle = jest.fn();
+    mockSelect = jest.fn();
+    mockInsert = jest.fn();
+    mockUpdate = jest.fn();
+    mockDeleteFn = jest.fn();
+    mockEq = jest.fn();
+    mockNot = jest.fn();
+    mockSingle = jest.fn();
 
-    mockBuilderMethods = { // Assign here
+    const mockDeleteResult = {
+        eq: jest.fn().mockReturnThis(),
+        single: jest.fn(),
+    };
+    mockDeleteFn.mockReturnValue(mockDeleteResult);
+
+    mockBuilderMethods = {
       select: mockSelect.mockReturnThis(),
       insert: mockInsert.mockReturnThis(),
       update: mockUpdate.mockReturnThis(),
-      delete: mockDelete.mockReturnThis(),
+      delete: mockDeleteFn,
       eq: mockEq.mockReturnThis(),
       not: mockNot.mockReturnThis(),
       single: mockSingle,
@@ -123,24 +137,38 @@ describe('/api/classes', () => {
 describe('/api/classes/[id]', () => {
     let mockSupabase: any;
     let mockCookies: any;
-    let mockBuilderMethods: any; // Declared here
+    let mockBuilderMethods: any;
+  
+    let mockSelect: jest.Mock;
+    let mockInsert: jest.Mock;
+    let mockUpdate: jest.Mock;
+    let mockDeleteFn: jest.Mock;
+    let mockEq: jest.Mock;
+    let mockNot: jest.Mock;
+    let mockSingle: jest.Mock;
   
     beforeEach(() => {
         jest.clearAllMocks();
     
-        const mockSelect = jest.fn();
-        const mockInsert = jest.fn();
-        const mockUpdate = jest.fn();
-        const mockDelete = jest.fn();
-        const mockEq = jest.fn();
-        const mockNot = jest.fn();
-        const mockSingle = jest.fn();
+        mockSelect = jest.fn();
+        mockInsert = jest.fn();
+        mockUpdate = jest.fn();
+        mockDeleteFn = jest.fn();
+        mockEq = jest.fn();
+        mockNot = jest.fn();
+        mockSingle = jest.fn();
     
-        mockBuilderMethods = { // Assign here
+        const mockDeleteResult = {
+            eq: jest.fn().mockReturnThis(),
+            single: jest.fn(),
+        };
+        mockDeleteFn.mockReturnValue(mockDeleteResult);
+    
+        mockBuilderMethods = {
           select: mockSelect.mockReturnThis(),
           insert: mockInsert.mockReturnThis(),
           update: mockUpdate.mockReturnThis(),
-          delete: mockDelete.mockReturnThis(),
+          delete: mockDeleteFn,
           eq: mockEq.mockReturnThis(),
           not: mockNot.mockReturnThis(),
           single: mockSingle,
@@ -195,7 +223,7 @@ describe('/api/classes/[id]', () => {
             const user = { id: 'user-1' };
             mockSupabase.auth.getUser.mockResolvedValueOnce({ data: { user }, error: null });
             // Mock for delete
-            mockBuilderMethods.eq.mockResolvedValueOnce({ error: null });
+            mockBuilderMethods.delete().eq.mockResolvedValueOnce({ error: null });
 
             const request = createMockRequest('DELETE', 'http://localhost/api/classes/class-1');
 
