@@ -18,4 +18,4 @@ Routing guidance:
 | 2025-12-07 | implement-logout-api | - | Feature | High | TBD | Closed | Implement missing server-side API endpoint for user logout. |
 | 2025-12-07 | auth-redirect-to-login | - | Bug | High | TBD | Open | On initial load, the app redirects to the create classes page instead of the login page. |
 | 2025-12-07 | profile-update-fails | - | Bug | High | TBD | Open | Profile updates fail on the /profile page with the error "unable to update profile". |
-| 2025-12-07 | auth-logout-access-issue | - | Bug | Critical | TBD | Open | After logging out, users can still access the /profile page by manually entering the URL. |
+| 2025-12-07 | auth-logout-access-issue | - | Bug | Critical | TBD | Open | After logging out, users can still access the /profile page by manually entering the URL. || 2025-12-07 | fix-jest-config-state | - | Documentation | High | TBD | Open | Reference for ongoing Jest configuration and testing issues. See: docs/sprint-artifacts/jest-config-state.md |

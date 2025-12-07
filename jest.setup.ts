@@ -86,19 +86,9 @@ class mockResponseClass implements Response {
   readonly bodyUsed: boolean;
   readonly trailer: Promise<Headers>;
 
+  private _bodyText: string | null; // Store the body as a string
+
   constructor(body: BodyInit | null = null, init: ResponseInit = {}) {
-    this.body = body instanceof ReadableStream
-      ? body
-      : (body ? new ReadableStream<Uint8Array>({
-          start(controller) {
-            const encoder = new TextEncoder();
-            const encodedData = encoder.encode(String(body));
-            const buffer = new ArrayBuffer(encodedData.length);
-            new Uint8Array(buffer).set(encodedData);
-            controller.enqueue(new Uint8Array(buffer));
-            controller.close();
-          }
-        }) : null);
     this.headers = new mockSimpleHeaders(init.headers) as unknown as Headers;
     this.ok = init.status ? (init.status >= 200 && init.status < 300) : true;
     this.redirected = false;
@@ -108,15 +98,64 @@ class mockResponseClass implements Response {
     this.url = 'mock://response.url';
     this.bodyUsed = false;
     this.trailer = Promise.resolve(new mockSimpleHeaders() as unknown as Headers);
+
+    // If body is not a ReadableStream, assume it's the raw content (string or object)
+    if (body instanceof ReadableStream) {
+      this.body = body;
+      this._bodyText = null; // Will be read on demand if text() or json() is called
+    } else if (body !== null && body !== undefined) {
+      this._bodyText = String(body);
+      this.body = new ReadableStream<Uint8Array>({
+        start(controller) {
+          const encoder = new TextEncoder();
+          controller.enqueue(encoder.encode(String(body)));
+          controller.close();
+        }
+      });
+    } else {
+      this.body = null;
+      this._bodyText = null;
+    }
   }
 
-  arrayBuffer(): Promise<ArrayBuffer> { return Promise.resolve(new ArrayBuffer(0)); }
+  async arrayBuffer(): Promise<ArrayBuffer> {
+    const text = await this.text();
+    return new TextEncoder().encode(text).buffer;
+  }
   blob(): Promise<Blob> { return Promise.resolve(new Blob()); }
   formData(): Promise<FormData> { return Promise.resolve(new FormData()); }
-  json(): Promise<any> { return Promise.resolve({}); }
-  text(): Promise<string> { return Promise.resolve(''); }
+  async json(): Promise<any> {
+    if (this._bodyText === null && this.body) {
+      this._bodyText = await this.text(); // Read stream if not already read
+    }
+    if (this._bodyText) {
+      try {
+        return JSON.parse(this._bodyText);
+      } catch (e) {
+        throw new Error('Failed to parse JSON body: ' + e.message);
+      }
+    }
+    return Promise.resolve({});
+  }
+  async text(): Promise<string> {
+    if (this._bodyText !== null) {
+      return this._bodyText;
+    }
+    if (this.body) {
+      const reader = this.body.getReader();
+      let result = '';
+      let done;
+      let value;
+      while (({ done, value } = await reader.read()) && !done) {
+        result += new TextDecoder().decode(value);
+      }
+      this._bodyText = result;
+      return result;
+    }
+    return Promise.resolve('');
+  }
   clone(): Response {
-    return new mockResponseClass(this.body, {
+    return new mockResponseClass(this._bodyText, {
       headers: this.headers,
       status: this.status,
       statusText: this.statusText,
