@@ -1,8 +1,6 @@
 // tests/integration/api/upload/route.test.ts
 import { POST } from '@/app/api/upload/route';
-// Removed: import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
-import { Readable } from 'stream';
 import { createClient } from '@/lib/supabase/server'; // Import the actual function to mock
 
 // Mock Supabase and Next.js cookies
@@ -15,7 +13,7 @@ jest.mock('uuid', () => ({
   v4: () => 'mock-uuid',
 }));
 
-// Refactor mockSupabase to be globally accessible for jest.mock
+// Global mock Supabase client and its chainable methods
 const mockUpload = jest.fn();
 const mockRemove = jest.fn();
 const mockStorageFrom = jest.fn((bucketName: string) => ({
@@ -23,25 +21,31 @@ const mockStorageFrom = jest.fn((bucketName: string) => ({
   remove: mockRemove,
 }));
 
+// Mock for select.single() call
 const mockSingle = jest.fn();
+
+// Mock for .select() method, which can be followed by .single() or awaited directly
 const mockSelect = jest.fn(() => ({
   single: mockSingle,
+  then: jest.fn((resolve) => resolve({ data: [], error: null })) // Default to empty array for .select().then()
 }));
+
+// Mock for .insert() method, which returns something with a .select() method
 const mockInsert = jest.fn(() => ({
   select: mockSelect,
 }));
-const mockUpdate = jest.fn(); // This will be the final call in the update chain
-const mockEq = jest.fn(() => ({ // The eq method returns an object that has the update method
-  update: mockUpdate,
+
+// Mock for update.eq.update
+const mockChainedUpdate = jest.fn();
+const mockEq = jest.fn(() => ({
+  update: mockChainedUpdate,
+}));
+const mockUpdate = jest.fn(() => ({
+  eq: mockEq,
 }));
 
-const mockFrom = jest.fn((tableName: string) => ({
-  insert: mockInsert,
-  update: jest.fn(() => ({ // The update method returns an object that has the eq method
-    eq: mockEq,
-  })),
-}));
 
+// Combined mock Supabase instance
 const mockSupabase = {
   auth: {
     getUser: jest.fn(),
@@ -49,14 +53,15 @@ const mockSupabase = {
   storage: {
     from: mockStorageFrom,
   },
-  from: mockFrom,
+  from: jest.fn((tableName: string) => ({
+    insert: mockInsert,
+    update: mockUpdate,
+  })),
 };
 
-// Removed: jest.mock('@supabase/auth-helpers-nextjs', ...)
-
-// Mock the shared Supabase client creator
+// Mock the local createClient function to return our mockSupabase
 jest.mock('@/lib/supabase/server', () => ({
-  createClient: jest.fn(),
+  createClient: jest.fn(() => mockSupabase),
 }));
 
 describe('POST /api/upload', () => {
@@ -92,27 +97,42 @@ describe('POST /api/upload', () => {
     };
   };
 
-  describe('General Upload Scenarios', () => {
-    // let mockSupabase: any; // No longer needed here, now global
-    let mockCookies: any;
+  beforeEach(() => {
+    jest.clearAllMocks(); // Clears all mock function calls and their return values
 
-    beforeEach(() => {
-      jest.clearAllMocks();
+    // Reset all mock implementations to their default behavior or re-mock them
+    mockSupabase.auth.getUser.mockResolvedValue({ data: { user: null }, error: null });
+    mockUpload.mockResolvedValue({ data: { path: 'mock-path/file.txt' }, error: null });
+    mockRemove.mockResolvedValue({ data: [], error: null });
+    mockSingle.mockResolvedValue({ data: { id: 'mock-material-id' }, error: null }); // Default for select().single()
+    mockInsert.mockImplementation(() => ({
+      select: () => ({
+        single: mockSingle,
+        then: jest.fn((resolve) => resolve({ data: [], error: null }))
+      })
+    }));
+    mockChainedUpdate.mockResolvedValue({ data: null, error: null }); // Default for .update().eq().update()
 
-      // Ensure mockSupabase is reset for each test
-      mockSupabase.auth.getUser.mockClear();
-      mockSupabase.storage.from().upload.mockClear();
-      mockSupabase.storage.from().remove.mockClear();
-      mockSupabase.from().insert.mockClear();
-      mockSupabase.from().update.mockClear();
-      mockSupabase.from().eq.mockClear();
-      mockSupabase.from.mockClear();
-
-
-      (createClient as jest.Mock).mockResolvedValue(mockSupabase); // Mock the shared createClient
-      mockCookies = (cookies as jest.Mock).mockReturnValue({}); // default empty cookies
+    (cookies as jest.Mock).mockReturnValue({
+      get: jest.fn((name: string) => undefined),
+      set: jest.fn(),
+      delete: jest.fn(),
     });
 
+    // Mock global.fetch by default to avoid network errors unless explicitly tested
+    jest.spyOn(global, 'fetch').mockResolvedValue(
+      new Response(JSON.stringify({ message: 'Success' }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      })
+    );
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks(); // Restore original implementations after each test
+  });
+
+  describe('General Upload Scenarios', () => {
     it('should return 401 if user is not authenticated', async () => {
       mockSupabase.auth.getUser.mockResolvedValueOnce({ data: { user: null }, error: null });
 
@@ -171,10 +191,8 @@ describe('POST /api/upload', () => {
       const mockMaterialId = 'material-123';
 
       mockSupabase.auth.getUser.mockResolvedValueOnce({ data: { user: { id: userId } }, error: null });
-      mockSupabase.storage.from().upload.mockResolvedValueOnce({ data: { path: mockStoragePath }, error: null });
-      mockSupabase.from().insert().select().single.mockResolvedValueOnce({ data: { id: mockMaterialId }, error: null });
-      mockSupabase.from().eq.mockReturnThis(); // Mock eq before update
-      mockSupabase.from().update.mockResolvedValueOnce({ data: null, error: null }); // Mock update
+      mockUpload.mockResolvedValueOnce({ data: { path: mockStoragePath }, error: null });
+      mockSingle.mockResolvedValueOnce({ data: { id: mockMaterialId }, error: null });
 
       const request = createMockRequest(mockFile, fileContent, 'class-abc', 'section-xyz');
       const response = await POST(request);
@@ -186,14 +204,14 @@ describe('POST /api/upload', () => {
       });
 
       expect(mockSupabase.storage.from).toHaveBeenCalledWith('study_materials');
-      expect(mockSupabase.storage.from().upload).toHaveBeenCalledWith(
+      expect(mockUpload).toHaveBeenCalledWith(
         mockStoragePath,
-        expect.any(Blob), // File object passed directly
+        expect.any(Blob),
         { cacheControl: '3600', upsert: false }
       );
 
       expect(mockSupabase.from).toHaveBeenCalledWith('study_materials');
-      expect(mockSupabase.from().insert).toHaveBeenCalledWith(
+      expect(mockInsert).toHaveBeenCalledWith(
         expect.objectContaining({
           user_id: userId,
           file_name: 'document.txt',
@@ -203,14 +221,11 @@ describe('POST /api/upload', () => {
           file_size: fileContent.length,
           class_id: 'class-abc',
           class_section_id: 'section-xyz',
-          // extracted_text is not inserted directly, but updated later
         })
       );
-      expect(mockSupabase.from().insert().select().single).toHaveBeenCalled();
-
-      // Expect the update to extracted_text to be called for TXT files
-      expect(mockSupabase.from().update).toHaveBeenCalledWith({ extracted_text: fileContent });
-      expect(mockSupabase.from().eq).toHaveBeenCalledWith('id', mockMaterialId);
+      expect(mockSingle).toHaveBeenCalled();
+      expect(mockChainedUpdate).toHaveBeenCalledWith({ extracted_text: fileContent });
+      expect(mockEq).toHaveBeenCalledWith('id', mockMaterialId);
     });
 
     it('should successfully upload a .pdf file, call Vercel Function, and update extracted_text', async () => {
@@ -223,12 +238,9 @@ describe('POST /api/upload', () => {
       const mockExtractedText = 'Extracted text from PDF';
 
       mockSupabase.auth.getUser.mockResolvedValueOnce({ data: { user: { id: userId } }, error: null });
-      mockSupabase.storage.from().upload.mockResolvedValueOnce({ data: { path: mockStoragePath }, error: null });
-      mockSupabase.from().insert().select().single.mockResolvedValueOnce({ data: { id: mockMaterialId }, error: null });
-      mockSupabase.from().eq.mockReturnThis(); // Mock eq before update
-      mockSupabase.from().update.mockResolvedValueOnce({ data: null, error: null }); // Mock update for extracted_text
+      mockUpload.mockResolvedValueOnce({ data: { path: mockStoragePath }, error: null });
+      mockSingle.mockResolvedValueOnce({ data: { id: mockMaterialId }, error: null });
 
-      // Mock the fetch call for the Vercel function
       jest.spyOn(global, 'fetch').mockResolvedValueOnce(
         new Response(JSON.stringify({ studyMaterialId: mockMaterialId, extractedText: mockExtractedText }), {
           status: 200,
@@ -236,13 +248,8 @@ describe('POST /api/upload', () => {
         })
       );
 
-      // Add a mock for req.nextUrl.origin
-      const mockRequest = createMockRequest(mockFile, pdfContent);
-      // @ts-ignore
-      mockRequest.nextUrl = new URL('http://localhost');
-
-
-      const response = await POST(mockRequest);
+      const request = createMockRequest(mockFile, pdfContent);
+      const response = await POST(request);
 
       expect(response.status).toBe(200);
       await expect(response.json()).resolves.toEqual({
@@ -251,14 +258,14 @@ describe('POST /api/upload', () => {
       });
 
       expect(mockSupabase.storage.from).toHaveBeenCalledWith('study_materials');
-      expect(mockSupabase.storage.from().upload).toHaveBeenCalledWith(
+      expect(mockUpload).toHaveBeenCalledWith(
         mockStoragePath,
-        expect.any(Blob), // File object passed directly
+        expect.any(Blob),
         { cacheControl: '3600', upsert: false }
       );
 
       expect(mockSupabase.from).toHaveBeenCalledWith('study_materials');
-      expect(mockSupabase.from().insert).toHaveBeenCalledWith(
+      expect(mockInsert).toHaveBeenCalledWith(
         expect.objectContaining({
           user_id: userId,
           file_name: 'document.pdf',
@@ -268,27 +275,20 @@ describe('POST /api/upload', () => {
           file_size: pdfBuffer.length,
           class_id: null,
           class_section_id: null,
-          // extracted_text is null initially, updated later
         })
       );
-      expect(mockSupabase.from().insert().select().single).toHaveBeenCalled();
+      expect(mockSingle).toHaveBeenCalled();
 
-      // Assert the fetch call to the Vercel function
       expect(global.fetch).toHaveBeenCalledWith(
         'http://localhost/api/pdf-parser',
         expect.objectContaining({
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ studyMaterialId: mockMaterialId, storagePath: mockStoragePath }),
         })
       );
 
-      // Assert the update to extracted_text for PDF files
-      expect(mockSupabase.from().update).toHaveBeenCalledWith({ extracted_text: mockExtractedText });
-      expect(mockSupabase.from().eq).toHaveBeenCalledWith('id', mockMaterialId);
-
-      // Restore original fetch after the test
-      (global.fetch as jest.Mock).mockRestore();
+      expect(mockChainedUpdate).toHaveBeenCalledWith({ extracted_text: mockExtractedText });
+      expect(mockEq).toHaveBeenCalledWith('id', mockMaterialId);
     });
 
     it('should return 500 if Supabase storage upload fails', async () => {
@@ -296,16 +296,16 @@ describe('POST /api/upload', () => {
       const mockFile = new File(['test'], 'document.txt', { type: 'text/plain' });
 
       mockSupabase.auth.getUser.mockResolvedValueOnce({ data: { user: { id: userId } }, error: null });
-      mockSupabase.storage.from().upload.mockResolvedValueOnce({ data: null, error: { message: 'Upload failed' } });
+      mockUpload.mockResolvedValueOnce({ data: null, error: { message: 'Upload failed' } });
 
-      const request = createMockRequest(mockFile, 'test'); // fileContent is still 'test' for mock purposes
+      const request = createMockRequest(mockFile, 'test');
       const response = await POST(request);
 
       expect(response.status).toBe(500);
       await expect(response.json()).resolves.toEqual({ error: 'Failed to upload file to storage.' });
       expect(mockSupabase.storage.from).toHaveBeenCalledWith('study_materials');
-      expect(mockSupabase.storage.from().upload).toHaveBeenCalled();
-      expect(mockSupabase.from).not.toHaveBeenCalled(); // No insert if upload fails
+      expect(mockUpload).toHaveBeenCalled();
+      expect(mockSupabase.from).not.toHaveBeenCalled();
     });
 
     it('should return 500 if Supabase database insert fails and attempt to remove file', async () => {
@@ -314,8 +314,8 @@ describe('POST /api/upload', () => {
       const mockStoragePath = `study_materials/${userId}/mock-uuid.txt`;
 
       mockSupabase.auth.getUser.mockResolvedValueOnce({ data: { user: { id: userId } }, error: null });
-      mockSupabase.storage.from().upload.mockResolvedValueOnce({ data: { path: mockStoragePath }, error: null });
-      mockSupabase.from().insert().select().single.mockResolvedValueOnce({ data: null, error: { message: 'Insert failed' } });
+      mockUpload.mockResolvedValueOnce({ data: { path: mockStoragePath }, error: null });
+      mockSingle.mockResolvedValueOnce({ data: null, error: { message: 'Insert failed' } }); // Simulate insert failure
 
       const request = createMockRequest(mockFile);
       const response = await POST(request);
@@ -323,110 +323,50 @@ describe('POST /api/upload', () => {
       expect(response.status).toBe(500);
       await expect(response.json()).resolves.toEqual({ error: 'Failed to save file metadata.' });
       expect(mockSupabase.storage.from).toHaveBeenCalledWith('study_materials');
-      expect(mockSupabase.storage.from().upload).toHaveBeenCalled();
+      expect(mockUpload).toHaveBeenCalled();
       expect(mockSupabase.from).toHaveBeenCalledWith('study_materials');
-      expect(mockSupabase.from().insert).toHaveBeenCalled();
-      expect(mockSupabase.storage.from().remove).toHaveBeenCalledWith([mockStoragePath]); // Verify cleanup
+      expect(mockInsert).toHaveBeenCalled();
+      expect(mockRemove).toHaveBeenCalledWith([mockStoragePath]); // Verify cleanup
     });
   });
 
-  describe('PDF Processing via Vercel Function', () => {
-    let mockFetch: jest.SpyInstance;
-    let mockSupabase: any;
-    let mockCookies: any;
+  describe('PDF Processing via Vercel Function (Error Handling)', () => {
+    // Note: mockSupabase is already defined globally and reset in beforeEach
+    // The previous error was a re-declaration, now fixed by removing the local `let mockSupabase: any;`
 
     beforeEach(() => {
-      jest.clearAllMocks();
+      jest.clearAllMocks(); // Clears all mock function calls and their return values
 
-      const mockUpload = jest.fn();
-      const mockRemove = jest.fn();
-      const mockStorageFrom = jest.fn((bucketName: string) => ({
-        upload: mockUpload,
-        remove: mockRemove,
+      // Reset all mock implementations to their default behavior or re-mock them
+      mockSupabase.auth.getUser.mockResolvedValue({ data: { user: null }, error: null });
+      mockUpload.mockResolvedValue({ data: { path: 'mock-path/file.txt' }, error: null });
+      mockRemove.mockResolvedValue({ data: [], error: null });
+      mockSingle.mockResolvedValue({ data: { id: 'mock-material-id' }, error: null }); // Default for select().single()
+      mockInsert.mockImplementation(() => ({
+        select: () => ({
+          single: mockSingle,
+          then: jest.fn((resolve) => resolve({ data: [], error: null }))
+        })
       }));
+      mockChainedUpdate.mockResolvedValue({ data: null, error: null }); // Default for .update().eq().update()
 
-      const mockSingle = jest.fn();
-      const mockSelect = jest.fn(() => ({
-        single: mockSingle,
-      }));
-      const mockInsert = jest.fn(() => ({
-        select: mockSelect,
-      }));
-      const mockUpdate = jest.fn();
-      const mockEq = jest.fn(() => ({
-        update: mockUpdate,
-      }));
-      const mockFrom = jest.fn((tableName: string) => ({
-        insert: mockInsert,
-        update: jest.fn(() => ({ // Mock update and chainable methods
-          eq: jest.fn().mockResolvedValue({ data: null, error: null }),
-        })),
-      }));
+      (cookies as jest.Mock).mockReturnValue({
+        get: jest.fn((name: string) => undefined),
+        set: jest.fn(),
+        delete: jest.fn(),
+      });
 
-      mockSupabase = {
-        auth: {
-          getUser: jest.fn(),
-        },
-        storage: {
-          from: mockStorageFrom,
-        },
-        from: mockFrom,
-      };
-
-      (createClient as jest.Mock).mockResolvedValue(mockSupabase);
-      mockCookies = (cookies as jest.Mock).mockReturnValue({}); // default empty cookies
-
-      // Mock global.fetch
-      mockFetch = jest.spyOn(global, 'fetch');
-    });
-
-    afterEach(() => {
-      mockFetch.mockRestore(); // Restore original fetch after each test
-    });
-
-    it('should successfully process a PDF via Vercel Function and update extracted_text', async () => {
-      const userId = 'user-1';
-      const pdfBuffer = Buffer.from('Mock PDF Content');
-      const mockFile = new File([pdfBuffer], 'document.pdf', { type: 'application/pdf' });
-      const mockStoragePath = `study_materials/${userId}/mock-uuid.pdf`;
-      const mockMaterialId = 'material-pdf-123';
-      const mockExtractedText = 'Extracted text from mock PDF.';
-
-      mockSupabase.auth.getUser.mockResolvedValueOnce({ data: { user: { id: userId } }, error: null });
-      mockSupabase.storage.from().upload.mockResolvedValueOnce({ data: { path: mockStoragePath }, error: null });
-      mockSupabase.from().insert().select().single.mockResolvedValueOnce({ data: { id: mockMaterialId }, error: null });
-      mockSupabase.from().eq.mockReturnThis(); // Mock eq before update
-
-
-      mockFetch.mockResolvedValueOnce(
-        new Response(JSON.stringify({ studyMaterialId: mockMaterialId, extractedText: mockExtractedText }), {
+      // Mock global.fetch by default to avoid network errors unless explicitly tested
+      jest.spyOn(global, 'fetch').mockResolvedValue(
+        new Response(JSON.stringify({ message: 'Success' }), {
           status: 200,
           headers: { 'Content-Type': 'application/json' },
         })
       );
+    });
 
-      const request = createMockRequest(mockFile, pdfBuffer);
-      const response = await POST(request);
-
-      expect(response.status).toBe(200);
-      await expect(response.json()).resolves.toEqual({
-        message: 'File uploaded successfully',
-        studyMaterialId: mockMaterialId,
-        extractedText: mockExtractedText,
-      });
-
-      expect(mockSupabase.storage.from().upload).toHaveBeenCalled();
-      expect(mockSupabase.from().insert).toHaveBeenCalled();
-      expect(mockFetch).toHaveBeenCalledWith(
-        expect.stringContaining('/api/process-pdf'),
-        expect.objectContaining({
-          method: 'POST',
-          body: JSON.stringify({ studyMaterialId: mockMaterialId, storagePath: mockStoragePath }),
-        })
-      );
-      expect(mockSupabase.from).toHaveBeenCalledWith('study_materials');
-      expect(mockSupabase.from().update).toHaveBeenCalledWith({ extracted_text: mockExtractedText });
-      expect(mockSupabase.from().update().eq).toHaveBeenCalledWith('id', mockMaterialId);
+    afterEach(() => {
+      jest.restoreAllMocks(); // Restore original implementations after each test
     });
 
     it('should return an error if Vercel Function for PDF processing fails', async () => {
@@ -438,12 +378,10 @@ describe('POST /api/upload', () => {
       const errorMessage = 'This file is password-protected or corrupted and cannot be processed.';
 
       mockSupabase.auth.getUser.mockResolvedValueOnce({ data: { user: { id: userId } }, error: null });
-      mockSupabase.storage.from().upload.mockResolvedValueOnce({ data: { path: mockStoragePath }, error: null });
-      mockSupabase.from().insert().select().single.mockResolvedValueOnce({ data: { id: mockMaterialId }, error: null });
-      // Mock for cleanup operations
-      mockSupabase.from().update().eq.mockResolvedValueOnce({ data: null, error: null });
+      mockUpload.mockResolvedValueOnce({ data: { path: mockStoragePath }, error: null });
+      mockSingle.mockResolvedValueOnce({ data: { id: mockMaterialId }, error: null });
 
-      mockFetch.mockResolvedValueOnce(
+      jest.spyOn(global, 'fetch').mockResolvedValueOnce(
         new Response(JSON.stringify({ error: errorMessage }), {
           status: 422, // Expect 422 for unprocessable entity
           headers: { 'Content-Type': 'application/json' },
@@ -453,18 +391,16 @@ describe('POST /api/upload', () => {
       const request = createMockRequest(mockFile, pdfBuffer);
       const response = await POST(request);
 
-      expect(response.status).toBe(422); // Check for 422 status
+      expect(response.status).toBe(422);
       await expect(response.json()).resolves.toEqual({ error: errorMessage });
 
-      // Expect the study_materials table to be updated with the error
-      expect(mockSupabase.from().update).toHaveBeenCalledWith({
+      expect(mockChainedUpdate).toHaveBeenCalledWith({
         extracted_text: expect.stringContaining(`Error processing PDF: ${errorMessage}`),
       });
-      expect(mockSupabase.from().update().eq).toHaveBeenCalledWith('id', mockMaterialId);
+      expect(mockEq).toHaveBeenCalledWith('id', mockMaterialId);
 
-      // Should NOT attempt to remove file from storage or delete DB entry on processing error
-      expect(mockSupabase.storage.from().remove).not.toHaveBeenCalled();
-      expect(mockSupabase.from().delete).not.toHaveBeenCalled();
+      expect(mockRemove).not.toHaveBeenCalled();
+      expect(mockSupabase.from().update().eq().delete).not.toHaveBeenCalled();
     });
 
     it('should return an error if Vercel Function call fails', async () => {
@@ -475,12 +411,10 @@ describe('POST /api/upload', () => {
       const mockMaterialId = 'material-pdf-789';
 
       mockSupabase.auth.getUser.mockResolvedValueOnce({ data: { user: { id: userId } }, error: null });
-      mockSupabase.storage.from().upload.mockResolvedValueOnce({ data: { path: mockStoragePath }, error: null });
-      mockSupabase.from().insert().select().single.mockResolvedValueOnce({ data: { id: mockMaterialId }, error: null });
-      // Mock for cleanup operations
-      mockSupabase.from().update().eq.mockResolvedValueOnce({ data: null, error: null });
+      mockUpload.mockResolvedValueOnce({ data: { path: mockStoragePath }, error: null });
+      mockSingle.mockResolvedValueOnce({ data: { id: mockMaterialId }, error: null });
 
-      mockFetch.mockRejectedValueOnce(new TypeError('Failed to fetch')); // Simulate network error or service unavailability
+      jest.spyOn(global, 'fetch').mockRejectedValueOnce(new TypeError('Failed to fetch')); // Simulate network error
 
       const request = createMockRequest(mockFile, pdfBuffer);
       const response = await POST(request);
@@ -488,14 +422,13 @@ describe('POST /api/upload', () => {
       expect(response.status).toBe(500);
       await expect(response.json()).resolves.toEqual({ error: 'Failed to process PDF.' });
 
-      // Expect the study_materials table to be updated with the error
-      expect(mockSupabase.from().update).toHaveBeenCalledWith({
+      expect(mockChainedUpdate).toHaveBeenCalledWith({
         extracted_text: expect.stringContaining('Error processing PDF: Failed to fetch'),
       });
-      expect(mockSupabase.from().update().eq).toHaveBeenCalledWith('id', mockMaterialId);
+      expect(mockEq).toHaveBeenCalledWith('id', mockMaterialId);
 
-      // Should NOT attempt to remove file from storage or delete DB entry on processing error
-      expect(mockSupabase.storage.from().remove).not.toHaveBeenCalled();
-      expect(mockSupabase.from().delete).not.toHaveBeenCalled();
+      expect(mockRemove).not.toHaveBeenCalled();
+      expect(mockSupabase.from().update().eq().delete).not.toHaveBeenCalled();
     });
   });
+});

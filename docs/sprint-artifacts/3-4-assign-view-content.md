@@ -30,11 +30,11 @@ so that I can easily find and access my study materials.
 - [x] Update API endpoints for `generated_content` to link to `class_id` and `class_section_id` (AC: 1)
 - [x] Implement `GET /api/classes/{id}/documents` (or similar) to retrieve documents for a class/section (AC: 2)
 - [x] Implement `GET /api/documents/{id}/generated-content` (or similar) to retrieve generated content for a document (AC: 4)
-- [ ] [Medium] Resolve `@ts-ignore` workaround for Supabase `createServerClient` cookies configuration.
+- [x] [Medium] Resolve `@ts-ignore` workaround for Supabase `createServerClient` cookies configuration.
 
 ### Review Follow-ups (AI)
 
-- [ ] [Medium] Resolve `@ts-ignore` workaround for Supabase `createServerClient` cookies configuration. [file: `src/app/api/study-materials/[id]/assign/route.ts`, `src/app/api/classes/[id]/documents/route.ts`, `src/app/api/sections/[id]/documents/route.ts`, `src/app/api/documents/[id]/generated-content/route.ts`, `src/app/api/study-materials/route.ts`, and potentially other existing API routes]
+- [x] [Medium] Resolve `@ts-ignore` workaround for Supabase `createServerClient` cookies configuration. [file: `src/app/api/study-materials/[id]/assign/route.ts`, `src/app/api/classes/[id]/documents/route.ts`, `src/app/api/sections/[id]/documents/route.ts`, `src/app/api/documents/[id]/generated-content/route.ts`, `src/app/api/study-materials/route.ts`, and potentially other existing API routes]
 - [ ] [Low] Implement E2E tests for content assignment, reassignment, and viewing user journeys to provide more comprehensive testing coverage. [file: `docs/sprint-artifacts/3-4-assign-view-content.md`]
 
 ## Dev Notes
@@ -228,7 +228,7 @@ Story 3.4, "Assign & View Content," has been implemented with all acceptance cri
 
 **Action Items:**
 **Code Changes Required:**
-*   - [ ] [Medium] Resolve `@ts-ignore` workaround for Supabase `createServerClient` cookies configuration. This is a technical debt item that should be addressed once a type-safe solution from `@supabase/ssr` is available or if library versions are aligned. [file: `src/app/api/study-materials/[id]/assign/route.ts`, `src/app/api/classes/[id]/documents/route.ts`, `src/app/api/sections/[id]/documents/route.ts`, `src/app/api/documents/[id]/generated-content/route.ts`, `src/app/api/study-materials/route.ts`, and potentially other existing API routes]
+*   - [x] [Medium] Resolve `@ts-ignore` workaround for Supabase `createServerClient` cookies configuration. This is a technical debt item that should be addressed once a type-safe solution from `@supabase/ssr` is available or if library versions are aligned. [file: `src/app/api/study-materials/[id]/assign/route.ts`, `src/app/api/classes/[id]/documents/route.ts`, `src/app/api/sections/[id]/documents/route.ts`, `src/app/api/documents/[id]/generated-content/route.ts`, `src/app/api/study-materials/route.ts`, and potentially other existing API routes]
 
 **Advisory Notes:**
 *   - Note: The `epics` directory and a general `index.md` for project documentation were not found. This suggests that some overarching project documentation is still absent. Consider creating these for better project context and discoverability.
