@@ -3,10 +3,25 @@
 
 import '@testing-library/jest-dom';
 
+// Polyfill for Web Streams API
+import { ReadableStream, TransformStream } from 'web-streams-polyfill/dist/ponyfill.js';
+global.ReadableStream = ReadableStream;
+global.TransformStream = TransformStream;
+
 // Polyfill TextEncoder for Jest environment
 if (typeof TextEncoder === 'undefined') {
   global.TextEncoder = require('util').TextEncoder;
 }
+
+// Mock next/headers
+// Mock next/headers
+jest.mock('next/headers', () => ({
+  cookies: jest.fn(() => ({
+    get: jest.fn(() => ({ value: 'mock-cookie-value' })),
+    set: jest.fn(),
+    remove: jest.fn(),
+  })),
+}));
 
 // Polyfill fetch and related globals for Jest test environment if they don't exist
 // This avoids direct import of 'node-fetch' which can cause ES module issues
@@ -123,4 +138,9 @@ jest.mock('next/server', () => ({
     })),
     redirect: jest.fn(),
   },
+  NextRequest: jest.fn(() => ({
+    url: 'http://localhost',
+    json: jest.fn(() => Promise.resolve({})),
+    formData: jest.fn(() => Promise.resolve(new FormData())),
+  })), // Mock NextRequest constructor
 }));

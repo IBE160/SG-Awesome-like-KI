@@ -1,21 +1,62 @@
 // tests/integration/api/upload/route.test.ts
 import { POST } from '@/app/api/upload/route';
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
+// Removed: import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import { Readable } from 'stream';
+import { createClient } from '@/lib/supabase/server'; // Import the actual function to mock
 
 // Mock Supabase and Next.js cookies
 jest.mock('next/headers', () => ({
   cookies: jest.fn(),
 }));
 
-jest.mock('@supabase/auth-helpers-nextjs', () => ({
-  createRouteHandlerClient: jest.fn(),
-}));
-
 // Mock the uuid library
 jest.mock('uuid', () => ({
   v4: () => 'mock-uuid',
+}));
+
+// Refactor mockSupabase to be globally accessible for jest.mock
+const mockUpload = jest.fn();
+const mockRemove = jest.fn();
+const mockStorageFrom = jest.fn((bucketName: string) => ({
+  upload: mockUpload,
+  remove: mockRemove,
+}));
+
+const mockSingle = jest.fn();
+const mockSelect = jest.fn(() => ({
+  single: mockSingle,
+}));
+const mockInsert = jest.fn(() => ({
+  select: mockSelect,
+}));
+const mockUpdate = jest.fn(); // This will be the final call in the update chain
+const mockEq = jest.fn(() => ({ // The eq method returns an object that has the update method
+  update: mockUpdate,
+}));
+
+const mockFrom = jest.fn((tableName: string) => ({
+  insert: mockInsert,
+  update: jest.fn(() => ({ // The update method returns an object that has the eq method
+    eq: mockEq,
+  })),
+}));
+
+const mockSupabase = {
+  auth: {
+    getUser: jest.fn(),
+  },
+  storage: {
+    from: mockStorageFrom,
+  },
+  from: mockFrom,
+};
+
+// Removed: jest.mock('@supabase/auth-helpers-nextjs', ...)
+
+// Mock the shared Supabase client creator
+jest.mock('@/lib/supabase/server', () => ({
+  createClient: jest.fn(),
 }));
 
 describe('POST /api/upload', () => {
@@ -52,49 +93,23 @@ describe('POST /api/upload', () => {
   };
 
   describe('General Upload Scenarios', () => {
-    let mockSupabase: any;
+    // let mockSupabase: any; // No longer needed here, now global
     let mockCookies: any;
 
     beforeEach(() => {
       jest.clearAllMocks();
 
-      const mockUpload = jest.fn();
-      const mockRemove = jest.fn();
-      const mockStorageFrom = jest.fn((bucketName: string) => ({
-        upload: mockUpload,
-        remove: mockRemove,
-      }));
+      // Ensure mockSupabase is reset for each test
+      mockSupabase.auth.getUser.mockClear();
+      mockSupabase.storage.from().upload.mockClear();
+      mockSupabase.storage.from().remove.mockClear();
+      mockSupabase.from().insert.mockClear();
+      mockSupabase.from().update.mockClear();
+      mockSupabase.from().eq.mockClear();
+      mockSupabase.from.mockClear();
 
-      const mockSingle = jest.fn();
-      const mockSelect = jest.fn(() => ({
-        single: mockSingle,
-      }));
-      const mockInsert = jest.fn(() => ({
-        select: mockSelect,
-      }));
-      const mockUpdate = jest.fn(); // This will be the final call in the update chain
-      const mockEq = jest.fn(() => ({ // The eq method returns an object that has the update method
-        update: mockUpdate,
-      }));
 
-      const mockFrom = jest.fn((tableName: string) => ({
-        insert: mockInsert,
-        update: jest.fn(() => ({ // The update method returns an object that has the eq method
-          eq: mockEq,
-        })),
-      }));
-
-      mockSupabase = {
-        auth: {
-          getUser: jest.fn(),
-        },
-        storage: {
-          from: mockStorageFrom,
-        },
-        from: mockFrom,
-      };
-
-      (createRouteHandlerClient as jest.Mock).mockReturnValue(mockSupabase);
+      (createClient as jest.Mock).mockResolvedValue(mockSupabase); // Mock the shared createClient
       mockCookies = (cookies as jest.Mock).mockReturnValue({}); // default empty cookies
     });
 
@@ -358,7 +373,7 @@ describe('POST /api/upload', () => {
         from: mockFrom,
       };
 
-      (createRouteHandlerClient as jest.Mock).mockReturnValue(mockSupabase);
+      (createClient as jest.Mock).mockResolvedValue(mockSupabase);
       mockCookies = (cookies as jest.Mock).mockReturnValue({}); // default empty cookies
 
       // Mock global.fetch

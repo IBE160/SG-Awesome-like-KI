@@ -53,6 +53,7 @@ development_status:
   3-3-create-manage-class-sections: done
   3-4-assign-view-content: in-progress
   3-5-post-upload-actions: ready-for-dev
+  tech-debt-supabase-ts-ignore: review
   epic-3-retrospective: optional
   epic-4: contexted
   4-1-ai-summary-generation: ready-for-dev

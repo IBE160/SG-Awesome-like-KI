@@ -1,31 +1,8 @@
 
 
 
-import { createServerClient, type CookieOptions } from '@supabase/ssr'
-import { cookies } from 'next/headers'
+import { createClient } from '@/lib/supabase/server' // Import from the shared utility
 import { NextResponse } from 'next/server'
-
-// Utility function to create a Supabase client
-const createSupabaseClient = () => {
-  const cookieStore = cookies()
-  return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        async get(name: string) {
-          return (await cookieStore).get(name)?.value
-        },
-        async set(name: string, value: string, options: CookieOptions) {
-          (await cookieStore).set(name, value, options)
-        },
-        async remove(name: string, options: CookieOptions) {
-          (await cookieStore).set(name, '', options)
-        },
-      },
-    }
-  )
-}
 
 // Shared function to get the authenticated user
 const getAuthenticatedUser = async (supabase: any) => {
@@ -41,7 +18,7 @@ const getAuthenticatedUser = async (supabase: any) => {
 }
 
 export async function GET() {
-  const supabase = createSupabaseClient()
+  const supabase = await createClient()
   const user = await getAuthenticatedUser(supabase)
 
   if (!user) {
@@ -75,7 +52,7 @@ export async function GET() {
 }
 
 export async function PUT(request: Request) {
-  const supabase = createSupabaseClient()
+  const supabase = await createClient()
   const user = await getAuthenticatedUser(supabase)
 
   if (!user) {

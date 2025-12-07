@@ -1,6 +1,6 @@
 # Story 3.4: Assign & View Content
 
-Status: ready-for-review
+Status: review
 
 ## Story
 
@@ -31,6 +31,11 @@ so that I can easily find and access my study materials.
 - [x] Implement `GET /api/classes/{id}/documents` (or similar) to retrieve documents for a class/section (AC: 2)
 - [x] Implement `GET /api/documents/{id}/generated-content` (or similar) to retrieve generated content for a document (AC: 4)
 - [ ] [Medium] Resolve `@ts-ignore` workaround for Supabase `createServerClient` cookies configuration.
+
+### Review Follow-ups (AI)
+
+- [ ] [Medium] Resolve `@ts-ignore` workaround for Supabase `createServerClient` cookies configuration. [file: `src/app/api/study-materials/[id]/assign/route.ts`, `src/app/api/classes/[id]/documents/route.ts`, `src/app/api/sections/[id]/documents/route.ts`, `src/app/api/documents/[id]/generated-content/route.ts`, `src/app/api/study-materials/route.ts`, and potentially other existing API routes]
+- [ ] [Low] Implement E2E tests for content assignment, reassignment, and viewing user journeys to provide more comprehensive testing coverage. [file: `docs/sprint-artifacts/3-4-assign-view-content.md`]
 
 ## Dev Notes
 
@@ -156,31 +161,31 @@ gemini-1.5-flash
 
 | Date         | Version | Changes                      | Author |
 | ------------ | ------- | ---------------------------- | ------ |
+| 2025-12-07   | 1.2     | Senior Developer Review notes appended | BIP    |
 | 2025-12-06   | 1.1     | Senior Developer Review notes appended | BIP    |
 
 ## Senior Developer Review (AI)
 
 **Reviewer:** BIP
-**Date:** 2025-12-06
+**Date:** Sunday, December 7, 2025
 **Outcome:** Changes Requested
 
 **Summary:**
-Story 3.4, "Assign & View Content," has been implemented with all acceptance criteria addressed and tasks completed. The data model has been effectively updated to support content organization and movement, including proper cascading behavior for generated content. New API endpoints and UI components are well-structured, incorporating necessary authentication, authorization, and validation. However, significant technical debt was introduced due to a persistent type incompatibility issue with the `@supabase/ssr` client configuration in Next.js API routes, necessitating `@ts-ignore` directives. Additionally, some broader project documentation (Epic documentation) remains missing.
+Story 3.4, "Assign & View Content," has been implemented with all acceptance criteria addressed and tasks completed. The data model has been effectively updated to support content organization and movement, including proper cascading behavior for generated content. New API endpoints and UI components are well-structured, incorporating necessary authentication, authorization, and validation. However, technical debt was introduced due to a persistent type incompatibility issue with the `@supabase/ssr` client configuration in Next.js API routes, necessitating `@ts-ignore` directives. Additionally, some broader project documentation (Epic documentation) remains missing, and E2E tests are not yet implemented.
 
 **Key Findings:**
 *   **Medium Severity:** **Technical Debt - `@ts-ignore` for Supabase `createServerClient` cookies configuration.** (Reference: Multiple API route files, e.g., `src/app/api/study-materials/[id]/assign/route.ts`).
     *   **Justification:** The workaround using `@ts-ignore` on the `cookies` property for `createServerClient` bypasses strict type checking due to an incompatibility between `@supabase/ssr`'s `CookieMethodsServer` and `next/headers` `cookies()` function. This is a temporary solution for a type system mismatch and should be resolved when a stable, type-safe integration path becomes available or when library versions are aligned.
-*   **Medium Severity:** **Task Tracking Discrepancy - Task marked incomplete but implemented.**
-    *   **Justification:** The task "Update API endpoints for `generated_content` to link to `class_id` and `class_section_id` (AC: 1)" was marked incomplete in the story document but its objective was fully achieved through schema modifications (`docs/schema.sql`) and direct linkage via `study_material_id` in the `generated_content` table. This indicates a minor tracking inconsistency.
 *   **Low Severity:** **Documentation Gap - Missing general Epic and Project documentation.**
-    *   **Justification:** While `tech-spec-epic-3.md` was created (addressing a previous gap), the `epics` directory (which would contain `epic-3.md`) and a general `index.md` for project documentation were not found. This suggests that some overarching project documentation is still absent.
+    *   **Justification:** The `epics` directory (which would contain `epic-3.md`) and a general `index.md` for project documentation were not found. This suggests that some overarching project documentation is still absent.
+*   **Low Severity:** **Testing Gap - Missing E2E tests.**
+    *   **Justification:** E2E tests for the new features (content assignment, reassignment, and viewing user journeys) have not yet been implemented, which is a gap in comprehensive testing coverage.
 
 **Acceptance Criteria Coverage:**
 *   **AC #1: Users can assign uploaded documents and generated content to specific classes and sections.** - **IMPLEMENTED** - Evidence: `src/app/api/study-materials/[id]/assign/route.ts`, `src/app/upload/page.tsx`, `src/components/ContentAssignmentUI.tsx`, `docs/schema.sql`.
 *   **AC #2: Users can view all documents and generated content organized by class and section.** - **IMPLEMENTED** - Evidence: `src/app/api/classes/[id]/documents/route.ts`, `src/app/api/sections/[id]/documents/route.ts`, `src/components/OrganizedContentView.tsx`, `src/app/classes/[id]/page.tsx`, `src/app/sections/[id]/page.tsx`.
 *   **AC #3: When a document is moved, all its associated generated content (summaries, quizzes) shall automatically move with it.** - **IMPLEMENTED** - Evidence: `docs/schema.sql` (ForeignKey `generated_content_study_material_id_fkey` with `ON UPDATE CASCADE`), `src/app/api/study-materials/[id]/assign/route.ts`.
-*   **AC #4: When viewing a class/section, generated content (summaries, quizzes) is clearly linked to and displayed alongside its source document.** - **IMPLEMENTED** - Evidence: `src/app/api/classes/[id]/documents/route.ts`, `src/app/api/sections/[id]/documents/route.ts`, `src/components/OrganizedContentView.tsx`, `src/app/api/documents/[id]/generated-content/route.ts`.
-
+*   **AC #4: When viewing a class/section, generated content (summaries, quizzes) is clearly linked to and displayed alongside its source document.** - **IMPLEMENTED** - Evidence: `src/app/api/documents/[id]/generated-content/route.ts`, `src/components/OrganizedContentView.tsx`.
 **Summary: All 4 acceptance criteria fully implemented and verified.**
 
 **Task Completion Validation:**
@@ -188,26 +193,25 @@ Story 3.4, "Assign & View Content," has been implemented with all acceptance cri
     *   Add option to assign class/section during document upload: VERIFIED COMPLETE. Evidence: `src/app/upload/page.tsx`.
     *   Implement UI for reassigning existing documents/generated content to different classes/sections: VERIFIED COMPLETE. Evidence: `src/components/ContentAssignmentUI.tsx`.
 *   **Implement UI for viewing organized content (AC: 2, 4)**
-    *   Display documents and generated content within class/section views: VERIFIED COMPLETE. Evidence: `src/app/classes/[id]/page.tsx`, `src/app/sections/[id]/page.tsx`.
+    *   Display documents and generated content within class/section views: VERIFIED COMPLETE. Evidence: `src/app/classes/[id]/page.tsx`.
     *   Clearly link generated content to its source document: VERIFIED COMPLETE. Evidence: `src/components/OrganizedContentView.tsx`.
 *   **Implement API endpoint for assigning/reassigning study materials (AC: 1, 3)**
     *   `PUT /api/study-materials/{id}/assign`: VERIFIED COMPLETE. Evidence: `src/app/api/study-materials/[id]/assign/route.ts`.
     *   Implement backend logic to update `class_id` and `class_section_id` for study materials: VERIFIED COMPLETE. Evidence: `src/app/api/study-materials/[id]/assign/route.ts`.
     *   Implement backend logic to automatically move associated generated content (AC: 3): VERIFIED COMPLETE. Evidence: `docs/schema.sql` (ForeignKey `generated_content_study_material_id_fkey` with `ON UPDATE CASCADE`).
-*   **Update API endpoints for `generated_content` to link to `class_id` and `class_section_id` (AC: 1): VERIFIED COMPLETE.** (Originally marked incomplete, but implemented via schema changes).
+*   **Update API endpoints for `generated_content` to link to `class_id` and `class_section_id` (AC: 1): VERIFIED COMPLETE.** Evidence: `docs/schema.sql`.
 *   **Implement `GET /api/classes/{id}/documents` (or similar) to retrieve documents for a class/section (AC: 2): VERIFIED COMPLETE.** Evidence: `src/app/api/classes/[id]/documents/route.ts`.
 *   **Implement `GET /api/documents/{id}/generated-content` (or similar) to retrieve generated content for a document (AC: 4): VERIFIED COMPLETE.** Evidence: `src/app/api/documents/[id]/generated-content/route.ts`.
-
-**Summary: All tasks verified as complete.**
+**Summary: All claimed complete tasks verified. One task is correctly marked incomplete.**
 
 **Test Coverage and Gaps:**
-*   Unit tests are created for all new UI components (`ContentAssignmentUI.test.tsx`, `OrganizedContentView.test.tsx`, `app/upload/page.test.tsx`, `app/assign-content/page.test.tsx`, `app/classes/[id]/page.test.tsx`, `app/sections/[id]/page.test.tsx`).
-*   Integration tests are created for all new API endpoints (`api/study_materials/assign_route.test.ts`, `api/classes/documents_route.test.ts`, `api/sections/documents_route.test.ts`, `api/documents/generated_content_route.test.ts`, `api/study_materials/get_route.test.ts`).
+*   Unit tests are created for all new UI components.
+*   Integration tests are created for all new API endpoints.
 *   **Gap:** E2E tests for the new features have not yet been implemented.
 
 **Architectural Alignment:**
 *   The overall design aligns with `architecture.md` (Next.js, Supabase, API routes, RLS).
-*   RLS implementation for content ownership verification in API routes is good.
+*   RLS implementation for content ownership verification in API routes is robust.
 *   Cascading updates for generated content using database foreign keys is aligned with the architecture and data consistency goals.
 
 **Security Notes:**
@@ -223,12 +227,9 @@ Story 3.4, "Assign & View Content," has been implemented with all acceptance cri
 *   Testing: Jest (v30.2.0), React Testing Library, Playwright (v1.57.0).
 
 **Action Items:**
-
 **Code Changes Required:**
-- [ ] [Medium] Resolve `@ts-ignore` workaround for Supabase `createServerClient` cookies configuration. This is a technical debt item that should be addressed once a type-safe solution from `@supabase/ssr` is available or if library versions can be aligned. [file: `src/app/api/study-materials/[id]/assign/route.ts`, `src/app/api/classes/[id]/documents/route.ts`, `src/app/api/sections/[id]/documents/route.ts`, `src/app/api/documents/[id]/generated-content/route.ts`, `src/app/api/study-materials/route.ts`, and potentially other existing API routes]
+*   - [ ] [Medium] Resolve `@ts-ignore` workaround for Supabase `createServerClient` cookies configuration. This is a technical debt item that should be addressed once a type-safe solution from `@supabase/ssr` is available or if library versions are aligned. [file: `src/app/api/study-materials/[id]/assign/route.ts`, `src/app/api/classes/[id]/documents/route.ts`, `src/app/api/sections/[id]/documents/route.ts`, `src/app/api/documents/[id]/generated-content/route.ts`, `src/app/api/study-materials/route.ts`, and potentially other existing API routes]
 
 **Advisory Notes:**
-- Note: The `epics` directory and a general `index.md` for project documentation were not found. This suggests that some overarching project documentation is still absent. Consider creating these for better project context and discoverability.
-- Note: The `Completion Notes List` has been updated in this review. The `File List` has been explicitly defined. The `Tasks / Subtasks` has been marked complete to reflect that all tasks are now implemented.
-- [ ] [Low] Implement E2E tests for content assignment, reassignment, and viewing user journeys to provide more comprehensive testing coverage. [file: `docs/sprint-artifacts/3-4-assign-view-content.md`]
-
+*   - Note: The `epics` directory and a general `index.md` for project documentation were not found. This suggests that some overarching project documentation is still absent. Consider creating these for better project context and discoverability.
+*   - [ ] [Low] Implement E2E tests for content assignment, reassignment, and viewing user journeys to provide more comprehensive testing coverage.
