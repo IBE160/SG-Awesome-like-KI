@@ -81,6 +81,8 @@ export default function UploadPage() {
     console.error('Client-side Validation Error:', message);
   };
 
+  const [uploadedDocumentId, setUploadedDocumentId] = useState<string | null>(null);
+
   const handleUploadDocument = async () => {
     if (!selectedFile) {
       setUploadError('Please select a file to upload.');
@@ -90,6 +92,7 @@ export default function UploadPage() {
     setIsUploading(true);
     setUploadError(null);
     setUploadSuccess(null);
+    setUploadedDocumentId(null); // Clear previous upload success state
 
     const formData = new FormData();
     formData.append('file', selectedFile);
@@ -120,12 +123,13 @@ export default function UploadPage() {
         }
       } else {
         setUploadSuccess('File uploaded and processed successfully!');
-        setSelectedFile(null);
+        setUploadedDocumentId(data.documentId); // Assuming the API returns documentId on success
+        setSelectedFile(null); // Clear selected file from the upload form
         setValidationError(null);
         setRetryCount(0);
         setSelectedClassId(null); // Reset class/section selection
         setSelectedSectionId(null);
-        console.log('Upload Success:', data);
+        console.log('Upload Success:', data, 'Document ID:', data.documentId);
       }
     } catch (error) {
       console.error('Network Error:', error);
@@ -146,6 +150,37 @@ export default function UploadPage() {
     handleUploadDocument();
   };
 
+  const handleGenerateSummary = (docId: string) => {
+    console.log(`Placeholder: Generate Summary for document ID: ${docId}`);
+    // In a real implementation, navigate to summary generation wizard or trigger API
+    // router.push(`/generate-summary?documentId=${docId}`);
+  };
+
+  const handleGenerateQuiz = (docId: string) => {
+    console.log(`Placeholder: Generate Quiz for document ID: ${docId}`);
+    // In a real implementation, navigate to quiz generation wizard or trigger API
+    // router.push(`/generate-quiz?documentId=${docId}`);
+  };
+
+  const handleViewDocument = (docId: string) => {
+    console.log(`Placeholder: View document: ${docId}`);
+    // In a real implementation, navigate to the document view page
+    // router.push(`/documents/${docId}`);
+  };
+
+  if (uploadedDocumentId) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-100">
+        <PostUploadActionsUI
+          documentId={uploadedDocumentId}
+          onGenerateSummary={handleGenerateSummary}
+          onGenerateQuiz={handleGenerateQuiz}
+          onViewDocument={handleViewDocument}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-100">
       <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
@@ -160,7 +195,7 @@ export default function UploadPage() {
         {uploadError && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
             <span className="block sm:inline">{uploadError}</span>
-            {retryCount === MAX_RETRIES && (
+            {retryCount < MAX_RETRIES && ( // Only show retry button if max retries not reached
                 <button
                     onClick={handleRetryUpload}
                     className="ml-4 px-3 py-1 bg-red-600 text-white font-semibold rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
@@ -171,7 +206,7 @@ export default function UploadPage() {
           </div>
         )}
 
-        {uploadSuccess && (
+        {uploadSuccess && !uploadedDocumentId && ( // Only show generic success if not transitioning to PostUploadActionsUI
           <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
             <span className="block sm:inline">{uploadSuccess}</span>
           </div>

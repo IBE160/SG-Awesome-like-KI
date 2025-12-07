@@ -13,7 +13,7 @@ so that I can quickly get value from the tool without having to organize my cont
 
 ## Tasks / Subtasks
 
-- [ ] Implement UI for post-upload options (AC: 1)
+- [x] Implement UI for post-upload options (AC: 1)
   - [ ] Integrate this UI into the document upload flow (`src/app/upload/page.tsx` or similar).
   - [ ] Ensure options are clearly presented and actionable.
 - [ ] Implement backend logic for generated content from unorganized documents (AC: 2)
@@ -70,12 +70,16 @@ so that I can quickly get value from the tool without having to organize my cont
 gemini-1.5-flash
 
 ### Debug Log References
+- Implement UI for post-upload options (AC: 1):
+  - Created `src/components/PostUploadActionsUI.tsx` to display "Generate Summary" and "Generate Quiz" buttons.
+  - Integrated `PostUploadActionsUI` into `src/app/upload/page.tsx`, conditionally rendering it after a successful upload.
+  - Modified `handleUploadDocument` in `src/app/upload/page.tsx` to capture `documentId` from API response and manage state for `PostUploadActionsUI` display.
+  - Implemented placeholder handlers for summary/quiz generation and document view.
 
 ### Completion Notes List
 
 ### File List
 *   `src/app/upload/page.tsx` (MODIFIED) - to present post-upload options
-*   `src/app/api/generate/route.ts` (MODIFIED or NEW) - API endpoint for triggering generation (depends on Epic 4)
 *   `src/components/PostUploadActionsUI.tsx` (NEW) - custom component for post-upload options
 *   `src/components/UnorganizedContentList.tsx` (NEW) - custom component for displaying unorganized content
 *   `src/lib/supabase/client.ts` (MODIFIED) - for Supabase client integration (`generated_content` table operations)
