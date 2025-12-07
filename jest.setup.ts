@@ -134,3 +134,18 @@ jest.mock('next/server', () => ({
     redirect: jest.fn(),
   },
 }));
+
+jest.mock('next/headers', () => ({
+  cookies: jest.fn(() => ({
+    get: jest.fn((name: string) => {
+      // You can customize this to return specific values for specific cookie names
+      // For now, return a basic mock object
+      if (name === 'sb:token') { // Example for a common Supabase token
+        return { name, value: 'mock-supabase-token' };
+      }
+      return { name, value: 'mock-cookie-value' };
+    }),
+    set: jest.fn(),
+    delete: jest.fn(),
+  })),
+}));
