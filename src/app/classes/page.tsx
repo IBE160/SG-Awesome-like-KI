@@ -1,88 +1,98 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { useEffect, useState } from "react";
-import { createClient } from "@/lib/supabase/client";
-import { LogoutButton } from "@/components/Logoutbutton";
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { createClient } from '@/lib/supabase/client';
+import Link from 'next/link';
+import AddClassForm from '@/components/AddClassForm';
 
-interface Class {
+interface ClassItem {
   id: string;
   name: string;
-  user_id: string;
 }
 
 export default function ClassesPage() {
+  const router = useRouter();
   const supabase = createClient();
-  const [classes, setClasses] = useState<Class[]>([]);
-  const [newClassName, setNewClassName] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [classes, setClasses] = useState<ClassItem[]>([]);
+  const [error, setError] = useState<string | null>(null);
+
+  async function loadClasses() {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      router.push("/login");
+      return;
+    }
+
+    const res = await fetch("/api/classes");
+    const data = await res.json();
+
+    if (res.ok) {
+      setClasses(data.classes);
+    } else {
+      setError(data.error || "Failed to load classes");
+    }
+
+    setLoading(false);
+  }
 
   useEffect(() => {
-    async function load() {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-
-      const { data } = await supabase
-        .from("classes")
-        .select("*")
-        .eq("user_id", user.id);
-
-      setClasses(data || []);
-    }
-    load();
+    loadClasses();
   }, []);
 
-  async function addClass(e: React.FormEvent) {
-    e.preventDefault();
-
-    const { data, error } = await supabase
-      .from("classes")
-      .insert({ name: newClassName })
-      .select()
-      .single();
-
-    if (!error) {
-      setClasses([...classes, data]);
-      setNewClassName("");
-    }
-  }
+  if (loading) return <p className="p-4">Loading…</p>;
 
   return (
     <div className="container mx-auto p-6">
 
-      <div className="flex justify-between mb-6">
-        <Link
-          href="/classes/manage"
-          className="bg-blue-600 px-4 py-2 text-white rounded"
-        >
-          Manage Classes
-        </Link>
+      {/* Top buttons */}
+      <div className="flex justify-between items-center mb-6">
+        <div className="flex gap-2">
+          <Link href="/upload">
+            <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+              Upload Document
+            </button>
+          </Link>
+          <Link href="/classes/manage">
+            <button className="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-800">
+              Manage Classes
+            </button>
+          </Link>
+          <Link href="/unorganized">
+            <button className="bg-purple-700 text-white px-4 py-2 rounded hover:bg-purple-800">
+              Unorganized Content
+            </button>
+          </Link>
+        </div>
 
-        <LogoutButton />
+        <button
+          className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+          onClick={async () => {
+            await supabase.auth.signOut();
+            router.push("/login");
+          }}
+        >
+          Log out
+        </button>
       </div>
 
-      {/* ADD CLASS */}
-      <form onSubmit={addClass} className="mb-8">
-        <input
-          type="text"
-          placeholder="New class name"
-          value={newClassName}
-          onChange={(e) => setNewClassName(e.target.value)}
-          className="border p-2 rounded w-full mb-3"
-        />
+      {/* Add class */}
+      <AddClassForm onClassAdded={loadClasses} />
 
-        <button className="bg-blue-600 text-white w-full p-3 rounded">
-          Add Class
-        </button>
-      </form>
+      <h2 className="text-xl font-bold mb-4 mt-6">Your Classes</h2>
 
-      {/* CLASS LIST */}
-      <h2 className="text-2xl font-bold mb-3">Your Classes</h2>
+      {error && <p className="text-red-500">{error}</p>}
 
-      {classes.map((c) => (
-        <div key={c.id} className="p-4 border rounded mb-2 bg-gray-50">
-          {c.name}
-        </div>
-      ))}
+      <ul className="space-y-3">
+        {classes.map((c) => (
+          <li key={c.id} className="p-4 border rounded bg-white shadow-sm hover:shadow-md hover:bg-gray-50 transition-all">
+            <Link href={`/classes/${c.id}`} className="block w-full h-full font-semibold text-lg text-gray-800">
+              {c.name}
+            </Link>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

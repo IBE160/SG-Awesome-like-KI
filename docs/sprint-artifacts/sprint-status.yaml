@@ -28,7 +28,7 @@
 # - Stories can be worked in parallel if team capacity allows
 # - SM typically drafts next story after previous one is 'done' to incorporate learnings
 # - Dev moves story to 'review', SM reviews, then Dev moves to 'done'
-generated: 2025-11-30
+generated: 2025-12-07
 project: ibe160
 project_key: 
 tracking_system: file-system
@@ -51,8 +51,8 @@ development_status:
   3-1-document-upload-text-pdf: done
   3-2-create-manage-classes: done
   3-3-create-manage-class-sections: done
-  3-4-assign-view-content: in-progress
-  3-5-post-upload-actions: in-progress
+  3-4-assign-view-content: done
+  3-5-post-upload-actions: done
   epic-3-retrospective: optional
   epic-4: contexted
   4-1-ai-summary-generation: ready-for-dev

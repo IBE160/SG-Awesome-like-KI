@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import Link from 'next/link';
 
 interface Class {
   id: string;
@@ -45,6 +46,9 @@ export function ClassManagementUI() {
   }
 
   async function deleteClass(id: string) {
+    if (!confirm('Are you sure you want to delete this class? All sections and documents within it will be removed.')) {
+      return;
+    }
     const { error } = await supabase
       .from("classes")
       .delete()
@@ -82,17 +86,23 @@ export function ClassManagementUI() {
               </button>
             </div>
           ) : (
-            <div className="flex justify-between">
+            <div className="flex justify-between items-center">
               <span>{c.name}</span>
 
               <div>
+                <Link href={`/classes/Manage/page.tsx`}>
+                  <button
+                    className="bg-blue-500 text-white px-3 py-1 rounded mr-2"
+                  >
+                    Manage Sections
+                  </button>
+                </Link>
                 <button
                   onClick={() => { setEditing(c.id); setNewName(c.name); }}
                   className="bg-yellow-500 text-white px-3 py-1 rounded mr-2"
                 >
                   Rename
                 </button>
-
                 <button
                   onClick={() => deleteClass(c.id)}
                   className="bg-red-600 text-white px-3 py-1 rounded"

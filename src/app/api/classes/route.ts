@@ -1,42 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createServerClient } from '@supabase/ssr';
-import { cookies } from 'next/headers';
-
-// ---------- CREATE SUPABASE CLIENT ----------
-async function createSupabaseClient() {
-  const cookieStore = await cookies(); // MUST await in Next.js 15/16
-
-  return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        get(name: string) {
-          return cookieStore.get(name)?.value;
-        },
-        set(name: string, value: string, options: any) {
-          try {
-            cookieStore.set({ name, value, ...options });
-          } catch (err) {
-            console.warn('Cookie set error:', err);
-          }
-        },
-        remove(name: string, options: any) {
-          try {
-            cookieStore.delete({ name, ...options });
-          } catch (err) {
-            console.warn('Cookie delete error:', err);
-          }
-        },
-      },
-    }
-  );
-}
+import { createSupabaseServerClient } from '@/lib/supabase/server';
 
 // ---------------------------- GET /api/classes ----------------------------
 export async function GET(req: NextRequest) {
   try {
-    const supabase = await createSupabaseClient();
+    const supabase = await createSupabaseServerClient();
 
     const { data: { user }, error: userError } = await supabase.auth.getUser();
 
@@ -64,7 +32,7 @@ export async function GET(req: NextRequest) {
 // ---------------------------- POST /api/classes ----------------------------
 export async function POST(req: NextRequest) {
   try {
-    const supabase = await createSupabaseClient();
+    const supabase = await createSupabaseServerClient();
 
     const { data: { user }, error: userError } = await supabase.auth.getUser();
 
@@ -75,7 +43,7 @@ export async function POST(req: NextRequest) {
     const { name } = await req.json();
 
     // Validate
-    if (!name || typeof name !== 'string' || name.length > 25 || !/^[a-zA-Z0-9\s]+$/.test(name)) {
+    if (!name || typeof name !== "string" || name.length > 25 || !/^[\p{L}0-9\s]+$/u.test(name)) {
       return NextResponse.json(
         { error: 'Invalid class name. Must be alphanumeric and max 25 characters.' },
         { status: 400 }

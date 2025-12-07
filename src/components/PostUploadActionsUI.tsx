@@ -4,36 +4,35 @@
 import React from 'react';
 
 interface PostUploadActionsUIProps {
+  documentId: string;
   onGenerateSummary: () => void;
   onGenerateQuiz: () => void;
-  documentId: string; // Document ID to pass to generation functions
 }
 
 export const PostUploadActionsUI: React.FC<PostUploadActionsUIProps> = ({
+  documentId,
   onGenerateSummary,
   onGenerateQuiz,
-  documentId,
 }) => {
   return (
-    <div className="flex flex-col items-center justify-center p-6 bg-gray-50 rounded-lg shadow-md mt-8">
-      <h2 className="text-xl font-semibold mb-4 text-gray-800">Document Uploaded Successfully!</h2>
-      <p className="text-gray-600 mb-6">What would you like to do next with this document?</p>
-      
-      <div className="flex space-x-4">
+    <div className="mt-8 p-6 w-full max-w-md bg-white rounded-lg shadow-md border border-gray-200">
+      <h2 className="text-xl font-bold mb-4 text-center text-gray-800">Document Uploaded Successfully!</h2>
+      <p className="text-center text-gray-600 mb-2">Document ID: <span className="font-mono text-sm bg-gray-100 p-1 rounded">{documentId}</span></p>
+      <p className="text-center text-gray-600 mb-6">What would you like to do next?</p>
+      <div className="flex justify-center space-x-4">
         <button
-          onClick={() => onGenerateSummary()}
-          className="px-6 py-3 bg-blue-600 text-white font-medium rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          onClick={onGenerateSummary}
+          className="px-4 py-2 bg-green-600 text-white font-semibold rounded-md shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
         >
           Generate Summary
         </button>
         <button
-          onClick={() => onGenerateQuiz()}
-          className="px-6 py-3 bg-green-600 text-white font-medium rounded-md shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+          onClick={onGenerateQuiz}
+          className="px-4 py-2 bg-purple-600 text-white font-semibold rounded-md shadow-sm hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
         >
           Generate Quiz
         </button>
       </div>
-      <p className="text-sm text-gray-500 mt-4">Document ID: {documentId}</p>
     </div>
   );
 };

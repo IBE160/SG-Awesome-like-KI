@@ -1,66 +1,69 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
+import { createServerClient, type CookieOptions } from '@supabase/ssr';
 
-// Correct Supabase SSR cookies config
-async function createSupabaseClient() {
-  const cookieStore = await cookies();
+// Create Supabase client
+function createSupabase() {
+  const cookieStore = cookies();
 
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        get: (name: string) => cookieStore.get(name)?.value,
-        set: (name: string, value: string, options: any) => {
-          try { cookieStore.set({ name, value, ...options }); } catch {}
+        get(name: string) {
+          return cookieStore.get(name)?.value;
         },
-        remove: (name: string, options: any) => {
-          try { cookieStore.delete({ name, ...options }); } catch {}
-        }
-      }
+        set(name: string, value: string, options: CookieOptions) {
+          cookieStore.set(name, value, options);
+        },
+        remove(name: string, options: CookieOptions) {
+          cookieStore.set(name, '', { ...options, maxAge: 0 });
+        },
+      },
     }
   );
 }
 
 export async function GET(
   req: NextRequest,
-  { params: paramsPromise }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
   try {
-    const { id } = await paramsPromise; // MUST await in Next.js 15/16
+    const supabase = createSupabase();
 
-    const supabase = await createSupabaseClient();
+    const {
+      data: { user }
+    } = await supabase.auth.getUser();
 
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    if (!user)
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-    // Verify the class belongs to the user
+    // Check class ownership
     const { data: cls, error: classError } = await supabase
-      .from('classes')
-      .select('id, user_id')
-      .eq('id', id)
-      .eq('user_id', user.id)
+      .from("classes")
+      .select("id, user_id")
+      .eq("id", params.id)
+      .eq("user_id", user.id)
       .single();
 
     if (classError || !cls) {
       return NextResponse.json(
-        { error: 'Class not found or unauthorized' },
+        { error: "Class not found or unauthorized" },
         { status: 404 }
       );
     }
 
-    // Fetch documents belonging to that class
+    // Fetch documents belonging to the class
     const { data: documents, error: docError } = await supabase
-      .from('documents')
-      .select('*')
-      .eq('class_id', id);
+      .from("documents")
+      .select("*")
+      .eq("class_id", params.id);
 
     if (docError) {
+      console.error("Document fetch error:", docError);
       return NextResponse.json(
-        { error: 'Failed to fetch documents' },
+        { error: "Failed to fetch documents" },
         { status: 500 }
       );
     }
@@ -70,9 +73,8 @@ export async function GET(
   } catch (err) {
     console.error("GET /api/classes/[id]/documents error:", err);
     return NextResponse.json(
-      { error: 'Internal Server Error' },
+      { error: "Internal Server Error" },
       { status: 500 }
     );
   }
 }
-
