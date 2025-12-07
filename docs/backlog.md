@@ -14,3 +14,4 @@ Routing guidance:
 | 2025-12-07 | 3.4 | 3 | Documentation | Low | TBD | Open | The `epics` directory and a general `index.md` for project documentation were not found. Consider creating these. |
 | 2025-12-07 | 3.4 | 3 | Testing | Low | TBD | Open | Implement E2E tests for content assignment, reassignment, and viewing user journeys. |
 | 2025-12-07 | fix-jest-config | - | Technical Debt | High | TBD | Open | Resolve Jest test suite configuration issues (SyntaxError, cookie scope, NextRequest constructor) for Next.js 16 API routes. This is blocking automated verification of other tasks. |
+| 2025-12-07 | implement-logout-api | - | Feature | High | TBD | Open | Implement missing server-side API endpoint for user logout. |
