@@ -148,7 +148,7 @@
       - [x] /run-agent-task sm *create-story-context {prompt / user-input-file}
         - [x] File: sprint-artifacts/{{story_key}}.context.xml
       - [x] /run-agent-task sm *validate-story-context {prompt / user-input-file}
-      - [x] /run-agent-task dev *develop-story {prompt / user-input-file}
+      - [ ] /run-agent-task dev *develop-story {prompt / user-input-file}
       - [ ] /run-agent-task dev *code-review {prompt / user-input-file}
       - [ ] Manuell test i brukergrensesnittet, prompt: "I want to do a manual test of the features we just implemented in this story. Please guide me through how I can open the application in a browser without opening the interactive shell in this conversation, i.e. opening a different terminal and typing npm run dev. And then explain the steps to verify the features."
     - [ ] /run-agent-task sm *epic-retrospective {prompt / user-input-file}

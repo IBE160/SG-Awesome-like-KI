@@ -31,19 +31,6 @@ export default function ProfilePage() {
     fetchProfile()
   }, [fetchProfile])
   
-  const handleLogout = async () => {
-    try {
-      const response = await fetch('/api/auth/logout', {
-        method: 'POST',
-      });
-      if (response.redirected) {
-        window.location.href = response.url;
-      }
-    } catch (e: any) {
-      setError(e.message);
-    }
-  };
-
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
@@ -100,22 +87,13 @@ export default function ProfilePage() {
               className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               disabled={loading}
             />
-            <div className="flex space-x-4">
-              <button
-                type="submit"
-                className="bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
-                disabled={loading}
-              >
-                {loading ? 'Updating...' : 'Update Profile'}
-              </button>
-              <button
-                onClick={handleLogout}
-                className="bg-red-600 text-white p-2 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 disabled:opacity-50"
-                disabled={loading}
-              >
-                Logout
-              </button>
-            </div>
+            <button
+              type="submit"
+              className="bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+              disabled={loading}
+            >
+              {loading ? 'Updating...' : 'Update Profile'}
+            </button>
           </div>
         </form>
         {message && <p className="mt-4 text-green-600">{message}</p>}
@@ -123,4 +101,3 @@ export default function ProfilePage() {
     </div>
   )
 }
-
