@@ -94,15 +94,7 @@ export default function UploadPage() {
     setRetryCount(0);
   };
 
-  const handleValidationError = (message: string) => {
-    setValidationError(message);
-    setSelectedFile(null);
-  };
 
-  const [uploadedDocumentId, setUploadedDocumentId] = useState<string | null>(null);
-
-  const handleUploadDocument = async () => {
-    if (!selectedFile) return;
 
     setIsUploading(true);
     setUploadError(null);

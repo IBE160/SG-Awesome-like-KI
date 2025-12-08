@@ -1,6 +1,7 @@
 // jest.setup.ts
 // Learn more: https://jestjs.io/docs/setup-files
 
+import { act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
 // Polyfill for Web Streams API
@@ -409,5 +410,5 @@ jest.mock('@supabase/ssr', () => ({
 
 // Mocking the local createClient for server components
 jest.mock('@/lib/supabase/server', () => ({
-  createClient: jest.fn(() => mockSupabaseClient),
+  createSupabaseServerClient: jest.fn(() => mockSupabaseClient),
 }));

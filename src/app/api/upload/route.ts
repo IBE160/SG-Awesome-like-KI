@@ -17,9 +17,7 @@ export async function POST(req: NextRequest) {
     const formData = await req.formData();
     const file = formData.get('file') as File;
     const classId = formData.get('class_id') as string | null;
-    const classSectionId = formData.get('class_section_id') as string | null;
 
-    const { data: { user } } = await supabase.auth.getUser();
 
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
