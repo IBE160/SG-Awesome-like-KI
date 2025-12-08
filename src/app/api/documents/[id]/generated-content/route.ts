@@ -1,39 +1,10 @@
-import { NextRequest, NextResponse } from "next/server";
-import { createServerClient } from "@supabase/ssr";
-import { cookies } from "next/headers";
+import { NextRequest, NextResponse } from 'next/server';
+import { createClient } from '@/lib/supabase/server';
 
-// ---- Supabase Client (correct cookies setup) ----
-async function createSupabaseClient() {
-  const cookieStore = await cookies(); // required for Next.js 15+
-
-  return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        get(name: string) {
-          return cookieStore.get(name)?.value;
-        },
-        set(name: string, value: string, options: any) {
-          try { cookieStore.set({ name, value, ...options }); } catch {}
-        },
-        remove(name: string, options: any) {
-          try { cookieStore.delete({ name, ...options }); } catch {}
-        }
-      }
-    }
-  );
-}
-
-// ---- GET /api/documents/[id]/generated-content ----
-export async function GET(
-  req: NextRequest,
-  context: { params: Promise<{ id: string }> }
-) {
+export async function GET(req: NextRequest, { params: paramsPromise }: { params: Promise<{ id: string }> }) {
   try {
-    const { id: studyMaterialId } = await context.params;
-
-    const supabase = await createSupabaseClient();
+    const params = await paramsPromise;
+    const supabase = await createClient();
 
     const { data: { user } } = await supabase.auth.getUser();
     if (!user)

@@ -64,7 +64,7 @@ export const DragAndDropUploadArea: React.FC<DragAndDropUploadAreaProps> = ({
         ${isDragActive ? 'border-blue-500 bg-blue-50' : 'border-gray-300 bg-gray-50'}
       `}
     >
-      <input {...getInputProps()} data-testid="dropzone-input" />
+      <input {...getInputProps()} data-testid="drag-and-drop-input" />
       {isDragActive ? (
         <p className="text-blue-600">Drop the files here ...</p>
       ) : (

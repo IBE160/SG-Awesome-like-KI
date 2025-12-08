@@ -1,40 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
-import { createServerClient, type CookieOptions } from '@supabase/ssr';
+import { createClient } from '@/lib/supabase/server';
 
-// Create Supabase client
-function createSupabase() {
-  const cookieStore = cookies();
-
-  return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        get(name: string) {
-          return cookieStore.get(name)?.value;
-        },
-        set(name: string, value: string, options: CookieOptions) {
-          cookieStore.set(name, value, options);
-        },
-        remove(name: string, options: CookieOptions) {
-          cookieStore.set(name, '', { ...options, maxAge: 0 });
-        },
-      },
-    }
-  );
-}
-
-export async function GET(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET(req: NextRequest, { params: paramsPromise }: { params: Promise<{ id: string }> }) {
   try {
-    const supabase = createSupabase();
+    const params = await paramsPromise;
+    const supabase = await createClient();
 
-    const {
-      data: { user }
-    } = await supabase.auth.getUser();
+    const { data: { user } } = await supabase.auth.getUser();
 
     if (!user)
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

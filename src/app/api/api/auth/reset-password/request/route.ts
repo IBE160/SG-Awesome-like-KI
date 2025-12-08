@@ -1,5 +1,4 @@
-import { createServerClient, type CookieOptions } from '@supabase/ssr'
-import { cookies } from 'next/headers'
+import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 
 export async function POST(request: Request) {
@@ -12,60 +11,7 @@ export async function POST(request: Request) {
 
     const email = String(formData.get('email'))
 
-    const cookieStore = await cookies() // Await the promise here
-
-    
-
-    const supabase = createServerClient(
-
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-
-      {
-
-        cookies: {
-
-          get(name: string) {
-
-            return cookieStore.get(name)?.value
-
-          },
-
-          set(name: string, value: string, options: CookieOptions) {
-
-            try {
-
-              cookieStore.set({ name, value, ...options })
-
-            } catch (error) {
-
-              // The `set` method was called from a Server Component.
-
-            }
-
-          },
-
-          remove(name: string, options: CookieOptions) {
-
-            try {
-
-              cookieStore.set({ name, value: '', ...options })
-
-            } catch (error) {
-
-              // The `remove` method was called from a Server Component.
-
-            }
-
-          },
-
-        },
-
-      }
-
-    )
-
+        const supabase = await createClient()
 
 
     const { error } = await supabase.auth.resetPasswordForEmail(email, {

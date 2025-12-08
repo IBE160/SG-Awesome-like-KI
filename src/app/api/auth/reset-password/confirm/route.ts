@@ -1,5 +1,4 @@
-import { createServerClient, type CookieOptions } from '@supabase/ssr';
-import { cookies } from 'next/headers';
+import { createClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {
@@ -7,24 +6,7 @@ export async function POST(request: Request) {
   const formData = await request.formData();
   const password = String(formData.get('password'));
 
-  const cookieStore = cookies();
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        async get(name: string) {
-          return (await cookieStore).get(name)?.value
-        },
-        async set(name: string, value: string, options: CookieOptions) {
-          (await cookieStore).set(name, value, options)
-        },
-        async remove(name: string, options: CookieOptions) {
-          (await cookieStore).set(name, '', options)
-        },
-      },
-    }
-  );
+  const supabase = await createClient();
 
   // Check if a session exists (user is authenticated)
   const { data: { session }, error: sessionError } = await supabase.auth.getSession();

@@ -99,13 +99,15 @@ export default function UploadPage() {
     setSelectedFile(null);
   };
 
+  const [uploadedDocumentId, setUploadedDocumentId] = useState<string | null>(null);
+
   const handleUploadDocument = async () => {
     if (!selectedFile) return;
 
     setIsUploading(true);
     setUploadError(null);
     setUploadSuccess(null);
-    setGenerationStatus(null);
+    setUploadedDocumentId(null); // Clear previous upload success state
 
     const formData = new FormData();
     formData.append('file', selectedFile);
@@ -117,17 +119,25 @@ export default function UploadPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'An unexpected error occurred during upload.');
+        setUploadError(data.error || 'An unexpected error occurred during upload.');
+        console.error('Server Upload Error:', data.error);
+        if (response.status === 413) {
+            setValidationError('File size exceeds 10MB limit.');
+        } else if (data.error?.includes('file type is not supported')) {
+            setValidationError(data.error);
+        } else if (data.error?.includes('password-protected') || data.error?.includes('corrupted')) {
+            setValidationError(data.error);
+        }
+      } else {
+        setUploadSuccess('File uploaded and processed successfully!');
+        setUploadedDocumentId(data.documentId); // Assuming the API returns documentId on success
+        setSelectedFile(null); // Clear selected file from the upload form
+        setValidationError(null);
+        setRetryCount(0);
+        setSelectedClassId(null); // Reset class/section selection
+        setSelectedSectionId(null);
+        console.log('Upload Success:', data, 'Document ID:', data.documentId);
       }
-      
-      setUploadSuccess('File uploaded successfully!');
-      setUploadedDocumentId(data.studyMaterialId); // Correctly read studyMaterialId
-      setSelectedFile(null);
-      setValidationError(null);
-      setRetryCount(0);
-      setSelectedClassId(null);
-      setSelectedSectionId(null);
-
     } catch (error) {
       console.error('Upload/Network Error:', error);
       if (retryCount < MAX_RETRIES) {
@@ -142,45 +152,72 @@ export default function UploadPage() {
     }
   };
 
-  const resetState = () => {
-      setSelectedFile(null);
-      setValidationError(null);
-      setUploadError(null);
-      setUploadSuccess(null);
-      setUploadedDocumentId(null);
-      setRetryCount(0);
-      setGenerationStatus(null);
-  }
+  const handleRetryUpload = () => {
+    setUploadError(null);
+    handleUploadDocument();
+  };
 
-  // If upload is complete, show the post-upload actions.
+  const handleGenerateSummary = (docId: string) => {
+    console.log(`Placeholder: Generate Summary for document ID: ${docId}`);
+    // In a real implementation, navigate to summary generation wizard or trigger API
+    // router.push(`/generate-summary?documentId=${docId}`);
+  };
+
+  const handleGenerateQuiz = (docId: string) => {
+    console.log(`Placeholder: Generate Quiz for document ID: ${docId}`);
+    // In a real implementation, navigate to quiz generation wizard or trigger API
+    // router.push(`/generate-quiz?documentId=${docId}`);
+  };
+
+  const handleViewDocument = (docId: string) => {
+    console.log(`Placeholder: View document: ${docId}`);
+    // In a real implementation, navigate to the document view page
+    // router.push(`/documents/${docId}`);
+  };
+
   if (uploadedDocumentId) {
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-100">
-            <PostUploadActionsUI
-              documentId={uploadedDocumentId}
-              onGenerateSummary={() => handleGeneration('summary')}
-              onGenerateQuiz={() => handleGeneration('quiz')}
-            />
-            {generationStatus && (
-                <div className={`mt-4 text-center p-2 rounded ${generationStatus.startsWith('Error:') ? 'text-red-700 bg-red-100' : 'text-green-700 bg-green-100'}`}>
-                    {generationStatus}
-                </div>
-            )}
-            {isGenerating && <p className="mt-4">Please wait...</p>}
-            <button onClick={resetState} className="mt-8 text-blue-600 hover:underline">Upload Another File</button>
-        </div>
+      <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-100">
+        <PostUploadActionsUI
+          documentId={uploadedDocumentId}
+          onGenerateSummary={handleGenerateSummary}
+          onGenerateQuiz={handleGenerateQuiz}
+          onViewDocument={handleViewDocument}
+        />
+      </div>
     );
   }
 
-  // Default upload view
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-100">
       <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
         <h1 className="text-2xl font-bold mb-6 text-center text-gray-800">Upload Your Study Material</h1>
 
-        {validationError && <div className="text-red-500 mb-4">{validationError}</div>}
-        {uploadError && <div className="text-red-500 mb-4">{uploadError}</div>}
-        {uploadSuccess && <div className="text-green-500 mb-4">{uploadSuccess}</div>}
+        {validationError && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+            <span className="block sm:inline">{validationError}</span>
+          </div>
+        )}
+
+        {uploadError && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+            <span className="block sm:inline">{uploadError}</span>
+            {retryCount < MAX_RETRIES && ( // Only show retry button if max retries not reached
+                <button
+                    onClick={handleRetryUpload}
+                    className="ml-4 px-3 py-1 bg-red-600 text-white font-semibold rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                >
+                    Retry Now
+                </button>
+            )}
+          </div>
+        )}
+
+        {uploadSuccess && !uploadedDocumentId && ( // Only show generic success if not transitioning to PostUploadActionsUI
+          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+            <span className="block sm:inline">{uploadSuccess}</span>
+          </div>
+        )}
 
         <DragAndDropUploadArea
           onFileUpload={handleFileUpload}

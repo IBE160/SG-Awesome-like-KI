@@ -1,10 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { createClient } from '@/lib/supabase/server';
 
 export async function POST(req: NextRequest) {
   const { email, password } = await req.json();
 
-  const supabase = await createSupabaseServerClient();
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  if (!supabaseUrl || !supabaseAnonKey) {
+    console.error('Supabase URL or Anon Key is not configured.');
+    return NextResponse.json({ error: 'Supabase URL or Anon Key is not configured.' }, { status: 500 });
+  }
+
+  const supabase = await createClient();
 
   const { data, error } = await supabase.auth.signUp({
     email,

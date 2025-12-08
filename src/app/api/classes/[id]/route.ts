@@ -1,17 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { createClient } from '@/lib/supabase/server';
 
-// ----------------------- PATCH (rename class) -----------------------
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function PUT(req: NextRequest, { params: paramsPromise }: { params: Promise<{ id: string }> }) {
   try {
-    const supabase = await createSupabaseServerClient();
+    const params = await paramsPromise;
+    const supabase = await createClient();
 
-    const {
-      data: { user }
-    } = await supabase.auth.getUser();
+    const { data: { user } } = await supabase.auth.getUser();
 
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
@@ -41,35 +36,35 @@ export async function PATCH(
   }
 }
 
-// ----------------------- DELETE -----------------------
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
-  try {
-    const supabase = await createSupabaseServerClient();
-
-    const {
-      data: { user }
-    } = await supabase.auth.getUser();
-
-    if (!user)
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-
-    const { error } = await supabase
-      .from('classes')
-      .delete()
-      .eq('id', params.id)
-      .eq('user_id', user.id);
-
-    if (error) {
-      console.error('DELETE error:', error);
-      return NextResponse.json({ error: 'Failed to delete class' }, { status: 500 });
+export async function DELETE(req: NextRequest, { params: paramsPromise }: { params: Promise<{ id: string }> }) {
+    try {
+      const params = await paramsPromise;
+      const supabase = await createClient();
+  
+      const { data: { user } } = await supabase.auth.getUser();
+  
+      if (!user) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      }
+  
+      const classId = params.id;
+  
+      // Delete the class
+      const { error: deleteError } = await supabase
+        .from('classes')
+        .delete()
+        .eq('id', classId)
+        .eq('user_id', user.id); // Ensure user can only delete their own classes
+  
+      if (deleteError) {
+        console.error('Error deleting class:', deleteError);
+        return NextResponse.json({ error: 'Failed to delete class.' }, { status: 500 });
+      }
+  
+      return new NextResponse(null, { status: 204 }); // No Content
+    } catch (error) {
+      console.error('Error in DELETE /api/classes/[id]:', error);
+      return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
-
-    return NextResponse.json({ success: true });
-  } catch (err) {
-    console.error('DELETE /api/classes/[id] error:', err);
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
-}
+  

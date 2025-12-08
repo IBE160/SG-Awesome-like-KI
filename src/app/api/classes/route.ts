@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { createClient } from '@/lib/supabase/server';
 
-// ---------------------------- GET /api/classes ----------------------------
 export async function GET(req: NextRequest) {
   try {
-    const supabase = await createSupabaseServerClient();
+    const supabase = await createClient();
 
     const { data: { user }, error: userError } = await supabase.auth.getUser();
 
@@ -32,7 +31,7 @@ export async function GET(req: NextRequest) {
 // ---------------------------- POST /api/classes ----------------------------
 export async function POST(req: NextRequest) {
   try {
-    const supabase = await createSupabaseServerClient();
+    const supabase = await createClient();
 
     const { data: { user }, error: userError } = await supabase.auth.getUser();
 
