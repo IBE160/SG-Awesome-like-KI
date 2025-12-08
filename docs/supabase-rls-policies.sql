@@ -84,14 +84,20 @@ USING (
   )
 );
 
-CREATE POLICY "Users can insert study materials for their own classes"
+CREATE POLICY "Users can insert their own study materials"
 ON study_materials FOR INSERT
 WITH CHECK (
-  EXISTS (
-    SELECT 1
-    FROM classes
-    WHERE classes.id = study_materials.class_id
-      AND classes.user_id = auth.uid()
+  (user_id = auth.uid())
+  AND
+  (
+    (class_id IS NULL AND class_section_id IS NULL)
+    OR
+    EXISTS (
+      SELECT 1
+      FROM classes
+      WHERE classes.id = study_materials.class_id
+        AND classes.user_id = auth.uid()
+    )
   )
 );
 
