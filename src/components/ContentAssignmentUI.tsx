@@ -1,7 +1,7 @@
-// src/components/ContentAssignmentUI.tsx
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation'; // Import useRouter
 
 type StudyMaterial = {
   id: string;
@@ -21,51 +21,24 @@ type Section = {
   class_id: string;
 };
 
-export const ContentAssignmentUI: React.FC = () => {
-  const [studyMaterials, setStudyMaterials] = useState<StudyMaterial[]>([]);
-  const [classes, setClasses] = useState<Class[]>([]);
+interface ContentAssignmentUIProps {
+  initialStudyMaterials: StudyMaterial[];
+  initialClasses: Class[];
+}
+
+export const ContentAssignmentUI: React.FC<ContentAssignmentUIProps> = ({ initialStudyMaterials, initialClasses }) => {
+  const router = useRouter(); // Initialize useRouter
+  const [studyMaterials, setStudyMaterials] = useState<StudyMaterial[]>(initialStudyMaterials);
+  const [classes, setClasses] = useState<Class[]>(initialClasses);
   const [sections, setSections] = useState<Section[]>([]);
 
   const [selectedStudyMaterialId, setSelectedStudyMaterialId] = useState<string | null>(null);
   const [selectedClassId, setSelectedClassId] = useState<string | null>(null);
   const [selectedSectionId, setSelectedSectionId] = useState<string | null>(null);
 
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false); // No longer loading initially as data comes from parent
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-
-  // Fetch all data on component mount
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      setError(null);
-      try {
-        // Fetch study materials (assuming an API to get all user's study materials)
-        // For now, let's assume /api/study-materials provides all user's materials
-        const smResponse = await fetch('/api/study-materials');
-        if (smResponse.ok) {
-          const smData = await smResponse.json();
-          setStudyMaterials(smData.studyMaterials || []);
-        } else {
-          throw new Error(`Failed to fetch study materials: ${smResponse.statusText}`);
-        }
-
-        // Fetch classes
-        const classResponse = await fetch('/api/classes');
-        if (classResponse.ok) {
-          const classData = await classResponse.json();
-          setClasses(classData.classes || []);
-        } else {
-          throw new Error(`Failed to fetch classes: ${classResponse.statusText}`);
-        }
-      } catch (err: any) {
-        setError(err.message || 'Failed to load data.');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchData();
-  }, []);
 
   // Fetch sections when selectedClassId changes
   useEffect(() => {
@@ -141,6 +114,7 @@ export const ContentAssignmentUI: React.FC = () => {
           ? { ...sm, class_id: selectedClassId, class_section_id: selectedSectionId }
           : sm
       ));
+      router.refresh(); // Revalidate data in the Server Component
     } catch (err: any) {
       setError(err.message || 'An unexpected error occurred during assignment.');
     } finally {
@@ -148,7 +122,7 @@ export const ContentAssignmentUI: React.FC = () => {
     }
   };
 
-  if (isLoading && !error) {
+  if (isLoading && !error) { // Keep this loading check for the assignment process
     return <div className="text-center text-gray-600">Loading assignment options...</div>;
   }
 

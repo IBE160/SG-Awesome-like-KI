@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 
-export async function GET(req: NextRequest, { params: paramsPromise }: { params: Promise<{ id: string }> }) {
+export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const params = await paramsPromise;
     const supabase = await createClient();
 
     const { data: { user } } = await supabase.auth.getUser();
@@ -26,9 +25,9 @@ export async function GET(req: NextRequest, { params: paramsPromise }: { params:
       );
     }
 
-    // Fetch documents belonging to the class
-    const { data: documents, error: docError } = await supabase
-      .from("documents")
+    // Fetch study materials belonging to the class
+    const { data: studyMaterials, error: docError } = await supabase
+      .from("study_materials")
       .select("*")
       .eq("class_id", params.id);
 
@@ -40,7 +39,7 @@ export async function GET(req: NextRequest, { params: paramsPromise }: { params:
       );
     }
 
-    return NextResponse.json({ documents }, { status: 200 });
+    return NextResponse.json({ studyMaterials }, { status: 200 });
 
   } catch (err) {
     console.error("GET /api/classes/[id]/documents error:", err);

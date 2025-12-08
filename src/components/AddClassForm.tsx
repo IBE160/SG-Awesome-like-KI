@@ -1,12 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from 'next/navigation';
 
-interface Props {
-  onClassAdded?: () => void;
-}
-
-export default function AddClassForm({ onClassAdded }: Props) {
+export default function AddClassForm() {
+  const router = useRouter();
   const [name, setName] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -31,8 +29,7 @@ export default function AddClassForm({ onClassAdded }: Props) {
 
     setName("");
     setLoading(false);
-
-    if (onClassAdded) onClassAdded();
+    router.refresh(); // Revalidate data in the Server Component
   }
 
   return (

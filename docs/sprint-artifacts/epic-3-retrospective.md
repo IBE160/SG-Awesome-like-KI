@@ -71,6 +71,7 @@
 3.  **Address 'Failed to fetch documents' error (bug-fetch-documents):**
     *   Owner: Amelia (Developer Agent)
     *   Success criteria: Users can successfully view documents after pressing on a class.
+    *   **Status: RESOLVED**
 4.  **Resolve 'createSupabaseServerClient export' error (bug-unorganised-content-export):**
     *   Owner: Amelia (Developer Agent)
     *   Success criteria: 'Unorganised content' page loads and displays content without errors.

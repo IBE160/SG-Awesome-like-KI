@@ -1,9 +1,9 @@
 // src/app/api/unorganized/route.ts
 import { NextResponse } from 'next/server';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { createClient } from '@/lib/supabase/server';
 
 export async function GET() {
-  const supabase = await createSupabaseServerClient();
+  const supabase = await createClient();
 
   try {
     const { data: { user }, error: authError } = await supabase.auth.getUser();

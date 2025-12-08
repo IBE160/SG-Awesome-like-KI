@@ -20,6 +20,6 @@ Routing guidance:
 | 2025-12-07 | profile-update-fails | - | Bug | High | TBD | Open | Profile updates fail on the /profile page with the error "unable to update profile". |
 | 2025-12-07 | auth-logout-access-issue | - | Bug | Critical | TBD | Open | After logging out, users can still access the /profile page by manually entering the URL. |
 | 2025-12-08 | bug-manage-classes-page | - | Bug | High | TBD | Open | The page 'manage classes' doesn't work. |
-| 2025-12-08 | bug-fetch-documents | - | Bug | High | TBD | Open | When pressing one of the created classes, an "Error: Failed to fetch documents" message appears. |
+| 2025-12-08 | bug-fetch-documents | - | Bug | High | Amelia | Closed | Resolved by correcting Supabase table name in API route and ensuring correct `params` handling in Server Component. |
 | 2025-12-08 | bug-unorganised-content-export | - | Bug | Critical | TBD | Open | When pressing "Unorganised content", an "Export createSupabaseServerClient doesn't exist in target module" error occurs. |
 | 2025-12-07 | fix-jest-config-state | - | Documentation | High | TBD | Open | Reference for ongoing Jest configuration and testing issues. See: docs/sprint-artifacts/jest-config-state.md |

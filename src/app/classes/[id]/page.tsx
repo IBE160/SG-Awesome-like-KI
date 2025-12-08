@@ -1,55 +1,47 @@
 // src/app/classes/[id]/page.tsx
-'use client';
-
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'next/navigation';
+import { redirect } from 'next/navigation';
+import { createClient } from '@/lib/supabase/server';
 import { OrganizedContentView } from '@/components/OrganizedContentView';
 
-export default function ClassDetailsPage() {
-  const params = useParams();
-  const classId = params.id as string;
+export default async function ClassDetailsPage({ params }: { params: { id: string } }) {
+  const resolvedParams = await Promise.resolve(params);
+  const classId = resolvedParams.id as string;
+  const supabase = await createClient();
 
-  const [studyMaterials, setStudyMaterials] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (classId) {
-      const fetchClassContent = async () => {
-        setIsLoading(true);
-        setError(null);
-        try {
-          const response = await fetch(`/api/classes/${classId}/documents`);
-          if (response.ok) {
-            const data = await response.json();
-            setStudyMaterials(data.studyMaterials || []);
-          } else {
-            const errorData = await response.json();
-            throw new Error(errorData.error || 'Failed to fetch class content.');
-          }
-        } catch (err: any) {
-          console.error('Error fetching class content:', err);
-          setError(err.message || 'An unexpected error occurred.');
-        } finally {
-          setIsLoading(false);
-        }
-      };
-      fetchClassContent();
-    }
-  }, [classId]);
-
-  if (isLoading) {
-    return <div className="text-center py-8">Loading class content...</div>;
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) {
+    redirect('/login');
   }
 
-  if (error) {
-    return <div className="text-center py-8 text-red-600">Error: {error}</div>;
+  // Check class ownership
+  const { data: cls, error: classError } = await supabase
+    .from("classes")
+    .select("id, user_id, name")
+    .eq("id", classId)
+    .eq("user_id", user.id)
+    .single();
+
+  if (classError || !cls) {
+    console.error("Error fetching class details:", classError);
+    // Redirect to classes page if class not found or unauthorized
+    redirect('/classes');
+  }
+
+  const { data: studyMaterials, error: docError } = await supabase
+    .from("study_materials")
+    .select("*")
+    .eq("class_id", classId)
+    .eq("user_id", user.id); // Ensure user can only see their own materials
+
+  if (docError) {
+    console.error("Error fetching class content:", docError);
+    return <div className="text-center py-8 text-red-600">Error: Failed to load class content.</div>;
   }
 
   return (
     <OrganizedContentView
-      studyMaterials={studyMaterials}
-      title={`Content for Class: ${classId}`} // You might want to fetch class name for better title
+      studyMaterials={studyMaterials || []}
+      title={`Content for Class: ${cls.name}`}
       description="Documents and generated content organized within this class."
     />
   );

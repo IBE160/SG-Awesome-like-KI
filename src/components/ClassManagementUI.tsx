@@ -1,35 +1,26 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { createClient } from "@/lib/supabase/client";
+import { useState } from "react";
+import { createClient } from "@/lib/supabase/client"; // Keep for rename/delete actions
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
-interface Class {
+interface ClassItem { // Renamed from Class to ClassItem for consistency with other files
   id: string;
   name: string;
   user_id: string;
 }
 
-export function ClassManagementUI() {
+interface ClassManagementUIProps {
+  initialClasses: ClassItem[];
+}
+
+export function ClassManagementUI({ initialClasses }: ClassManagementUIProps) {
   const supabase = createClient();
-  const [classes, setClasses] = useState<Class[]>([]);
+  const router = useRouter();
+  const [classes, setClasses] = useState<ClassItem[]>(initialClasses);
   const [editing, setEditing] = useState<string | null>(null);
   const [newName, setNewName] = useState("");
-
-  useEffect(() => {
-    async function load() {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-
-      const { data } = await supabase
-        .from("classes")
-        .select("*")
-        .eq("user_id", user.id);
-
-      setClasses(data || []);
-    }
-    load();
-  }, []);
 
   async function renameClass(id: string) {
     const { error } = await supabase
@@ -42,6 +33,7 @@ export function ClassManagementUI() {
         c.id === id ? { ...c, name: newName } : c
       ));
       setEditing(null);
+      router.refresh(); // Revalidate data in the Server Component
     }
   }
 
@@ -56,6 +48,7 @@ export function ClassManagementUI() {
 
     if (!error) {
       setClasses(classes.filter((c) => c.id !== id));
+      router.refresh(); // Revalidate data in the Server Component
     }
   }
 
@@ -90,7 +83,7 @@ export function ClassManagementUI() {
               <span>{c.name}</span>
 
               <div>
-                <Link href={`/classes/Manage/page.tsx`}>
+                <Link href={`/classes/${c.id}/sections`}>
                   <button
                     className="bg-blue-500 text-white px-3 py-1 rounded mr-2"
                   >

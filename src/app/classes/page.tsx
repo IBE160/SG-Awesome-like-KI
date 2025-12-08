@@ -1,47 +1,33 @@
-'use client';
-
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { createClient } from '@/lib/supabase/client';
+import { redirect } from 'next/navigation';
+import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
 import AddClassForm from '@/components/AddClassForm';
+import { Permanent_Marker } from 'next/font/google';
+
+const permanent_Marker = Permanent_Marker({ subsets: ["latin"], weight: "400" });
 
 interface ClassItem {
   id: string;
   name: string;
 }
 
-export default function ClassesPage() {
-  const router = useRouter();
-  const supabase = createClient();
-  const [loading, setLoading] = useState(true);
-  const [classes, setClasses] = useState<ClassItem[]>([]);
-  const [error, setError] = useState<string | null>(null);
+export default async function ClassesPage() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
 
-  async function loadClasses() {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      router.push("/login");
-      return;
-    }
-
-    const res = await fetch("/api/classes");
-    const data = await res.json();
-
-    if (res.ok) {
-      setClasses(data.classes);
-    } else {
-      setError(data.error || "Failed to load classes");
-    }
-
-    setLoading(false);
+  if (!user) {
+    redirect('/login');
   }
 
-  useEffect(() => {
-    loadClasses();
-  }, []);
+  const { data: classes, error } = await supabase
+    .from("classes")
+    .select("*")
+    .eq("user_id", user.id);
 
-  if (loading) return <p className="p-4">Loading…</p>;
+  if (error) {
+    console.error("Error fetching classes:", error);
+    return <p className="p-4 text-red-500">Error: Failed to load classes.</p>;
+  }
 
   return (
     <div className="container mx-auto p-6">
@@ -66,26 +52,25 @@ export default function ClassesPage() {
           </Link>
         </div>
 
-        <button
-          className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
-          onClick={async () => {
-            await supabase.auth.signOut();
-            router.push("/login");
-          }}
-        >
-          Log out
-        </button>
+        <form action="/auth/sign-out" method="post">
+          <button
+            className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+            type="submit"
+          >
+            Log out
+          </button>
+        </form>
       </div>
 
       {/* Add class */}
-      <AddClassForm onClassAdded={loadClasses} />
+      <AddClassForm initialClasses={classes || []} />
 
       <h2 className="text-xl font-bold mb-4 mt-6">Your Classes</h2>
 
-      {error && <p className="text-red-500">{error}</p>}
+      {error && <p className="text-red-500">{error.message}</p>}
 
       <ul className="space-y-3">
-        {classes.map((c) => (
+        {classes?.map((c) => (
           <li key={c.id} className="p-4 border rounded bg-white shadow-sm hover:shadow-md hover:bg-gray-50 transition-all">
             <Link href={`/classes/${c.id}`} className="block w-full h-full font-semibold text-lg text-gray-800">
               {c.name}

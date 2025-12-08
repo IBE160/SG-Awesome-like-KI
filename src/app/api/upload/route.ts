@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { createClient } from '@/lib/supabase/server';
 import { v4 as uuidv4 } from 'uuid';
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 const SUPPORTED_FILE_TYPES = ['text/plain', 'application/pdf'];
 
 export async function POST(req: NextRequest) {
-  const supabase = await createSupabaseServerClient();
+  const supabase = await createClient();
 
   try {
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -17,6 +17,7 @@ export async function POST(req: NextRequest) {
     const formData = await req.formData();
     const file = formData.get('file') as File;
     const classId = formData.get('class_id') as string | null;
+    const classSectionId = formData.get('class_section_id') as string | null;
 
 
     if (!user) {

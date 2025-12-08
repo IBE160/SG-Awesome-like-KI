@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'next/navigation';
+import { useRouter } from 'next/navigation'; // Import useRouter
 
 // Define the ClassSection type
 interface ClassSection {
@@ -12,41 +12,23 @@ interface ClassSection {
 
 interface ClassSectionManagementUIProps {
   classId: string;
+  initialSections: ClassSection[]; // Add initialSections prop
 }
 
-export const ClassSectionManagementUI: React.FC<ClassSectionManagementUIProps> = ({ classId }) => {
-  const [sections, setSections] = useState<ClassSection[]>([]);
+export const ClassSectionManagementUI: React.FC<ClassSectionManagementUIProps> = ({ classId, initialSections }) => {
+  const router = useRouter(); // Initialize useRouter
+  const [sections, setSections] = useState<ClassSection[]>(initialSections); // Initialize with initialSections
   const [newSectionName, setNewSectionName] = useState<string>('');
   const [editingSection, setEditingSection] = useState<ClassSection | null>(null);
   const [renamedSectionName, setRenamedSectionName] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<ClassSection | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false); // No longer loading initially as data comes from parent
 
-  // Fetch sections on component mount or when classId changes
+  // No longer fetching sections on component mount, data is passed as prop
   useEffect(() => {
-    if (!classId) {
-      setError('Class ID is missing.');
-      setLoading(false);
-      return;
-    }
-
-    const fetchSections = async () => {
-      try {
-        const response = await fetch(`/api/classes/${classId}/sections`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch class sections');
-        }
-        const data = await response.json();
-        setSections(data.sections);
-      } catch (err) {
-        setError((err as Error).message);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchSections();
-  }, [classId]);
+    setSections(initialSections); // Update sections if initialSections prop changes
+  }, [initialSections]);
 
   // Handle creating a new section
   const handleCreateSection = async (e: React.FormEvent) => {
@@ -69,8 +51,10 @@ export const ClassSectionManagementUI: React.FC<ClassSectionManagementUIProps> =
         throw new Error(data.error || 'Failed to create section');
       }
       const data = await response.json();
+      // Optimistic update for UI, then refresh to revalidate server state
       setSections([...sections, data.section]);
       setNewSectionName('');
+      router.refresh(); // Revalidate data in the Server Component
     } catch (err) {
       setError((err as Error).message);
     }
@@ -101,6 +85,7 @@ export const ClassSectionManagementUI: React.FC<ClassSectionManagementUIProps> =
       setSections(sections.map(s => (s.id === editingSection.id ? data.section : s)));
       setEditingSection(null);
       setRenamedSectionName('');
+      router.refresh(); // Revalidate data in the Server Component
     } catch (err) {
       setError((err as Error).message);
     }
@@ -118,6 +103,7 @@ export const ClassSectionManagementUI: React.FC<ClassSectionManagementUIProps> =
       }
       setSections(sections.filter(s => s.id !== sectionToDelete.id));
       setShowDeleteConfirm(null);
+      router.refresh(); // Revalidate data in the Server Component
     } catch (err) {
       setError((err as Error).message);
     }

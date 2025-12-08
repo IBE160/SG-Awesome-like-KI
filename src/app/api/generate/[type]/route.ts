@@ -1,12 +1,12 @@
 // src/app/api/generate/[type]/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { createClient } from '@/lib/supabase/server';
 
 export async function POST(
   req: NextRequest,
   { params }: { params: { type: string } }
 ) {
-  const supabase = await createSupabaseServerClient();
+  const supabase = await createClient();
   const { type } = params;
 
   if (type !== 'summary' && type !== 'quiz') {

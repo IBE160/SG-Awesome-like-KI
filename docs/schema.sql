@@ -50,7 +50,14 @@ CREATE TABLE public.generated_content (
     CONSTRAINT fk_generated_content_class_section_id FOREIGN KEY (class_section_id) REFERENCES public.class_sections(id) ON DELETE SET NULL
 );
 
+-- Create the `profiles` table for additional user metadata
+CREATE TABLE public.profiles (
+    id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    full_name text,
+    updated_at timestamp with time zone,
+    CONSTRAINT profiles_pkey PRIMARY KEY (id)
+);
+
 -- Drop redundant junction tables
 DROP TABLE IF EXISTS public.generated_content_materials;
 DROP TABLE IF EXISTS public.generated_content_sections;
-
