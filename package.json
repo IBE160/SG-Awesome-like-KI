@@ -51,6 +51,7 @@
     "jest-environment-jsdom": "^30.2.0",
     "node-fetch": "^3.3.2",
     "playwright": "^1.57.0",
+    "supabase": "^2.65.6",
     "tailwindcss": "^4",
     "ts-jest": "^29.4.5",
     "typescript": "^5",

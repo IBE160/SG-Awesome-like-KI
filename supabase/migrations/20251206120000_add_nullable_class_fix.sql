@@ -2,11 +2,11 @@
 -- These columns will allow generated content to exist without being immediately assigned to a class or section,
 -- enabling the "unorganized" state described in the story's Acceptance Criteria 2.
 
-ALTER TABLE public.generated_content
-ADD COLUMN class_id uuid NULL;
+-- ALTER TABLE public.generated_content
+-- ADD COLUMN IF NOT EXISTS class_id uuid NULL;
 
-ALTER TABLE public.generated_content
-ADD COLUMN class_section_id uuid NULL;
+-- ALTER TABLE public.generated_content
+-- ADD COLUMN IF NOT EXISTS class_section_id uuid NULL;
 
 -- Add foreign key constraints for the new columns.
 -- Using ON DELETE SET NULL ensures that if a class or section is deleted,
