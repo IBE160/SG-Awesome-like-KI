@@ -61,16 +61,14 @@ export default function UploadPage() {
     }
   }, [selectedClassId]);
 
-  const handleGeneration = async (type: 'summary' | 'quiz') => {
-    if (!uploadedDocumentId) return;
-
+  const handleGeneration = async (type: 'summary' | 'quiz', studyMaterialId: string) => {
     setIsGenerating(true);
     setGenerationStatus(`Generating ${type}...`);
     try {
       const response = await fetch(`/api/generate/${type}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ studyMaterialId: uploadedDocumentId }),
+        body: JSON.stringify({ studyMaterialId }),
       });
       const data = await response.json();
       if (!response.ok) {
@@ -94,8 +92,19 @@ export default function UploadPage() {
     setRetryCount(0);
   };
 
+  const handleValidationError = (message: string) => {
+    setValidationError(message);
+    setSelectedFile(null); // Clear selected file if validation fails
+  };
 
 
+  const handleUploadDocument = async () => {
+    if (!selectedFile) {
+      setValidationError('Please select a file to upload.');
+      return;
+    }
+
+    setValidationError(null); // Clear any previous validation errors
     setIsUploading(true);
     setUploadError(null);
     setUploadSuccess(null);
@@ -144,36 +153,36 @@ export default function UploadPage() {
     }
   };
 
+
+
   const handleRetryUpload = () => {
     setUploadError(null);
     handleUploadDocument();
   };
 
-  const handleGenerateSummary = (docId: string) => {
-    console.log(`Placeholder: Generate Summary for document ID: ${docId}`);
-    // In a real implementation, navigate to summary generation wizard or trigger API
-    // router.push(`/generate-summary?documentId=${docId}`);
-  };
-
-  const handleGenerateQuiz = (docId: string) => {
-    console.log(`Placeholder: Generate Quiz for document ID: ${docId}`);
-    // In a real implementation, navigate to quiz generation wizard or trigger API
-    // router.push(`/generate-quiz?documentId=${docId}`);
-  };
-
   const handleViewDocument = (docId: string) => {
     console.log(`Placeholder: View document: ${docId}`);
-    // In a real implementation, navigate to the document view page
-    // router.push(`/documents/${docId}`);
+    // Future enhancement: Implement actual navigation to the document view page.
+    // For example: router.push(`/documents/${docId}`);
   };
 
   if (uploadedDocumentId) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-100">
+        {isGenerating && (
+          <div className="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded relative mb-4" role="alert">
+            <span className="block sm:inline">{generationStatus}</span>
+          </div>
+        )}
+        {!isGenerating && generationStatus && (
+          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+            <span className="block sm:inline">{generationStatus}</span>
+          </div>
+        )}
         <PostUploadActionsUI
           documentId={uploadedDocumentId}
-          onGenerateSummary={handleGenerateSummary}
-          onGenerateQuiz={handleGenerateQuiz}
+          onGenerateSummary={(docId) => handleGeneration('summary', docId)}
+          onGenerateQuiz={(docId) => handleGeneration('quiz', docId)}
           onViewDocument={handleViewDocument}
         />
       </div>
