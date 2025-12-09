@@ -17,7 +17,7 @@ export async function GET() {
         id,
         original_name,
         created_at,
-        generated_content (
+        generated_content!generated_content_study_material_id_fkey (
           id,
           type,
           content,
