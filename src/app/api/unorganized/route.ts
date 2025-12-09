@@ -20,8 +20,7 @@ export async function GET() {
         generated_content!generated_content_study_material_id_fkey (
           id,
           type,
-          content,
-          created_at
+          content
         )
       `)
       .eq('user_id', user.id)
