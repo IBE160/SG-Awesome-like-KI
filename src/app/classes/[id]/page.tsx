@@ -2,14 +2,15 @@
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { OrganizedContentView } from '@/components/OrganizedContentView';
+import { ClassActions } from '@/components/ClassActions';
 
 export default async function ClassDetailsPage({ params }: { params: { id: string } }) {
   const resolvedParams = await Promise.resolve(params);
   const classId = resolvedParams.id as string;
   const supabase = await createClient();
 
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) {
+  const { data: { user }, error: userError } = await supabase.auth.getUser();
+  if (!user || userError) {
     redirect('/login');
   }
 
@@ -39,10 +40,16 @@ export default async function ClassDetailsPage({ params }: { params: { id: strin
   }
 
   return (
-    <OrganizedContentView
-      studyMaterials={studyMaterials || []}
-      title={`Content for Class: ${cls.name}`}
-      description="Documents and generated content organized within this class."
-    />
+    <div className="container mx-auto p-6">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold">{cls.name}</h1>
+        <ClassActions classId={classId} initialClassName={cls.name} />
+      </div>
+      <OrganizedContentView
+        studyMaterials={studyMaterials || []}
+        title={`Content for Class: ${cls.name}`}
+        description="Documents and generated content organized within this class."
+      />
+    </div>
   );
 }

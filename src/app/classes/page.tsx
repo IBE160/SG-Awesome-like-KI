@@ -1,3 +1,4 @@
+import { PostgrestError } from '@supabase/supabase-js';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
@@ -13,19 +14,21 @@ interface ClassItem {
 
 export default async function ClassesPage() {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data, error: userError } = await supabase.auth.getUser();
 
-  if (!user) {
+  if (userError || !data?.user) {
     redirect('/login');
   }
 
-  const { data: classes, error } = await supabase
+  const user = data.user;
+
+  const { data: classes, error: classesError }: { data: ClassItem[] | null; error: PostgrestError | null } = await supabase
     .from("classes")
     .select("*")
     .eq("user_id", user.id);
 
-  if (error) {
-    console.error("Error fetching classes:", error);
+  if (classesError) {
+    console.error("Error fetching classes:", classesError);
     return <p className="p-4 text-red-500">Error: Failed to load classes.</p>;
   }
 
@@ -40,11 +43,7 @@ export default async function ClassesPage() {
               Upload Document
             </button>
           </Link>
-          <Link href="/classes/manage">
-            <button className="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-800">
-              Manage Classes
-            </button>
-          </Link>
+
           <Link href="/unorganized">
             <button className="bg-purple-700 text-white px-4 py-2 rounded hover:bg-purple-800">
               Unorganized Content
@@ -63,11 +62,11 @@ export default async function ClassesPage() {
       </div>
 
       {/* Add class */}
-      <AddClassForm initialClasses={classes || []} />
+      <AddClassForm />
 
       <h2 className="text-xl font-bold mb-4 mt-6">Your Classes</h2>
 
-      {error && <p className="text-red-500">{error.message}</p>}
+      {classesError && <p className="text-red-500">{(classesError as Error).message}</p>}
 
       <ul className="space-y-3">
         {classes?.map((c) => (
