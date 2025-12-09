@@ -1,110 +1,97 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { createServerClient } from '@supabase/ssr';
-import { cookies } from 'next/headers';
-import { v4 as uuidv4 } from 'uuid'; // For generating unique IDs for placeholder content
+import { createClient } from '@/lib/supabase/server';
+import { NextResponse } from 'next/server';
+// import { Anthropic } from '@anthropic-ai/sdk';
 
-// ---------- CREATE SUPABASE CLIENT ----------
-async function createSupabaseClient() {
-  const cookieStore = await cookies();
+// const anthropic = new Anthropic({
+//   apiKey: process.env.ANTHROPIC_API_KEY,
+// });
 
-  return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        get(name: string) {
-          return cookieStore.get(name)?.value;
-        },
-        set(name: string, value: string, options: any) {
-          try { cookieStore.set({ name, value, ...options }); } catch {}
-        },
-        remove(name: string, options: any) {
-          try { cookieStore.delete({ name, ...options }); } catch {}
-        }
-      }
-    }
-  );
-}
+export async function POST(request: Request) {
+  const { documentId, type } = await request.json();
 
-// -------------------- POST /api/generate --------------------
-// This endpoint simulates content generation and stores it in generated_content table.
-// It supports both 'summary' and 'quiz' types.
-// For unorganized content, class_id and class_section_id will be NULL.
-export async function POST(req: NextRequest) {
+  if (type !== 'summary') {
+    return NextResponse.json({ error: 'Invalid generation type' }, { status: 400 });
+  }
+
+  if (!documentId) {
+    return NextResponse.json({ error: 'documentId is required' }, { status: 400 });
+  }
+
+  const supabase = await createClient();
+
   try {
-    const supabase = await createSupabaseClient();
-    const { data: { user } } = await supabase.auth.getUser();
-
-    if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    // 1. Get user session
+    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+    if (sessionError || !session) {
+      return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
     }
+    const userId = session.user.id;
 
-    const { study_material_id, type, options } = await req.json();
-
-    if (!study_material_id || !type) {
-      return NextResponse.json({ error: 'Missing study_material_id or type' }, { status: 400 });
-    }
-
-    // Basic validation for type
-    if (type !== 'summary' && type !== 'quiz') {
-      return NextResponse.json({ error: 'Invalid generation type. Must be "summary" or "quiz".' }, { status: 400 });
-    }
-
-    // Verify ownership of the study material
-    const { data: studyMaterial, error: smError } = await supabase
+    // 2. Retrieve document from study_materials table to get storage_path
+    const { data: document, error: docError } = await supabase
       .from('study_materials')
-      .select('id, user_id, original_name')
-      .eq('id', study_material_id)
-      .eq('user_id', user.id)
+      .select('storage_path')
+      .eq('id', documentId)
+      .eq('user_id', userId)
       .single();
 
-    if (!studyMaterial || smError) {
-      return NextResponse.json({ error: 'Study material not found or unauthorized.' }, { status: 404 });
+    if (docError || !document) {
+      return NextResponse.json({ error: 'Document not found or access denied.' }, { status: 404 });
     }
 
-    // --- Simulate content generation (placeholder for Epic 4) ---
-    let generatedContentData: any;
-    if (type === 'summary') {
-      generatedContentData = {
-        title: `Summary of ${studyMaterial.original_name}`,
-        text: `This is a simulated summary for document ID ${study_material_id}. Options: ${JSON.stringify(options)}`,
-      };
-    } else { // type === 'quiz'
-      generatedContentData = {
-        title: `Quiz for ${studyMaterial.original_name}`,
-        questions: [
-          { id: uuidv4(), question: 'What is the capital of France?', options: ['Berlin', 'Madrid', 'Paris', 'Rome'], answer: 'Paris' },
-          { id: uuidv4(), question: 'What is 2 + 2?', options: ['3', '4', '5'], answer: '4' },
-        ],
-        options: options,
-      };
-    }
-    // --- End simulation ---
+    // 3. Download document content from Supabase Storage
+    const { data: fileContent, error: downloadError } = await supabase
+      .storage
+      .from('documents') // Assuming 'documents' is your bucket name
+      .download(document.storage_path);
 
-    // Insert the generated content into the database
-    // class_id and class_section_id are NULL for unorganized content (initially)
-    const { data: newGeneratedContent, error: insertError } = await supabase
+    if (downloadError || !fileContent) {
+        return NextResponse.json({ error: 'Failed to retrieve document from storage.' }, { status: 500 });
+    }
+    
+    const textContent = await fileContent.text();
+
+    if (textContent.length < 100) { // Example threshold
+        return NextResponse.json({ error: 'Insufficient text for summary.' }, { status: 400 });
+    }
+
+    // 4. (Placeholder) Call AI model for summary
+    // In a real implementation, this would be a call to a service like Anthropic/Claude
+    const summaryText = `This is a mock summary for document ID: ${documentId}. The document content has ${textContent.length} characters.`;
+    
+    // const msg = await anthropic.messages.create({
+    //   model: "claude-3-haiku-20240307",
+    //   max_tokens: 1024,
+    //   messages: [
+    //     {"role": "user", "content": `Please summarize the following text:\n\n${textContent}`}
+    //   ],
+    // });
+    // const summaryText = msg.content[0].text;
+
+
+    // 5. Store the generated summary in the generated_content table
+    const { data: generatedContent, error: insertError } = await supabase
       .from('generated_content')
       .insert({
-        study_material_id: study_material_id,
-        user_id: user.id, // Assuming user_id is also a column in generated_content for RLS/ownership
-        type: type,
-        content: generatedContentData,
-        class_id: null,
-        class_section_id: null,
+        user_id: userId,
+        study_material_id: documentId,
+        content_type: 'summary',
+        content: { summary: summaryText },
+        model_used: 'mock-model-v1', // Or the actual model used e.g., 'claude-3-haiku-20240307'
       })
       .select()
       .single();
 
     if (insertError) {
-      console.error('Error inserting generated content:', insertError);
-      return NextResponse.json({ error: 'Failed to store generated content.' }, { status: 500 });
+      console.error('Failed to store generated summary:', insertError);
+      return NextResponse.json({ error: 'Failed to save summary.' }, { status: 500 });
     }
 
-    return NextResponse.json({ generatedContent: newGeneratedContent }, { status: 200 });
+    return NextResponse.json(generatedContent, { status: 200 });
 
-  } catch (error) {
-    console.error('Error in POST /api/generate:', error);
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+  } catch (e) {
+    const error = e as Error;
+    console.error('An unexpected error occurred:', error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

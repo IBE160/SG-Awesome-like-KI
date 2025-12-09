@@ -1,6 +1,6 @@
 # Story 4.1: AI Summary Generation
 
-Status: ready-for-dev
+Status: Done
 
 ## Story
 

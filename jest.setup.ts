@@ -17,6 +17,19 @@ if (typeof TextDecoder === 'undefined') {
   global.TextDecoder = require('util').TextDecoder;
 }
 
+// Polyfill Blob.prototype.text for Jest environment
+if (typeof Blob !== 'undefined' && !Blob.prototype.text) {
+  Blob.prototype.text = function() {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        resolve(reader.result as string);
+      };
+      reader.readAsText(this);
+    });
+  };
+}
+
 
 // Mock next/headers
 let mockCookieStore: { [key: string]: { value: string; options?: any } } = {};
@@ -410,5 +423,7 @@ jest.mock('@supabase/ssr', () => ({
 
 // Mocking the local createClient for server components
 jest.mock('@/lib/supabase/server', () => ({
-  createSupabaseServerClient: jest.fn(() => mockSupabaseClient),
+  createClient: jest.fn(() => mockSupabaseClient),
 }));
+
+globalThis.mockSupabaseClient = mockSupabaseClient;
