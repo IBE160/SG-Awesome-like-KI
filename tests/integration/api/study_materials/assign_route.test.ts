@@ -1,38 +1,10 @@
 // tests/integration/api/study_materials/assign_route.test.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { PUT } from '../../../../src/app/api/study-materials/[id]/assign/route';
-import { createServerClient } from '@supabase/ssr';
-import { cookies } from 'next/headers';
 import { v4 as uuidv4 } from 'uuid';
+import { mockSupabaseClient } from '../../../../jest.setup';
 
-// Mock Supabase client
-jest.mock('@supabase/ssr', () => ({
-  createServerClient: jest.fn(() => ({
-    auth: {
-      getUser: jest.fn(),
-    },
-    from: jest.fn(() => ({
-      select: jest.fn(() => ({
-        eq: jest.fn(() => ({
-          single: jest.fn(),
-          in: jest.fn(() => ({
-            data: [],
-            error: null,
-          })),
-        })),
-      })),
-      update: jest.fn(() => ({
-        eq: jest.fn(() => ({
-          select: jest.fn(() => ({
-            single: jest.fn(),
-          })),
-        })),
-      })),
-    })),
-  })),
-}));
-
-// Mock Next.js headers
+// Mock Next.js headers (should be covered by jest.setup.ts)
 jest.mock('next/headers', () => ({
   cookies: jest.fn(() => ({
     get: jest.fn(),
@@ -41,97 +13,96 @@ jest.mock('next/headers', () => ({
   })),
 }));
 
-const mockSupabase = createServerClient as jest.Mock;
-
 describe('PUT /api/study-materials/[id]/assign', () => {
   const MOCK_USER_ID = uuidv4();
   const MOCK_STUDY_MATERIAL_ID = uuidv4();
   const MOCK_CLASS_ID = uuidv4();
   const MOCK_SECTION_ID = uuidv4();
 
+  // Mocks for study_materials table interactions
+  let mockStudyMaterialsSelect: jest.Mock;
+  let mockStudyMaterialsEq: jest.Mock;
+  let mockStudyMaterialsSingle: jest.Mock;
+  let mockStudyMaterialsUpdate: jest.Mock;
+  let mockStudyMaterialsUpdateEq: jest.Mock;
+  let mockStudyMaterialsUpdateSelect: jest.Mock;
+  let mockStudyMaterialsUpdateSingle: jest.Mock;
+
+  // Mocks for classes table interactions
+  let mockClassesSelect: jest.Mock;
+  let mockClassesEq: jest.Mock;
+  let mockClassesSingle: jest.Mock;
+
+  // Mocks for class_sections table interactions
+  let mockClassSectionsSelect: jest.Mock;
+  let mockClassSectionsEq: jest.Mock;
+  let mockClassSectionsSingle: jest.Mock;
+
   beforeEach(() => {
+    globalThis.mockSupabaseClient._reset();
     jest.clearAllMocks();
 
-    mockSupabase.mockImplementation(() => ({
-      auth: {
-        getUser: jest.fn(() => Promise.resolve({ data: { user: { id: MOCK_USER_ID } }, error: null })),
-      },
-      from: jest.fn((tableName) => {
-        if (tableName === 'study_materials') {
-          return {
-            select: jest.fn(() => ({
-              eq: jest.fn((column, value) => {
-                if (column === 'id' && value === MOCK_STUDY_MATERIAL_ID) {
-                  return {
-                    eq: jest.fn((userColumn, userId) => ({
-                      single: jest.fn(() => {
-                        if (userColumn === 'user_id' && userId === MOCK_USER_ID) {
-                          return Promise.resolve({ data: { id: MOCK_STUDY_MATERIAL_ID, user_id: MOCK_USER_ID }, error: null });
-                        }
-                        return Promise.resolve({ data: null, error: { message: 'Unauthorized' } });
-                      }),
-                    })),
-                  };
-                }
-                return { single: jest.fn(() => Promise.resolve({ data: null, error: null })) };
-              }),
-            })),
-            update: jest.fn(() => ({
-              eq: jest.fn((column, value) => {
-                if (column === 'id' && value === MOCK_STUDY_MATERIAL_ID) {
-                  return {
-                    select: jest.fn(() => ({
-                      single: jest.fn(() => Promise.resolve({ data: { id: MOCK_STUDY_MATERIAL_ID, class_id: MOCK_CLASS_ID, class_section_id: MOCK_SECTION_ID }, error: null })),
-                    })),
-                  };
-                }
-                return { select: jest.fn(() => ({ single: jest.fn(() => Promise.resolve({ data: null, error: null })) })) };
-              }),
-            })),
-          };
-        } else if (tableName === 'classes') {
-          return {
-            select: jest.fn(() => ({
-              eq: jest.fn((column, value) => {
-                if (column === 'id' && value === MOCK_CLASS_ID) {
-                  return {
-                    eq: jest.fn((userColumn, userId) => ({
-                      single: jest.fn(() => {
-                        if (userColumn === 'user_id' && userId === MOCK_USER_ID) {
-                          return Promise.resolve({ data: { id: MOCK_CLASS_ID, user_id: MOCK_USER_ID }, error: null });
-                        }
-                        return Promise.resolve({ data: null, error: { message: 'Unauthorized class' } });
-                      }),
-                    })),
-                  };
-                }
-                return { single: jest.fn(() => Promise.resolve({ data: null, error: null })) };
-              }),
-            })),
-          };
-        } else if (tableName === 'class_sections') {
-          return {
-            select: jest.fn(() => ({
-              eq: jest.fn((column, value) => {
-                if (column === 'id' && value === MOCK_SECTION_ID) {
-                  return {
-                    eq: jest.fn((classColumn, classId) => ({
-                      single: jest.fn(() => {
-                        if (classColumn === 'class_id' && classId === MOCK_CLASS_ID) {
-                          return Promise.resolve({ data: { id: MOCK_SECTION_ID, class_id: MOCK_CLASS_ID }, error: null });
-                        }
-                        return Promise.resolve({ data: null, error: { message: 'Section not in class' } });
-                      }),
-                    })),
-                  };
-                }
-                return { single: jest.fn(() => Promise.resolve({ data: null, error: null })) };
-              }),
-            })),
-          };
-        }
-        return { select: jest.fn(() => ({ single: jest.fn(() => Promise.resolve({ data: null, error: null })) })) };
-      }),
+    // Initialize mocks for study_materials
+    mockStudyMaterialsSelect = jest.fn();
+    mockStudyMaterialsEq = jest.fn();
+    mockStudyMaterialsSingle = jest.fn();
+    mockStudyMaterialsUpdate = jest.fn();
+    mockStudyMaterialsUpdateEq = jest.fn();
+    mockStudyMaterialsUpdateSelect = jest.fn();
+    mockStudyMaterialsUpdateSingle = jest.fn();
+
+    // Initialize mocks for classes
+    mockClassesSelect = jest.fn();
+    mockClassesEq = jest.fn();
+    mockClassesSingle = jest.fn();
+
+    // Initialize mocks for class_sections
+    mockClassSectionsSelect = jest.fn();
+    mockClassSectionsEq = jest.fn();
+    mockClassSectionsSingle = jest.fn();
+
+    globalThis.mockSupabaseClient.auth.getUser.mockResolvedValue({ data: { user: { id: MOCK_USER_ID } }, error: null });
+
+    globalThis.mockSupabaseClient.from.mockImplementation((tableName: string) => {
+      if (tableName === 'study_materials') {
+        return {
+          select: mockStudyMaterialsSelect.mockReturnThis(),
+          eq: mockStudyMaterialsEq.mockReturnThis(),
+          single: mockStudyMaterialsSingle,
+          update: mockStudyMaterialsUpdate.mockReturnThis(),
+        };
+      } else if (tableName === 'classes') {
+        return {
+          select: mockClassesSelect.mockReturnThis(),
+          eq: mockClassesEq.mockReturnThis(),
+          single: mockClassesSingle,
+        };
+      } else if (tableName === 'class_sections') {
+        return {
+          select: mockClassSectionsSelect.mockReturnThis(),
+          eq: mockClassSectionsEq.mockReturnThis(),
+          single: mockClassSectionsSingle,
+        };
+      }
+      return {
+        select: jest.fn().mockReturnThis(),
+        eq: jest.fn().mockReturnThis(),
+        single: jest.fn(),
+        in: jest.fn().mockReturnThis(),
+        update: jest.fn().mockReturnThis(),
+        delete: jest.fn().mockReturnThis(),
+      };
+    });
+
+    // For update calls: supabase.from('study_materials').update(...).eq(...).select().single()
+    mockStudyMaterialsUpdate.mockImplementation(() => ({
+        eq: mockStudyMaterialsUpdateEq.mockReturnThis(),
+    }));
+    mockStudyMaterialsUpdateEq.mockImplementation(() => ({
+        select: mockStudyMaterialsUpdateSelect.mockReturnThis(),
+    }));
+    mockStudyMaterialsUpdateSelect.mockImplementation(() => ({
+        single: mockStudyMaterialsUpdateSingle,
     }));
   });
 
