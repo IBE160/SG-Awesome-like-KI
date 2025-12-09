@@ -12,11 +12,10 @@ Routing guidance:
 ## Open Items
 | Date | Story | Epic | Type | Severity | Owner | Status | Notes |
 | ---- | ----- | ---- | ---- | -------- | ----- | ------ | ----- |
-| 2025-12-07 | 3.4 | 3 | Testing | Low | TBD | Open | Implement E2E tests for content assignment, reassignment, and viewing user journeys. |
 | 2025-12-07 | fix-jest-config-state | - | Documentation | High | TBD | Open | Reference for ongoing Jest configuration and testing issues. See: docs/sprint-artifacts/jest-config-state.md |
 | 2025-12-07 | fix-jest-config | - | Technical Debt | High | TBD | Open | Resolve Jest test suite configuration issues (SyntaxError, cookie scope, NextRequest constructor) for Next.js 16 API routes. This is blocking automated verification of other tasks. |
 | 2025-12-08 | bug-manage-classes-page | - | Bug | High | TBD | Open | The page 'manage classes' doesn't work. |
-| 2025-12-09 | bug-unorganised-content-fetch | - | Bug | High | TBD | Open | When pressing unorganised content, the page loads, but where I should see my content I only get the message Error: Failed to fetch unorganized content |
+| 2025-12-09 | bug-unorganised-content-fetch | - | Bug | High | Amelia | Closed | Resolved by explicitly defining relationship for generated_content in API |
 ## Closed Items
 | Date | Story | Epic | Type | Severity | Owner | Status | Notes |
 | ---- | ----- | ---- | ---- | -------- | ----- | ------ | ----- |
