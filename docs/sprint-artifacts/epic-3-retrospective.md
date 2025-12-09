@@ -123,6 +123,7 @@ Technical Health: **Unstable**
 
 Unresolved Blockers: **Exist**
 ⚠️ Must resolve: Jest config, 'manage classes' page, 'fetch documents' error, 'unorganised content' export error, auth redirect, profile update failures, auth logout access issue.
+✅ Resolved: 'unorganised content' fetch - API now returns all unassigned study materials. Previous "data issue" was a feature interpretation mismatch.
 
 ## Commitments and Next Steps:
 

@@ -32,8 +32,9 @@ export async function GET() {
       return NextResponse.json({ error: 'Failed to fetch unorganized content' }, { status: 500 });
     }
 
-    // Filter out materials that have no generated content
-    const unorganizedContent = data.filter(d => d.generated_content && d.generated_content.length > 0);
+    // Do not filter out materials that have no generated content.
+    // The user expects to see all unorganized files, regardless of whether content has been generated yet.
+    const unorganizedContent = data;
 
     return NextResponse.json({ data: unorganizedContent }, { status: 200 });
 
