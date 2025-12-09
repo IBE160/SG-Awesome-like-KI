@@ -15,8 +15,11 @@ Routing guidance:
 | 2025-12-07 | fix-jest-config-state | - | Documentation | High | TBD | Open | Reference for ongoing Jest configuration and testing issues. See: docs/sprint-artifacts/jest-config-state.md |
 | 2025-12-07 | fix-jest-config | - | Technical Debt | High | TBD | Open | Resolve Jest test suite configuration issues (SyntaxError, cookie scope, NextRequest constructor) for Next.js 16 API routes. This is blocking automated verification of other tasks. |
 | 2025-12-08 | bug-manage-classes-page | - | Bug | High | TBD | Open | The page 'manage classes' doesn't work. |
-| 2025-12-09 | bug-unorganised-content-fetch | - | Bug | High | Amelia | Closed | Resolved by explicitly defining relationship for generated_content in API |
+
 ## Closed Items
+| Date | Story | Epic | Type | Severity | Owner | Status | Notes |
+| ---- | ----- | ---- | ---- | -------- | ----- | ------ | ----- |
+| 2025-12-09 | bug-unorganised-content-fetch | - | Bug | High | Amelia | Closed | Resolved by adding 'created_at' column to database, clarifying Supabase query, and removing filter for generated content to align with feature expectation. |
 | Date | Story | Epic | Type | Severity | Owner | Status | Notes |
 | ---- | ----- | ---- | ---- | -------- | ----- | ------ | ----- |
 | 2025-12-07 | tech-debt-supabase-ts-ignore | 3 | Technical Debt | Medium | Sofie | Closed | Resolve `@ts-ignore` workaround for Supabase `createServerClient` cookies configuration. See: docs/sprint-artifacts/tech-debt-supabase-ts-ignore.md |
