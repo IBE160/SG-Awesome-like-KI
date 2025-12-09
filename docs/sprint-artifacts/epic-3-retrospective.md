@@ -68,6 +68,7 @@
 2.  **Fix 'Manage Classes' page (bug-manage-classes-page):**
     *   Owner: Amelia (Developer Agent)
     *   Success criteria: Users can successfully create, view, and manage classes.
+    *   **Status: RESOLVED**
 3.  **Address 'Failed to fetch documents' error (bug-fetch-documents):**
     *   Owner: Amelia (Developer Agent)
     *   Success criteria: Users can successfully view documents after pressing on a class.
@@ -75,15 +76,19 @@
 4.  **Resolve 'createSupabaseServerClient export' error (bug-unorganised-content-export):**
     *   Owner: Amelia (Developer Agent)
     *   Success criteria: 'Unorganised content' page loads and displays content without errors.
+    *   **Status: RESOLVED**
 5.  **Address Auth Redirect to Login (auth-redirect-to-login):**
     *   Owner: Amelia (Developer Agent)
     *   Success criteria: App correctly redirects to the login page on initial load when not authenticated.
+    *   **Status: RESOLVED**
 6.  **Fix Profile Update Failure (profile-update-fails):**
     *   Owner: Amelia (Developer Agent)
     *   Success criteria: Users can successfully update their profile information.
+    *   **Status: RESOLVED**
 7.  **Resolve Auth Logout Access Issue (auth-logout-access-issue):**
     *   Owner: Amelia (Developer Agent)
     *   Success criteria: Users cannot access authenticated pages after logging out.
+    *   **Status: RESOLVED**
 
 **PARALLEL PREPARATION (Can happen during early stories of Epic 4, if capacity allows):**
 
