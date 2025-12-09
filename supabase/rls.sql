@@ -120,46 +120,18 @@ USING (
 --
 -- RLS Policies for `generated_content`
 --
-CREATE POLICY "Users can view generated content for their own classes"
+CREATE POLICY "Users can view their own generated content"
 ON generated_content FOR SELECT
-USING (
-  EXISTS (
-    SELECT 1
-    FROM classes
-    WHERE classes.id = generated_content.class_id
-      AND classes.user_id = auth.uid()
-  )
-);
+USING (auth.uid() = user_id);
 
-CREATE POLICY "Users can insert generated content for their own classes"
+CREATE POLICY "Users can insert their own generated content"
 ON generated_content FOR INSERT
-WITH CHECK (
-  EXISTS (
-    SELECT 1
-    FROM classes
-    WHERE classes.id = generated_content.class_id
-      AND classes.user_id = auth.uid()
-  )
-);
+WITH CHECK (auth.uid() = user_id);
 
-CREATE POLICY "Users can update generated content for their own classes"
+CREATE POLICY "Users can update their own generated content"
 ON generated_content FOR UPDATE
-USING (
-  EXISTS (
-    SELECT 1
-    FROM classes
-    WHERE classes.id = generated_content.class_id
-      AND classes.user_id = auth.uid()
-  )
-);
+USING (auth.uid() = user_id);
 
-CREATE POLICY "Users can delete generated content for their own classes"
+CREATE POLICY "Users can delete their own generated content"
 ON generated_content FOR DELETE
-USING (
-  EXISTS (
-    SELECT 1
-    FROM classes
-    WHERE classes.id = generated_content.class_id
-      AND classes.user_id = auth.uid()
-  )
-);
+USING (auth.uid() = user_id);
