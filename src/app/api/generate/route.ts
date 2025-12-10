@@ -3,13 +3,12 @@ import { createClient } from '@/lib/supabase/server';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
-import { generateSummaryWithGemini, generateQuizWithGemini } from '@/lib/gemini';
-// Placeholder for the AI model import
-// import { Anthropic } from '@anthropic-ai/sdk';
+// Removed Gemini specific imports
+import Anthropic from '@anthropic-ai/sdk'; // Corrected import for Anthropic
 
-// const anthropic = new Anthropic({
-//   apiKey: process.env.ANTHROPIC_API_KEY,
-// });
+const anthropic = new Anthropic({
+  apiKey: process.env.ANTHROPIC_API_KEY,
+});
 
 // NOTE: For production environments, consider replacing `console.error` with a structured logging solution.
 export async function POST(req: Request) {
@@ -58,32 +57,22 @@ export async function POST(req: Request) {
     if (type === 'summary') {
       let summary: string;
       try {
-        // --- START ACTUAL GEMINI INTEGRATION SNIPPET ---
-        // In a real deployment, ensure GEMINI_API_KEY is securely set in your environment variables.
-        // You would typically import GoogleGenerativeAI from '@google/generative-ai'.
-        // const { GoogleGenerativeAI } = require('@google/generative-ai');
-
-        const geminiApiKey = process.env.GEMINI_API_KEY;
-
-        if (geminiApiKey) {
-          // Placeholder for actual Gemini API call
-          // const genAI = new GoogleGenerativeAI(geminiApiKey);
-          // const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-          // const prompt = `Summarize the following text: ${document.extracted_text}`;
-          // const result = await model.generateContent(prompt);
-          // const response = await result.response;
-          // summary = response.text();
-          console.warn("Using simulated Gemini API as actual integration is commented out. Uncomment and provide API key for real usage.");
-          summary = await generateSummaryWithGemini(document.extracted_text); // Fallback to simulated
-        } else {
-          console.warn("GEMINI_API_KEY not set. Using simulated Gemini API for summary generation.");
-          summary = await generateSummaryWithGemini(document.extracted_text); // Fallback to simulated
+        if (!process.env.ANTHROPIC_API_KEY) {
+          throw new Error("ANTHROPIC_API_KEY is not set.");
         }
-        // --- END ACTUAL GEMINI INTEGRATION SNIPPET ---
-      } catch (geminiError: any) {
+
+        const prompt = `Please provide a concise summary of the following text: ${document.extracted_text}`;
+        const claudeResponse = await anthropic.messages.create({
+          model: 'claude-3-opus-20240229', // or another appropriate Claude model
+          max_tokens: 1024,
+          messages: [{ role: 'user', content: prompt }],
+        });
+        summary = claudeResponse.content[0].text; // Extract the text from the response
+
+      } catch (claudeError: any) {
         // NOTE: For production environments, consider replacing `console.error` with a structured logging solution.
-        console.error('Error from Gemini API during summary generation:', geminiError);
-        return new NextResponse(`AI summary generation failed: ${geminiError.message}`, { status: 500 });
+        console.error('Error from Claude API during summary generation:', claudeError);
+        return new NextResponse(`AI summary generation failed: ${claudeError.message}`, { status: 500 });
       }
       generatedContent = { summary };
     } else if (type === 'quiz') {
@@ -94,30 +83,59 @@ export async function POST(req: Request) {
 
       let quiz: any; // Placeholder for quiz structure
       try { // Inner try block for quiz generation
-        // --- START ACTUAL GEMINI QUIZ GENERATION SNIPPET ---
-        const geminiApiKey = process.env.GEMINI_API_KEY;
-        if (geminiApiKey) {
-          // Placeholder for actual Gemini API call for quiz
-          // const genAI = new GoogleGenerativeAI(geminiApiKey);
-          // const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-          // const prompt = `Generate a ${quizLength} multiple-choice quiz from the following text: ${document.extracted_text}`;
-          // const result = await model.generateContent(prompt);
-          // const response = await result.response;
-          // quiz = JSON.parse(response.text()); // Assuming JSON output
-          console.warn("Using simulated Gemini API for quiz generation as actual integration is commented out. Uncomment and provide API key for real usage.");
-          quiz = await generateQuizWithGemini(document.extracted_text, quizLength); // Fallback to simulated
-        } else {
-          console.warn("GEMINI_API_KEY not set. Using simulated Gemini API for quiz generation.");
-          quiz = await generateQuizWithGemini(document.extracted_text, quizLength); // Fallback to simulated
+        if (!process.env.ANTHROPIC_API_KEY) {
+          throw new Error("ANTHROPIC_API_KEY is not set.");
         }
-        // --- END ACTUAL GEMINI QUIZ GENERATION SNIPPET ---
-      } catch (geminiError: any) { // Catch for quiz generation error
+
+        let quizPrompt: string;
+        if (quizLength === 'short') {
+          quizPrompt = `Generate a short multiple-choice quiz (3-5 questions) from the following text. Provide the output as a JSON array of objects, where each object has 'question', 'options' (an array of strings), and 'answer' (the correct option string). Text: ${document.extracted_text}`;
+        } else if (quizLength === 'medium') {
+          quizPrompt = `Generate a medium multiple-choice quiz (6-8 questions) from the following text. Provide the output as a JSON array of objects, where each object has 'question', 'options' (an array of strings), and 'answer' (the correct option string). Text: ${document.extracted_text}`;
+        } else { // long
+          quizPrompt = `Generate a long multiple-choice quiz (9-12 questions) from the following text. Provide the output as a JSON array of objects, where each object has 'question', 'options' (an array of strings), and 'answer' (the correct option string). Text: ${document.extracted_text}`;
+        }
+        
+        const claudeResponse = await anthropic.messages.create({
+          model: 'claude-3-opus-20240229', // or another appropriate Claude model
+          max_tokens: 2048, // Increased max tokens for quiz generation
+          messages: [{ role: 'user', content: quizPrompt }],
+        });
+        quiz = JSON.parse(claudeResponse.content[0].text); // Assuming Claude returns JSON directly
+      } catch (claudeError: any) { // Catch for quiz generation error
         // NOTE: For production environments, consider replacing `console.error` with a structured logging solution.
-        console.error('Error from Gemini API during quiz generation:', geminiError);
-        return new NextResponse(`AI quiz generation failed: ${geminiError.message}`, { status: 500 });
+        console.error('Error from Claude API during quiz generation:', claudeError);
+        return new NextResponse(`AI quiz generation failed: ${claudeError.message}`, { status: 500 });
       }
       generatedContent = { quiz };
     }
+
+    // 3. Store the generated content in the `generated_content` table
+    const { data, error } = await supabase
+      .from('generated_content')
+      .insert([
+        {
+          user_id: session.user.id,
+          study_material_id: documentId,
+          content_type: type, // Use the dynamic type
+          content: generatedContent,
+        },
+      ])
+      .select();
+
+    if (error) {
+      // NOTE: For production environments, consider replacing `console.error` with a structured logging solution.
+      console.error('Error saving content:', error);
+      return new NextResponse('Internal Server Error', { status: 500 });
+    }
+
+    return NextResponse.json(data);
+  } catch (error) { // Outer catch block restored
+    // NOTE: For production environments, consider replacing `console.error` with a structured logging solution.
+    console.error('Error generating content:', error);
+    return new NextResponse('Internal Server Error', { status: 500 });
+  }
+}
 
     // 3. Store the generated content in the `generated_content` table
     const { data, error } = await supabase

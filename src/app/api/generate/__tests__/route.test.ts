@@ -1,29 +1,38 @@
 import { POST } from '@/app/api/generate/route';
 import { createClient } from '@/lib/supabase/server';
 import { cookies } from 'next/headers';
-// Import both functions to mock
-import { generateSummaryWithGemini, generateQuizWithGemini } from '@/lib/gemini';
+import Anthropic from '@anthropic-ai/sdk'; // Import Anthropic
 
 jest.mock('@/lib/supabase/server');
 jest.mock('next/headers');
-jest.mock('@/lib/gemini'); // Mock the entire gemini module
+jest.mock('@anthropic-ai/sdk'); // Mock the Anthropic SDK
 
 const mockSupabase = createClient as jest.Mock;
 const mockCookies = cookies as jest.Mock;
-// Mock both functions
-const mockGenerateSummaryWithGemini = generateSummaryWithGemini as jest.Mock;
-const mockGenerateQuizWithGemini = generateQuizWithGemini as jest.Mock;
+const mockAnthropic = Anthropic as jest.Mocked<typeof Anthropic>;
+
+// Mock the messages.create method
+mockAnthropic.prototype.messages = {
+  create: jest.fn(),
+} as any;
+
 
 describe('POST /api/generate', () => {
   beforeEach(() => {
     jest.resetAllMocks();
     mockCookies.mockReturnValue({ get: jest.fn() });
-    // Default successful mocks
-    mockGenerateSummaryWithGemini.mockResolvedValue('This is a summary.');
-    mockGenerateQuizWithGemini.mockResolvedValue({
-      title: 'Mock Quiz',
-      questions: [{ id: '1', question: 'Q1', options: ['A'], correctAnswer: 'A' }],
-    });
+    process.env.ANTHROPIC_API_KEY = 'test-api-key'; // Ensure API key is set for tests
+    // Default successful mocks for Claude
+    (mockAnthropic.prototype.messages.create as jest.Mock)
+      .mockResolvedValueOnce({ content: [{ text: 'This is a summary.' }] }) // For summary
+      .mockResolvedValueOnce({ content: [{ text: JSON.stringify({
+        title: 'Mock Quiz',
+        questions: [{ id: '1', question: 'Q1', options: ['A'], correctAnswer: 'A' }],
+      }) }] }); // For quiz
+  });
+
+  afterEach(() => {
+    delete process.env.ANTHROPIC_API_KEY; // Clean up
   });
 
   it('should return 401 if user is not authenticated', async () => {
@@ -85,10 +94,14 @@ describe('POST /api/generate', () => {
               select: jest.fn().mockResolvedValue({ data: [mockSummary], error: null }),
             }),
           };
-        }
+        };
         return {};
       }),
     });
+
+    // Mock for summary generation
+    (mockAnthropic.prototype.messages.create as jest.Mock)
+      .mockResolvedValueOnce({ content: [{ type: 'text', text: 'This is a summary.' }] });
 
     const req = {
       json: jest.fn().mockResolvedValue({ type: 'summary', documentId: '123' }),
@@ -98,9 +111,15 @@ describe('POST /api/generate', () => {
     expect(response.status).toBe(200);
     const body = await response.json(); // This expects JSON
     expect(body).toEqual([mockSummary]);
+    expect(mockAnthropic.prototype.messages.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        model: 'claude-3-opus-20240229',
+        messages: [{ role: 'user', content: 'Please provide a concise summary of the following text: Some text' }],
+      })
+    );
   });
 
-  it('should return 500 if Gemini API throws an error', async () => {
+  it('should return 500 if Claude API throws an error during summary generation', async () => {
     mockSupabase.mockReturnValue({
       auth: {
         getSession: jest.fn().mockResolvedValue({ data: { session: { user: { id: 'user-1' } } } }),
@@ -112,7 +131,8 @@ describe('POST /api/generate', () => {
         }),
       }),
     });
-    mockGenerateSummaryWithGemini.mockRejectedValue(new Error('Insufficient text to summarize.'));
+    (mockAnthropic.prototype.messages.create as jest.Mock)
+      .mockRejectedValue(new Error('Claude summarization failed.'));
 
     const req = {
       json: jest.fn().mockResolvedValue({ type: 'summary', documentId: '123' }),
@@ -120,7 +140,7 @@ describe('POST /api/generate', () => {
 
     const response = await POST(req);
     expect(response.status).toBe(500);
-    expect(await response.text()).toBe('AI summary generation failed: Insufficient text to summarize.'); // Changed to .text()
+    expect(await response.text()).toBe('AI summary generation failed: Claude summarization failed.'); // Changed to .text()
   });
 
   it('should return 500 if Supabase insert for generated content fails', async () => {
@@ -147,6 +167,8 @@ describe('POST /api/generate', () => {
         return {};
       }),
     });
+    (mockAnthropic.prototype.messages.create as jest.Mock)
+      .mockResolvedValueOnce({ content: [{ type: 'text', text: 'This is a summary.' }] });
 
     const req = {
       json: jest.fn().mockResolvedValue({ type: 'summary', documentId: '123' }),
@@ -224,7 +246,9 @@ describe('POST /api/generate', () => {
         return {};
       }),
     });
-    mockGenerateQuizWithGemini.mockResolvedValue(mockQuiz);
+    // Mock for quiz generation
+    (mockAnthropic.prototype.messages.create as jest.Mock)
+      .mockResolvedValueOnce({ content: [{ type: 'text', text: JSON.stringify(mockQuiz) }] });
 
     const req = {
       json: jest.fn().mockResolvedValue({
@@ -238,7 +262,12 @@ describe('POST /api/generate', () => {
     expect(response.status).toBe(200);
     const body = await response.json(); // This expects JSON
     expect(body).toEqual([mockQuiz]);
-    expect(mockGenerateQuizWithGemini).toHaveBeenCalledWith('Some text for quiz', 'short');
+    expect(mockAnthropic.prototype.messages.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        model: 'claude-3-opus-20240229',
+        messages: [{ role: 'user', content: expect.stringContaining('Generate a short multiple-choice quiz (3-5 questions) from the following text.') }],
+      })
+    );
   });
 
   it('should return 400 if quizLength is missing for quiz type', async () => {
@@ -268,7 +297,7 @@ describe('POST /api/generate', () => {
     expect(await response.text()).toBe('Invalid or missing quizLength option'); // Changed to .text()
   });
 
-  it('should return 500 if Gemini API throws an error during quiz generation', async () => {
+  it('should return 500 if Claude API throws an error during quiz generation', async () => {
     mockSupabase.mockReturnValue({
       auth: {
         getSession: jest.fn().mockResolvedValue({ data: { session: { user: { id: 'user-1' } } } }),
@@ -280,7 +309,8 @@ describe('POST /api/generate', () => {
         }),
       }),
     });
-    mockGenerateQuizWithGemini.mockRejectedValue(new Error('Insufficient text for quiz.'));
+    (mockAnthropic.prototype.messages.create as jest.Mock)
+      .mockRejectedValue(new Error('Claude quiz generation failed.'));
 
     const req = {
       json: jest.fn().mockResolvedValue({
@@ -292,6 +322,6 @@ describe('POST /api/generate', () => {
 
     const response = await POST(req);
     expect(response.status).toBe(500);
-    expect(await response.text()).toBe('AI quiz generation failed: Insufficient text for quiz.'); // Changed to .text()
+    expect(await response.text()).toBe('AI quiz generation failed: Claude quiz generation failed.'); // Changed to .text()
   });
 });
