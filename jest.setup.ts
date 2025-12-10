@@ -31,8 +31,7 @@ if (typeof Blob !== 'undefined' && !Blob.prototype.text) {
 }
 
 
-// Mock next/headers
-let mockCookieStore: { [key: string]: { value: string; options?: any } } = {};
+let mockCookieStore: { [key: string]: { value: string; options?: any } } = {}; // Defined globally now
 
 jest.mock('next/headers', () => ({
   cookies: jest.fn(() => ({
@@ -44,10 +43,23 @@ jest.mock('next/headers', () => ({
       delete mockCookieStore[name];
     }),
     _clear: () => {
-      mockCookieStore = {};
+      mockCookieStore = {}; // Clears the global mockCookieStore
     },
     _getAll: () => mockCookieStore,
   })),
+}));
+
+jest.mock('next/navigation', () => ({
+  useRouter: jest.fn(() => ({
+    push: jest.fn(),
+    replace: jest.fn(),
+    refresh: jest.fn(),
+    back: jest.fn(),
+    prefetch: jest.fn(),
+  })),
+  usePathname: jest.fn(() => '/mock-path'),
+  useSearchParams: jest.fn(() => new URLSearchParams()),
+  useParams: jest.fn(() => ({})),
 }));
 
 // Polyfill fetch and related globals for Jest test environment if they don't exist
@@ -202,6 +214,20 @@ if (typeof global.fetch === 'undefined') {
 let mockSupabaseDb: { [tableName: string]: any[] } = {};
 let mockAuthUser: any = null; // Store authenticated user
 
+// Pre-populate with some data for RLS testing
+const MOCK_USER_ID = 'test-user-id';
+const MOCK_CLASS_ID_1 = 'mock-class-id-1';
+const MOCK_CLASS_ID_2 = 'mock-class-id-2';
+const MOCK_SECTION_ID_1 = 'mock-section-id-1';
+const MOCK_SECTION_ID_2 = 'mock-section-id-2';
+const MOCK_STUDY_MATERIAL_ID_1 = 'mock-study-material-id-1';
+const MOCK_STUDY_MATERIAL_ID_2 = 'mock-study-material-id-2';
+const MOCK_GENERATED_CONTENT_ID_1 = 'mock-generated-content-id-1';
+const MOCK_GENERATED_CONTENT_ID_2 = 'mock-generated-content-id-2';
+
+const MOCK_OTHER_USER_ID = 'other-user-id';
+const MOCK_OTHER_CLASS_ID = 'other-class-id';
+
 const createMockQueryBuilder = (tableName: string) => {
   let query: any = {};
   let dataStore = mockSupabaseDb[tableName] || [];
@@ -212,6 +238,11 @@ const createMockQueryBuilder = (tableName: string) => {
     if (query.eq) {
       filtered = filtered.filter(item => item[query.eq.column] === query.eq.value);
     }
+    // Apply RLS - only return items owned by mockAuthUser
+    if (mockAuthUser && ['profiles', 'classes', 'class_sections', 'study_materials', 'generated_content'].includes(tableName)) {
+      filtered = filtered.filter(item => item.user_id === mockAuthUser.id);
+    }
+
     // Apply limit if set
     if (currentLimit !== null) {
       filtered = filtered.slice(0, currentLimit);
@@ -249,14 +280,14 @@ const createMockQueryBuilder = (tableName: string) => {
       };
     }),
     insert: jest.fn((payload: any) => {
-      const newEntry = { id: 'mock-uuid-' + (dataStore.length + 1), ...payload };
+      const newEntry = { id: 'mock-uuid-' + (dataStore.length + 1), ...payload, user_id: mockAuthUser?.id };
       dataStore.push(newEntry);
       mockSupabaseDb[tableName] = dataStore; // Update the "database"
       return {
         ...mockQueryBuilder,
         select: jest.fn(() => ({
           single: jest.fn(() => Promise.resolve({ data: newEntry, error: null })),
-          then: (resolve: any, reject: any) => Promise.resolve(resolve({ data: [newEntry], error: null })),
+          then: (resolve: any, reject: any) => resolve({ data: [newEntry], error: null }),
         })),
       };
     }),
@@ -266,6 +297,11 @@ const createMockQueryBuilder = (tableName: string) => {
       if (query.eq) {
         dataStore = dataStore.map(item => {
           if (item[query.eq.column] === query.eq.value) {
+            // Apply RLS for update as well
+            if (item.user_id && item.user_id !== mockAuthUser?.id) {
+              error = { message: 'Unauthorized update', status: 401 };
+              return item;
+            }
             const updatedItem = { ...item, ...payload, updated_at: new Date().toISOString() };
             updatedData.push(updatedItem);
             return updatedItem;
@@ -294,7 +330,13 @@ const createMockQueryBuilder = (tableName: string) => {
       let deletedDataCount = 0;
       if (query.eq) {
         const initialLength = dataStore.length;
-        dataStore = dataStore.filter(item => item[query.eq.column] !== query.eq.value);
+        dataStore = dataStore.filter(item => {
+          // Apply RLS for delete
+          if (item[query.eq.column] === query.eq.value && (!item.user_id || item.user_id === mockAuthUser?.id)) {
+            return false; // delete this item
+          }
+          return true;
+        });
         deletedDataCount = initialLength - dataStore.length;
         mockSupabaseDb[tableName] = dataStore;
       }
@@ -311,10 +353,20 @@ const createMockQueryBuilder = (tableName: string) => {
       let resultData;
 
       if (existingIndex !== -1) {
+        // Apply RLS for upsert (update part)
+        if (dataStore[existingIndex].user_id && dataStore[existingIndex].user_id !== mockAuthUser?.id) {
+          return {
+            ...mockQueryBuilder,
+            select: jest.fn(() => ({
+              single: jest.fn(() => Promise.resolve({ data: null, error: { message: 'Unauthorized upsert', status: 401 } })),
+              then: (resolve: any, reject: any) => Promise.resolve(resolve({ data: [], error: { message: 'Unauthorized upsert', status: 401 } })),
+            })),
+          };
+        }
         dataStore[existingIndex] = { ...dataStore[existingIndex], ...payload, updated_at: new Date().toISOString() };
         resultData = dataStore[existingIndex];
       } else {
-        const newEntry = { id: payload[idColumn] || 'mock-uuid-' + (dataStore.length + 1), ...payload, created_at: new Date().toISOString() };
+        const newEntry = { id: payload[idColumn] || 'mock-uuid-' + (dataStore.length + 1), ...payload, created_at: new Date().toISOString(), user_id: mockAuthUser?.id };
         dataStore.push(newEntry);
         resultData = newEntry;
       }
@@ -336,14 +388,16 @@ const createMockQueryBuilder = (tableName: string) => {
 
 export const mockSupabaseClient = {
   auth: {
-    getUser: jest.fn(() => Promise.resolve({ data: { user: mockAuthUser }, error: null })),
+    getUser: jest.fn(() => {
+      return Promise.resolve({ data: { user: mockAuthUser }, error: null });
+    }),
     signOut: jest.fn(() => {
       mockAuthUser = null;
       return Promise.resolve({ error: null });
     }),
     signInWithPassword: jest.fn(({ email, password }: any) => {
       if (email === 'test@example.com' && password === 'password') {
-        mockAuthUser = { id: 'mock-user-id', email };
+        mockAuthUser = { id: MOCK_USER_ID, email };
         return Promise.resolve({ data: { user: mockAuthUser, session: { access_token: 'mock-token' } }, error: null });
       }
       return Promise.resolve({ data: { user: null, session: null }, error: { message: 'Invalid credentials' } });
@@ -401,7 +455,60 @@ export const mockSupabaseClient = {
   },
   // Add other top-level Supabase client properties/methods as needed
   _reset: () => {
-    mockSupabaseDb = {};
+    process.env.GEMINI_API_KEY = 'mock-api-key';
+    mockSupabaseDb = {
+      profiles: [
+        { id: MOCK_USER_ID, full_name: 'Test User', user_id: MOCK_USER_ID },
+        { id: MOCK_OTHER_USER_ID, full_name: 'Other User', user_id: MOCK_OTHER_USER_ID },
+      ],
+      classes: [
+        { id: MOCK_CLASS_ID_1, name: 'Class 1', user_id: MOCK_USER_ID },
+        { id: MOCK_CLASS_ID_2, name: 'Class 2', user_id: MOCK_USER_ID },
+        { id: MOCK_OTHER_CLASS_ID, name: 'Other Class', user_id: MOCK_OTHER_USER_ID },
+      ],
+      class_sections: [
+        { id: MOCK_SECTION_ID_1, name: 'Section 1', class_id: MOCK_CLASS_ID_1, user_id: MOCK_USER_ID },
+        { id: MOCK_SECTION_ID_2, name: 'Section 2', class_id: MOCK_CLASS_ID_1, user_id: MOCK_USER_ID },
+      ],
+      study_materials: [
+        {
+          id: MOCK_STUDY_MATERIAL_ID_1,
+          original_name: 'Doc 1',
+          file_path: 'path/to/doc1.pdf',
+          extracted_text: 'Extracted text from Doc 1',
+          user_id: MOCK_USER_ID,
+          class_id: MOCK_CLASS_ID_1,
+          class_section_id: MOCK_SECTION_ID_1,
+          generated_content: [
+            { id: MOCK_GENERATED_CONTENT_ID_1, type: 'summary', content: { text: 'Summary of Doc 1' } }
+          ],
+        },
+        {
+          id: MOCK_STUDY_MATERIAL_ID_2,
+          original_name: 'Doc 2',
+          file_path: 'path/to/doc2.txt',
+          extracted_text: 'Extracted text from Doc 2',
+          user_id: MOCK_USER_ID,
+          class_id: MOCK_CLASS_ID_1,
+          class_section_id: null,
+          generated_content: [],
+        },
+        {
+          id: 'other-study-material-id',
+          original_name: 'Other User Doc',
+          file_path: 'path/to/other.pdf',
+          extracted_text: 'Extracted text from Other User Doc',
+          user_id: MOCK_OTHER_USER_ID,
+          class_id: MOCK_OTHER_CLASS_ID,
+          class_section_id: null,
+          generated_content: [],
+        }
+      ],
+      generated_content: [
+        { id: MOCK_GENERATED_CONTENT_ID_1, study_material_id: MOCK_STUDY_MATERIAL_ID_1, type: 'summary', content: { text: 'Summary of Doc 1' }, user_id: MOCK_USER_ID },
+        { id: MOCK_GENERATED_CONTENT_ID_2, study_material_id: MOCK_STUDY_MATERIAL_ID_1, type: 'quiz', content: { questions: ['Q1?', 'Q2?'] }, user_id: MOCK_USER_ID },
+      ],
+    };
     mockAuthUser = null;
     mockCookieStore = {};
     // Iterate over all table query builders and call their _reset method
@@ -422,8 +529,22 @@ jest.mock('@supabase/ssr', () => ({
 }));
 
 // Mocking the local createClient for server components
-jest.mock('@/lib/supabase/server', () => ({
-  createClient: jest.fn(() => mockSupabaseClient),
-}));
+// jest.mock('@/lib/supabase/server', () => ({
+//   createClient: jest.fn(() => mockSupabaseClient),
+// }));
 
 globalThis.mockSupabaseClient = mockSupabaseClient;
+
+// Set up a default authenticated user for API routes before each test
+beforeEach(() => {
+  jest.resetModules(); // Clear module registry to ensure fresh imports
+  mockSupabaseClient.auth._setMockUser({ id: MOCK_USER_ID, email: 'test@example.com' });
+  // Also clear the database for each test to ensure isolation and re-populate
+  mockSupabaseClient._reset();
+});
+
+// Clear the authenticated user after each test
+afterEach(() => {
+  mockSupabaseClient.auth._clearMockUser();
+  mockSupabaseClient._reset(); // Reset again after each test
+});

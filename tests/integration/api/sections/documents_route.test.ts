@@ -4,26 +4,9 @@ import { GET } from '@/app/api/sections/[id]/documents/route';
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { v4 as uuidv4 } from 'uuid';
+import { mockSupabaseClient } from '../../../../jest.setup';
 
-// Mock Supabase client
-jest.mock('@supabase/ssr', () => ({
-  createServerClient: jest.fn(() => ({
-    auth: {
-      getUser: jest.fn(),
-    },
-    from: jest.fn(() => ({
-      select: jest.fn(() => ({
-        eq: jest.fn(() => ({
-          single: jest.fn(),
-          in: jest.fn(() => ({
-            data: [],
-            error: null,
-          })),
-        })),
-      })),
-    })),
-  })),
-}));
+
 
 // Mock Next.js headers
 jest.mock('next/headers', () => ({
@@ -34,7 +17,7 @@ jest.mock('next/headers', () => ({
   })),
 }));
 
-const mockSupabase = createServerClient as jest.Mock;
+
 
 describe('GET /api/sections/[id]/documents', () => {
   const MOCK_USER_ID = uuidv4();
@@ -44,87 +27,55 @@ describe('GET /api/sections/[id]/documents', () => {
   const MOCK_STUDY_MATERIAL_ID_2 = uuidv4();
   const MOCK_GENERATED_CONTENT_ID_1 = uuidv4();
 
+  let mockClassSectionsSingle: jest.Mock;
+  let mockStudyMaterialsEq: jest.Mock;
+
   beforeEach(() => {
     jest.clearAllMocks();
+    mockClassSectionsSingle = jest.fn();
+    mockStudyMaterialsEq = jest.fn();
+    globalThis.mockSupabaseClient._reset(); // Ensure a clean state for the global mock
 
-    mockSupabase.mockImplementation(() => ({
-      auth: {
-        getUser: jest.fn(() => Promise.resolve({ data: { user: { id: MOCK_USER_ID } }, error: null })),
+    globalThis.mockSupabaseClient.auth.getUser.mockResolvedValue({ data: { user: { id: MOCK_USER_ID } }, error: null });
+
+    // Mock for class_sections table
+    mockClassSectionsSingle.mockResolvedValue({
+      data: {
+        id: MOCK_SECTION_ID,
+        class_id: MOCK_CLASS_ID,
+        classes: [{ user_id: MOCK_USER_ID }]
       },
-      from: jest.fn((tableName) => {
-        if (tableName === 'class_sections') {
-          return {
-            select: jest.fn((query) => ({
-              eq: jest.fn((column, value) => {
-                if (column === 'id' && value === MOCK_SECTION_ID) {
-                  return {
-                    single: jest.fn(() => Promise.resolve({
-                      data: {
-                        id: MOCK_SECTION_ID,
-                        class_id: MOCK_CLASS_ID,
-                        classes: [{ user_id: MOCK_USER_ID }]
-                      },
-                      error: null
-                    })),
-                  };
-                }
-                return { single: jest.fn(() => Promise.resolve({ data: null, error: null })) };
-              }),
-            })),
-          };
-        } else if (tableName === 'study_materials') {
-          return {
-            select: jest.fn((query) => ({
-              eq: jest.fn((column, value) => {
-                if (column === 'class_section_id' && value === MOCK_SECTION_ID) {
-                  return {
-                    eq: jest.fn((userColumn, userId) => {
-                      if (userColumn === 'user_id' && userId === MOCK_USER_ID) {
-                        return Promise.resolve({
-                          data: [
-                            {
-                              id: MOCK_STUDY_MATERIAL_ID_1,
-                              original_name: 'Sec Doc 1',
-                              file_type: 'pdf',
-                              file_size: 1024,
-                              created_at: new Date().toISOString(),
-                              extracted_text: 'Extracted text for sec doc 1',
-                              generated_content: [{ id: MOCK_GENERATED_CONTENT_ID_1, type: 'summary', content: { text: 'Sec Summary 1' } }],
-                            },
-                            {
-                              id: MOCK_STUDY_MATERIAL_ID_2,
-                              original_name: 'Sec Doc 2',
-                              file_type: 'txt',
-                              file_size: 2048,
-                              created_at: new Date().toISOString(),
-                              extracted_text: null,
-                              generated_content: [],
-                            },
-                          ],
-                          error: null,
-                        });
-                      }
-                      return Promise.resolve({ data: [], error: { message: 'Unauthorized materials' } });
-                    }),
-                  };
-                }
-                return Promise.resolve({ data: [], error: null });
-              }),
-            })),
-          };
-        }
-        return { select: jest.fn(() => Promise.resolve({ data: [], error: null })) };
-      }),
-    }));
+      error: null
+    });
+
+    // Mock for study_materials table
+    mockStudyMaterialsEq.mockResolvedValue({
+      data: [
+        {
+          id: MOCK_STUDY_MATERIAL_ID_1,
+          original_name: 'Sec Doc 1',
+          file_type: 'pdf',
+          file_size: 1024,
+          created_at: new Date().toISOString(),
+          extracted_text: 'Extracted text for sec doc 1',
+          generated_content: [{ id: MOCK_GENERATED_CONTENT_ID_1, type: 'summary', content: { text: 'Sec Summary 1' } }],
+        },
+        {
+          id: MOCK_STUDY_MATERIAL_ID_2,
+          original_name: 'Sec Doc 2',
+          file_type: 'txt',
+          file_size: 2048,
+          created_at: new Date().toISOString(),
+          extracted_text: null,
+          generated_content: [],
+        },
+      ],
+      error: null,
+    });
   });
 
   it('should return 401 if user is not authenticated', async () => {
-    mockSupabase.mockImplementationOnce(() => ({
-      auth: {
-        getUser: jest.fn(() => Promise.resolve({ data: { user: null }, error: null })),
-      },
-      from: jest.fn(),
-    }));
+    globalThis.mockSupabaseClient.auth.getUser.mockResolvedValueOnce({ data: { user: null }, error: null });
 
     const req = {} as NextRequest;
     const response = await GET(req, { params: Promise.resolve({ id: MOCK_SECTION_ID }) });
@@ -135,23 +86,7 @@ describe('GET /api/sections/[id]/documents', () => {
   });
 
   it('should return 404 if section is not found or unauthorized', async () => {
-    mockSupabase.mockImplementation(() => ({
-      auth: {
-        getUser: jest.fn(() => Promise.resolve({ data: { user: { id: MOCK_USER_ID } }, error: null })),
-      },
-      from: jest.fn((tableName) => {
-        if (tableName === 'class_sections') {
-          return {
-            select: jest.fn(() => ({
-              eq: jest.fn(() => ({
-                single: jest.fn(() => Promise.resolve({ data: null, error: { message: 'Section not found' } })),
-              })),
-            })),
-          };
-        }
-        return { select: jest.fn(() => Promise.resolve({ data: [], error: null })) };
-      }),
-    }));
+    mockClassSectionsSingle.mockResolvedValueOnce({ data: null, error: { message: 'Section not found' } });
 
     const req = {} as NextRequest;
     const response = await GET(req, { params: Promise.resolve({ id: uuidv4() }) });
@@ -174,38 +109,15 @@ describe('GET /api/sections/[id]/documents', () => {
   });
 
   it('should return empty array if no study materials are found for the section', async () => {
-    mockSupabase.mockImplementation(() => ({
-      auth: {
-        getUser: jest.fn(() => Promise.resolve({ data: { user: { id: MOCK_USER_ID } }, error: null })),
+    mockClassSectionsSingle.mockResolvedValueOnce({
+      data: {
+        id: MOCK_SECTION_ID,
+        class_id: MOCK_CLASS_ID,
+        classes: [{ user_id: MOCK_USER_ID }]
       },
-      from: jest.fn((tableName) => {
-        if (tableName === 'class_sections') {
-          return {
-            select: jest.fn(() => ({
-              eq: jest.fn(() => ({
-                single: jest.fn(() => Promise.resolve({
-                  data: {
-                    id: MOCK_SECTION_ID,
-                    class_id: MOCK_CLASS_ID,
-                    classes: [{ user_id: MOCK_USER_ID }]
-                  },
-                  error: null
-                })),
-              })),
-            })),
-          };
-        } else if (tableName === 'study_materials') {
-          return {
-            select: jest.fn(() => ({
-              eq: jest.fn(() => ({
-                eq: jest.fn(() => Promise.resolve({ data: [], error: null })),
-              })),
-            })),
-          };
-        }
-        return { select: jest.fn(() => Promise.resolve({ data: [], error: null })) };
-      }),
-    }));
+      error: null
+    });
+    mockStudyMaterialsEq.mockResolvedValueOnce({ data: [], error: null });
 
     const req = {} as NextRequest;
     const response = await GET(req, { params: Promise.resolve({ id: MOCK_SECTION_ID }) });

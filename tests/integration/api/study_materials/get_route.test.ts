@@ -4,26 +4,9 @@ import { GET } from '../../../../src/app/api/study-materials/route';
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { v4 as uuidv4 } from 'uuid';
+import { mockSupabaseClient } from '../../../../jest.setup';
 
-// Mock Supabase client
-jest.mock('@supabase/ssr', () => ({
-  createServerClient: jest.fn(() => ({
-    auth: {
-      getUser: jest.fn(),
-    },
-    from: jest.fn(() => ({
-      select: jest.fn(() => ({
-        eq: jest.fn(() => ({
-          single: jest.fn(),
-          in: jest.fn(() => ({
-            data: [],
-            error: null,
-          })),
-        })),
-      })),
-    })),
-  })),
-}));
+
 
 // Mock Next.js headers
 jest.mock('next/headers', () => ({
@@ -34,7 +17,7 @@ jest.mock('next/headers', () => ({
   })),
 }));
 
-const mockSupabase = createServerClient as jest.Mock;
+
 
 describe('GET /api/study-materials', () => {
   const MOCK_USER_ID = uuidv4();
@@ -43,8 +26,14 @@ describe('GET /api/study-materials', () => {
   const MOCK_CLASS_ID = uuidv4();
   const MOCK_SECTION_ID = uuidv4();
 
+  let mockStudyMaterialsEq: jest.Mock;
+  let mockStudyMaterialsSelect: jest.Mock;
+
   beforeEach(() => {
     jest.clearAllMocks();
+    globalThis.mockSupabaseClient._reset();
+    mockStudyMaterialsEq = jest.fn();
+    mockStudyMaterialsSelect = jest.fn();
 
     mockSupabase.mockImplementation(() => ({
       auth: {

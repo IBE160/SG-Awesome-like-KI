@@ -23,7 +23,6 @@ const mockCookies = cookies as jest.Mock;
 
 describe('GET /api/unorganized-content', () => {
   let mockRequest: Partial<NextRequest>;
-  let mockSupabase: any;
   let mockAuth: any;
   let mockFrom: any;
 
@@ -40,12 +39,9 @@ describe('GET /api/unorganized-content', () => {
       eq: jest.fn(() => mockFrom),
     };
 
-    mockSupabase = {
-      auth: mockAuth,
-      from: jest.fn(() => mockFrom),
-    };
-
-    mockCreateServerClient.mockReturnValue(mockSupabase);
+    // Directly mock globalThis.mockSupabaseClient.auth and .from
+    globalThis.mockSupabaseClient.auth = mockAuth;
+    globalThis.mockSupabaseClient.from.mockImplementation(() => mockFrom);
     mockCookies.mockReturnValue({
       get: jest.fn(),
       set: jest.fn(),
@@ -89,7 +85,7 @@ describe('GET /api/unorganized-content', () => {
 
     expect(response.status).toBe(200);
     expect(body.unorganizedContent).toEqual(mockUnorganizedContent);
-    expect(mockSupabase.from).toHaveBeenCalledWith('generated_content');
+    expect(globalThis.mockSupabaseClient.from).toHaveBeenCalledWith('generated_content');
     expect(mockFrom.is).toHaveBeenCalledWith('class_id', null);
     expect(mockFrom.is).toHaveBeenCalledWith('class_section_id', null);
     expect(mockFrom.eq).toHaveBeenCalledWith('user_id', mockUser.id);

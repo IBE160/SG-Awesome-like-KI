@@ -107,12 +107,7 @@ describe('PUT /api/study-materials/[id]/assign', () => {
   });
 
   it('should return 401 if user is not authenticated', async () => {
-    mockSupabase.mockImplementationOnce(() => ({
-      auth: {
-        getUser: jest.fn(() => Promise.resolve({ data: { user: null }, error: null })),
-      },
-      from: jest.fn(),
-    }));
+    globalThis.mockSupabaseClient.auth.getUser.mockResolvedValueOnce({ data: { user: null }, error: null });
 
     const req = { json: jest.fn() } as unknown as NextRequest;
     const response = await PUT(req, { params: Promise.resolve({ id: MOCK_STUDY_MATERIAL_ID }) });
@@ -150,20 +145,7 @@ describe('PUT /api/study-materials/[id]/assign', () => {
   });
 
   it('should return 404 if study material is not found or unauthorized', async () => {
-    mockSupabase.mockImplementationOnce(() => ({
-      auth: {
-        getUser: jest.fn(() => Promise.resolve({ data: { user: { id: MOCK_USER_ID } }, error: null })),
-      },
-      from: jest.fn((tableName) => ({
-        select: jest.fn(() => ({
-          eq: jest.fn(() => ({
-            eq: jest.fn(() => ({
-              single: jest.fn(() => Promise.resolve({ data: null, error: { message: 'Not found' } })),
-            })),
-          })),
-        })),
-      })),
-    }));
+    mockStudyMaterialsSingle.mockResolvedValueOnce({ data: null, error: { message: 'Not found' } });
 
     const req = { json: jest.fn(() => Promise.resolve({ class_id: MOCK_CLASS_ID })) } as unknown as NextRequest;
     const response = await PUT(req, { params: Promise.resolve({ id: MOCK_STUDY_MATERIAL_ID }) });
@@ -174,35 +156,8 @@ describe('PUT /api/study-materials/[id]/assign', () => {
   });
 
   it('should return 404 if target class is not found or unauthorized', async () => {
-    mockSupabase.mockImplementation(() => ({
-      auth: {
-        getUser: jest.fn(() => Promise.resolve({ data: { user: { id: MOCK_USER_ID } }, error: null })),
-      },
-      from: jest.fn((tableName) => {
-        if (tableName === 'study_materials') {
-          return {
-            select: jest.fn(() => ({
-              eq: jest.fn((column, value) => ({
-                eq: jest.fn(() => ({
-                  single: jest.fn(() => Promise.resolve({ data: { id: MOCK_STUDY_MATERIAL_ID, user_id: MOCK_USER_ID }, error: null })),
-                })),
-              })),
-            })),
-          };
-        } else if (tableName === 'classes') {
-          return {
-            select: jest.fn(() => ({
-              eq: jest.fn(() => ({
-                eq: jest.fn(() => ({
-                  single: jest.fn(() => Promise.resolve({ data: null, error: { message: 'Class not found' } })),
-                })),
-              })),
-            })),
-          };
-        }
-        return { select: jest.fn(() => ({ single: jest.fn(() => Promise.resolve({ data: null, error: null })) })) };
-      }),
-    }));
+    mockStudyMaterialsSingle.mockResolvedValueOnce({ data: { id: MOCK_STUDY_MATERIAL_ID, user_id: MOCK_USER_ID }, error: null });
+    mockClassesSingle.mockResolvedValueOnce({ data: null, error: { message: 'Class not found' } });
 
     const req = { json: jest.fn(() => Promise.resolve({ class_id: uuidv4() })) } as unknown as NextRequest;
     const response = await PUT(req, { params: Promise.resolve({ id: MOCK_STUDY_MATERIAL_ID }) });
@@ -213,45 +168,9 @@ describe('PUT /api/study-materials/[id]/assign', () => {
   });
 
   it('should return 404 if target section is not found or unauthorized', async () => {
-    mockSupabase.mockImplementation(() => ({
-      auth: {
-        getUser: jest.fn(() => Promise.resolve({ data: { user: { id: MOCK_USER_ID } }, error: null })),
-      },
-      from: jest.fn((tableName) => {
-        if (tableName === 'study_materials') {
-          return {
-            select: jest.fn(() => ({
-              eq: jest.fn((column, value) => ({
-                eq: jest.fn(() => ({
-                  single: jest.fn(() => Promise.resolve({ data: { id: MOCK_STUDY_MATERIAL_ID, user_id: MOCK_USER_ID }, error: null })),
-                })),
-              })),
-            })),
-          };
-        } else if (tableName === 'classes') {
-          return {
-            select: jest.fn(() => ({
-              eq: jest.fn(() => ({
-                eq: jest.fn(() => ({
-                  single: jest.fn(() => Promise.resolve({ data: { id: MOCK_CLASS_ID, user_id: MOCK_USER_ID }, error: null })),
-                })),
-              })),
-            })),
-          };
-        } else if (tableName === 'class_sections') {
-          return {
-            select: jest.fn(() => ({
-              eq: jest.fn(() => ({
-                eq: jest.fn(() => ({
-                  single: jest.fn(() => Promise.resolve({ data: null, error: { message: 'Section not found' } })),
-                })),
-              })),
-            })),
-          };
-        }
-        return { select: jest.fn(() => ({ single: jest.fn(() => Promise.resolve({ data: null, error: null })) })) };
-      }),
-    }));
+    mockStudyMaterialsSingle.mockResolvedValueOnce({ data: { id: MOCK_STUDY_MATERIAL_ID, user_id: MOCK_USER_ID }, error: null });
+    mockClassesSingle.mockResolvedValueOnce({ data: { id: MOCK_CLASS_ID, user_id: MOCK_USER_ID }, error: null });
+    mockClassSectionsSingle.mockResolvedValueOnce({ data: null, error: { message: 'Section not found' } });
 
     const req = { json: jest.fn(() => Promise.resolve({ class_id: MOCK_CLASS_ID, class_section_id: uuidv4() })) } as unknown as NextRequest;
     const response = await PUT(req, { params: Promise.resolve({ id: MOCK_STUDY_MATERIAL_ID }) });
@@ -268,7 +187,7 @@ describe('PUT /api/study-materials/[id]/assign', () => {
 
     expect(response.status).toBe(200);
     expect(json.studyMaterial).toEqual({ id: MOCK_STUDY_MATERIAL_ID, class_id: MOCK_CLASS_ID, class_section_id: MOCK_SECTION_ID });
-    expect(mockSupabase().from('study_materials').update).toHaveBeenCalledWith({ class_id: MOCK_CLASS_ID, class_section_id: MOCK_SECTION_ID });
+    expect(globalThis.mockSupabaseClient.from('study_materials').update).toHaveBeenCalledWith({ class_id: MOCK_CLASS_ID, class_section_id: MOCK_SECTION_ID });
   });
 
   it('should successfully assign content to a class only', async () => {
@@ -278,7 +197,7 @@ describe('PUT /api/study-materials/[id]/assign', () => {
 
     expect(response.status).toBe(200);
     expect(json.studyMaterial).toEqual({ id: MOCK_STUDY_MATERIAL_ID, class_id: MOCK_CLASS_ID, class_section_id: MOCK_SECTION_ID });
-    expect(mockSupabase().from('study_materials').update).toHaveBeenCalledWith({ class_id: MOCK_CLASS_ID, class_section_id: null });
+    expect(globalThis.mockSupabaseClient.from('study_materials').update).toHaveBeenCalledWith({ class_id: MOCK_CLASS_ID, class_section_id: null });
   });
 
   it('should successfully unassign content', async () => {
@@ -288,6 +207,6 @@ describe('PUT /api/study-materials/[id]/assign', () => {
 
     expect(response.status).toBe(200);
     expect(json.studyMaterial).toEqual({ id: MOCK_STUDY_MATERIAL_ID, class_id: MOCK_CLASS_ID, class_section_id: MOCK_SECTION_ID });
-    expect(mockSupabase().from('study_materials').update).toHaveBeenCalledWith({ class_id: null, class_section_id: null });
+    expect(globalThis.mockSupabaseClient.from('study_materials').update).toHaveBeenCalledWith({ class_id: null, class_section_id: null });
   });
 });

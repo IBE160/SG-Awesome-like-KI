@@ -1,15 +1,14 @@
 import { POST } from '@/app/api/generate/route';
 import { createClient } from '@/lib/supabase/server';
-import { generateSummaryWithGemini } from '@/lib/gemini';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 import { cookies } from 'next/headers';
-import { NextResponse } from 'next/server'; // Import NextResponse for direct usage if needed in mocks
 
 jest.mock('@/lib/supabase/server');
-jest.mock('@/lib/gemini');
-jest.mock('next/headers'); // Mock the entire next/headers module
+jest.mock('@google/generative-ai');
+jest.mock('next/headers');
 
 const mockCreateClient = createClient as jest.Mock;
-const mockGenerateSummaryWithGemini = generateSummaryWithGemini as jest.Mock;
+const mockGoogleGenerativeAI = GoogleGenerativeAI as jest.Mock;
 const mockCookies = cookies as jest.Mock;
 
 describe('Integration: POST /api/generate', () => {
@@ -23,6 +22,7 @@ describe('Integration: POST /api/generate', () => {
   let mockEq: jest.Mock;
   let mockSingle: jest.Mock;
   let mockInsert: jest.Mock;
+  let mockGenerateContent: jest.Mock;
 
   beforeEach(() => {
     jest.resetAllMocks();
@@ -44,7 +44,7 @@ describe('Integration: POST /api/generate', () => {
         return {
           insert: mockInsert.mockImplementation((data: any) => {
             return {
-              select: jest.fn().mockResolvedValueOnce({ data, error: null }), // Mock select immediately after insert
+              select: jest.fn().mockResolvedValueOnce({ data, error: null }),
             };
           }),
         };
@@ -62,8 +62,18 @@ describe('Integration: POST /api/generate', () => {
     mockCookies.mockReturnValue({
       get: jest.fn(),
     });
+    
+    mockGenerateContent = jest.fn().mockResolvedValue({
+        response: {
+            text: () => MOCK_SUMMARY_CONTENT,
+        },
+    });
 
-    mockGenerateSummaryWithGemini.mockResolvedValue(MOCK_SUMMARY_CONTENT);
+    mockGoogleGenerativeAI.mockImplementation(() => ({
+        getGenerativeModel: () => ({
+            generateContent: mockGenerateContent,
+        }),
+    }));
   });
 
   it('should return 401 if user is not authenticated', async () => {
@@ -80,7 +90,7 @@ describe('Integration: POST /api/generate', () => {
 
     const response = await POST(req);
     expect(response.status).toBe(401);
-    const body = await response.text(); // Use .text() as NextResponse('Unauthorized') sends plain text
+    const body = await response.text();
     expect(body).toBe('Unauthorized');
   });
 
@@ -134,7 +144,7 @@ describe('Integration: POST /api/generate', () => {
 
   it('should return 500 if Gemini API call fails', async () => {
     mockSingle.mockResolvedValue({ data: { extracted_text: MOCK_EXTRACTED_TEXT }, error: null });
-    mockGenerateSummaryWithGemini.mockRejectedValue(new Error('AI service unavailable'));
+    mockGenerateContent.mockRejectedValue(new Error('AI service unavailable'));
 
     const req = {
       json: () => Promise.resolve({ type: 'summary', documentId: MOCK_DOCUMENT_ID }),
@@ -143,12 +153,11 @@ describe('Integration: POST /api/generate', () => {
     const response = await POST(req);
     expect(response.status).toBe(500);
     const body = await response.text();
-    expect(body).toBe('AI summary generation failed: AI service unavailable');
+    expect(body).toBe('Failed to generate summary with Gemini AI.');
   });
 
   it('should return 500 if storing generated content fails', async () => {
     mockSingle.mockResolvedValue({ data: { extracted_text: MOCK_EXTRACTED_TEXT }, error: null });
-    // This needs to mock the select part of insert().select()
     mockInsert.mockImplementationOnce(() => {
       return {
         select: jest.fn().mockResolvedValueOnce({ data: null, error: { message: 'DB write error' } }),
@@ -187,7 +196,6 @@ describe('Integration: POST /api/generate', () => {
     expect(mockFrom).toHaveBeenCalledWith('study_materials');
     expect(mockEq).toHaveBeenCalledWith('id', MOCK_DOCUMENT_ID);
     expect(mockEq).toHaveBeenCalledWith('user_id', MOCK_USER_ID);
-    expect(mockGenerateSummaryWithGemini).toHaveBeenCalledWith(MOCK_EXTRACTED_TEXT);
     expect(mockFrom).toHaveBeenCalledWith('generated_content');
     expect(mockInsert).toHaveBeenCalledWith([
       {
