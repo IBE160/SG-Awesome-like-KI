@@ -4,9 +4,14 @@ import { render, screen, waitFor, fireEvent, act, within } from '@testing-librar
 import '@testing-library/jest-dom';
 import { ClassSectionManagementUI } from '@/components/ClassSectionManagementUI';
 
-// Mock Next.js useParams
+// Mock Next.js navigation
 jest.mock('next/navigation', () => ({
-  useParams: jest.fn(() => ({ id: 'mock-class-id' })),
+  useRouter: () => ({
+    refresh: jest.fn(),
+  }),
+  useParams: () => ({
+    id: 'mock-class-id',
+  }),
 }));
 
 // Mock global fetch
@@ -21,73 +26,27 @@ describe('ClassSectionManagementUI', () => {
     mockFetch.mockClear(); // Clear all mock calls on mockFetch
   });
 
-  it('renders correctly and fetches sections on mount', async () => {
+  it('renders correctly with initial sections', () => {
     const mockSections = [
       { id: 'sec1', name: 'Section 1', class_id: mockClassId },
       { id: 'sec2', name: 'Section 2', class_id: mockClassId },
     ];
-    let resolveFetch: (value: any) => void;
-    mockFetch.mockImplementationOnce(() =>
-      new Promise(resolve => {
-        resolveFetch = resolve;
-      })
-    );
 
-    render(<ClassSectionManagementUI classId={mockClassId} />); 
+    render(<ClassSectionManagementUI classId={mockClassId} initialSections={mockSections} />);
 
-    // Expect loading state initially
-    expect(screen.getByText(/Loading sections.../i)).toBeInTheDocument();
-
-    await act(async () => {
-        resolveFetch({ // Resolve the promise once loading is asserted
-            ok: true,
-            json: () => Promise.resolve({ sections: mockSections }),
-        });
-    });
-
-    await waitFor(() => {
-      expect(screen.queryByText(/Loading sections.../i)).not.toBeInTheDocument(); // It should be gone now
-      expect(screen.getByText('Manage Sections for Class: mock-class-id')).toBeInTheDocument();
-      expect(screen.getByText('Section 1')).toBeInTheDocument();
-      expect(screen.getByText('Section 2')).toBeInTheDocument();
-    });
-
-    expect(mockFetch).toHaveBeenCalledWith(`/api/classes/${mockClassId}/sections`);
+    expect(screen.getByText('Manage Sections for Class: mock-class-id')).toBeInTheDocument();
+    expect(screen.getByText('Section 1')).toBeInTheDocument();
+    expect(screen.getByText('Section 2')).toBeInTheDocument();
   });
 
   it('allows creating a new section', async () => {
-    // Mock for initial GET sections (empty)
-    let resolveInitialFetch: (value: any) => void;
-    mockFetch.mockImplementationOnce(() =>
-      new Promise(resolve => {
-        resolveInitialFetch = resolve;
-      })
-    );
-
-    // Mock response for creating a new section (POST)
     const newSection = { id: 'sec3', name: 'New Section', class_id: mockClassId };
-    mockFetch.mockImplementationOnce(() =>
-      Promise.resolve({
-        ok: true,
-        json: () => Promise.resolve({ section: newSection }),
-      })
-    );
-
-    render(<ClassSectionManagementUI classId={mockClassId} />);
-
-    expect(screen.getByText(/Loading sections.../i)).toBeInTheDocument();
-
-    await act(async () => {
-        resolveInitialFetch({
-            ok: true,
-            json: () => Promise.resolve({ sections: [] }),
-        });
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: () => Promise.resolve({ section: newSection }),
     });
 
-    await waitFor(() => {
-      expect(screen.queryByText(/Loading sections.../i)).not.toBeInTheDocument();
-      expect(screen.getByText('Manage Sections for Class: mock-class-id')).toBeInTheDocument();
-    });
+    render(<ClassSectionManagementUI classId={mockClassId} initialSections={[]} />);
 
     const input = screen.getByPlaceholderText('New section name');
     const createButton = screen.getByText('Create Section');
@@ -109,29 +68,7 @@ describe('ClassSectionManagementUI', () => {
   });
 
   it('displays error if new section name is invalid', async () => {
-    // Mock for initial GET sections (empty)
-    let resolveInitialFetch: (value: any) => void;
-    mockFetch.mockImplementationOnce(() =>
-      new Promise(resolve => {
-        resolveInitialFetch = resolve;
-      })
-    );
-
-    render(<ClassSectionManagementUI classId={mockClassId} />);
-
-    expect(screen.getByText(/Loading sections.../i)).toBeInTheDocument();
-
-    await act(async () => {
-        resolveInitialFetch({
-            ok: true,
-            json: () => Promise.resolve({ sections: [] }),
-        });
-    });
-
-    await waitFor(() => {
-      expect(screen.queryByText(/Loading sections.../i)).not.toBeInTheDocument();
-      expect(screen.getByText('Manage Sections for Class: mock-class-id')).toBeInTheDocument();
-    });
+    render(<ClassSectionManagementUI classId={mockClassId} initialSections={[]} />);
 
     const input = screen.getByPlaceholderText('New section name');
     const createButton = screen.getByText('Create Section');
@@ -154,36 +91,16 @@ describe('ClassSectionManagementUI', () => {
       expect(screen.getByText('Section name must be alphanumeric and max 25 characters.')).toBeInTheDocument();
     });
 
-    expect(mockFetch).not.toHaveBeenCalledWith(expect.any(String), { method: 'POST', ...expect.any(Object) });
+    expect(mockFetch).not.toHaveBeenCalled();
   });
 
   it('allows renaming an existing section', async () => {
     const initialSections = [{ id: 'sec1', name: 'Old Name', class_id: mockClassId }];
-    let resolveInitialFetch: (value: any) => void;
-    mockFetch.mockImplementationOnce(() =>
-      new Promise(resolve => {
-        resolveInitialFetch = resolve;
-      })
-    );
-
     const updatedSection = { id: 'sec1', name: 'Updated Name', class_id: mockClassId };
-    mockFetch.mockImplementationOnce(() =>
-      Promise.resolve({ ok: true, json: () => Promise.resolve({ section: updatedSection }) })
-    );
+    mockFetch.mockResolvedValueOnce({ ok: true, json: () => Promise.resolve({ section: updatedSection }) });
 
-    render(<ClassSectionManagementUI classId={mockClassId} />);
-
-    expect(screen.getByText(/Loading sections.../i)).toBeInTheDocument();
-
-    await act(async () => {
-        resolveInitialFetch({ ok: true, json: () => Promise.resolve({ sections: initialSections }) });
-    });
-
-    await waitFor(() => {
-      expect(screen.queryByText(/Loading sections.../i)).not.toBeInTheDocument();
-      expect(screen.getByText('Old Name')).toBeInTheDocument();
-    });
-
+    render(<ClassSectionManagementUI classId={mockClassId} initialSections={initialSections} />);
+    
     await act(async () => {
       fireEvent.click(screen.getByRole('button', { name: 'Rename' }));
     });
@@ -206,27 +123,9 @@ describe('ClassSectionManagementUI', () => {
 
   it('allows deleting a section with confirmation', async () => {
     const initialSections = [{ id: 'sec1', name: 'Section to Delete', class_id: mockClassId }];
-    let resolveInitialFetch: (value: any) => void;
-    mockFetch.mockImplementationOnce(() =>
-      new Promise(resolve => {
-        resolveInitialFetch = resolve;
-      })
-    );
+    mockFetch.mockResolvedValueOnce({ ok: true, status: 204 });
 
-    mockFetch.mockImplementationOnce(() => Promise.resolve({ ok: true, status: 204 })); // Mock response for DELETE
-
-    render(<ClassSectionManagementUI classId={mockClassId} />);
-
-    expect(screen.getByText(/Loading sections.../i)).toBeInTheDocument();
-
-    await act(async () => {
-        resolveInitialFetch({ ok: true, json: () => Promise.resolve({ sections: initialSections }) });
-    });
-
-    await waitFor(() => {
-      expect(screen.queryByText(/Loading sections.../i)).not.toBeInTheDocument();
-      expect(screen.getByText('Section to Delete')).toBeInTheDocument();
-    });
+    render(<ClassSectionManagementUI classId={mockClassId} initialSections={initialSections} />);
 
     await act(async () => {
         // Find the delete button for the specific section item
@@ -254,33 +153,12 @@ describe('ClassSectionManagementUI', () => {
   });
 
   it('handles API errors for section creation', async () => {
-    let resolveInitialFetch: (value: any) => void;
-    mockFetch.mockImplementationOnce(() => // Initial GET sections
-      new Promise(resolve => {
-        resolveInitialFetch = resolve;
-      })
-    );
-    
-    // Mock response for API error during creation
-    mockFetch.mockImplementationOnce(() => // POST section with error
-      Promise.resolve({
+    mockFetch.mockResolvedValueOnce({
         ok: false,
         json: () => Promise.resolve({ error: 'Duplicate section name' }),
-      })
-    );
+      });
 
-    render(<ClassSectionManagementUI classId={mockClassId} />);
-
-    expect(screen.getByText(/Loading sections.../i)).toBeInTheDocument();
-
-    await act(async () => {
-        resolveInitialFetch({ ok: true, json: () => Promise.resolve({ sections: [] }) });
-    });
-
-    await waitFor(() => {
-        expect(screen.queryByText(/Loading sections.../i)).not.toBeInTheDocument();
-        expect(screen.getByText('Manage Sections for Class: mock-class-id')).toBeInTheDocument();
-    });
+    render(<ClassSectionManagementUI classId={mockClassId} initialSections={[]} />);
 
     const input = screen.getByPlaceholderText('New section name');
     const createButton = screen.getByText('Create Section');

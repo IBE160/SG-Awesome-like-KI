@@ -206,4 +206,19 @@ describe('Integration: POST /api/generate', () => {
       },
     ]);
   });
+
+  it('should call Gemini with the correct summary prompt', async () => {
+    mockSingle.mockResolvedValue({ data: { extracted_text: MOCK_EXTRACTED_TEXT }, error: null });
+
+    const req = {
+      json: () => Promise.resolve({ type: 'summary', documentId: MOCK_DOCUMENT_ID }),
+    } as unknown as Request;
+
+    await POST(req);
+
+    expect(mockGenerateContent).toHaveBeenCalledTimes(1);
+    expect(mockGenerateContent).toHaveBeenCalledWith(
+      `Summarize the following text in a concise way, highlighting the key points:\n\n${MOCK_EXTRACTED_TEXT}`
+    );
+  });
 });
