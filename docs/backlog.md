@@ -16,6 +16,7 @@ Routing guidance:
 | 2025-12-07 | fix-jest-config | - | Technical Debt | High | TBD | Open | Resolve Jest test suite configuration issues (SyntaxError, cookie scope, NextRequest constructor) for Next.js 16 API routes. This is blocking automated verification of other tasks. |
 | 2025-12-10 | unrestricted-supabase-tables | - | Security | High | TBD | Open | The `generated_content_materials` and `generated_content_sections` tables in Supabase are currently unrestricted, posing a security risk. |
 | 2025-12-10 | missing-section-creation-ui | - | Feature | High | TBD | Open | There is no interface provided to create sections within a class, limiting content organization. |
+| 2025-12-11 | section-material-count | - | Bug | High | TBD | Open | The file, summary, and quiz counters for sections on the class details page do not update correctly when materials are assigned to a section. |
 
 ## Closed Items
 | Date | Story | Epic | Type | Severity | Owner | Status | Notes |

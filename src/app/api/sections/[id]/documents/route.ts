@@ -52,8 +52,7 @@ export async function GET(req: NextRequest, { params: paramsPromise }: { params:
         file_type,
         file_size,
         created_at,
-        extracted_text,
-        generated_content (
+        generated_content!generated_content_study_material_id_fkey (
           id,
           type,
           content

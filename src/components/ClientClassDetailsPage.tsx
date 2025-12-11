@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { ClassActions } from '@/components/ClassActions';
 import { SectionContainer } from '@/components/SectionContainer';
@@ -23,8 +23,14 @@ export function ClientClassDetailsPage({ classId, initialClassName, initialStudy
   const [showNewSectionForm, setShowNewSectionForm] = useState(false);
   const [newSectionName, setNewSectionName] = useState('');
   const [sections, setSections] = useState<ClassSection[]>(initialSections);
+  const [studyMaterialsState, setStudyMaterialsState] = useState<any[]>(initialStudyMaterials); // New state for study materials
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  // Effect to update studyMaterialsState when initialStudyMaterials prop changes
+  useEffect(() => {
+    setStudyMaterialsState(initialStudyMaterials);
+  }, [initialStudyMaterials]);
 
   const handleCreateSection = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -64,7 +70,7 @@ export function ClientClassDetailsPage({ classId, initialClassName, initialStudy
   };
 
   const getSectionContentCounts = (sectionId: string) => {
-    const sectionMaterials = initialStudyMaterials.filter(material => material.class_section_id === sectionId);
+    const sectionMaterials = studyMaterialsState.filter(material => material.class_section_id === sectionId);
     const fileCount = sectionMaterials.filter(material => material.type === 'file').length;
     const summaryCount = sectionMaterials.filter(material => material.type === 'summary').length;
     const quizCount = sectionMaterials.filter(material => material.type === 'quiz').length;
@@ -141,14 +147,14 @@ export function ClientClassDetailsPage({ classId, initialClassName, initialStudy
       {/* Unorganized Content - materials without a section */}
       <h2 className="text-2xl font-bold mt-8 mb-4">Unorganized Content</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {initialStudyMaterials.filter(material => !material.class_section_id).map((material) => (
+        {studyMaterialsState.filter(material => !material.class_section_id).map((material) => (
           <div key={material.id} className="bg-white p-4 rounded-lg shadow-md">
             <h3 className="text-lg font-semibold">{material.original_name}</h3>
             <p className="text-gray-600 capitalize">Type: {material.type}</p>
             {/* Add more material details or actions here */}
           </div>
         ))}
-        {initialStudyMaterials.filter(material => !material.class_section_id).length === 0 && (
+        {studyMaterialsState.filter(material => !material.class_section_id).length === 0 && (
           <p className="text-gray-600 col-span-full">All content is organized into sections.</p>
         )}
       </div>
