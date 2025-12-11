@@ -26,8 +26,15 @@ export default function SummaryGenerator({ documentId }: SummaryGeneratorProps) 
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to generate summary');
+        let errorMessage = 'Failed to generate summary';
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+          const errorData = await response.json();
+          errorMessage = errorData.error || errorData.message || errorMessage;
+        } else {
+          errorMessage = await response.text();
+        }
+        throw new Error(errorMessage);
       }
 
       const data = await response.json();
@@ -59,7 +66,7 @@ export default function SummaryGenerator({ documentId }: SummaryGeneratorProps) 
       </div>
 
       {isLoading && (
-        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 backdrop-blur-sm">
+        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 backdrop-blur-sm" role="status" aria-live="polite" aria-label="Generating summary, please wait">
             <div className="bg-white p-8 rounded-lg shadow-xl flex flex-col items-center">
                 <div className="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-16 w-16 mb-4"></div>
                 <p className="text-lg font-semibold text-gray-700">Generating your summary, please wait<span className="animate-pulse">...</span></p>

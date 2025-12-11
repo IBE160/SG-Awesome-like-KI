@@ -22,13 +22,21 @@ describe('POST /api/generate', () => {
     jest.resetAllMocks();
     mockCookies.mockReturnValue({ get: jest.fn() });
     process.env.ANTHROPIC_API_KEY = 'test-api-key'; // Ensure API key is set for tests
+    process.env.CLAUDE_MODEL_NAME = 'claude-3-opus-20240229'; // Ensure Claude model name is set for tests
     // Default successful mocks for Claude
     (mockAnthropic.prototype.messages.create as jest.Mock)
-      .mockResolvedValueOnce({ content: [{ text: 'This is a summary.' }] }) // For summary
-      .mockResolvedValueOnce({ content: [{ text: JSON.stringify({
-        title: 'Mock Quiz',
-        questions: [{ id: '1', question: 'Q1', options: ['A'], correctAnswer: 'A' }],
-      }) }] }); // For quiz
+      .mockImplementation((params) => {
+        const prompt = params.messages[0].content;
+        if (prompt.includes('summary')) {
+          return Promise.resolve({ content: [{ type: 'text', text: 'This is a summary.' }] });
+        } else if (prompt.includes('quiz')) {
+          return Promise.resolve({ content: [{ type: 'text', text: JSON.stringify({
+            title: 'Mock Quiz',
+            questions: [{ id: '1', question: 'Q1', options: ['A'], correctAnswer: 'A' }],
+          }) }] });
+        }
+        return Promise.reject(new Error('Unexpected Claude API call'));
+      });
   });
 
   afterEach(() => {
@@ -84,7 +92,7 @@ describe('POST /api/generate', () => {
           return {
             select: jest.fn().mockReturnValue({
               eq: jest.fn().mockReturnThis(),
-              single: jest.fn().mockResolvedValue({ data: { extracted_text: 'Some text' } }),
+              single: jest.fn().mockResolvedValue({ data: { extracted_text: 'Some long text that is definitely more than one hundred characters long. This should allow the test to pass without triggering the short text error.' } }),
             }),
           };
         }
@@ -114,7 +122,7 @@ describe('POST /api/generate', () => {
     expect(mockAnthropic.prototype.messages.create).toHaveBeenCalledWith(
       expect.objectContaining({
         model: 'claude-3-opus-20240229',
-        messages: [{ role: 'user', content: 'Please provide a concise summary of the following text: Some text' }],
+        messages: [{ role: 'user', content: 'Please provide a concise summary of the following text: Some long text that is definitely more than one hundred characters long. This should allow the test to pass without triggering the short text error.' }],
       })
     );
   });
@@ -127,7 +135,7 @@ describe('POST /api/generate', () => {
       from: jest.fn().mockReturnValue({
         select: jest.fn().mockReturnValue({
           eq: jest.fn().mockReturnThis(),
-          single: jest.fn().mockResolvedValue({ data: { extracted_text: 'Short text' } }),
+          single: jest.fn().mockResolvedValue({ data: { extracted_text: 'This is a much longer text that should easily exceed the 100 character limit for summarization. This will ensure that the short text error is not triggered and the Claude API error is properly tested.' } }),
         }),
       }),
     });
@@ -153,7 +161,7 @@ describe('POST /api/generate', () => {
           return {
             select: jest.fn().mockReturnValue({
               eq: jest.fn().mockReturnThis(),
-              single: jest.fn().mockResolvedValue({ data: { extracted_text: 'Some text' } }),
+              single: jest.fn().mockResolvedValue({ data: { extracted_text: 'This is a much longer text that should easily exceed the 100 character limit for summarization. This will ensure that the short text error is not triggered and the Supabase insert failure is properly tested.' } }),
             }),
           };
         }
@@ -197,6 +205,72 @@ describe('POST /api/generate', () => {
     const response = await POST(req);
     expect(response.status).toBe(500);
     expect(await response.text()).toBe('Internal Server Error'); // Changed to .text()
+  });
+
+  it('should return 400 if document.extracted_text is null for summary type', async () => {
+    mockSupabase.mockReturnValue({
+      auth: {
+        getSession: jest.fn().mockResolvedValue({ data: { session: { user: { id: 'user-1' } } } }),
+      },
+      from: jest.fn().mockReturnValue({
+        select: jest.fn().mockReturnValue({
+          eq: jest.fn().mockReturnThis(),
+          single: jest.fn().mockResolvedValue({ data: { extracted_text: null }, error: null }),
+        }),
+      }),
+    });
+
+    const req = {
+      json: jest.fn().mockResolvedValue({ type: 'summary', documentId: '123' }),
+    } as any;
+
+    const response = await POST(req);
+    expect(response.status).toBe(400);
+    expect(await response.text()).toBe('Document has no text content to summarize');
+  });
+
+  it('should return 400 if document.extracted_text is an empty string for summary type', async () => {
+    mockSupabase.mockReturnValue({
+      auth: {
+        getSession: jest.fn().mockResolvedValue({ data: { session: { user: { id: 'user-1' } } } }),
+      },
+      from: jest.fn().mockReturnValue({
+        select: jest.fn().mockReturnValue({
+          eq: jest.fn().mockReturnThis(),
+          single: jest.fn().mockResolvedValue({ data: { extracted_text: '' }, error: null }),
+        }),
+      }),
+    });
+
+    const req = {
+      json: jest.fn().mockResolvedValue({ type: 'summary', documentId: '123' }),
+    } as any;
+
+    const response = await POST(req);
+    expect(response.status).toBe(400);
+    expect(await response.text()).toBe('Document has no text content to summarize');
+  });
+
+  it('should return 400 if document.extracted_text is a very short string for summary type', async () => {
+    mockSupabase.mockReturnValue({
+      auth: {
+        getSession: jest.fn().mockResolvedValue({ data: { session: { user: { id: 'user-1' } } } }),
+      },
+      from: jest.fn().mockReturnValue({
+        select: jest.fn().mockReturnValue({
+          eq: jest.fn().mockReturnThis(),
+          single: jest.fn().mockResolvedValue({ data: { extracted_text: 'too short' }, error: null }),
+        }),
+      }),
+    });
+
+    const req = {
+      json: jest.fn().mockResolvedValue({ type: 'summary', documentId: '123' }),
+    } as any;
+
+    const response = await POST(req);
+    expect(response.status).toBe(400);
+    expect(await response.text()).toBe('Document content is too short for meaningful summarization.');
   });
 
   it('should return 400 if type is neither summary nor quiz', async () => {
