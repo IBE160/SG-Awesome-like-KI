@@ -13,6 +13,8 @@ export async function GET(req: NextRequest, { params: paramsPromise }: { params:
     }
 
     const sectionId = params.id;
+    console.log('GET /api/sections/[id]/documents - User ID:', user.id);
+    console.log('GET /api/sections/[id]/documents - Section ID:', sectionId);
 
     // Verify ownership of the section (and implicitly the class)
     const { data: targetSection, error: sectionError } = await supabase
@@ -27,8 +29,11 @@ export async function GET(req: NextRequest, { params: paramsPromise }: { params:
       .eq('id', sectionId)
       .single();
 
+    console.log('GET /api/sections/[id]/documents - Supabase targetSection:', targetSection);
+    console.log('GET /api/sections/[id]/documents - Supabase sectionError:', sectionError);
+
     if (sectionError || !targetSection || targetSection.classes?.[0]?.user_id !== user.id) {
-      console.error('Error fetching target section or unauthorized:', sectionError);
+      console.error('Error fetching target section or unauthorized (GET /api/sections/[id]/documents):', sectionError);
       return NextResponse.json({ error: sectionError?.message || 'Target section not found or unauthorized.' }, { status: 404 });
     }
 

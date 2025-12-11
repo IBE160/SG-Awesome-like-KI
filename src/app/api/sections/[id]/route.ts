@@ -13,6 +13,8 @@ export async function GET(req: NextRequest, { params: paramsPromise }: { params:
     }
 
     const sectionId = params.id;
+    console.log('GET /api/sections/[id] - User ID:', user.id);
+    console.log('GET /api/sections/[id] - Section ID:', sectionId);
 
     // Verify user owns the class that the section belongs to
     const { data: sectionData, error: fetchSectionError } = await supabase
@@ -28,9 +30,12 @@ export async function GET(req: NextRequest, { params: paramsPromise }: { params:
       .eq('id', sectionId)
       .single();
 
+    console.log('GET /api/sections/[id] - Supabase sectionData:', sectionData);
+    console.log('GET /api/sections/[id] - Supabase fetchSectionError:', fetchSectionError);
+
     if (fetchSectionError || !sectionData || sectionData.classes?.[0]?.user_id !== user.id) {
-      console.error('Error verifying section ownership:', fetchSectionError);
-      return NextResponse.json({ error: 'Section not found or not owned by user.' }, { status: 404 });
+      console.error('Error verifying section ownership (GET /api/sections/[id]):', fetchSectionError);
+      return NextResponse.json({ error: fetchSectionError?.message || 'Section not found or not owned by user.' }, { status: 404 });
     }
 
     // Return the section details
