@@ -29,7 +29,7 @@ export async function GET(req: NextRequest, { params: paramsPromise }: { params:
 
     if (sectionError || !targetSection || targetSection.classes?.[0]?.user_id !== user.id) {
       console.error('Error fetching target section or unauthorized:', sectionError);
-      return NextResponse.json({ error: 'Target section not found or unauthorized.' }, { status: 404 });
+      return NextResponse.json({ error: sectionError?.message || 'Target section not found or unauthorized.' }, { status: 404 });
     }
 
     // Retrieve study materials and their associated generated content for the section
@@ -53,12 +53,12 @@ export async function GET(req: NextRequest, { params: paramsPromise }: { params:
 
     if (studyMaterialsError) {
       console.error('Error fetching study materials for section:', studyMaterialsError);
-      return NextResponse.json({ error: 'Failed to retrieve study materials for section.' }, { status: 500 });
+      return NextResponse.json({ error: studyMaterialsError.message || 'Failed to retrieve study materials for section.' }, { status: 500 });
     }
 
     return NextResponse.json({ studyMaterials }, { status: 200 });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error in GET /api/sections/[id]/documents:', error);
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 });
   }
 }

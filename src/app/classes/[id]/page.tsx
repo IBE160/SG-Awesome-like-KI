@@ -1,8 +1,8 @@
 // src/app/classes/[id]/page.tsx
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
-import { OrganizedContentView } from '@/components/OrganizedContentView';
-import { ClassActions } from '@/components/ClassActions';
+import { ClientClassDetailsPage } from '@/components/ClientClassDetailsPage';
+
 
 export default async function ClassDetailsPage({ params }: { params: { id: string } }) {
   const resolvedParams = await Promise.resolve(params);
@@ -39,17 +39,22 @@ export default async function ClassDetailsPage({ params }: { params: { id: strin
     return <div className="text-center py-8 text-red-600">Error: Failed to load class content.</div>;
   }
 
+  const { data: sections, error: sectionsError } = await supabase
+    .from("class_sections")
+    .select("*")
+    .eq("class_id", classId);
+
+  if (sectionsError) {
+    console.error("Error fetching sections:", sectionsError);
+    return <div className="text-center py-8 text-red-600">Error: Failed to load sections.</div>;
+  }
+
   return (
-    <div className="container mx-auto p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">{cls.name}</h1>
-        <ClassActions classId={classId} initialClassName={cls.name} />
-      </div>
-      <OrganizedContentView
-        studyMaterials={studyMaterials || []}
-        title={`Content for Class: ${cls.name}`}
-        description="Documents and generated content organized within this class."
-      />
-    </div>
+    <ClientClassDetailsPage
+      classId={classId}
+      initialClassName={cls.name}
+      initialStudyMaterials={studyMaterials || []}
+      initialSections={sections || []}
+    />
   );
 }

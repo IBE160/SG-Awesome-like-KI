@@ -12,6 +12,7 @@ export default function SectionDetailsPage() {
   const [studyMaterials, setStudyMaterials] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [sectionName, setSectionName] = useState<string>(''); // Declare sectionName state
 
   useEffect(() => {
     if (sectionId) {
@@ -20,12 +21,17 @@ export default function SectionDetailsPage() {
         setError(null);
         try {
           const response = await fetch(`/api/sections/${sectionId}/documents`);
-          if (response.ok) {
+          const sectionResponse = await fetch(`/api/sections/${sectionId}`); // Fetch section details
+
+          if (response.ok && sectionResponse.ok) {
             const data = await response.json();
+            const sectionData = await sectionResponse.json();
             setStudyMaterials(data.studyMaterials || []);
+            setSectionName(sectionData.section.name || `ID: ${sectionId}`); // Set section name
           } else {
             const errorData = await response.json();
-            throw new Error(errorData.error || 'Failed to fetch section content.');
+            console.error('API Error Response:', errorData); // Log the full errorData
+            throw new Error(errorData.error || response.statusText || 'Failed to fetch section content.');
           }
         } catch (err: any) {
           console.error('Error fetching section content:', err);
@@ -49,7 +55,7 @@ export default function SectionDetailsPage() {
   return (
     <OrganizedContentView
       studyMaterials={studyMaterials}
-      title={`Content for Section: ${sectionId}`} // You might want to fetch section name for better title
+      title={`Content for Section: ${sectionName}`} // Use sectionName here
       description="Documents and generated content organized within this section."
     />
   );

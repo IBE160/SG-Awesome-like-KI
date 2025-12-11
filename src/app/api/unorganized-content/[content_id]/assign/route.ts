@@ -71,12 +71,22 @@ export async function POST(req: NextRequest, { params: paramsPromise }: { params
     if (class_section_id) {
       const { data: sectionData, error: sectionError } = await supabase
         .from('class_sections')
-        .select('id, user_id') // Assuming class_sections also has a user_id or can be joined
+        .select(`
+            id,
+            class_id,
+            classes (
+                user_id
+            )
+        `)
         .eq('id', class_section_id)
-        // You might want to join with classes table to verify section ownership
         .single();
-      if (!sectionData || sectionError) {
+
+      if (sectionError || !sectionData || sectionData.classes?.[0]?.user_id !== user.id) {
         return NextResponse.json({ error: 'Section not found or unauthorized.' }, { status: 404 });
+      }
+      // Also verify that the section belongs to the provided class_id, if a class_id is provided
+      if (class_id && sectionData.class_id !== class_id) {
+        return NextResponse.json({ error: 'Section does not belong to the specified class.' }, { status: 400 });
       }
     }
 

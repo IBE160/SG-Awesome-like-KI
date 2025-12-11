@@ -1,6 +1,46 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 
+export async function GET(req: NextRequest, { params: paramsPromise }: { params: Promise<{ id: string }> }) {
+  try {
+    const params = await paramsPromise;
+    const supabase = await createClient();
+
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const sectionId = params.id;
+
+    // Verify user owns the class that the section belongs to
+    const { data: sectionData, error: fetchSectionError } = await supabase
+      .from('class_sections')
+      .select(`
+        id,
+        name,
+        class_id,
+        classes (
+          user_id
+        )
+      `)
+      .eq('id', sectionId)
+      .single();
+
+    if (fetchSectionError || !sectionData || sectionData.classes?.[0]?.user_id !== user.id) {
+      console.error('Error verifying section ownership:', fetchSectionError);
+      return NextResponse.json({ error: 'Section not found or not owned by user.' }, { status: 404 });
+    }
+
+    // Return the section details
+    return NextResponse.json({ section: { id: sectionData.id, name: sectionData.name, class_id: sectionData.class_id } }, { status: 200 });
+  } catch (error) {
+    console.error('Error in GET /api/sections/[id]:', error);
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+  }
+}
+
 export async function PUT(req: NextRequest, { params: paramsPromise }: { params: Promise<{ id: string }> }) {
   try {
     const params = await paramsPromise;
