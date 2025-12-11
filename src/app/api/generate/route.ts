@@ -56,8 +56,7 @@ const anthropic = new Anthropic({
 
 // NOTE: For production environments, consider replacing `console.error` with a structured logging solution.
 export async function POST(req: Request) {
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
+  const supabase = await createClient();
 
   const {
     data: { session },
