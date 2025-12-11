@@ -32,7 +32,13 @@ export async function GET(req: NextRequest, { params: paramsPromise }: { params:
     console.log('GET /api/sections/[id]/documents - Supabase targetSection:', targetSection);
     console.log('GET /api/sections/[id]/documents - Supabase sectionError:', sectionError);
 
-    if (sectionError || !targetSection || targetSection.classes?.[0]?.user_id !== user.id) {
+    const isOwner = targetSection?.classes?.user_id === user.id;
+
+    console.log('GET /api/sections/[id]/documents - user.id:', `"${user.id}"`, ' (typeof: ', typeof user.id, ')');
+    console.log('GET /api/sections/[id]/documents - targetSection.classes?.user_id:', `"${targetSection?.classes?.user_id}"`, ' (typeof: ', typeof targetSection?.classes?.user_id, ')');
+    console.log('GET /api/sections/[id]/documents - isOwner (targetSection.classes?.user_id === user.id):', isOwner);
+
+    if (sectionError || !targetSection || !isOwner) {
       console.error('Error fetching target section or unauthorized (GET /api/sections/[id]/documents):', sectionError);
       return NextResponse.json({ error: sectionError?.message || 'Target section not found or unauthorized.' }, { status: 404 });
     }

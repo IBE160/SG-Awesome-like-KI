@@ -33,7 +33,13 @@ export async function GET(req: NextRequest, { params: paramsPromise }: { params:
     console.log('GET /api/sections/[id] - Supabase sectionData:', sectionData);
     console.log('GET /api/sections/[id] - Supabase fetchSectionError:', fetchSectionError);
 
-    if (fetchSectionError || !sectionData || sectionData.classes?.[0]?.user_id !== user.id) {
+    const isOwner = sectionData?.classes?.user_id === user.id;
+
+    console.log('GET /api/sections/[id] - user.id:', `"${user.id}"`, ' (typeof: ', typeof user.id, ')');
+    console.log('GET /api/sections/[id] - sectionData.classes?.user_id:', `"${sectionData?.classes?.user_id}"`, ' (typeof: ', typeof sectionData?.classes?.user_id, ')');
+    console.log('GET /api/sections/[id] - isOwner (sectionData.classes?.user_id === user.id):', isOwner);
+
+    if (fetchSectionError || !sectionData || !isOwner) {
       console.error('Error verifying section ownership (GET /api/sections/[id]):', fetchSectionError);
       return NextResponse.json({ error: fetchSectionError?.message || 'Section not found or not owned by user.' }, { status: 404 });
     }
@@ -79,7 +85,7 @@ export async function PUT(req: NextRequest, { params: paramsPromise }: { params:
         .eq('id', sectionId)
         .single();
 
-    if (fetchSectionError || !sectionData || sectionData.classes?.[0]?.user_id !== user.id) {
+    if (fetchSectionError || !sectionData || sectionData.classes?.user_id !== user.id) {
         console.error('Error verifying section ownership:', fetchSectionError);
         return NextResponse.json({ error: 'Section not found or not owned by user.' }, { status: 404 });
     }
@@ -142,7 +148,7 @@ export async function DELETE(req: NextRequest, { params: paramsPromise }: { para
           .eq('id', sectionId)
           .single();
   
-      if (fetchSectionError || !sectionData || sectionData.classes?.[0]?.user_id !== user.id) {
+      if (fetchSectionError || !sectionData || sectionData.classes?.user_id !== user.id) {
           console.error('Error verifying section ownership:', fetchSectionError);
           return NextResponse.json({ error: 'Section not found or not owned by user.' }, { status: 404 });
       }
