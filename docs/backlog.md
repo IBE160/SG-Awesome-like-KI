@@ -23,6 +23,7 @@ Routing guidance:
 | 2025-12-12 | 4.2 | 4 | Test | Medium | TBD | Open | Expand Backend Unit Tests for Quiz Lengths: Add unit tests in `src/app/api/generate/__tests__/route.test.ts` to verify correct prompt construction for 'medium' and 'long' `quizLength` options. |
 | 2025-12-12 | 4.2 | 4 | Test | Medium | TBD | Open | Expand Backend Unit Tests for Specific AI Errors: Add unit tests in `src/app/api/generate/__tests__/route.test.ts` to verify that `handleClaudeError` returns the *specific* error messages for different Claude API error types. |
 | 2025-12-12 | 4.2 | 4 | Test | High | TBD | Open | Add Backend Unit Tests for AC3: Write unit tests in `src/app/api/generate/__tests__/route.test.ts` to cover the new logic for AC3, including scenarios where content limitations trigger a shorter quiz and the corresponding user message.
+| 2025-12-12 | gemini-migration-docs | - | Documentation | Low | TBD | Open | Skip documentation updates for `gemini_migration_plan.md` and address it later.
 
 ## Closed Items
 | Date | Story | Epic | Type | Severity | Owner | Status | Notes |

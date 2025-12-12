@@ -456,6 +456,7 @@ export const mockSupabaseClient = {
   // Add other top-level Supabase client properties/methods as needed
   _reset: () => {
     process.env.GEMINI_API_KEY = 'mock-api-key';
+    process.env.GEMINI_MODEL_NAME = 'gemini-pro';
     mockSupabaseDb = {
       profiles: [
         { id: MOCK_USER_ID, full_name: 'Test User', user_id: MOCK_USER_ID },

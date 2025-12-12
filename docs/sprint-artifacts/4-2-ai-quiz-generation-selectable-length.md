@@ -1,71 +1,8 @@
 # Story 4.2: AI Quiz Generation (Selectable Length)
 
-Status: review
+Status: ready for review
 
 ## Story
-
-As a user,
-I want to generate multiple-choice quizzes from my uploaded study materials with a selectable length (short, medium, long),
-so that I can test my knowledge effectively and receive an informative error message if the AI is unable to generate a quiz or if I request a longer quiz than the content can support, with the system generating the longest possible quiz in the latter case.
-
-## Acceptance Criteria
-
-1.  **Given** I have an uploaded document, **when** I request a quiz and select a desired length (short, medium, long), **then** the AI generates a relevant multiple-choice quiz within 30 seconds.
-2.  **If** the AI is unable to generate a quiz, **then** the system displays an informative error message.
-3.  **If** I request a longer quiz than the content can support, **then** the system informs me and generates the longest possible quiz.
-
-## Tasks / Subtasks
-
-- [x] **Develop `POST /api/generate` endpoint for Quiz Generation (Vercel Function)** (AC: #1, #2, #3)
-    - [x] Implement endpoint to receive `documentId`, `type: "quiz"`, and `options` (`quizLength`).
-    - [x] Retrieve document content from Supabase Storage using `documentId`.
-    - [x] Construct an AI prompt for Gemini AI, including document content and desired `quizLength`. (Simulated)
-    - [x] Call Gemini AI and handle its response, including cases where content might not support requested quiz length. (Simulated)
-    - [x] Store the generated quiz in the `generated_content` table, linking to `study_materials` and `class_sections`.
-    - [x] Implement robust error handling for AI API calls and document retrieval.
-    - [x] Ensure AI API keys are securely managed within the Vercel Function, not exposed client-side.
-    - [x] *Testing Subtask:* Write unit tests for the Vercel Function to verify correct prompt construction, AI interaction, database storage, and error handling. (Framework: Jest)
-
-- [x] **Integrate Quiz Generation in Frontend (Next.js)** (AC: #1, #2, #3)
-    - [x] Implement UI logic to call `POST /api/generate` with appropriate parameters for quiz generation (from Story 4.6: Guided Quiz Generation Wizard).
-    - [x] Display a loading screen/modal (as per UX spec: "Loading Screen/Modal for Generation") during the 30-second generation period).
-    - [x] Handle successful AI response: store generated quiz in local state, transition to the interactive quiz interface (Story 4.3).
-    - [x] Handle AI inability to generate quiz: display informative error message to the user.
-    - [x] Handle AI generating a shorter quiz than requested: display an informative message to the user along with the generated quiz.
-    - [x] *Testing Subtask:* Write integration tests for the frontend to verify correct API calls, loading state, display of generated quiz, and error/information message handling. (Framework: Jest, potentially Playwright/Cypress for E2E)
-
-- [x] **Update Database Schema (Supabase PostgreSQL)** (AC: #1)
-    - [x] Ensure `generated_content` table schema can store quiz data (questions, options, correct answers, explanations - potentially within the `jsonb content` field).
-    - [x] Verify existing Row Level Security (RLS) policies for `generated_content` table adequately protect quiz data.
-    - [x] *Testing Subtask:* Write database migration scripts and verification steps to ensure schema supports quiz data and RLS is effective.
-
-- [x] **Implement Observability for Quiz Generation** (AC: #1, #2, #3)
-    - [x] Implement comprehensive logging for quiz generation requests, AI API calls, and responses within the Vercel Function and Frontend.
-    - [x] Collect metrics on quiz generation time, success/failure rates, and AI model response times.
-    - [x] Consider implementing distributed tracing to track requests across Frontend, Vercel Function, and Claude AI for easier debugging.
-
-### Review Follow-ups (AI)
-
-**Code Changes Required:**
-- [ ] [AI-Review][High] Implement AC3 in Backend API: Add logic to `src/app/api/generate/route.ts` to:
-    1.  Pre-process `document.extracted_text` to estimate its capacity for generating questions.
-    2.  If the requested `quizLength` is longer than content can support, adjust the prompt to generate the longest possible quiz based on content.
-    3.  Include a `message` in the API response to inform the user that a shorter quiz was generated due to content limitations. (AC #3, Task 1.4, Task 2.5)
-- [ ] [AI-Review][Medium] Link to Class Sections: When inserting into `generated_content` in `src/app/api/generate/route.ts`, ensure `class_section_id` is populated correctly if available from the `study_materials` record. (Task 1.5)
-- [ ] [AI-Review][Medium] Implement Metrics Collection: Add code to `src/app/api/generate/route.ts` to collect metrics (e.g., quiz generation time, success/failure counts) and integrate with a monitoring solution. (Task 4.2)
-
-**Test Changes Required:**
-- [ ] [AI-Review][Medium] Expand Backend Unit Tests for Quiz Lengths: Add unit tests in `src/app/api/generate/__tests__/route.test.ts` to verify correct prompt construction for 'medium' and 'long' `quizLength` options. (Task 1.8)
-- [ ] [AI-Review][Medium] Expand Backend Unit Tests for Specific AI Errors: Add unit tests in `src/app/api/generate/__tests__/route.test.ts` to verify that `handleClaudeError` returns the *specific* error messages for different Claude API error types (e.g., 401, 429). (Task 1.8)
-- [ ] [AI-Review][High] Add Backend Unit Tests for AC3: Write unit tests in `src/app/api/generate/__tests__/route.test.ts` to cover the new logic for AC3, including scenarios where content limitations trigger a shorter quiz and the corresponding user message. (AC #3, Task 1.4, Task 1.8)
-
-**Advisory Notes:**
-- Note: Consider enhancing frontend transition to the interactive quiz interface (Story 4.3) once that story is implemented, as currently it only displays the generated quiz on the same page. (Task 2.3)
-- Note: While basic request ID logging is present for tracing, consider integrating a dedicated distributed tracing system (e.g., OpenTelemetry) for more comprehensive end-to-end request tracking across frontend, Vercel Function, and AI services. (Task 4.3)
-- Note: Review AI prompts more rigorously for potential prompt injection vectors and to ensure optimal AI model adherence to quiz length constraints. (Code Quality)
-- Note: Ensure consistent naming of the AI model across all project documentation and code (e.g., exclusively "Anthropic AI" or "Claude AI" rather than "Gemini AI" in story documents). (LOW Severity - Code Quality)
-
-## Dev Agent Record
 
 ### Context Reference
 
