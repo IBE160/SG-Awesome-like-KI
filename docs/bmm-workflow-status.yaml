@@ -1,25 +1,68 @@
-# Workflow Status
-# generated: 2025-11-10
-# project: IBE160
-# project_type: software
-# selected_track: method
-# field_type: greenfield
-# workflow_path: method-greenfield.yaml
+# Business Model Management (BMM) Workflow Status
 
-generated: "2025-11-10"
-project: "IBE160"
-project_type: "software"
-selected_track: "method"
-field_type: "greenfield"
-workflow_path: "method-greenfield.yaml"
+# This document outlines the various states and transitions within the Business Model Management workflow.
+# Each status represents a stage in the lifecycle of a business model, from initial concept to
+# active deployment and eventual archival.
 
-workflow_status:
-  product-brief: docs/product-brief.md
-  prd: docs/PRD.md
-  create-epics-and-stories: docs/epics.md
-  validate-prd: optional
-  create-design: conditional
-  create-architecture: required
-  validate-architecture: optional
-  solutioning-gate-check: docs/implementation-readiness-report-2025-11-29-revised.md
-  sprint-planning: required
+workflow_name: "Business Model Management"
+version: "1.0.0"
+description: "Defines the lifecycle and states of a business model within the SG-Awesome-like-KI project."
+
+states:
+  - name: "Concept"
+    description: "Initial idea generation and preliminary research phase. The business model is a raw concept."
+    color: "#ADD8E6" # Light Blue
+    is_start_state: true
+    allowed_transitions: ["Drafting"]
+
+  - name: "Drafting"
+    description: "Detailed ideation and initial documentation of the business model canvas or equivalent. Key components are being defined."
+    color: "#FFFF99" # Light Yellow
+    allowed_transitions: ["Review", "Concept"]
+
+  - name: "Review"
+    description: "The business model draft is circulated among stakeholders for feedback and iteration. Focus on feasibility, viability, and desirability."
+    color: "#FFD700" # Gold
+    allowed_transitions: ["Drafting", "Approved for Development", "Rejected"]
+
+  - name: "Approved for Development"
+    description: "The business model has received stakeholder approval and is ready for technical implementation and detailed planning."
+    color: "#90EE90" # Light Green
+    allowed_transitions: ["In Development", "Archived"]
+
+  - name: "Rejected"
+    description: "The business model has been deemed unviable or undesirable after review and will not proceed further."
+    color: "#FF6347" # Tomato
+    is_end_state: true
+    allowed_transitions: ["Archived"] # Can be archived for historical reference
+
+  - name: "In Development"
+    description: "The business model is actively being built and integrated into the product/service. Technical and operational aspects are being realized."
+    color: "#87CEEB" # Sky Blue
+    allowed_transitions: ["Testing", "Approved for Development"]
+
+  - name: "Testing"
+    description: "The implemented business model is undergoing internal and external testing to validate its functionality and performance."
+    color: "#FFA500" # Orange
+    allowed_transitions: ["In Development", "Deployed", "Archived"]
+
+  - name: "Deployed"
+    description: "The business model is live and operational, generating value and interacting with users/customers."
+    color: "#32CD32" # Lime Green
+    allowed_transitions: ["Monitoring", "Archived"]
+
+  - name: "Monitoring"
+    description: "The deployed business model's performance is being tracked and analyzed. Adjustments may be made based on feedback and data."
+    color: "#1E90FF" # Dodger Blue
+    allowed_transitions: ["Deployed", "Iteration", "Archived"]
+
+  - name: "Iteration"
+    description: "Minor adjustments or improvements are being made to an active business model based on monitoring and feedback."
+    color: "#BA55D3" # Medium Orchid
+    allowed_transitions: ["Monitoring", "Deployed", "Archived"]
+
+  - name: "Archived"
+    description: "The business model is no longer active (e.g., replaced by a new model, deprecated, or failed). Kept for historical data and learning."
+    color: "#A9A9A9" # Dark Gray
+    is_end_state: true
+    allowed_transitions: [] # No further transitions from archived
