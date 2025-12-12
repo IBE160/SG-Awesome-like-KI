@@ -44,10 +44,12 @@ CREATE TABLE public.generated_content (
     study_material_id uuid NOT NULL,
     class_id uuid NULL,
     class_section_id uuid NULL,
+    user_id uuid NOT NULL,
     CONSTRAINT generated_content_pkey PRIMARY KEY (id),
     CONSTRAINT generated_content_study_material_id_fkey FOREIGN KEY (study_material_id) REFERENCES public.study_materials (id) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT fk_generated_content_class_id FOREIGN KEY (class_id) REFERENCES public.classes(id) ON DELETE SET NULL,
-    CONSTRAINT fk_generated_content_class_section_id FOREIGN KEY (class_section_id) REFERENCES public.class_sections(id) ON DELETE SET NULL
+    CONSTRAINT fk_generated_content_class_section_id FOREIGN KEY (class_section_id) REFERENCES public.class_sections(id) ON DELETE SET NULL,
+    CONSTRAINT fk_generated_content_user_id FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
 );
 
 -- Create the `profiles` table for additional user metadata
