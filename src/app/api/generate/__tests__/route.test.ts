@@ -139,8 +139,10 @@ describe('POST /api/generate', () => {
         }),
       }),
     });
+    const anthropicError = new Error('Claude summarization failed.') as any;
+    anthropicError.status = 500;
     (mockAnthropic.prototype.messages.create as jest.Mock)
-      .mockRejectedValue(new Error('Claude summarization failed.'));
+      .mockRejectedValue(anthropicError);
 
     const req = {
       json: jest.fn().mockResolvedValue({ type: 'summary', documentId: '123' }),
@@ -148,7 +150,7 @@ describe('POST /api/generate', () => {
 
     const response = await POST(req);
     expect(response.status).toBe(500);
-    expect(await response.text()).toBe('AI summary generation failed: Claude summarization failed.'); // Changed to .text()
+    expect(await response.text()).toBe('Claude API internal error: Claude summarization failed.'); // Changed to .text()
   });
 
   it('should return 500 if Supabase insert for generated content fails', async () => {
@@ -229,7 +231,7 @@ describe('POST /api/generate', () => {
     expect(await response.text()).toBe('Document has no text content to summarize');
   });
 
-  it('should return 400 if document.extracted_text is an empty string for summary type', async () => {
+  it('should return 400 if document.extracted_text is an empty string for quiz type', async () => {
     mockSupabase.mockReturnValue({
       auth: {
         getSession: jest.fn().mockResolvedValue({ data: { session: { user: { id: 'user-1' } } } }),
@@ -243,7 +245,7 @@ describe('POST /api/generate', () => {
     });
 
     const req = {
-      json: jest.fn().mockResolvedValue({ type: 'summary', documentId: '123' }),
+      json: jest.fn().mockResolvedValue({ type: 'quiz', documentId: '123', options: { quizLength: 'short' } }),
     } as any;
 
     const response = await POST(req);
@@ -251,7 +253,7 @@ describe('POST /api/generate', () => {
     expect(await response.text()).toBe('Document has no text content to summarize');
   });
 
-  it('should return 400 if document.extracted_text is a very short string for summary type', async () => {
+  it('should return 400 if document.extracted_text is a very short string for quiz type', async () => {
     mockSupabase.mockReturnValue({
       auth: {
         getSession: jest.fn().mockResolvedValue({ data: { session: { user: { id: 'user-1' } } } }),
@@ -265,12 +267,337 @@ describe('POST /api/generate', () => {
     });
 
     const req = {
-      json: jest.fn().mockResolvedValue({ type: 'summary', documentId: '123' }),
+      json: jest.fn().mockResolvedValue({ type: 'quiz', documentId: '123', options: { quizLength: 'short' } }),
     } as any;
 
     const response = await POST(req);
     expect(response.status).toBe(400);
-    expect(await response.text()).toBe('Document content is too short for meaningful summarization.');
+    expect(await response.text()).toBe('Document content is too short for meaningful quiz generation.');
+  });
+
+  it('should adjust to "short" quiz when requesting "long" with very short content (< 500 chars)', async () => {
+    const shortText = 'This is a short text for a quiz. It has less than 100 characters.'; // Should now trigger textLength < 100
+    const mockQuiz = [{ question: 'Q1', options: ['A'], answer: 'A', explanation: 'Exp' }];
+    mockSupabase.mockReturnValue({
+      auth: {
+        getSession: jest.fn().mockResolvedValue({ data: { session: { user: { id: 'user-1' } } } }),
+      },
+      from: jest.fn((table: string) => {
+        if (table === 'study_materials') {
+          return {
+            select: jest.fn().mockReturnValue({
+              eq: jest.fn().mockReturnThis(),
+              single: jest.fn().mockResolvedValue({ data: { extracted_text: shortText } }),
+            }),
+          };
+        }
+        if (table === 'generated_content') {
+          return {
+            insert: jest.fn().mockReturnValue({
+              select: jest.fn().mockResolvedValue({ data: [{ quiz: mockQuiz, message: "The document content is too short to generate a long quiz. Generating a short quiz instead." }], error: null }),
+            }),
+          };
+        }
+        return {};
+      }),
+    });
+    (mockAnthropic.prototype.messages.create as jest.Mock)
+      .mockResolvedValueOnce({ content: [{ type: 'text', text: JSON.stringify(mockQuiz) }] });
+
+    const req = {
+      json: jest.fn().mockResolvedValue({
+        type: 'quiz',
+        documentId: '123',
+        options: { quizLength: 'long' },
+      }),
+    } as any;
+
+    const response = await POST(req);
+    expect(response.status).toBe(400);
+    expect(await response.text()).toBe('Document content is too short for meaningful quiz generation.');
+  });
+
+  it('should adjust to "medium" quiz when requesting "long" with medium content (500-1500 chars)', async () => {
+    const mediumText = 'This is a medium length text. It is long enough to be between 500 and 1500 characters. '.repeat(10); // ~700 chars
+    const mockQuiz = [{ question: 'Q1', options: ['A'], answer: 'A', explanation: 'Exp' }];
+    mockSupabase.mockReturnValue({
+      auth: {
+        getSession: jest.fn().mockResolvedValue({ data: { session: { user: { id: 'user-1' } } } }),
+      },
+      from: jest.fn((table: string) => {
+        if (table === 'study_materials') {
+          return {
+            select: jest.fn().mockReturnValue({
+              eq: jest.fn().mockReturnThis(),
+              single: jest.fn().mockResolvedValue({ data: { extracted_text: mediumText } }),
+            }),
+          };
+        }
+        if (table === 'generated_content') {
+          return {
+            insert: jest.fn().mockReturnValue({
+              select: jest.fn().mockResolvedValue({ data: [{ quiz: mockQuiz, message: "The document content is not sufficient for a long quiz. Generating a medium quiz instead." }], error: null }),
+            }),
+          };
+        }
+        return {};
+      }),
+    });
+    (mockAnthropic.prototype.messages.create as jest.Mock)
+      .mockResolvedValueOnce({ content: [{ type: 'text', text: JSON.stringify(mockQuiz) }] });
+
+    const req = {
+      json: jest.fn().mockResolvedValue({
+        type: 'quiz',
+        documentId: '123',
+        options: { quizLength: 'long' },
+      }),
+    } as any;
+
+    const response = await POST(req);
+    expect(response.status).toBe(200);
+    const body = await response.json();
+    expect(body).toEqual([{ quiz: mockQuiz, message: "The document content is not sufficient for a long quiz. Generating a medium quiz instead." }]);
+    expect(mockAnthropic.prototype.messages.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        messages: [{ role: 'user', content: expect.stringContaining('Generate a medium multiple-choice quiz (6-8 questions) from the following text.') }],
+      })
+    );
+  });
+
+  it('should adjust to "short" quiz when requesting "medium" with very short content (< 500 chars)', async () => {
+    const shortText = 'This is another short text for a quiz. Less than 100 characters.'; // Should now trigger textLength < 100
+    const mockQuiz = [{ question: 'Q1', options: ['A'], answer: 'A', explanation: 'Exp' }];
+    mockSupabase.mockReturnValue({
+      auth: {
+        getSession: jest.fn().mockResolvedValue({ data: { session: { user: { id: 'user-1' } } } }),
+      },
+      from: jest.fn((table: string) => {
+        if (table === 'study_materials') {
+          return {
+            select: jest.fn().mockReturnValue({
+              eq: jest.fn().mockReturnThis(),
+              single: jest.fn().mockResolvedValue({ data: { extracted_text: shortText } }),
+            }),
+          };
+        }
+        if (table === 'generated_content') {
+          return {
+            insert: jest.fn().mockReturnValue({
+              select: jest.fn().mockResolvedValue({ data: [{ quiz: mockQuiz, message: "The document content is too short to generate a medium quiz. Generating a short quiz instead." }], error: null }),
+            }),
+          };
+        }
+        return {};
+      }),
+    });
+    (mockAnthropic.prototype.messages.create as jest.Mock)
+      .mockResolvedValueOnce({ content: [{ type: 'text', text: JSON.stringify(mockQuiz) }] });
+
+    const req = {
+      json: jest.fn().mockResolvedValue({
+        type: 'quiz',
+        documentId: '123',
+        options: { quizLength: 'medium' },
+      }),
+    } as any;
+
+    const response = await POST(req);
+    expect(response.status).toBe(400);
+    expect(await response.text()).toBe('Document content is too short for meaningful quiz generation.');
+  });
+
+  it('should generate "short" quiz as requested with sufficient content', async () => {
+    const longText = 'This is a very long text that can support any quiz length. '.repeat(100); // > 1500 chars
+    const mockQuiz = [{ question: 'Q1', options: ['A'], answer: 'A', explanation: 'Exp' }];
+    mockSupabase.mockReturnValue({
+      auth: {
+        getSession: jest.fn().mockResolvedValue({ data: { session: { user: { id: 'user-1' } } } }),
+      },
+      from: jest.fn((table: string) => {
+        if (table === 'study_materials') {
+          return {
+            select: jest.fn().mockReturnValue({
+              eq: jest.fn().mockReturnThis(),
+              single: jest.fn().mockResolvedValue({ data: { extracted_text: longText } }),
+            }),
+          };
+        }
+        if (table === 'generated_content') {
+          return {
+            insert: jest.fn().mockReturnValue({
+              select: jest.fn().mockResolvedValue({ data: [{ quiz: mockQuiz, message: null }], error: null }),
+            }),
+          };
+        }
+        return {};
+      }),
+    });
+    (mockAnthropic.prototype.messages.create as jest.Mock)
+      .mockResolvedValueOnce({ content: [{ type: 'text', text: JSON.stringify(mockQuiz) }] });
+
+    const req = {
+      json: jest.fn().mockResolvedValue({
+        type: 'quiz',
+        documentId: '123',
+        options: { quizLength: 'short' },
+      }),
+    } as any;
+
+    const response = await POST(req);
+    expect(response.status).toBe(200);
+    const body = await response.json();
+    expect(body).toEqual([{ quiz: mockQuiz, message: null }]);
+    expect(mockAnthropic.prototype.messages.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        messages: [{ role: 'user', content: expect.stringContaining('Generate a short multiple-choice quiz (3-5 questions) from the following text.') }],
+      })
+    );
+  });
+
+  it('should generate "medium" quiz as requested with sufficient content', async () => {
+    const longText = 'This is a very long text that can support any quiz length. '.repeat(100); // > 1500 chars
+    const mockQuiz = [{ question: 'Q1', options: ['A'], answer: 'A', explanation: 'Exp' }];
+    mockSupabase.mockReturnValue({
+      auth: {
+        getSession: jest.fn().mockResolvedValue({ data: { session: { user: { id: 'user-1' } } } }),
+      },
+      from: jest.fn((table: string) => {
+        if (table === 'study_materials') {
+          return {
+            select: jest.fn().mockReturnValue({
+              eq: jest.fn().mockReturnThis(),
+              single: jest.fn().mockResolvedValue({ data: { extracted_text: longText } }),
+            }),
+          };
+        }
+        if (table === 'generated_content') {
+          return {
+            insert: jest.fn().mockReturnValue({
+              select: jest.fn().mockResolvedValue({ data: [{ quiz: mockQuiz, message: null }], error: null }),
+            }),
+          };
+        }
+        return {};
+      }),
+    });
+    (mockAnthropic.prototype.messages.create as jest.Mock)
+      .mockResolvedValueOnce({ content: [{ type: 'text', text: JSON.stringify(mockQuiz) }] });
+
+    const req = {
+      json: jest.fn().mockResolvedValue({
+        type: 'quiz',
+        documentId: '123',
+        options: { quizLength: 'medium' },
+      }),
+    } as any;
+
+    const response = await POST(req);
+    expect(response.status).toBe(200);
+    const body = await response.json();
+    expect(body).toEqual([{ quiz: mockQuiz, message: null }]);
+    expect(mockAnthropic.prototype.messages.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        messages: [{ role: 'user', content: expect.stringContaining('Generate a medium multiple-choice quiz (6-8 questions) from the following text.') }],
+      })
+    );
+  });
+
+
+  it('should generate "medium" quiz as requested with sufficient content', async () => {
+    const longText = 'This is a very long text that can support any quiz length. '.repeat(100); // > 1500 chars
+    const mockQuiz = [{ question: 'Q1', options: ['A'], answer: 'A', explanation: 'Exp' }];
+    mockSupabase.mockReturnValue({
+      auth: {
+        getSession: jest.fn().mockResolvedValue({ data: { session: { user: { id: 'user-1' } } } }),
+      },
+      from: jest.fn((table: string) => {
+        if (table === 'study_materials') {
+          return {
+            select: jest.fn().mockReturnValue({
+              eq: jest.fn().mockReturnThis(),
+              single: jest.fn().mockResolvedValue({ data: { extracted_text: longText, class_section_id: 'class-1' } }),
+            }),
+          };
+        }
+        if (table === 'generated_content') {
+          return {
+            insert: jest.fn().mockReturnValue({
+              select: jest.fn().mockResolvedValue({ data: [{ quiz: mockQuiz, message: null }], error: null }),
+            }),
+          };
+        }
+        return {};
+      }),
+    });
+    (mockAnthropic.prototype.messages.create as jest.Mock)
+      .mockResolvedValueOnce({ content: [{ type: 'text', text: JSON.stringify(mockQuiz) }] });
+
+    const req = {
+      json: jest.fn().mockResolvedValue({
+        type: 'quiz',
+        documentId: '123',
+        options: { quizLength: 'medium' },
+      }),
+    } as any;
+
+    const response = await POST(req);
+    expect(response.status).toBe(200);
+    const body = await response.json();
+    expect(body).toEqual([{ quiz: mockQuiz, message: null }]);
+    expect(mockAnthropic.prototype.messages.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        messages: [{ role: 'user', content: expect.stringContaining('Generate a medium multiple-choice quiz (6-8 questions) from the following text.') }],
+      })
+    );
+  });
+
+  it('should generate "long" quiz as requested with sufficient content', async () => {
+    const longText = 'This is a very long text that can support any quiz length. '.repeat(100); // > 1500 chars
+    const mockQuiz = [{ question: 'Q1', options: ['A'], answer: 'A', explanation: 'Exp' }];
+    mockSupabase.mockReturnValue({
+      auth: {
+        getSession: jest.fn().mockResolvedValue({ data: { session: { user: { id: 'user-1' } } } }),
+      },
+      from: jest.fn((table: string) => {
+        if (table === 'study_materials') {
+          return {
+            select: jest.fn().mockReturnValue({
+              eq: jest.fn().mockReturnThis(),
+              single: jest.fn().mockResolvedValue({ data: { extracted_text: longText, class_section_id: 'class-1' } }),
+            }),
+          };
+        }
+        if (table === 'generated_content') {
+          return {
+            insert: jest.fn().mockReturnValue({
+              select: jest.fn().mockResolvedValue({ data: [{ quiz: mockQuiz, message: null }], error: null }),
+            }),
+          };
+        }
+        return {};
+      }),
+    });
+    (mockAnthropic.prototype.messages.create as jest.Mock)
+      .mockResolvedValueOnce({ content: [{ type: 'text', text: JSON.stringify(mockQuiz) }] });
+
+    const req = {
+      json: jest.fn().mockResolvedValue({
+        type: 'quiz',
+        documentId: '123',
+        options: { quizLength: 'long' },
+      }),
+    } as any;
+
+    const response = await POST(req);
+    expect(response.status).toBe(200);
+    const body = await response.json();
+    expect(body).toEqual([{ quiz: mockQuiz, message: null }]);
+    expect(mockAnthropic.prototype.messages.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        messages: [{ role: 'user', content: expect.stringContaining('Generate a long multiple-choice quiz (9-12 questions) from the following text.') }],
+      })
+    );
   });
 
   it('should return 400 if type is neither summary nor quiz', async () => {
@@ -306,7 +633,7 @@ describe('POST /api/generate', () => {
           return {
             select: jest.fn().mockReturnValue({
               eq: jest.fn().mockReturnThis(),
-              single: jest.fn().mockResolvedValue({ data: { extracted_text: 'Some text for quiz' } }),
+              single: jest.fn().mockResolvedValue({ data: { extracted_text: 'This is a very long text that can support any quiz length. It is definitely more than one hundred characters long.', class_section_id: 'class-1' } }),
             }),
           };
         }
@@ -383,8 +710,10 @@ describe('POST /api/generate', () => {
         }),
       }),
     });
+    const anthropicError = new Error('Claude quiz generation failed.') as any;
+    anthropicError.status = 500;
     (mockAnthropic.prototype.messages.create as jest.Mock)
-      .mockRejectedValue(new Error('Claude quiz generation failed.'));
+      .mockRejectedValue(anthropicError);
 
     const req = {
       json: jest.fn().mockResolvedValue({
@@ -397,5 +726,65 @@ describe('POST /api/generate', () => {
     const response = await POST(req);
     expect(response.status).toBe(500);
     expect(await response.text()).toBe('AI quiz generation failed: Claude quiz generation failed.'); // Changed to .text()
+  });
+
+  it('should handle Claude API 401 Unauthorized error correctly', async () => {
+    mockSupabase.mockReturnValue({
+      auth: {
+        getSession: jest.fn().mockResolvedValue({ data: { session: { user: { id: 'user-1' } } } }),
+      },
+      from: jest.fn().mockReturnValue({
+        select: jest.fn().mockReturnValue({
+          eq: jest.fn().mockReturnThis(),
+          single: jest.fn().mockResolvedValue({ data: { extracted_text: 'Some text for quiz', class_section_id: 'class-1' } }),
+        }),
+      }),
+    });
+
+    const anthropicError = new Error('Invalid API Key') as any;
+    anthropicError.status = 401;
+    (mockAnthropic.prototype.messages.create as jest.Mock).mockRejectedValue(anthropicError);
+
+    const req = {
+      json: jest.fn().mockResolvedValue({
+        type: 'quiz',
+        documentId: '123',
+        options: { quizLength: 'short' },
+      }),
+    } as any;
+
+    const response = await POST(req);
+    expect(response.status).toBe(401);
+    expect(await response.text()).toBe('Authentication/Authorization error with Claude API. Please check your API key.');
+  });
+
+  it('should handle Claude API 429 Rate Limit Exceeded error correctly', async () => {
+    mockSupabase.mockReturnValue({
+      auth: {
+        getSession: jest.fn().mockResolvedValue({ data: { session: { user: { id: 'user-1' } } } }),
+      },
+      from: jest.fn().mockReturnValue({
+        select: jest.fn().mockReturnValue({
+          eq: jest.fn().mockReturnThis(),
+          single: jest.fn().mockResolvedValue({ data: { extracted_text: 'Some text for quiz', class_section_id: 'class-1' } }),
+        }),
+      }),
+    });
+
+    const anthropicError = new Error('Rate limit exceeded') as any;
+    anthropicError.status = 429;
+    (mockAnthropic.prototype.messages.create as jest.Mock).mockRejectedValue(anthropicError);
+
+    const req = {
+      json: jest.fn().mockResolvedValue({
+        type: 'quiz',
+        documentId: '123',
+        options: { quizLength: 'short' },
+      }),
+    } as any;
+
+    const response = await POST(req);
+    expect(response.status).toBe(429);
+    expect(await response.text()).toBe('Claude API rate limit exceeded. Please try again shortly.');
   });
 });

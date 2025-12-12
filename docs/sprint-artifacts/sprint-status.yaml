@@ -56,7 +56,7 @@ development_status:
   epic-3-retrospective: completed
   epic-4: contexted
   4-1-ai-summary-generation: in-progress
-  4-2-ai-quiz-generation-selectable-length: review
+  4-2-ai-quiz-generation-selectable-length: in-progress
   4-3-interactive-quiz-interface: ready-for-dev
   4-4-motivational-feedback-explanations: ready-for-dev
   4-5-guided-summary-generation-wizard: ready-for-dev
