@@ -5,28 +5,36 @@ import { v4 as uuidv4 } from 'uuid'; // Import uuid
 
 import { generateSummaryWithGemini, generateQuizWithGemini, handleGeminiError } from '@/lib/gemini';
 
-
-
-
-
+const logger = {
+  info: (message: string, context?: object) => console.log(`INFO: ${message}`, context),
+  warn: (message: string, context?: object) => console.warn(`WARN: ${message}`, context),
+  error: (message: string, context?: object) => console.error(`ERROR: ${message}`, context),
+};
 
 export async function POST(req: Request) {
   const requestId = uuidv4(); // Generate a unique request ID
   logger.info('API Generate Request received', { requestId, url: req.url, method: req.method });
+
+  let actualDocumentId: string | undefined; // Declare actualDocumentId here to ensure it's always in scope
+  let originalDocumentId: string | undefined; // Keep track of the original for initial logging if needed
+  let document: any; // Declare document here for broader scope
+  let userId: string | undefined; // Declare userId here for broader scope
+  let type: string | undefined; // Declare type here for broader scope
 
   try { // Top-level try block starts here
     const supabase = await createClient();
 
     const {
       data: { session },
-    } = await supabase.auth.getSession();
+    }
+    = await supabase.auth.getSession();
 
     if (!session) {
       logger.warn('Unauthorized access attempt to API Generate', { requestId });
       throw new NextResponse('Unauthorized', { status: 401 });
     }
 
-    const userId = session.user.id;
+    userId = session.user.id; // Assign to the already declared userId
     let body;
     try {
       body = await req.json();
@@ -35,38 +43,35 @@ export async function POST(req: Request) {
       throw new NextResponse('Invalid JSON in request body', { status: 400 });
     }
 
-    const { type, documentId, options } = body;
-    logger.info('Request body details', { requestId, userId, type, documentId, options });
-
-    if (!['summary', 'quiz'].includes(type)) {
-      logger.warn('Invalid generation type requested', { requestId, userId, type });
-      throw new NextResponse('Invalid type', { status: 400 });
+    type = body.type; // Assign to the already declared type
+    originalDocumentId = body.documentId; // Store original documentId
+    actualDocumentId = body.documentId; // Initialize actualDocumentId with the original
+    if (!actualDocumentId) {
+      logger.warn('Missing documentId in request body', { requestId, userId, type });
+      throw new NextResponse('Document ID is required', { status: 400 });
     }
+    const options = body.options;
+    
+    logger.info('Request body details', { requestId, userId, type, documentId: originalDocumentId, options });
 
-    if (!documentId) {
-      logger.warn('Missing documentId in request', { requestId, userId });
-      throw new NextResponse('Missing documentId', { status: 400 });
-    }
-
-    let document: any;
     let docError: any;
     try {
       ({ data: document, error: docError } = await supabase
         .from('study_materials')
         .select('extracted_text, class_section_id')
-        .eq('id', documentId)
+        .eq('id', actualDocumentId) // Use actualDocumentId for Supabase query
         .eq('user_id', userId)
         .single());
     } catch (err: any) {
-      logger.error('Error during Supabase document retrieval setup', { requestId, err, documentId, userId });
+      logger.error('Error during Supabase document retrieval setup', { requestId, err, documentId: actualDocumentId, userId });
       throw new NextResponse('Internal Server Error', { status: 500 }); // Catch setup errors
     }
 
     if (docError || !document) {
-      logger.error('Error retrieving document from Supabase', { requestId, docError, documentId, userId });
+      logger.error('Error retrieving document from Supabase', { requestId, docError, documentId: actualDocumentId, userId });
       throw new NextResponse('Document not found or access denied', { status: 404 });
     }
-    logger.info('Document successfully retrieved from Supabase', { requestId, documentId, userId, class_section_id: document.class_section_id });
+    logger.info('Document successfully retrieved from Supabase', { requestId, documentId: actualDocumentId, userId, class_section_id: document.class_section_id });
 
     if (!document.extracted_text) {
       logger.warn('Document has no extracted text content', { requestId, documentId, userId });
@@ -85,7 +90,7 @@ export async function POST(req: Request) {
           throw new Error("GEMINI_API_KEY is not set.");
         }
         if (document.extracted_text.length < 100) { // Specific check for summary length
-          logger.warn('Document content too short for meaningful summarization', { requestId, documentId, userId, content_length: document.extracted_text.length });
+          logger.warn('Document content too short for meaningful summarization', { requestId, actualDocumentId, userId, content_length: document.extracted_text.length });
           throw new NextResponse('Document content is too short for meaningful summarization.', { status: 400 });
         }
 
@@ -168,27 +173,27 @@ export async function POST(req: Request) {
       .insert([
         {
           user_id: userId,
-          study_material_id: documentId,
+          study_material_id: actualDocumentId,
           class_section_id: document.class_section_id,
-          content_type: type,
+          type: type,
           content: generatedContent,
         },
       ])
       .select();
 
     if (dbError) {
-      logger.error('Error saving generated content to Supabase', { requestId, dbError, documentId, userId, contentType: type });
+      logger.error('Error saving generated content to Supabase', { requestId, dbError, documentId: originalDocumentId, userId, contentType: type });
       throw new NextResponse('Internal Server Error', { status: 500 });
     }
-    logger.info('Generated content successfully saved to Supabase', { requestId, generatedContentId: data?.[0]?.id, documentId, userId, contentType: type });
+    logger.info('Generated content successfully saved to Supabase', { requestId, generatedContentId: data?.[0]?.id, documentId: originalDocumentId, userId, contentType: type });
 
-    logger.info('API Generate Request completed successfully', { requestId, userId, type, documentId });
-    return NextResponse.json(data);
+    logger.info('API Generate Request completed successfully', { requestId, userId, type, documentId: originalDocumentId });
+    return NextResponse.json({ content: generatedContent });
   } catch (err: any) { // Top-level catch block
     if (err instanceof NextResponse) {
       return err; // Return the specific NextResponse
     }
-    logger.error('Truly unhandled error during API Generate Request', { requestId, error: err, documentId, userId, type });
+    logger.error('Truly unhandled error during API Generate Request', { requestId, error: err, documentId: originalDocumentId, userId, type });
     return new NextResponse('Internal Server Error', { status: 500 });
   }
 }

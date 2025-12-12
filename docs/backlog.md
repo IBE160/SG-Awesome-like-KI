@@ -12,6 +12,7 @@ Routing guidance:
 ## Open Items
 | Date | Story | Epic | Type | Severity | Owner | Status | Notes |
 | ---- | ----- | ---- | ---- | -------- | ----- | ------ | ----- |
+| 2025-12-12 | 4.1 | 3 | Bug | High | TBD | Open | `extracted_text` column in `public.study_materials` is `NULL` for uploaded PDF/text files. This is due to the `pdf-parser` being a simulation (`src/app/api/pdf-parser/route.ts`) and the extracted text not being saved back to the database. This prevents actual summary/quiz generation with real documents.
 | 2025-12-07 | fix-jest-config-state | - | Documentation | High | TBD | Open | Reference for ongoing Jest configuration and testing issues. See: docs/sprint-artifacts/jest-config-state.md |
 | 2025-12-07 | fix-jest-config | - | Technical Debt | High | TBD | Open | Resolve Jest test suite configuration issues (SyntaxError, cookie scope, NextRequest constructor) for Next.js 16 API routes. This is blocking automated verification of other tasks. |
 | 2025-12-10 | unrestricted-supabase-tables | - | Security | High | TBD | Open | The `generated_content_materials` and `generated_content_sections` tables in Supabase are currently unrestricted, posing a security risk. |
