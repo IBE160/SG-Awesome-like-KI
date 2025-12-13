@@ -82,11 +82,24 @@ export async function POST(req: NextRequest) {
     // If PDF, trigger text extraction
     else if (file.type === 'application/pdf') {
       try {
+        const { data: signedUrlData, error: signedUrlError } = await supabase.storage
+          .from('study-materials')
+          .createSignedUrl(storagePath, 60 * 5); // 5-minute expiry
+
+        if (signedUrlError) {
+          console.error('Signed URL Generation Error:', signedUrlError);
+          await supabase
+            .from('study_materials')
+            .update({ extracted_text: 'PDF_PARSING_ERROR: Could not create a secure link to the file.' })
+            .eq('id', record.id);
+          return NextResponse.json({ error: 'Could not create a secure link for the PDF file.', studyMaterialId: record.id }, { status: 500 });
+        }
+
         const parserUrl = `${req.nextUrl.origin}/api/pdf-parser`;
         const parserResponse = await fetch(parserUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ studyMaterialId: record.id, storagePath: storagePath }),
+            body: JSON.stringify({ studyMaterialId: record.id, signedUrl: signedUrlData.signedUrl }),
         });
 
         const parserData = await parserResponse.json();
