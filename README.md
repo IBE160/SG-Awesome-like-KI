@@ -2,17 +2,29 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
-First, run the development server:
+Follow these steps to get your local development environment set up.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+1.  **Install Dependencies:**
+    Open a terminal in the project root and run the following command to install the necessary packages:
+    ```bash
+    npm install
+    ```
+
+2.  **Set Up Environment Variables:**
+    This project requires API keys to connect to Supabase and Google Gemini.
+    - First, copy the example environment file to a new local file:
+      ```bash
+      cp .env.example .env.local
+      ```
+      (On Windows PowerShell, use `copy .env.example .env.local`)
+    - Next, open the newly created `.env.local` file in your code editor.
+    - Fill in the values for each variable. You will need to get these keys from your Supabase and Google AI Studio dashboards.
+
+3.  **Run the Development Server:**
+    Once your environment variables are set, you can start the development server:
+    ```bash
+    npm run dev
+    ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 

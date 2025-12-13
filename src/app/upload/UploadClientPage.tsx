@@ -61,14 +61,16 @@ export default function UploadClientPage({ initialClasses, user }: UploadClientP
     setIsGenerating(true);
     setGenerationStatus(`Generating ${type}...`);
     try {
-      const response = await fetch(`/api/generate/${type}`, {
+      const response = await fetch(`/api/generate`, { // Corrected: Use the static, real endpoint
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ studyMaterialId }),
+        // Corrected: Send 'type' in the body along with the ID
+        body: JSON.stringify({ studyMaterialId, type, options: { quizLength: 'short' } }), // Added a default quizLength
       });
       const data = await response.json();
       if (!response.ok) {
-        throw new Error(data.error || `Failed to generate ${type}`);
+        // The real API might return errors in a different format, e.g., data.message
+        throw new Error(data.error || data.message || `Failed to generate ${type}`);
       }
       setGenerationStatus(`${type.charAt(0).toUpperCase() + type.slice(1)} generated successfully! You can find it in the "Unorganized" section.`);
     } catch (error) {
@@ -100,11 +102,14 @@ export default function UploadClientPage({ initialClasses, user }: UploadClientP
       return;
     }
 
-    setValidationError(null); // Clear any previous validation errors
+    // Reset UI states for a new upload attempt
+    setValidationError(null);
     setIsUploading(true);
     setUploadError(null);
     setUploadSuccess(null);
-    setUploadedDocumentId(null); // Clear previous upload success state
+    setUploadedDocumentId(null);
+    // Let's not reset retry count on manual trigger, only on success.
+    // setRetryCount(0);
 
     const formData = new FormData();
     formData.append('file', selectedFile);
@@ -113,39 +118,65 @@ export default function UploadClientPage({ initialClasses, user }: UploadClientP
 
     try {
       const response = await fetch('/api/upload', { method: 'POST', body: formData });
-      const data = await response.json();
 
+      // Handle server-side errors (e.g., validation, file size)
       if (!response.ok) {
-        setUploadError(data.error || 'An unexpected error occurred during upload.');
-        console.error('Server Upload Error:', data.error);
+        let errorMessage = 'An unexpected error occurred during upload.';
+        
         if (response.status === 413) {
-            setValidationError('File size exceeds 10MB limit.');
-        } else if (data.error?.includes('file type is not supported')) {
-            setValidationError(data.error);
-        } else if (data.error?.includes('password-protected') || data.error?.includes('corrupted')) {
-            setValidationError(data.error);
+          errorMessage = 'Upload failed: File is too large (max 10MB).';
+          setValidationError(errorMessage); // Show specific error in validation section
+        } else {
+            try {
+              const data = await response.json();
+              let serverError = data.error || data.message;
+              if (serverError) {
+                // Append the specific Supabase error if it exists, for better debugging
+                if (data.supabaseError) {
+                  serverError += ` (Supabase: ${data.supabaseError})`;
+                }
+                errorMessage = serverError;
+                
+                // For specific, actionable errors, use the validation slot based on the original message
+                const originalError = data.error || data.message || '';
+                if (originalError.includes('file type is not supported') || originalError.includes('password-protected') || originalError.includes('corrupted')) {
+                    setValidationError(originalError);
+                }
+              }
+            } catch (jsonError) {
+              // Fallback if the error response is not JSON
+              errorMessage = `Server error: ${response.status} ${response.statusText}`;
+              console.error('Failed to parse server error response as JSON:', jsonError);
+            }
         }
-      } else {
-        setUploadSuccess('File uploaded and processed successfully!');
-        setUploadedDocumentId(data.documentId); // Assuming the API returns documentId on success
-        setSelectedFile(null); // Clear selected file from the upload form
-        setValidationError(null);
-        setRetryCount(0);
-        setSelectedClassId(null); // Reset class/section selection
-        setSelectedSectionId(null);
-        console.log('Upload Success:', data, 'Document ID:', data.documentId);
+        setUploadError(errorMessage); // Set the general upload error message
+        setIsUploading(false); // Stop loading indicator
+        return; // End the function here
       }
-    } catch (error) {
+
+      // Handle successful upload
+      const data = await response.json();
+      setUploadSuccess('File uploaded and processed successfully!');
+      setUploadedDocumentId(data.studyMaterialId);
+      setSelectedFile(null);
+      setValidationError(null);
+      setRetryCount(0); // Reset retries on success
+      setSelectedClassId(null);
+      setSelectedSectionId(null);
+      console.log('Upload Success:', data, 'Document ID:', data.studyMaterialId);
+      // No need to set isUploading to false, the component will be replaced by PostUploadActionsUI
+
+    } catch (error) { // This block now only catches network/fetch errors
       console.error('Upload/Network Error:', error);
       if (retryCount < MAX_RETRIES) {
         setRetryCount(prev => prev + 1);
         setUploadError(`Network error. Retrying (${retryCount + 1}/${MAX_RETRIES})...`);
-        setTimeout(() => handleUploadDocument(), 2000);
+        setTimeout(() => handleUploadDocument(), 2000); // Retry the upload
+        // Do not set isUploading to false here, as a retry is in progress
       } else {
-        setUploadError('Max retries reached. Please try again manually.');
+        setUploadError('Max retries reached. A network error occurred. Please try again manually.');
+        setIsUploading(false); // Stop loading on final failure
       }
-    } finally {
-      setIsUploading(false);
     }
   };
 

@@ -44,10 +44,10 @@ export async function POST(req: Request) {
     }
 
     type = body.type; // Assign to the already declared type
-    originalDocumentId = body.documentId; // Store original documentId
-    actualDocumentId = body.documentId; // Initialize actualDocumentId with the original
+    originalDocumentId = body.studyMaterialId; // Store original studyMaterialId
+    actualDocumentId = body.studyMaterialId; // Initialize actualDocumentId with the original
     if (!actualDocumentId) {
-      logger.warn('Missing documentId in request body', { requestId, userId, type });
+      logger.warn('Missing studyMaterialId in request body', { requestId, userId, type });
       throw new NextResponse('Document ID is required', { status: 400 });
     }
     const options = body.options;
@@ -64,7 +64,7 @@ export async function POST(req: Request) {
         .single());
     } catch (err: any) {
       logger.error('Error during Supabase document retrieval setup', { requestId, err, documentId: actualDocumentId, userId });
-      throw new NextResponse('Internal Server Error', { status: 500 }); // Catch setup errors
+      throw NextResponse.json({ error: 'Database error while retrieving document.' }, { status: 500 }); // Catch setup errors and respond with JSON
     }
 
     if (docError || !document) {
@@ -87,7 +87,7 @@ export async function POST(req: Request) {
       try {
         if (!process.env.GEMINI_API_KEY) {
           logger.error('GEMINI_API_KEY is not set for summary generation', { requestId, userId });
-          throw new Error("GEMINI_API_KEY is not set.");
+          return NextResponse.json({ error: 'GEMINI_API_KEY is not set on the server. Please add it to your .env.local file.' }, { status: 500 });
         }
         if (document.extracted_text.length < 100) { // Specific check for summary length
           logger.warn('Document content too short for meaningful summarization', { requestId, actualDocumentId, userId, content_length: document.extracted_text.length });
@@ -131,8 +131,8 @@ export async function POST(req: Request) {
       }
       // If content is very short for any quiz, warn the user and return 400
       if (textLength < 100) {
-        logger.warn('Document content too short for meaningful quiz generation', { requestId, documentId, userId, content_length: document.extracted_text.length });
-        throw new NextResponse('Document content is too short for meaningful quiz generation.', { status: 400 });
+        logger.warn('Document content too short for meaningful quiz generation', { requestId, documentId: actualDocumentId, userId, content_length: document.extracted_text.length });
+        return NextResponse.json({ error: 'Document content is too short for meaningful quiz generation.' }, { status: 400 });
       }
 
       let quiz: any;
@@ -140,7 +140,7 @@ export async function POST(req: Request) {
       try {
         if (!process.env.GEMINI_API_KEY) {
           logger.error('GEMINI_API_KEY is not set for quiz generation', { requestId, userId });
-          throw new Error("GEMINI_API_KEY is not set.");
+          return NextResponse.json({ error: 'GEMINI_API_KEY is not set on the server. Please add it to your .env.local file.' }, { status: 500 });
         }
 
         let quizPrompt: string;
@@ -194,6 +194,6 @@ export async function POST(req: Request) {
       return err; // Return the specific NextResponse
     }
     logger.error('Truly unhandled error during API Generate Request', { requestId, error: err, documentId: originalDocumentId, userId, type });
-    return new NextResponse('Internal Server Error', { status: 500 });
+    return NextResponse.json({ error: 'An unexpected internal server error occurred.' }, { status: 500 });
   }
 }

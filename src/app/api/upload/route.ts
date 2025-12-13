@@ -51,6 +51,9 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Failed to upload file to storage' }, { status: 500 });
     }
 
+    // Add a short delay to mitigate potential replication lag in Supabase Storage
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
     const { data: record, error: dbError } = await supabase
       .from('study_materials')
       .insert({
@@ -74,6 +77,7 @@ export async function POST(req: NextRequest) {
     // If text file, extract text directly
     if (file.type === 'text/plain') {
         const textContent = await file.text();
+        console.log(`--- DIAGNOSTIC: Extracted text content length: ${textContent.length} characters ---`);
         await supabase
             .from('study_materials')
             .update({ extracted_text: textContent })
@@ -81,6 +85,15 @@ export async function POST(req: NextRequest) {
     }
     // If PDF, trigger text extraction
     else if (file.type === 'application/pdf') {
+      // WORKAROUND: PDF parsing is temporarily disabled due to a persistent Supabase "Object not found" error.
+      // The code to generate a signed URL and call the parser is preserved below for when the issue is resolved.
+      await supabase
+          .from('study_materials')
+          .update({ extracted_text: 'PDF_PARSING_DISABLED: This feature is temporarily unavailable. Please use .txt files for now.' })
+          .eq('id', record.id);
+      
+      /*
+      // Original code, disabled for now:
       try {
         const { data: signedUrlData, error: signedUrlError } = await supabase.storage
           .from('study-materials')
@@ -92,7 +105,10 @@ export async function POST(req: NextRequest) {
             .from('study_materials')
             .update({ extracted_text: 'PDF_PARSING_ERROR: Could not create a secure link to the file.' })
             .eq('id', record.id);
-          return NextResponse.json({ error: 'Could not create a secure link for the PDF file.', studyMaterialId: record.id }, { status: 500 });
+          return NextResponse.json({
+            error: 'Could not create a secure link for the PDF file.',
+            supabaseError: signedUrlError.message
+          }, { status: 500 });
         }
 
         const parserUrl = `${req.nextUrl.origin}/api/pdf-parser`;
@@ -125,6 +141,7 @@ export async function POST(req: NextRequest) {
                 .update({ extracted_text: 'PDF_PARSING_ERROR: Invocation failed.' })
                 .eq('id', record.id);
       }
+      */
     }
 
     return NextResponse.json({ message: 'File uploaded successfully', studyMaterialId: record.id }, { status: 200 });
