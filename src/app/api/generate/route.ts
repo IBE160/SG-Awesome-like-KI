@@ -94,8 +94,7 @@ export async function POST(req: Request) {
           throw new NextResponse('Document content is too short for meaningful summarization.', { status: 400 });
         }
 
-        const prompt = `Please provide a concise summary of the following text: ${document.extracted_text}`;
-        logger.info('Calling Gemini API for summary generation', { requestId, userId, prompt_length: prompt.length });
+                    const prompt = `Please provide a concise summary of the following text, ensuring the summary is in the same language as the original text: ${document.extracted_text}`;        logger.info('Calling Gemini API for summary generation', { requestId, userId, prompt_length: prompt.length });
 
         startTime = Date.now(); // Assign value here
         const geminiSummary = await generateSummaryWithGemini(prompt, requestId);

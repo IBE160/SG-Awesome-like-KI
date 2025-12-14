@@ -3,13 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "concurrently \"next dev\" \"python python-pdf-parser/app.py\"",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
     "test": "jest --coverage",
     "test:watch": "jest --watch --coverage",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "install-pdf-parser-deps": "pip install -r python-pdf-parser/requirements.txt"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.20.0",
@@ -49,6 +50,7 @@
     "@types/react-dom": "^19",
     "@types/uuid": "^10.0.0",
     "babel-jest": "^30.2.0",
+    "concurrently": "^9.2.1",
     "eslint": "^9",
     "eslint-config-next": "16.0.5",
     "jest": "^30.2.0",
