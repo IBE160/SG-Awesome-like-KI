@@ -12,10 +12,6 @@ const nextConfig: NextConfig = {
       },
     ]
   },
-  env: {
-    GEMINI_API_KEY: 'AIzaSyD0hNHAzG0huvcaLN62OoFD54NkyY3L5Y4', // Keep this line as is
-    GEMINI_MODEL_NAME: 'gemini-2.5-flash', // Add this line
-  },
 };
 
 export default nextConfig;

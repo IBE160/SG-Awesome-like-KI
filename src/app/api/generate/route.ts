@@ -164,7 +164,9 @@ export async function POST(req: Request) {
         startTime = Date.now(); // Assign value here
         const geminiQuiz = await generateQuizWithGemini(quizPrompt, requestId);
         const duration = Date.now() - startTime; // End timer
-        quiz = JSON.parse(geminiQuiz);
+        // Clean the geminiQuiz string by removing markdown code block fences before parsing
+        const cleanedGeminiQuiz = geminiQuiz.replace(/```json\n|\n```/g, '');
+        quiz = JSON.parse(cleanedGeminiQuiz);
         logger.info('Gemini API responded successfully for quiz generation', { requestId, userId, requestedQuizLength, effectiveQuizLength, response_length: geminiQuiz.length, generation_time_ms: duration, status: 'success' });
         requestMetrics.quiz.success = 1;
         requestMetrics.quiz.duration_ms = duration;
