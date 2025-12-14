@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { GET } from '@/app/api/sections/[id]/documents/route';
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID } from 'crypto';
 import { mockSupabaseClient } from '../../../../jest.setup';
 
 

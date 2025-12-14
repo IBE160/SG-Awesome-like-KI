@@ -1,11 +1,11 @@
 // tests/e2e/summary-generation.spec.ts
 import { test, expect } from '@playwright/test';
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID } from 'crypto';
 import path from 'path';
 import fs from 'fs/promises';
 
 test.describe('Summary Generation Flow', () => {
-  const userEmail = `summary-test-${uuidv4()}@example.com`;
+  const userEmail = `summary-test-${randomUUID()}@example.com`;
   const userPassword = 'password123';
   const testFileName = 'summary_document.txt';
   const testFileContent = 'This is a document about various animals. It talks about lions, tigers, and bears. Lions are large cats found in Africa. Tigers are striped cats found in Asia. Bears are omnivores found in many parts of the world.';
@@ -41,7 +41,7 @@ test.describe('Summary Generation Flow', () => {
     await registerAndLogin(page, userEmail, userPassword);
 
     // 2. Create a class for assignment later via API (optional for this test, but good practice)
-    const testClassName = `Summary Class ${uuidv4().substring(0, 8)}`;
+    const testClassName = `Summary Class ${randomUUID().substring(0, 8)}`;
     const createClassResponse = await request.post('/api/classes', {
       data: { name: testClassName },
     });
@@ -101,7 +101,7 @@ test.describe('Summary Generation Flow', () => {
     await registerAndLogin(page, userEmail, userPassword);
 
     // 2. Create a class (optional)
-    const testClassName = `Summary Error Class ${uuidv4().substring(0, 8)}`;
+    const testClassName = `Summary Error Class ${randomUUID().substring(0, 8)}`;
     await request.post('/api/classes', { data: { name: testClassName } });
 
     // 3. Upload a document

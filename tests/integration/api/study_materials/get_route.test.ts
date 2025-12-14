@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { GET } from '../../../../src/app/api/study-materials/route';
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID } from 'crypto';
 import { mockSupabaseClient } from '../../../../jest.setup';
 
 
@@ -20,11 +20,11 @@ jest.mock('next/headers', () => ({
 
 
 describe('GET /api/study-materials', () => {
-  const MOCK_USER_ID = uuidv4();
-  const MOCK_STUDY_MATERIAL_ID_1 = uuidv4();
-  const MOCK_STUDY_MATERIAL_ID_2 = uuidv4();
-  const MOCK_CLASS_ID = uuidv4();
-  const MOCK_SECTION_ID = uuidv4();
+  const MOCK_USER_ID = randomUUID();
+  const MOCK_STUDY_MATERIAL_ID_1 = randomUUID();
+  const MOCK_STUDY_MATERIAL_ID_2 = randomUUID();
+  const MOCK_CLASS_ID = randomUUID();
+  const MOCK_SECTION_ID = randomUUID();
 
   let mockStudyMaterialsEq: jest.Mock;
   let mockStudyMaterialsSelect: jest.Mock;

@@ -3,13 +3,18 @@ import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 import { v4 as uuidv4 } from 'uuid'; // Import uuid
 
-import { generateSummaryWithGemini, generateQuizWithGemini, handleGeminiError } from '@/lib/gemini';
+import { generateSummaryWithClaude, generateQuizWithClaude, handleClaudeError } from '@/lib/claude'; // Updated import
 
 const logger = {
   info: (message: string, context?: object) => console.log(`INFO: ${message}`, context),
   warn: (message: string, context?: object) => console.warn(`WARN: ${message}`, context),
   error: (message: string, context?: object) => console.error(`ERROR: ${message}`, context),
 };
+
+// Define constants for minimum text lengths required for different quiz lengths
+const MIN_TEXT_LENGTH_SHORT_QUIZ = 100;
+const MIN_TEXT_LENGTH_MEDIUM_QUIZ = 500;
+const MIN_TEXT_LENGTH_LONG_QUIZ = 1500;
 
 export async function POST(req: Request) {
   const requestId = uuidv4(); // Generate a unique request ID
@@ -85,27 +90,28 @@ export async function POST(req: Request) {
       let summary: string;
       let startTime: number = 0; // Declare startTime here
       try {
-        if (!process.env.GEMINI_API_KEY) {
-          logger.error('GEMINI_API_KEY is not set for summary generation', { requestId, userId });
-          return NextResponse.json({ error: 'GEMINI_API_KEY is not set on the server. Please add it to your .env.local file.' }, { status: 500 });
+        if (!process.env.ANTHROPIC_API_KEY) { // Changed to ANTHROPIC_API_KEY
+          logger.error('ANTHROPIC_API_KEY is not set for summary generation', { requestId, userId });
+          return NextResponse.json({ error: 'ANTHROPIC_API_KEY is not set on the server. Please add it to your .env.local file.' }, { status: 500 });
         }
-        if (document.extracted_text.length < 100) { // Specific check for summary length
+        if (document.extracted_text.length < MIN_TEXT_LENGTH_SHORT_QUIZ) { // Re-using constant for consistency
           logger.warn('Document content too short for meaningful summarization', { requestId, actualDocumentId, userId, content_length: document.extracted_text.length });
           throw new NextResponse('Document content is too short for meaningful summarization.', { status: 400 });
         }
 
-                    const prompt = `Please provide a concise summary of the following text, ensuring the summary is in the same language as the original text: ${document.extracted_text}`;        logger.info('Calling Gemini API for summary generation', { requestId, userId, prompt_length: prompt.length });
+        const prompt = `Please provide a concise summary of the following text, ensuring the summary is in the same language as the original text: ${document.extracted_text}`;
+        logger.info('Calling Claude API for summary generation', { requestId, userId, prompt_length: prompt.length }); // Changed to Claude
 
         startTime = Date.now(); // Assign value here
-        const geminiSummary = await generateSummaryWithGemini(prompt, requestId);
+        const claudeSummary = await generateSummaryWithClaude(prompt, requestId); // Changed to Claude
         const duration = Date.now() - startTime; // End timer
-        summary = geminiSummary;
-        logger.info('Gemini API responded successfully for summary generation', { requestId, userId, response_length: summary.length, generation_time_ms: duration, status: 'success' });
+        summary = claudeSummary;
+        logger.info('Claude API responded successfully for summary generation', { requestId, userId, response_length: summary.length, generation_time_ms: duration, status: 'success' }); // Changed to Claude
 
-      } catch (geminiError: any) {
+      } catch (claudeError: any) { // Changed to Claude
         const duration = Date.now() - startTime; // Calculate duration even on error
-        logger.error('Gemini API call failed for summary generation', { requestId, userId, generation_time_ms: duration, status: 'failed', error_message: geminiError.message });
-        throw handleGeminiError(geminiError, 'summary', requestId);
+        logger.error('Claude API call failed for summary generation', { requestId, userId, generation_time_ms: duration, status: 'failed', error_message: claudeError.message }); // Changed to Claude
+        throw handleClaudeError(claudeError, 'summary', requestId); // Changed to Claude
       }
       generatedContent = { summary };
     } else if (type === 'quiz') {
@@ -117,51 +123,54 @@ export async function POST(req: Request) {
 
       const textLength = document.extracted_text.length;
       let effectiveQuizLength = requestedQuizLength;
+      let quizQuestionCount = '';
 
       // Determine max allowed quiz length based on text content (AC3)
-      if (textLength < 500 && requestedQuizLength !== 'short') {
-        effectiveQuizLength = 'short';
-        userMessage = `The document content is too short to generate a ${requestedQuizLength} quiz. Generating a short quiz instead.`;
-        logger.warn('Adjusting quiz length due to insufficient content', { requestId, userId, requestedQuizLength, effectiveQuizLength, textLength });
-      } else if (textLength >= 500 && textLength < 1500 && requestedQuizLength === 'long') {
-        effectiveQuizLength = 'medium';
-        userMessage = `The document content is not sufficient for a long quiz. Generating a medium quiz instead.`;
-        logger.warn('Adjusting quiz length due to insufficient content', { requestId, userId, requestedQuizLength, effectiveQuizLength, textLength });
-      }
-      // If content is very short for any quiz, warn the user and return 400
-      if (textLength < 100) {
+      if (textLength < MIN_TEXT_LENGTH_SHORT_QUIZ) {
         logger.warn('Document content too short for meaningful quiz generation', { requestId, documentId: actualDocumentId, userId, content_length: document.extracted_text.length });
         return NextResponse.json({ error: 'Document content is too short for meaningful quiz generation.' }, { status: 400 });
+      } else if (textLength < MIN_TEXT_LENGTH_MEDIUM_QUIZ) {
+        if (requestedQuizLength !== 'short') {
+          effectiveQuizLength = 'short';
+          userMessage = `The document content is too short to generate a ${requestedQuizLength} quiz. Generating a short quiz instead.`;
+          logger.warn('Adjusting quiz length due to insufficient content', { requestId, userId, requestedQuizLength, effectiveQuizLength, textLength });
+        }
+        quizQuestionCount = '(3-5 questions)';
+      } else if (textLength < MIN_TEXT_LENGTH_LONG_QUIZ) {
+        if (requestedQuizLength === 'long') {
+          effectiveQuizLength = 'medium';
+          userMessage = `The document content is not sufficient for a long quiz. Generating a medium quiz instead.`;
+          logger.warn('Adjusting quiz length due to insufficient content', { requestId, userId, requestedQuizLength, effectiveQuizLength, textLength });
+        }
+        quizQuestionCount = effectiveQuizLength === 'short' ? '(3-5 questions)' : '(6-8 questions)';
+      } else {
+        // Sufficient length for a long quiz
+        quizQuestionCount = effectiveQuizLength === 'short' ? '(3-5 questions)' : effectiveQuizLength === 'medium' ? '(6-8 questions)' : '(9-12 questions)';
       }
+
 
       let quiz: any;
       let startTime: number = 0; // Declare startTime here
       try {
-        if (!process.env.GEMINI_API_KEY) {
-          logger.error('GEMINI_API_KEY is not set for quiz generation', { requestId, userId });
-          return NextResponse.json({ error: 'GEMINI_API_KEY is not set on the server. Please add it to your .env.local file.' }, { status: 500 });
+        if (!process.env.ANTHROPIC_API_KEY) { // Changed to ANTHROPIC_API_KEY
+          logger.error('ANTHROPIC_API_KEY is not set for quiz generation', { requestId, userId });
+          return NextResponse.json({ error: 'ANTHROPIC_API_KEY is not set on the server. Please add it to your .env.local file.' }, { status: 500 });
         }
 
         let quizPrompt: string;
-        if (effectiveQuizLength === 'short') {
-          quizPrompt = `Generate a short multiple-choice quiz (3-5 questions) from the following text. Provide the output as a JSON array of objects, where each object has 'question', 'options' (an array of strings), 'answer' (the correct option string), and 'explanation' (a string explaining the correct answer). Text: ${document.extracted_text}`;
-        } else if (effectiveQuizLength === 'medium') {
-          quizPrompt = `Generate a medium multiple-choice quiz (6-8 questions) from the following text. Provide the output as a JSON array of objects, where each object has 'question', 'options' (an array of strings), 'answer' (the correct option string), and 'explanation' (a string explaining the correct answer). Text: ${document.extracted_text}`;
-        } else {
-          quizPrompt = `Generate a long multiple-choice quiz (9-12 questions) from the following text. Provide the output as a JSON array of objects, where each object has 'question', 'options' (an array of strings), 'answer' (the correct option string), and 'explanation' (a string explaining the correct answer). Text: ${document.extracted_text}`;
-        }
+        quizPrompt = `Generate a ${effectiveQuizLength} multiple-choice quiz ${quizQuestionCount} from the following text. Provide the output as a JSON array of objects, where each object has 'question', 'options' (an array of strings), 'answer' (the correct option string), and 'explanation' (a string explaining the correct answer). Text: ${document.extracted_text}`;
         
-        logger.info('Calling Gemini API for quiz generation', { requestId, userId, requestedQuizLength, effectiveQuizLength, prompt_length: quizPrompt.length, userMessage });
+        logger.info('Calling Claude API for quiz generation', { requestId, userId, requestedQuizLength, effectiveQuizLength, prompt_length: quizPrompt.length, userMessage }); // Changed to Claude
         startTime = Date.now(); // Assign value here
-        const geminiQuiz = await generateQuizWithGemini(quizPrompt, requestId);
+        const claudeQuiz = await generateQuizWithClaude(quizPrompt, requestId); // Changed to Claude
         const duration = Date.now() - startTime; // End timer
-        quiz = JSON.parse(geminiQuiz);
-        logger.info('Gemini API responded successfully for quiz generation', { requestId, userId, requestedQuizLength, effectiveQuizLength, response_length: geminiQuiz.length, generation_time_ms: duration, status: 'success' });
+        quiz = JSON.parse(claudeQuiz);
+        logger.info('Claude API responded successfully for quiz generation', { requestId, userId, requestedQuizLength, effectiveQuizLength, response_length: claudeQuiz.length, generation_time_ms: duration, status: 'success' }); // Changed to Claude
 
-      } catch (geminiError: any) {
+      } catch (claudeError: any) { // Changed to Claude
         const duration = Date.now() - startTime; // Calculate duration even on error
-        logger.error('Gemini API call failed for quiz generation', { requestId, userId, requestedQuizLength, effectiveQuizLength, generation_time_ms: duration, status: 'failed', error_message: geminiError.message });
-        throw handleGeminiError(geminiError, 'quiz', requestId);
+        logger.error('Claude API call failed for quiz generation', { requestId, userId, requestedQuizLength, effectiveQuizLength, generation_time_ms: duration, status: 'failed', error_message: claudeError.message }); // Changed to Claude
+        throw handleClaudeError(claudeError, 'quiz', requestId); // Changed to Claude
       }
       generatedContent = { quiz, message: userMessage };
     }
