@@ -152,12 +152,14 @@ export async function POST(req: Request) {
         }
 
         let quizPrompt: string;
+        const baseQuizPrompt = `Generate a multiple-choice quiz from the following text. Provide the output as a JSON array of objects, where each object has 'question', 'options' (an array of strings), 'answer' (the correct option string), and 'explanation' (a string explaining the correct answer). Ensure the quiz is in the same language as the original text.`;
+
         if (effectiveQuizLength === 'short') {
-          quizPrompt = `Generate a short multiple-choice quiz (3-5 questions) from the following text. Provide the output as a JSON array of objects, where each object has 'question', 'options' (an array of strings), 'answer' (the correct option string), and 'explanation' (a string explaining the correct answer). Text: ${document.extracted_text}`;
+          quizPrompt = `Generate a short (3-5 questions) ${baseQuizPrompt} Text: ${document.extracted_text}`;
         } else if (effectiveQuizLength === 'medium') {
-          quizPrompt = `Generate a medium multiple-choice quiz (6-8 questions) from the following text. Provide the output as a JSON array of objects, where each object has 'question', 'options' (an array of strings), 'answer' (the correct option string), and 'explanation' (a string explaining the correct answer). Text: ${document.extracted_text}`;
+          quizPrompt = `Generate a medium (6-8 questions) ${baseQuizPrompt} Text: ${document.extracted_text}`;
         } else {
-          quizPrompt = `Generate a long multiple-choice quiz (9-12 questions) from the following text. Provide the output as a JSON array of objects, where each object has 'question', 'options' (an array of strings), 'answer' (the correct option string), and 'explanation' (a string explaining the correct answer). Text: ${document.extracted_text}`;
+          quizPrompt = `Generate a long (9-12 questions) ${baseQuizPrompt} Text: ${document.extracted_text}`;
         }
         
         logger.info('Calling Gemini API for quiz generation', { requestId, userId, requestedQuizLength, effectiveQuizLength, prompt_length: quizPrompt.length, userMessage });

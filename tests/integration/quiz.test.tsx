@@ -1,101 +1,171 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import '@testing-library/jest-dom';
-import { QuizInterface, QuizData } from '@/app/components/quiz/QuizInterface';
+// tests/integration/quiz.test.ts
+// This file will contain integration tests for the QuizInterface component.
+// Due to known Jest configuration issues with Next.js client components and shadcn/ui dependencies,
+// these tests are written with the expectation that running them might require further Jest setup.
 
-const mockQuizData: QuizData = {
-  questions: [
-    {
-      questionText: 'What is the capital of France?',
-      options: ['London', 'Paris', 'Berlin', 'Madrid'],
-      correctAnswer: 'Paris',
-      explanation: 'Paris is the capital and most populous city of France.',
-    },
-    {
-      questionText: 'What is 2 + 2?',
-      options: ['3', '4', '5', '6'],
-      correctAnswer: '4',
-      explanation: 'The sum of 2 and 2 is 4.',
-    },
-  ],
-};
+import React from "react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import "@testing-library/jest-dom";
+import QuizTestPage from "@/app/quiz-test/page"; // Import the page that uses the QuizProvider and QuizInterface
+import { QuizProvider } from "@/lib/context/QuizContext";
 
-describe('QuizInterface', () => {
-  it('renders the first question and its answers', () => {
-    render(<QuizInterface quizData={mockQuizData} />);
+// Mocking the QuizProvider for isolated testing if needed,
+// but for integration tests, we'll use the actual provider from QuizTestPage.
 
-    expect(screen.getByText('Question 1 of 2')).toBeInTheDocument();
-    expect(screen.getByText('What is the capital of France?')).toBeInTheDocument();
-    expect(screen.getByText('London')).toBeInTheDocument();
-    expect(screen.getByText('Paris')).toBeInTheDocument();
-    expect(screen.getByText('Berlin')).toBeInTheDocument();
-    expect(screen.getByText('Madrid')).toBeInTheDocument();
+describe("Quiz Interface Integration Tests", () => {
+  beforeEach(() => {
+    // Clear any previous state if necessary for isolated tests
+    // This might not be strictly needed for QuizTestPage which re-initializes mock data
   });
 
-  it('shows immediate feedback for a correct answer', () => {
-    render(<QuizInterface quizData={mockQuizData} />);
-    
-    fireEvent.click(screen.getByText('Paris'));
+  it("should render the quiz interface with the first question", async () => {
+    render(<QuizTestPage />);
 
-    expect(screen.getByText('Correct!')).toBeInTheDocument();
-    expect(screen.getByText(mockQuizData.questions[0].explanation)).toBeInTheDocument();
+    // Check if the page title is rendered
+    expect(screen.getByRole("heading", { name: /Quiz Test Page/i })).toBeInTheDocument();
+
+    // Check if the first question is rendered
+    expect(screen.getByText(/Question 1 of 4/i)).toBeInTheDocument();
+    expect(screen.getByText(/What is the capital of France?/i)).toBeInTheDocument();
+
+    // Check if options for the first question are rendered
+    expect(screen.getByLabelText(/Berlin/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Paris/i)).toBeInTheDocument();
   });
 
-  it('shows immediate feedback for an incorrect answer', () => {
-    render(<QuizInterface quizData={mockQuizData} />);
-    
-    fireEvent.click(screen.getByText('London'));
+  it("should allow selecting an answer and submitting it, then show correct feedback", async () => {
+    render(<QuizTestPage />);
 
-    expect(screen.getByText('Incorrect')).toBeInTheDocument();
-    expect(screen.getByText(`The correct answer is: ${mockQuizData.questions[0].correctAnswer}.`)).toBeInTheDocument();
+    // Select the correct answer for the first question
+    fireEvent.click(screen.getByLabelText(/Paris/i));
+    expect(screen.getByLabelText(/Paris/i)).toBeChecked();
+
+    // Submit the answer
+    fireEvent.click(screen.getByRole("button", { name: /Submit Answer/i }));
+
+    // Wait for feedback to appear
+    await waitFor(() => {
+      expect(screen.getByText(/Correct!/i)).toBeInTheDocument();
+    });
+
+    // Check that Next Question button is enabled
+    expect(screen.getByRole("button", { name: /Next Question/i })).toBeEnabled();
   });
 
-  it('proceeds to the next question', () => {
-    render(<QuizInterface quizData={mockQuizData} />);
-    
-    fireEvent.click(screen.getByText('Paris'));
-    fireEvent.click(screen.getByText('Next Question'));
+  it("should allow selecting an answer and submitting it, then show incorrect feedback", async () => {
+    render(<QuizTestPage />);
 
-    expect(screen.getByText('Question 2 of 2')).toBeInTheDocument();
-    expect(screen.getByText('What is 2 + 2?')).toBeInTheDocument();
+    // Select an incorrect answer for the first question
+    fireEvent.click(screen.getByLabelText(/Berlin/i));
+    expect(screen.getByLabelText(/Berlin/i)).toBeChecked();
+
+    // Submit the answer
+    fireEvent.click(screen.getByRole("button", { name: /Submit Answer/i }));
+
+    // Wait for feedback to appear
+    await waitFor(() => {
+      expect(screen.getByText(/Incorrect./i)).toBeInTheDocument();
+      expect(screen.getByText(/The correct answer was: Paris/i)).toBeInTheDocument();
+    });
+
+    // Check that Next Question button is enabled
+    expect(screen.getByRole("button", { name: /Next Question/i })).toBeEnabled();
   });
 
-  it('disables options after an answer is selected', () => {
-    render(<QuizInterface quizData={mockQuizData} />);
+  it("should navigate to the next question after submitting an answer", async () => {
+    render(<QuizTestPage />);
 
-    const parisButton = screen.getByText('Paris');
-    fireEvent.click(parisButton);
-    
-    expect(parisButton).toBeDisabled();
-    expect(screen.getByText('London')).toBeDisabled();
+    // Answer first question correctly
+    fireEvent.click(screen.getByLabelText(/Paris/i));
+    fireEvent.click(screen.getByRole("button", { name: /Submit Answer/i }));
+    await waitFor(() => expect(screen.getByText(/Correct!/i)).toBeInTheDocument());
+
+    // Go to next question
+    fireEvent.click(screen.getByRole("button", { name: /Next Question/i }));
+
+    // Check if the second question is rendered
+    expect(screen.getByText(/Question 2 of 4/i)).toBeInTheDocument();
+    expect(screen.getByText(/Which planet is known as the Red Planet?/i)).toBeInTheDocument();
   });
 
-  it('shows the final score at the end of the quiz', () => {
-    render(<QuizInterface quizData={mockQuizData} />);
-    
-    // Question 1
-    fireEvent.click(screen.getByText('Paris')); // Correct
-    fireEvent.click(screen.getByText('Next Question'));
+  it("should display quiz completed screen and final score after all questions", async () => {
+    render(<QuizTestPage />);
 
-    // Question 2
-    fireEvent.click(screen.getByText('4')); // Correct
-    fireEvent.click(screen.getByText('Finish Quiz'));
+    // Answer all questions (4 questions in mock data)
+    // Q1: Correct (Paris)
+    fireEvent.click(screen.getByLabelText(/Paris/i));
+    fireEvent.click(screen.getByRole("button", { name: /Submit Answer/i }));
+    await waitFor(() => expect(screen.getByText(/Correct!/i)).toBeInTheDocument());
+    fireEvent.click(screen.getByRole("button", { name: /Next Question/i }));
 
-    expect(screen.getByText('Quiz Complete!')).toBeInTheDocument();
-    expect(screen.getByText('2 / 2')).toBeInTheDocument();
+    // Q2: Correct (Mars)
+    fireEvent.click(screen.getByLabelText(/Mars/i));
+    fireEvent.click(screen.getByRole("button", { name: /Submit Answer/i }));
+    await waitFor(() => expect(screen.getByText(/Correct!/i)).toBeInTheDocument());
+    fireEvent.click(screen.getByRole("button", { name: /Next Question/i }));
+
+    // Q3: Correct (Pacific Ocean)
+    fireEvent.click(screen.getByLabelText(/Pacific Ocean/i));
+    fireEvent.click(screen.getByRole("button", { name: /Submit Answer/i }));
+    await waitFor(() => expect(screen.getByText(/Correct!/i)).toBeInTheDocument());
+    fireEvent.click(screen.getByRole("button", { name: /Next Question/i }));
+
+    // Q4: Correct (Leonardo da Vinci) - this will be the last question
+    fireEvent.click(screen.getByLabelText(/Leonardo da Vinci/i));
+    fireEvent.click(screen.getByRole("button", { name: /Submit Answer/i }));
+    await waitFor(() => expect(screen.getByText(/Correct!/i)).toBeInTheDocument());
+
+    // Click Finish Quiz button
+    fireEvent.click(screen.getByRole("button", { name: /Finish Quiz/i }));
+
+    // Expect quiz completed screen
+    await waitFor(() => {
+      expect(screen.getByText(/Quiz Completed!/i)).toBeInTheDocument();
+      expect(screen.getByText(/You scored 4 out of 4/i)).toBeInTheDocument();
+    });
   });
 
-  it('allows retaking the quiz', () => {
-    render(<QuizInterface quizData={mockQuizData} />);
-    
+  it("should reset the quiz when 'Retake Quiz' is clicked", async () => {
+    render(<QuizTestPage />);
+
     // Complete the quiz
-    fireEvent.click(screen.getByText('Paris'));
-    fireEvent.click(screen.getByText('Next Question'));
-    fireEvent.click(screen.getByText('4'));
-    fireEvent.click(screen.getByText('Finish Quiz'));
+    // Q1
+    fireEvent.click(screen.getByLabelText(/Paris/i));
+    fireEvent.click(screen.getByRole("button", { name: /Submit Answer/i }));
+    await waitFor(() => expect(screen.getByText(/Correct!/i)).toBeInTheDocument());
+    fireEvent.click(screen.getByRole("button", { name: /Next Question/i }));
 
-    // Retake
-    fireEvent.click(screen.getByText('Retake Quiz'));
+    // Q2
+    fireEvent.click(screen.getByLabelText(/Mars/i));
+    fireEvent.click(screen.getByRole("button", { name: /Submit Answer/i }));
+    await waitFor(() => expect(screen.getByText(/Correct!/i)).toBeInTheDocument());
+    fireEvent.click(screen.getByRole("button", { name: /Next Question/i }));
 
-    expect(screen.getByText('Question 1 of 2')).toBeInTheDocument();
+    // Q3
+    fireEvent.click(screen.getByLabelText(/Pacific Ocean/i));
+    fireEvent.click(screen.getByRole("button", { name: /Submit Answer/i }));
+    await waitFor(() => expect(screen.getByText(/Correct!/i)).toBeInTheDocument());
+    fireEvent.click(screen.getByRole("button", { name: /Next Question/i }));
+
+    // Q4
+    fireEvent.click(screen.getByLabelText(/Leonardo da Vinci/i));
+    fireEvent.click(screen.getByRole("button", { name: /Submit Answer/i }));
+    await waitFor(() => expect(screen.getByText(/Correct!/i)).toBeInTheDocument());
+    fireEvent.click(screen.getByRole("button", { name: /Finish Quiz/i }));
+
+
+    await waitFor(() => {
+      expect(screen.getByText(/Quiz Completed!/i)).toBeInTheDocument();
+    });
+
+    // Click Retake Quiz
+    fireEvent.click(screen.getByRole("button", { name: /Retake Quiz/i }));
+
+    // Expect to be back at the first question
+    await waitFor(() => {
+      expect(screen.getByText(/Question 1 of 4/i)).toBeInTheDocument();
+      expect(screen.getByText(/What is the capital of France?/i)).toBeInTheDocument();
+      expect(screen.queryByText(/Quiz Completed!/i)).not.toBeInTheDocument();
+    });
   });
 });
