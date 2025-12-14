@@ -62,13 +62,27 @@ export const UnorganizedContentList = () => {
               <div key={content.id} className="p-3 bg-gray-50 rounded-md">
                 <p className="font-semibold capitalize text-gray-700">{content.type}</p>
                 {content.type === 'summary' && content.content.summary && (
-                  <p className="text-sm text-gray-600 truncate">{content.content.summary}</p>
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                    <p className="text-sm text-gray-600 truncate">Summary: {content.content.summary}</p>
+                    <Link href={`/summary-view/${content.id}`} passHref>
+                      <button className="bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 mt-2 sm:mt-0">
+                        Read Summary
+                      </button>
+                    </Link>
+                  </div>
                 )}
                 {content.type === 'quiz' && content.content.quiz && (
-                  <p className="text-sm text-gray-600">
-                    Quiz: {JSON.stringify(content.content.quiz)}
-                    {content.content.message && ` (${content.content.message})`}
-                  </p>
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                    <p className="text-sm text-gray-600">
+                      Quiz: {content.content.quiz.length} questions
+                      {content.content.message && ` (${content.content.message})`}
+                    </p>
+                    <Link href={`/quiz-take/${content.id}`} passHref>
+                      <button className="bg-green-500 text-white px-3 py-1 rounded text-sm hover:bg-green-600 mt-2 sm:mt-0">
+                        Start Quiz
+                      </button>
+                    </Link>
+                  </div>
                 )}
               </div>
             ))}

@@ -16,7 +16,7 @@ const customJestConfig = {
     '^.+\.(js|jsx|mjs)$': ['babel-jest', { presets: ['next/babel'] }],
   },
   transformIgnorePatterns: [
-    '/node_modules/(?!(?:.pnpm/)?(@shadcn/ui|@radix-ui|lucide-react)/)',
+    '/node_modules/(?!(?:.pnpm/)?(@shadcn/ui|@radix-ui|lucide-react|uuid)/)',
   ],
   testPathIgnorePatterns: [
     '<rootDir>/tests/e2e/',

@@ -19,6 +19,7 @@ import { Separator } from "@/components/ui/separator";
     score,
     quizCompleted,
     isCorrect,
+    motivationalFeedback, // Add this line
     handleAnswerSelect,
     handleSubmitAnswer,
     handleNextQuestion,
@@ -44,6 +45,9 @@ import { Separator } from "@/components/ui/separator";
         </CardHeader>
         <CardContent className="text-center">
           <p className="text-xl font-semibold mb-4">Great job!</p>
+          {motivationalFeedback && (
+            <p className="text-lg mt-4">{motivationalFeedback}</p>
+          )}
           {/* Add more detailed results or review options here */}
         </CardContent>
         <CardFooter className="flex justify-center">

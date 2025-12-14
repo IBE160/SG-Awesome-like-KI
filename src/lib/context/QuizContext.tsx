@@ -12,6 +12,7 @@ export interface QuizQuestion {
 
 export interface QuizData {
   questions: QuizQuestion[];
+  motivationalFeedback?: string; // Add motivational feedback, optional as summary doesn't have it
 }
 
 interface QuizContextType {
@@ -22,6 +23,7 @@ interface QuizContextType {
   score: number;
   quizCompleted: boolean;
   isCorrect: boolean | null;
+  motivationalFeedback: string | undefined; // Add this line
   setQuizData: (data: QuizData) => void;
   handleAnswerSelect: (value: string) => void;
   handleSubmitAnswer: () => void;
@@ -33,10 +35,11 @@ const QuizContext = createContext<QuizContextType | undefined>(undefined);
 
 interface QuizProviderProps {
   children: ReactNode;
+  initialQuizData?: QuizData;
 }
 
-export const QuizProvider: React.FC<QuizProviderProps> = ({ children }) => {
-  const [quizData, setQuizData] = useState<QuizData | null>(null);
+export const QuizProvider: React.FC<QuizProviderProps> = ({ children, initialQuizData }) => {
+  const [quizData, setQuizData] = useState<QuizData | null>(() => initialQuizData || null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [showFeedback, setShowFeedback] = useState(false);
@@ -92,6 +95,7 @@ export const QuizProvider: React.FC<QuizProviderProps> = ({ children }) => {
         score,
         quizCompleted,
         isCorrect,
+        motivationalFeedback: quizData?.motivationalFeedback, // Add this line
         setQuizData,
         handleAnswerSelect,
         handleSubmitAnswer,

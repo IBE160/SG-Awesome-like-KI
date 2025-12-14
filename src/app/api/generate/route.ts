@@ -48,16 +48,9 @@ export async function POST(req: Request) {
       throw new NextResponse('Invalid JSON in request body', { status: 400 });
     }
 
-    type = body.type; // Assign to the already declared type
-    originalDocumentId = body.studyMaterialId; // Store original studyMaterialId
-    actualDocumentId = body.studyMaterialId; // Initialize actualDocumentId with the original
-    if (!actualDocumentId) {
-      logger.warn('Missing studyMaterialId in request body', { requestId, userId, type });
-      throw new NextResponse('Document ID is required', { status: 400 });
-    }
-    const options = body.options;
-    
-    logger.info('Request body details', { requestId, userId, type, documentId: originalDocumentId, options });
+    const { type, studyMaterialId, options } = body;
+    actualDocumentId = studyMaterialId; // Assign studyMaterialId to actualDocumentId
+    logger.info('Request body details', { requestId, userId, type, documentId: actualDocumentId, options });
 
     let docError: any;
     try {
@@ -85,6 +78,8 @@ export async function POST(req: Request) {
 
     let generatedContent: any;
     let userMessage: string | null = null; // Initialize user message for AC3
+    let quiz: any; // Declare quiz in broader scope
+    let motivationalFeedback: string | null = null; // Declare motivationalFeedback in broader scope
 
     if (type === 'summary') {
       let summary: string;
@@ -152,7 +147,7 @@ export async function POST(req: Request) {
         }
 
         let quizPrompt: string;
-        const baseQuizPrompt = `Generate a multiple-choice quiz from the following text. Provide the output as a JSON array of objects, where each object has 'question', 'options' (an array of strings), 'answer' (the correct option string), and 'explanation' (a string explaining the correct answer). Ensure the quiz is in the same language as the original text.`;
+        const baseQuizPrompt = `Generate a multiple-choice quiz from the following text. Provide motivational feedback and explanations for quiz answers in a supportive and educational tone. The output should be a JSON object with two fields: 'motivational_feedback' (a string with overall positive reinforcement and encouragement) and 'quiz' (an array of objects, where each object has 'question', 'options' (an array of strings), 'answer' (the correct option string), and 'explanation' (a string explaining the correct answer)). Ensure the quiz and feedback are in the same language as the original text.`;
 
         if (effectiveQuizLength === 'short') {
           quizPrompt = `Generate a short (3-5 questions) ${baseQuizPrompt} Text: ${document.extracted_text}`;
@@ -167,8 +162,22 @@ export async function POST(req: Request) {
         const geminiQuiz = await generateQuizWithGemini(quizPrompt, requestId);
         const duration = Date.now() - startTime; // End timer
         // Clean the geminiQuiz string by removing markdown code block fences before parsing
-        const cleanedGeminiQuiz = geminiQuiz.replace(/```json\n|\n```/g, '');
-        quiz = JSON.parse(cleanedGeminiQuiz);
+        const cleanedGeminiResponse = geminiQuiz.replace(/```json\n|\n```/g, '');
+        const parsedGeminiResponse = JSON.parse(cleanedGeminiResponse);
+        motivationalFeedback = parsedGeminiResponse.motivational_feedback; // Extract motivational feedback
+        let quizData = parsedGeminiResponse.quiz; // Extract quiz
+
+        // Ensure each quiz question has an explanation, if not, provide a default message (AC3)
+        if (Array.isArray(quizData)) {
+          quizData = quizData.map((question: any) => {
+            if (!question.explanation || question.explanation.trim() === '') {
+              logger.warn('AI did not provide an explanation for a quiz question', { requestId, question: question.question });
+              return { ...question, explanation: 'Explanation not available.' };
+            }
+            return question;
+          });
+        }
+        quiz = quizData; // Assign the processed quiz data back to quiz
         logger.info('Gemini API responded successfully for quiz generation', { requestId, userId, requestedQuizLength, effectiveQuizLength, response_length: geminiQuiz.length, generation_time_ms: duration, status: 'success' });
         requestMetrics.quiz.success = 1;
         requestMetrics.quiz.duration_ms = duration;
@@ -180,7 +189,7 @@ export async function POST(req: Request) {
         requestMetrics.quiz.duration_ms = duration;
         throw handleGeminiError(geminiError, 'quiz', requestId);
       }
-      generatedContent = { quiz, message: userMessage };
+      generatedContent = { quiz, motivational_feedback: motivationalFeedback, message: userMessage }; // Include motivational_feedback
     }
 
     // Database insert operation
