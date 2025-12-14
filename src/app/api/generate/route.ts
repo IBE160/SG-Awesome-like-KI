@@ -15,6 +15,11 @@ export async function POST(req: Request) {
   const requestId = uuidv4(); // Generate a unique request ID
   logger.info('API Generate Request received', { requestId, url: req.url, method: req.method });
 
+  const requestMetrics = {
+    summary: { success: 0, failed: 0, duration_ms: 0 },
+    quiz: { success: 0, failed: 0, duration_ms: 0 },
+  };
+
   let actualDocumentId: string | undefined; // Declare actualDocumentId here to ensure it's always in scope
   let originalDocumentId: string | undefined; // Keep track of the original for initial logging if needed
   let document: any; // Declare document here for broader scope
@@ -101,10 +106,14 @@ export async function POST(req: Request) {
         const duration = Date.now() - startTime; // End timer
         summary = geminiSummary;
         logger.info('Gemini API responded successfully for summary generation', { requestId, userId, response_length: summary.length, generation_time_ms: duration, status: 'success' });
+        requestMetrics.summary.success = 1;
+        requestMetrics.summary.duration_ms = duration;
 
       } catch (geminiError: any) {
         const duration = Date.now() - startTime; // Calculate duration even on error
         logger.error('Gemini API call failed for summary generation', { requestId, userId, generation_time_ms: duration, status: 'failed', error_message: geminiError.message });
+        requestMetrics.summary.failed = 1;
+        requestMetrics.summary.duration_ms = duration;
         throw handleGeminiError(geminiError, 'summary', requestId);
       }
       generatedContent = { summary };
@@ -157,10 +166,14 @@ export async function POST(req: Request) {
         const duration = Date.now() - startTime; // End timer
         quiz = JSON.parse(geminiQuiz);
         logger.info('Gemini API responded successfully for quiz generation', { requestId, userId, requestedQuizLength, effectiveQuizLength, response_length: geminiQuiz.length, generation_time_ms: duration, status: 'success' });
+        requestMetrics.quiz.success = 1;
+        requestMetrics.quiz.duration_ms = duration;
 
       } catch (geminiError: any) {
         const duration = Date.now() - startTime; // Calculate duration even on error
         logger.error('Gemini API call failed for quiz generation', { requestId, userId, requestedQuizLength, effectiveQuizLength, generation_time_ms: duration, status: 'failed', error_message: geminiError.message });
+        requestMetrics.quiz.failed = 1;
+        requestMetrics.quiz.duration_ms = duration;
         throw handleGeminiError(geminiError, 'quiz', requestId);
       }
       generatedContent = { quiz, message: userMessage };
@@ -186,13 +199,13 @@ export async function POST(req: Request) {
     }
     logger.info('Generated content successfully saved to Supabase', { requestId, generatedContentId: data?.[0]?.id, documentId: originalDocumentId, userId, contentType: type });
 
-    logger.info('API Generate Request completed successfully', { requestId, userId, type, documentId: originalDocumentId });
-    return NextResponse.json({ content: generatedContent });
+    logger.info('API Generate Request completed successfully', { requestId, userId, type, documentId: originalDocumentId, metrics: requestMetrics });
+    return NextResponse.json({ content: generatedContent, message: userMessage });
   } catch (err: any) { // Top-level catch block
     if (err instanceof NextResponse) {
       return err; // Return the specific NextResponse
     }
-    logger.error('Truly unhandled error during API Generate Request', { requestId, error: err, documentId: originalDocumentId, userId, type });
+    logger.error('Truly unhandled error during API Generate Request', { requestId, error: err, documentId: originalDocumentId, userId, type, metrics: requestMetrics });
     return NextResponse.json({ error: 'An unexpected internal server error occurred.' }, { status: 500 });
   }
 }

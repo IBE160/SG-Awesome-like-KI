@@ -26,9 +26,14 @@ describe('POST /api/generate', () => {
     mockGenerateQuizWithGemini.mockResolvedValue(JSON.stringify({
         questions: [{ question: 'Q1', options: ['A'], answer: 'A', explanation: 'Exp' }]
     }));
+    // Note: handleGeminiError now returns a NextResponse object, not just a message.
     mockHandleGeminiError.mockImplementation((error, generationType, requestId) => {
         console.error(`Mock handleGeminiError: ${error.message}`);
-        return { status: 500, message: `AI ${generationType} generation failed: ${error.message}` };
+        // Simulate NextResponse behavior for testing
+        return {
+            status: error.status || 500,
+            text: async () => `AI ${generationType} generation failed: ${error.message}` // Return a function for .text()
+        } as any;
     });
   });
 
@@ -50,7 +55,7 @@ describe('POST /api/generate', () => {
 
     const response = await POST(req);
     expect(response.status).toBe(401);
-    expect(await response.text()).toBe('Unauthorized'); // Changed to .text()
+    expect(await response.text()).toBe('Unauthorized');
   });
 
   it('should return 404 if document is not found', async () => {
@@ -61,7 +66,7 @@ describe('POST /api/generate', () => {
       from: jest.fn().mockReturnValue({
         select: jest.fn().mockReturnValue({
           eq: jest.fn().mockReturnThis(),
-          single: jest.fn().mockResolvedValue({ data: null, error: { message: 'Not found' } }), // Added error message to match route.ts
+          single: jest.fn().mockResolvedValue({ data: null, error: { message: 'Not found' } }),
         }),
       }),
     });
@@ -72,7 +77,7 @@ describe('POST /api/generate', () => {
 
     const response = await POST(req);
     expect(response.status).toBe(404);
-    expect(await response.text()).toBe('Document not found or access denied'); // Changed to .text()
+    expect(await response.text()).toBe('Document not found or access denied');
   });
 
   it('should return 200 and data on success', async () => {
@@ -93,7 +98,7 @@ describe('POST /api/generate', () => {
         if (table === 'generated_content') {
           return {
             insert: jest.fn().mockReturnValue({
-              select: jest.fn().mockResolvedValue({ data: [mockSummary], error: null }),
+              select: jest.fn().mockResolvedValue({ data: [{ content: mockSummary }], error: null }),
             }),
           };
         };
@@ -109,15 +114,15 @@ describe('POST /api/generate', () => {
 
     const response = await POST(req);
     expect(response.status).toBe(200);
-    const body = await response.json(); // This expects JSON
-    expect(body).toEqual([mockSummary]);
+    const body = await response.json();
+    expect(body).toEqual({ content: mockSummary, message: null }); // Expected to be an object with content
     expect(mockGenerateSummaryWithGemini).toHaveBeenCalledWith(
-      'Please provide a concise summary of the following text: Some long text that is definitely more than one hundred characters long. This should allow the test to pass without triggering the short text error.',
+      'Please provide a concise summary of the following text, ensuring the summary is in the same language as the original text: Some long text that is definitely more than one hundred characters long. This should allow the test to pass without triggering the short text error.',
       expect.any(String) // requestId
     );
   });
 
-  it('should return 500 if Claude API throws an error during summary generation', async () => {
+  it('should return 500 if Gemini API throws an error during summary generation', async () => {
     mockSupabase.mockReturnValue({
       auth: {
         getSession: jest.fn().mockResolvedValue({ data: { session: { user: { id: 'user-1' } } } }),
@@ -125,7 +130,7 @@ describe('POST /api/generate', () => {
       from: jest.fn().mockReturnValue({
         select: jest.fn().mockReturnValue({
           eq: jest.fn().mockReturnThis(),
-          single: jest.fn().mockResolvedValue({ data: { extracted_text: 'This is a much longer text that should easily exceed the 100 character limit for summarization. This will ensure that the short text error is not triggered and the Claude API error is properly tested.' } }),
+          single: jest.fn().mockResolvedValue({ data: { extracted_text: 'This is a much longer text that should easily exceed the 100 character limit for summarization. This will ensure that the short text error is not triggered and the Gemini API error is properly tested.' } }),
         }),
       }),
     });
@@ -139,10 +144,11 @@ describe('POST /api/generate', () => {
 
     const response = await POST(req);
     expect(response.status).toBe(500);
-    expect(await response.text()).toBe('AI summary generation failed: Gemini summarization failed.'); // Changed to .text()
+    expect(await response.text()).toBe('AI summary generation failed: Gemini summarization failed.');
   });
 
   it('should return 500 if Supabase insert for generated content fails', async () => {
+    const mockSummary = { summary: 'This is a summary.' };
     mockSupabase.mockReturnValue({
       auth: {
         getSession: jest.fn().mockResolvedValue({ data: { session: { user: { id: 'user-1' } } } }),
@@ -174,7 +180,7 @@ describe('POST /api/generate', () => {
 
     const response = await POST(req);
     expect(response.status).toBe(500);
-    expect(await response.text()).toBe('Internal Server Error'); // Changed to .text()
+    expect(await response.text()).toBe('Internal Server Error');
   });
 
   it('should return 500 for a generic unexpected error', async () => {
@@ -194,7 +200,7 @@ describe('POST /api/generate', () => {
 
     const response = await POST(req);
     expect(response.status).toBe(500);
-    expect(await response.text()).toBe('Internal Server Error'); // Changed to .text()
+    expect(await response.text()).toBe('An unexpected internal server error occurred.'); // Updated error message
   });
 
   it('should return 400 if document.extracted_text is null for summary type', async () => {
@@ -263,8 +269,8 @@ describe('POST /api/generate', () => {
     expect(await response.text()).toBe('Document content is too short for meaningful quiz generation.');
   });
 
-  it('should adjust to "short" quiz when requesting "long" with very short content (< 500 chars)', async () => {
-    const shortText = 'This is a short text for a quiz. It has less than 100 characters.'; // Should now trigger textLength < 100
+  it('should adjust to "short" quiz when requesting "long" with content (100-499 chars)', async () => {
+    const textBetween100And499 = 'This text has more than 100 characters but less than 500. It is suitable for a short quiz. '.repeat(4); // ~360 chars
     const mockQuiz = [{ question: 'Q1', options: ['A'], answer: 'A', explanation: 'Exp' }];
     mockSupabase.mockReturnValue({
       auth: {
@@ -275,14 +281,14 @@ describe('POST /api/generate', () => {
           return {
             select: jest.fn().mockReturnValue({
               eq: jest.fn().mockReturnThis(),
-              single: jest.fn().mockResolvedValue({ data: { extracted_text: shortText } }),
+              single: jest.fn().mockResolvedValue({ data: { extracted_text: textBetween100And499 } }),
             }),
           };
         }
         if (table === 'generated_content') {
           return {
             insert: jest.fn().mockReturnValue({
-              select: jest.fn().mockResolvedValue({ data: [{ quiz: mockQuiz, message: "The document content is too short to generate a long quiz. Generating a short quiz instead." }], error: null }),
+              select: jest.fn().mockResolvedValue({ data: [{ content: { quiz: mockQuiz, message: "The document content is too short to generate a long quiz. Generating a short quiz instead." } }], error: null }),
             }),
           };
         }
@@ -300,8 +306,13 @@ describe('POST /api/generate', () => {
     } as any;
 
     const response = await POST(req);
-    expect(response.status).toBe(400);
-    expect(await response.text()).toBe('Document content is too short for meaningful quiz generation.');
+    expect(response.status).toBe(200);
+    const body = await response.json();
+    expect(body).toEqual({ content: { quiz: mockQuiz, message: "The document content is too short to generate a long quiz. Generating a short quiz instead." }, message: "The document content is too short to generate a long quiz. Generating a short quiz instead." });
+    expect(mockGenerateQuizWithGemini).toHaveBeenCalledWith(
+      'Generate a short multiple-choice quiz (3-5 questions) from the following text. Provide the output as a JSON array of objects, where each object has \'question\', \'options\' (an array of strings), \'answer\' (the correct option string), and \'explanation\' (a string explaining the correct answer). Text: ' + textBetween100And499,
+      expect.any(String) // requestId
+    );
   });
 
   it('should adjust to "medium" quiz when requesting "long" with medium content (500-1500 chars)', async () => {
@@ -323,7 +334,7 @@ describe('POST /api/generate', () => {
         if (table === 'generated_content') {
           return {
             insert: jest.fn().mockReturnValue({
-              select: jest.fn().mockResolvedValue({ data: [{ quiz: mockQuiz, message: "The document content is not sufficient for a long quiz. Generating a medium quiz instead." }], error: null }),
+              select: jest.fn().mockResolvedValue({ data: [{ content: { quiz: mockQuiz, message: "The document content is not sufficient for a long quiz. Generating a medium quiz instead." } }], error: null }),
             }),
           };
         }
@@ -343,16 +354,15 @@ describe('POST /api/generate', () => {
     const response = await POST(req);
     expect(response.status).toBe(200);
     const body = await response.json();
-    expect(body).toEqual([{ quiz: mockQuiz, message: "The document content is not sufficient for a long quiz. Generating a medium quiz instead." }]);
+    expect(body).toEqual({ content: { quiz: mockQuiz, message: "The document content is not sufficient for a long quiz. Generating a medium quiz instead." }, message: "The document content is not sufficient for a long quiz. Generating a medium quiz instead." });
     expect(mockGenerateQuizWithGemini).toHaveBeenCalledWith(
-      'Generate a medium multiple-choice quiz (6-8 questions) from the following text. The quiz should include a question, multiple options, the correct answer, and a brief explanation for each question. Respond only with a JSON array of quiz questions.',
-      mediumText,
+      'Generate a medium multiple-choice quiz (6-8 questions) from the following text. Provide the output as a JSON array of objects, where each object has \'question\', \'options\' (an array of strings), \'answer\' (the correct option string), and \'explanation\' (a string explaining the correct answer). Text: ' + mediumText,
       expect.any(String) // requestId
     );
   });
 
-  it('should adjust to "short" quiz when requesting "medium" with very short content (< 500 chars)', async () => {
-    const shortText = 'This is another short text for a quiz. Less than 100 characters.'; // Should now trigger textLength < 100
+  it('should adjust to "short" quiz when requesting "medium" with content (100-499 chars)', async () => {
+    const textBetween100And499 = 'This text has more than 100 characters but less than 500. It is suitable for a short quiz. '.repeat(4); // ~360 chars
     const mockQuiz = [{ question: 'Q1', options: ['A'], answer: 'A', explanation: 'Exp' }];
     mockSupabase.mockReturnValue({
       auth: {
@@ -363,13 +373,20 @@ describe('POST /api/generate', () => {
           return {
             select: jest.fn().mockReturnValue({
               eq: jest.fn().mockReturnThis(),
-              single: jest.fn().mockResolvedValue({ data: { extracted_text: shortText } }),
+              single: jest.fn().mockResolvedValue({ data: { extracted_text: textBetween100And499 } }),
             }),
           };
         }
         if (table === 'generated_content') {
           return {
             insert: jest.fn().mockReturnValue({
+              select: jest.fn().mockResolvedValue({ data: [{ content: { quiz: mockQuiz, message: "The document content is too short to generate a medium quiz. Generating a short quiz instead." } }], error: null }),
+            }),
+          };
+        }
+        return {};
+      }),
+    });
     mockGenerateQuizWithGemini.mockResolvedValueOnce(JSON.stringify(mockQuiz));
 
     const req = {
@@ -381,10 +398,61 @@ describe('POST /api/generate', () => {
     } as any;
 
     const response = await POST(req);
-    expect(response.status).toBe(400);
-    expect(await response.text()).toBe('Document content is too short for meaningful quiz generation.');
+    expect(response.status).toBe(200);
+    const body = await response.json();
+    expect(body).toEqual({ content: { quiz: mockQuiz, message: "The document content is too short to generate a medium quiz. Generating a short quiz instead." }, message: "The document content is too short to generate a medium quiz. Generating a short quiz instead." });
+    expect(mockGenerateQuizWithGemini).toHaveBeenCalledWith(
+      'Generate a short multiple-choice quiz (3-5 questions) from the following text. Provide the output as a JSON array of objects, where each object has \'question\', \'options\' (an array of strings), \'answer\' (the correct option string), and \'explanation\' (a string explaining the correct answer). Text: ' + textBetween100And499,
+      expect.any(String) // requestId
+    );
   });
 
+  it('should adjust to "medium" quiz when requesting "long" with content (500-1499 chars)', async () => {
+    const textBetween500And1499 = 'This text has more than 500 characters but less than 1500. It is suitable for a medium quiz. '.repeat(10); // ~900 chars
+    const mockQuiz = [{ question: 'Q1', options: ['A'], answer: 'A', explanation: 'Exp' }];
+    mockSupabase.mockReturnValue({
+      auth: {
+        getSession: jest.fn().mockResolvedValue({ data: { session: { user: { id: 'user-1' } } } }),
+      },
+      from: jest.fn((table: string) => {
+        if (table === 'study_materials') {
+          return {
+            select: jest.fn().mockReturnValue({
+              eq: jest.fn().mockReturnThis(),
+              single: jest.fn().mockResolvedValue({ data: { extracted_text: textBetween500And1499 } }),
+            }),
+          };
+        }
+        if (table === 'generated_content') {
+          return {
+            insert: jest.fn().mockReturnValue({
+              select: jest.fn().mockResolvedValue({ data: [{ content: { quiz: mockQuiz, message: "The document content is not sufficient for a long quiz. Generating a medium quiz instead." } }], error: null }),
+            }),
+          };
+        }
+        return {};
+      }),
+    });
+    mockGenerateQuizWithGemini.mockResolvedValueOnce(JSON.stringify(mockQuiz));
+
+    const req = {
+      json: jest.fn().mockResolvedValue({
+        type: 'quiz',
+        documentId: '123',
+        options: { quizLength: 'long' },
+      }),
+    } as any;
+
+    const response = await POST(req);
+    expect(response.status).toBe(200);
+    const body = await response.json();
+    expect(body).toEqual({ content: { quiz: mockQuiz, message: "The document content is not sufficient for a long quiz. Generating a medium quiz instead." }, message: "The document content is not sufficient for a long quiz. Generating a medium quiz instead." });
+    expect(mockGenerateQuizWithGemini).toHaveBeenCalledWith(
+      'Generate a medium multiple-choice quiz (6-8 questions) from the following text. Provide the output as a JSON array of objects, where each object has \'question\', \'options\' (an array of strings), \'answer\' (the correct option string), and \'explanation\' (a string explaining the correct answer). Text: ' + textBetween500And1499,
+      expect.any(String) // requestId
+    );
+  });
+  
   it('should generate "short" quiz as requested with sufficient content', async () => {
     const longText = 'This is a very long text that can support any quiz length. '.repeat(100); // > 1500 chars
     const mockQuiz = [{ question: 'Q1', options: ['A'], answer: 'A', explanation: 'Exp' }];
@@ -404,7 +472,7 @@ describe('POST /api/generate', () => {
         if (table === 'generated_content') {
           return {
             insert: jest.fn().mockReturnValue({
-              select: jest.fn().mockResolvedValue({ data: [{ quiz: mockQuiz, message: null }], error: null }),
+              select: jest.fn().mockResolvedValue({ data: [{ content: { quiz: mockQuiz, message: null } }], error: null }),
             }),
           };
         }
@@ -424,41 +492,15 @@ describe('POST /api/generate', () => {
     const response = await POST(req);
     expect(response.status).toBe(200);
     const body = await response.json();
-    expect(body).toEqual([{ quiz: mockQuiz, message: null }]);
+    expect(body).toEqual({ content: { quiz: mockQuiz, message: null }, message: null });
     expect(mockGenerateQuizWithGemini).toHaveBeenCalledWith(
-      'Generate a short multiple-choice quiz (3-5 questions) from the following text. The quiz should include a question, multiple options, the correct answer, and a brief explanation for each question. Respond only with a JSON array of quiz questions.',
-      longText,
+      'Generate a short multiple-choice quiz (3-5 questions) from the following text. Provide the output as a JSON array of objects, where each object has \'question\', \'options\' (an array of strings), \'answer\' (the correct option string), and \'explanation\' (a string explaining the correct answer). Text: ' + longText,
       expect.any(String) // requestId
     );
   });
 
   it('should generate "medium" quiz as requested with sufficient content', async () => {
-    const longText = 'This is a very long text that can support any quiz length. '.repeat(100); // > 1500 chars
-    const mockQuiz = [{ question: 'Q1', options: ['A'], answer: 'A', explanation: 'Exp' }];
-    mockGenerateQuizWithGemini.mockResolvedValueOnce(JSON.stringify(mockQuiz));
-
-    const req = {
-      json: jest.fn().mockResolvedValue({
-        type: 'quiz',
-        documentId: '123',
-        options: { quizLength: 'medium' },
-      }),
-    } as any;
-
-    const response = await POST(req);
-    expect(response.status).toBe(200);
-    const body = await response.json();
-    expect(body).toEqual([{ quiz: mockQuiz, message: null }]);
-    expect(mockGenerateQuizWithGemini).toHaveBeenCalledWith(
-      'Generate a medium multiple-choice quiz (6-8 questions) from the following text. The quiz should include a question, multiple options, the correct answer, and a brief explanation for each question. Respond only with a JSON array of quiz questions.',
-      longText,
-      expect.any(String) // requestId
-    );
-  });
-
-
-  it('should generate "medium" quiz as requested with sufficient content', async () => {
-    const longText = 'This is a very long text that can support any quiz length. '.repeat(100); // > 1500 chars
+    const longText = 'This is a very long text that can support any quiz length. It needs to be at least 1500 characters for a long quiz and 500 for a medium quiz. '.repeat(100); // Ensures > 1500 chars
     const mockQuiz = [{ question: 'Q1', options: ['A'], answer: 'A', explanation: 'Exp' }];
     mockSupabase.mockReturnValue({
       auth: {
@@ -476,7 +518,7 @@ describe('POST /api/generate', () => {
         if (table === 'generated_content') {
           return {
             insert: jest.fn().mockReturnValue({
-              select: jest.fn().mockResolvedValue({ data: [{ quiz: mockQuiz, message: null }], error: null }),
+              select: jest.fn().mockResolvedValue({ data: [{ content: { quiz: mockQuiz, message: null } }], error: null }),
             }),
           };
         }
@@ -496,16 +538,16 @@ describe('POST /api/generate', () => {
     const response = await POST(req);
     expect(response.status).toBe(200);
     const body = await response.json();
-    expect(body).toEqual([{ quiz: mockQuiz, message: null }]);
+    expect(body).toEqual({ content: { quiz: mockQuiz, message: null }, message: null });
     expect(mockGenerateQuizWithGemini).toHaveBeenCalledWith(
-      'Generate a medium multiple-choice quiz (6-8 questions) from the following text. The quiz should include a question, multiple options, the correct answer, and a brief explanation for each question. Respond only with a JSON array of quiz questions.',
-      longText,
+      'Generate a medium multiple-choice quiz (6-8 questions) from the following text. Provide the output as a JSON array of objects, where each object has \'question\', \'options\' (an array of strings), \'answer\' (the correct option string), and \'explanation\' (a string explaining the correct answer). Text: ' + longText,
       expect.any(String) // requestId
     );
   });
 
+
   it('should generate "long" quiz as requested with sufficient content', async () => {
-    const longText = 'This is a very long text that can support any quiz length. '.repeat(100); // > 1500 chars
+    const longText = 'This is a very long text that can support any quiz length. It needs to be at least 1500 characters for a long quiz and 500 for a medium quiz. '.repeat(100); // Ensures > 1500 chars
     const mockQuiz = [{ question: 'Q1', options: ['A'], answer: 'A', explanation: 'Exp' }];
     mockSupabase.mockReturnValue({
       auth: {
@@ -523,7 +565,7 @@ describe('POST /api/generate', () => {
         if (table === 'generated_content') {
           return {
             insert: jest.fn().mockReturnValue({
-              select: jest.fn().mockResolvedValue({ data: [{ quiz: mockQuiz, message: null }], error: null }),
+              select: jest.fn().mockResolvedValue({ data: [{ content: { quiz: mockQuiz, message: null } }], error: null }),
             }),
           };
         }
@@ -543,10 +585,9 @@ describe('POST /api/generate', () => {
     const response = await POST(req);
     expect(response.status).toBe(200);
     const body = await response.json();
-    expect(body).toEqual([{ quiz: mockQuiz, message: null }]);
+    expect(body).toEqual({ content: { quiz: mockQuiz, message: null }, message: null });
     expect(mockGenerateQuizWithGemini).toHaveBeenCalledWith(
-      'Generate a long multiple-choice quiz (9-12 questions) from the following text. The quiz should include a question, multiple options, the correct answer, and a brief explanation for each question. Respond only with a JSON array of quiz questions.',
-      longText,
+      'Generate a long multiple-choice quiz (9-12 questions) from the following text. Provide the output as a JSON array of objects, where each object has \'question\', \'options\' (an array of strings), \'answer\' (the correct option string), and \'explanation\' (a string explaining the correct answer). Text: ' + longText,
       expect.any(String) // requestId
     );
   });
@@ -565,7 +606,7 @@ describe('POST /api/generate', () => {
 
     const response = await POST(req);
     expect(response.status).toBe(400);
-    expect(await response.text()).toBe('Invalid type'); // Changed to .text()
+    expect(await response.text()).toBe('Invalid type');
   });
 
   it('should return 200 and quiz data on successful quiz generation', async () => {
@@ -591,7 +632,7 @@ describe('POST /api/generate', () => {
         if (table === 'generated_content') {
           return {
             insert: jest.fn().mockReturnValue({
-              select: jest.fn().mockResolvedValue({ data: [mockQuiz], error: null }),
+              select: jest.fn().mockResolvedValue({ data: [{ content: { quiz: mockQuiz, message: null } }], error: null }),
             }),
           };
         }
@@ -610,11 +651,10 @@ describe('POST /api/generate', () => {
 
     const response = await POST(req);
     expect(response.status).toBe(200);
-    const body = await response.json(); // This expects JSON
-    expect(body).toEqual([mockQuiz]);
+    const body = await response.json();
+    expect(body).toEqual({ content: { quiz: mockQuiz, message: null }, message: null });
     expect(mockGenerateQuizWithGemini).toHaveBeenCalledWith(
-      'Generate a short multiple-choice quiz (3-5 questions) from the following text. The quiz should include a question, multiple options, the correct answer, and a brief explanation for each question. Respond only with a JSON array of quiz questions.',
-      'This is a very long text that can support any quiz length. It is definitely more than one hundred characters long.',
+      'Generate a short multiple-choice quiz (3-5 questions) from the following text. Provide the output as a JSON array of objects, where each object has \'question\', \'options\' (an array of strings), \'answer\' (the correct option string), and \'explanation\' (a string explaining the correct answer). Text: ' + 'This is a very long text that can support any quiz length. It is definitely more than one hundred characters long.',
       expect.any(String) // requestId
     );
   });
@@ -643,10 +683,10 @@ describe('POST /api/generate', () => {
 
     const response = await POST(req);
     expect(response.status).toBe(400);
-    expect(await response.text()).toBe('Invalid or missing quizLength option'); // Changed to .text()
+    expect(await response.text()).toBe('Invalid or missing quizLength option');
   });
 
-  it('should return 500 if Claude API throws an error during quiz generation', async () => {
+  it('should return 500 if Gemini API throws an error during quiz generation', async () => {
     mockSupabase.mockReturnValue({
       auth: {
         getSession: jest.fn().mockResolvedValue({ data: { session: { user: { id: 'user-1' } } } }),
@@ -672,10 +712,10 @@ describe('POST /api/generate', () => {
 
     const response = await POST(req);
     expect(response.status).toBe(500);
-    expect(await response.text()).toBe('AI quiz generation failed: Gemini quiz generation failed.'); // Changed to .text()
+    expect(await response.text()).toBe('AI quiz generation failed: Gemini quiz generation failed.');
   });
 
-  it('should handle Claude API 401 Unauthorized error correctly', async () => {
+  it('should handle Gemini API 401 Unauthorized error correctly', async () => {
     mockSupabase.mockReturnValue({
       auth: {
         getSession: jest.fn().mockResolvedValue({ data: { session: { user: { id: 'user-1' } } } }),
@@ -705,7 +745,7 @@ describe('POST /api/generate', () => {
     expect(await response.text()).toBe('Authentication/Authorization error with Gemini API. Please check your API key.');
   });
 
-  it('should handle Claude API 429 Rate Limit Exceeded error correctly', async () => {
+  it('should handle Gemini API 429 Rate Limit Exceeded error correctly', async () => {
     mockSupabase.mockReturnValue({
       auth: {
         getSession: jest.fn().mockResolvedValue({ data: { session: { user: { id: 'user-1' } } } }),
