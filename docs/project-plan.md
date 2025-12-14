@@ -158,7 +158,7 @@
       - [x] File: sprint-artifacts/tech-spec-epic-{{epic_id}}.md
     - [x] /run-agent-task sm validate-epic-tech-context {prompt / user-input-file}
     - foreach story in epic:
-    - [ ] 4.1
+    - [x] 4.1
       - [x] /run-agent-task sm *create-story {prompt / user-input-file}
         - [x] File: sprint-artifacts/{{story_key}}.md
       - [x] /run-agent-task sm *validate-create-story {for story 4.1}
@@ -167,7 +167,7 @@
       - [x] /run-agent-task sm *validate-story-context {for story 4.1}
       - [x] /run-agent-task dev *develop-story {for story 4.1}
       - [x] /run-agent-task dev *code-review {for story 4.1}
-      - [ ] Manuell test i brukergrensesnittet, prompt: "I want to do a manual test of the features we just implemented in this story. Please guide me through how I can open the application in a browser without opening the interactive shell in this conversation, i.e. opening a different terminal and typing npm run dev. And then explain the steps to verify the features."
+      - [x] Manuell test i brukergrensesnittet, prompt: "I want to do a manual test of the features we just implemented in this story. Please guide me through how I can open the application in a browser without opening the interactive shell in this conversation, i.e. opening a different terminal and typing npm run dev. And then explain the steps to verify the features."
     - [ ] 4.2
       - [x] /run-agent-task sm *create-story {for story 4.2}
         - [x] File: sprint-artifacts/{{story_key}}.md
@@ -176,8 +176,8 @@
         - [x] File: sprint-artifacts/{{story_key}}.context.xml
       - [x] /run-agent-task sm *validate-story-context {for story 4.2}
       - [x] /run-agent-task dev *develop-story {for story 4.2}
-      - [ ] /run-agent-task dev *code-review {for story 4.2}
-      - [ ] Manuell test i brukergrensesnittet, prompt: "I want to do a manual test of the features we just implemented in this story. Please guide me through how I can open the application in a browser without opening the interactive shell in this conversation, i.e. opening a different terminal and typing npm run dev. And then explain the steps to verify the features."
+      - [x] /run-agent-task dev *code-review {for story 4.2}
+      - [ ] Manuell test i brukergrensesnittet, prompt: "I want to do a manual test of the features implemented in story 4.2. Please guide me through how I can open the application in a browser without opening the interactive shell in this conversation, i.e. opening a different terminal and typing npm run dev. And then explain the steps to verify all the features."
     - [ ] 4.3
       - [x] /run-agent-task sm *create-story {for story 4.3}
         - [x] File: sprint-artifacts/{{story_key}}.md
