@@ -450,3 +450,10 @@ Outcome: PASS with issues (Critical: 0, Major: 0, Minor: 2)
 *   **Dev Notes Quality:** Dev notes are specific, providing relevant architecture patterns, constraints, source tree components, and testing standards summary, along with appropriate citations.
 *   **Story Structure:** The story adheres to the expected structure, including status, story statement format, and initialized Dev Agent Record sections.
 *   **Unresolved Review Items Alert:** No unresolved review items were found from the previous story.
+
+## Post-Review Follow-ups
+
+-   **Story 4.5: Guided Summary Generation Wizard**
+    -   [ ] [Medium] Integrate SummaryWizard into UI Flow (AC #1)
+    -   [ ] [Low] Refine Document Selection Prompting (AC #3)
+    -   [ ] [Low] Enhance User Feedback for Document Selection (AC #3)
