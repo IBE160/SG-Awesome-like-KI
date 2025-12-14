@@ -7,7 +7,8 @@ import Link from 'next/link';
 interface GeneratedContent {
   id: string;
   type: 'summary' | 'quiz';
-  content: string;
+  // content can be an object { summary: string } or { quiz: Array<any>, message?: string }
+  content: { summary?: string; quiz?: any; message?: string };
   created_at: string;
 }
 
@@ -60,7 +61,15 @@ export const UnorganizedContentList = () => {
             {material.generated_content.map((content) => (
               <div key={content.id} className="p-3 bg-gray-50 rounded-md">
                 <p className="font-semibold capitalize text-gray-700">{content.type}</p>
-                <p className="text-sm text-gray-600 truncate">{content.content}</p>
+                {content.type === 'summary' && content.content.summary && (
+                  <p className="text-sm text-gray-600 truncate">{content.content.summary}</p>
+                )}
+                {content.type === 'quiz' && content.content.quiz && (
+                  <p className="text-sm text-gray-600">
+                    Quiz: {JSON.stringify(content.content.quiz)}
+                    {content.content.message && ` (${content.content.message})`}
+                  </p>
+                )}
               </div>
             ))}
           </div>

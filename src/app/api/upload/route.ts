@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import { createClient, createServiceRoleClient } from '@/lib/supabase/server';
 import { v4 as uuidv4 } from 'uuid';
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
@@ -7,6 +7,7 @@ const SUPPORTED_FILE_TYPES = ['text/plain', 'application/pdf'];
 
 export async function POST(req: NextRequest) {
   const supabase = await createClient();
+  const supabaseServiceRole = await createServiceRoleClient(); // Initialize service role client
 
   try {
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -42,17 +43,19 @@ export async function POST(req: NextRequest) {
     const uniqueName = `${uuidv4()}.${extension}`;
     const storagePath = `${user.id}/${uniqueName}`;
 
-    const { error: uploadError } = await supabase.storage
+    const { error: uploadError } = await supabaseServiceRole.storage
       .from('study-materials')
       .upload(storagePath, file);
 
     if (uploadError) {
       console.error('Storage Upload Error:', uploadError);
       return NextResponse.json({ error: 'Failed to upload file to storage' }, { status: 500 });
+    } else {
+      console.log(`--- DIAGNOSTIC: File successfully uploaded to storagePath: ${storagePath} ---`);
     }
 
     // Add a short delay to mitigate potential replication lag in Supabase Storage
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise(resolve => setTimeout(resolve, 5000));
 
     const { data: record, error: dbError } = await supabase
       .from('study_materials')
@@ -85,17 +88,8 @@ export async function POST(req: NextRequest) {
     }
     // If PDF, trigger text extraction
     else if (file.type === 'application/pdf') {
-      // WORKAROUND: PDF parsing is temporarily disabled due to a persistent Supabase "Object not found" error.
-      // The code to generate a signed URL and call the parser is preserved below for when the issue is resolved.
-      await supabase
-          .from('study_materials')
-          .update({ extracted_text: 'PDF_PARSING_DISABLED: This feature is temporarily unavailable. Please use .txt files for now.' })
-          .eq('id', record.id);
-      
-      /*
-      // Original code, disabled for now:
       try {
-        const { data: signedUrlData, error: signedUrlError } = await supabase.storage
+        const { data: signedUrlData, error: signedUrlError } = await supabaseServiceRole.storage
           .from('study-materials')
           .createSignedUrl(storagePath, 60 * 5); // 5-minute expiry
 
@@ -141,7 +135,6 @@ export async function POST(req: NextRequest) {
                 .update({ extracted_text: 'PDF_PARSING_ERROR: Invocation failed.' })
                 .eq('id', record.id);
       }
-      */
     }
 
     return NextResponse.json({ message: 'File uploaded successfully', studyMaterialId: record.id }, { status: 200 });

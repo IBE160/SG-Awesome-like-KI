@@ -6,7 +6,7 @@ export const createClient = async () => {
   const cookieStore = await cookies() // Await cookies() call
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
         get(name: string) {
@@ -30,6 +30,23 @@ export const createClient = async () => {
             // user sessions.
           }
         },
+      },
+    }
+  );
+};
+
+export const createServiceRoleClient = async () => {
+  return createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    {
+      auth: {
+        persistSession: false, // Service role client doesn't need to persist sessions
+      },
+      cookies: { // Add dummy cookie options
+        get: () => undefined,
+        set: () => {},
+        remove: () => {},
       },
     }
   );
