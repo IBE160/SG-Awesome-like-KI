@@ -13,6 +13,13 @@ const customJestConfig = {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
   },
+  transform: {
+    '^.+\\.(ts|tsx)$': ['babel-jest', { presets: ['next/babel', '@babel/preset-typescript'] }],
+    '^.+\\.(js|jsx|mjs)$': ['babel-jest', { presets: ['next/babel'] }],
+  },
+  transformIgnorePatterns: [
+    'node_modules/(?!(node-fetch|data-uri-to-buffer|fetch-blob|formdata-polyfill)/)',
+  ],
   testPathIgnorePatterns: [
     '<rootDir>/tests/e2e/', // Ignore E2E tests
   ],

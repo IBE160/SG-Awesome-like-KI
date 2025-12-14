@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
-import { randomUUID } from 'crypto';
+import { v4 as uuidv4 } from 'uuid';
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
@@ -18,7 +18,7 @@ describe('Profile RLS Policies', () => {
   beforeAll(async () => {
     // Create User A
     const { data: dataA, error: errorA } = await supabaseAdmin.auth.admin.createUser({
-      email: `userA-${randomUUID().split('-')[0]}@test.com`, // Use a valid-looking domain
+      email: `userA-${uuidv4().split('-')[0]}@test.com`, // Use a valid-looking domain
       password: 'password123',
       email_confirm: true, // Directly confirm email
     });
@@ -45,7 +45,7 @@ describe('Profile RLS Policies', () => {
 
     // Create User B
     const { data: dataB, error: errorB } = await supabaseAdmin.auth.admin.createUser({
-      email: `userB-${randomUUID().split('-')[0]}@test.com`,
+      email: `userB-${uuidv4().split('-')[0]}@test.com`,
       password: 'password123',
       email_confirm: true,
     });
@@ -101,14 +101,14 @@ describe('Profile RLS Policies', () => {
   });
 
   it('User A should be able to update their own profile', async () => {
-    const newName = `Updated Name A - ${randomUUID()}`;
+    const newName = `Updated Name A - ${uuidv4()}`;
     const { data, error } = await supabaseA.from('profiles').update({ full_name: newName }).eq('id', userA.id).select().single();
     expect(error).toBeNull();
     expect(data).toHaveProperty('full_name', newName);
   });
 
   it('User A should NOT be able to update User B\'s profile', async () => {
-    const newName = `Malicious Update - ${randomUUID()}`;
+    const newName = `Malicious Update - ${uuidv4()}`;
     const { data, error } = await supabaseA.from('profiles').update({ full_name: newName }).eq('id', userB.id).select().single();
     expect(data).toBeNull();
     expect(error?.code).toBe('PGRST116'); // Correctly expects error code for unauthorized update with .single()

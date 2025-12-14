@@ -3,13 +3,11 @@ import { NextRequest } from 'next/server';
 import { POST } from '@/app/api/generate/route';
 import { createClient } from '@/lib/supabase/server';
 import { cookies } from 'next/headers';
-import { randomUUID } from 'crypto';
-
-import * as claudeLib from '@/lib/claude'; // Updated import
+import { v4 as uuidv4 } from 'uuid';
 
 // Mock Supabase client
 const mockGeneratedContentInsert = jest.fn(() => ({
-  select: jest.fn(() => Promise.resolve({ data: [{ id: randomUUID(), content: { summary: MOCK_SUMMARY_CONTENT } }], error: null })),
+  select: jest.fn(() => Promise.resolve({ data: [{ id: uuidv4(), content: { summary: MOCK_SUMMARY_CONTENT } }], error: null })),
 }));
 
 jest.mock('@/lib/supabase/server', () => ({
@@ -47,27 +45,27 @@ jest.mock('next/headers', () => ({
   })),
 }));
 
-// Mock Claude utility functions
-jest.mock('@/lib/claude', () => ({
-  generateSummaryWithClaude: jest.fn(),
-  generateQuizWithClaude: jest.fn(),
-  handleClaudeError: jest.fn((error) => { throw error; }), // Re-throw errors for testing
+// Mock Gemini utility functions
+jest.mock('@/lib/gemini', () => ({
+  generateSummaryWithGemini: jest.fn(),
+  generateQuizWithGemini: jest.fn(),
+  handleGeminiError: jest.fn((error) => { throw error; }), // Re-throw errors for testing
 }));
 
-const MOCK_USER_ID = randomUUID();
-const MOCK_DOCUMENT_ID = randomUUID();
-const MOCK_CLASS_SECTION_ID = randomUUID();
+const MOCK_USER_ID = uuidv4();
+const MOCK_DOCUMENT_ID = uuidv4();
+const MOCK_CLASS_SECTION_ID = uuidv4();
 const MOCK_EXTRACTED_TEXT = 'This is a mock extracted text for study material summarization. It is intentionally made longer than 100 characters to ensure that the summary generation logic proceeds without triggering the "content too short" error path. This longer text allows for a proper test of successful summary creation.';
 const MOCK_SUMMARY_CONTENT = 'This is the generated summary.';
 
 const mockSupabase = createClient as jest.Mock;
-const mockGenerateSummaryWithClaude = claudeLib.generateSummaryWithClaude as jest.Mock; // Updated to claudeLib
+const mockGenerateSummaryWithGemini = require('@/lib/gemini').generateSummaryWithGemini as jest.Mock;
 
 
 describe('POST /api/generate', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    process.env.ANTHROPIC_API_KEY = 'mock-anthropic-api-key'; // Mock the API key
+    process.env.GEMINI_API_KEY = 'mock-gemini-api-key'; // Mock the API key
 
     mockSupabase.mockImplementation(() => ({
       auth: {
@@ -105,7 +103,7 @@ describe('POST /api/generate', () => {
     }));
 
     mockGeneratedContentInsert.mockClear(); // Clear calls for the persistent mock
-    mockGenerateSummaryWithClaude.mockResolvedValue(MOCK_SUMMARY_CONTENT);
+    mockGenerateSummaryWithGemini.mockResolvedValue(MOCK_SUMMARY_CONTENT);
   });
 
   it('should return 401 if user is not authenticated', async () => {
@@ -166,7 +164,7 @@ describe('POST /api/generate', () => {
         } else if (tableName === 'generated_content') {
             return {
               insert: jest.fn(() => ({
-                select: jest.fn(() => Promise.resolve({ data: [{ id: randomUUID(), content: { summary: MOCK_SUMMARY_CONTENT } }], error: null })),
+                select: jest.fn(() => Promise.resolve({ data: [{ id: uuidv4(), content: { summary: MOCK_SUMMARY_CONTENT } }], error: null })),
               })),
             };
           }
@@ -203,7 +201,7 @@ describe('POST /api/generate', () => {
 
     expect(response.status).toBe(200);
     expect(json).toEqual({ content: { summary: MOCK_SUMMARY_CONTENT } });
-    expect(mockGenerateSummaryWithClaude).toHaveBeenCalledWith(
+    expect(mockGenerateSummaryWithGemini).toHaveBeenCalledWith(
       expect.stringContaining(MOCK_EXTRACTED_TEXT),
       expect.any(String)
     );
