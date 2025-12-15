@@ -210,7 +210,6 @@ export default function UploadClientPage({ initialClasses, user }: UploadClientP
           documentId={uploadedDocumentId}
           onGenerateSummary={(docId) => handleGeneration('summary', docId)}
           onGenerateQuiz={(docId) => handleGeneration('quiz', docId)}
-          onViewDocument={handleViewDocument}
         />
       </div>
     );

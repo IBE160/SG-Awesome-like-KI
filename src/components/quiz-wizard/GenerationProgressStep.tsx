@@ -69,7 +69,7 @@ const GenerationProgressStep: React.FC<GenerationProgressStepProps> = ({
           <p>Quiz generated successfully!</p>
           <p className="text-sm text-gray-500">
             You can view your quiz{' '}
-            <a href={`/quiz/${generatedContentId}`} className="text-blue-500 hover:underline">
+            <a href={`/quiz-take/${generatedContentId}`} className="text-blue-500 hover:underline">
               here
             </a>
             .

@@ -6,14 +6,12 @@ interface PostUploadActionsUIProps {
   documentId: string; // The ID of the newly uploaded document
   onGenerateSummary: (documentId: string) => void;
   onGenerateQuiz: (documentId: string) => void;
-  onViewDocument: (documentId: string) => void; // Optional: To view the raw document
 }
 
 export function PostUploadActionsUI({
   documentId,
   onGenerateSummary,
   onGenerateQuiz,
-  onViewDocument,
 }: PostUploadActionsUIProps) {
   return (
     <Card className="w-[350px] mx-auto mt-8">
@@ -28,9 +26,6 @@ export function PostUploadActionsUI({
           </Button>
           <Button onClick={() => onGenerateQuiz(documentId)} className="w-full" variant="outline">
             Generate Quiz
-          </Button>
-          <Button onClick={() => onViewDocument(documentId)} className="w-full" variant="ghost">
-            View Document
           </Button>
         </div>
       </CardContent>
