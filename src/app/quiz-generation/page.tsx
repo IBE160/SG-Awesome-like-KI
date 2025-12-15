@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 type QuizLength = 'short' | 'medium' | 'long';
 
@@ -16,12 +16,43 @@ interface GeneratedQuiz {
   message?: string; // For cases where AI generates shorter quiz
 }
 
+interface Document {
+  id: string;
+  original_name: string;
+}
+
 export default function QuizGenerationPage() {
-  const [documentId, setDocumentId] = useState<string>('your-document-id-here'); // Placeholder
+  const [documents, setDocuments] = useState<Document[]>([]);
+  const [documentId, setDocumentId] = useState<string>(''); // Default to empty, require selection
   const [quizLength, setQuizLength] = useState<QuizLength>('medium');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [quizResult, setQuizResult] = useState<GeneratedQuiz | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [documentsLoading, setDocumentsLoading] = useState<boolean>(true);
+  const [documentsError, setDocumentsError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchDocuments = async () => {
+      setDocumentsLoading(true);
+      setDocumentsError(null);
+      try {
+        const response = await fetch('/api/study-materials');
+        if (!response.ok) {
+          throw new Error('Failed to fetch documents.');
+        }
+        const data = await response.json();
+        setDocuments(data.studyMaterials);
+        if (data.studyMaterials.length > 0) {
+          setDocumentId(data.studyMaterials[0].id); // Pre-select the first document
+        }
+      } catch (err: any) {
+        setDocumentsError(err.message);
+      } finally {
+        setDocumentsLoading(false);
+      }
+    };
+    fetchDocuments();
+  }, []);
 
   const handleGenerateQuiz = async () => {
     const clientRequestId = `client-${Date.now()}`; // Simple client-side request ID
@@ -69,17 +100,30 @@ export default function QuizGenerationPage() {
       <h1 className="text-2xl font-bold mb-4">Generate Quiz</h1>
 
       <div className="mb-4">
-        <label htmlFor="documentId" className="block text-sm font-medium text-gray-700">
-          Document ID (Placeholder)
+        <label htmlFor="documentSelect" className="block text-sm font-medium text-gray-700">
+          Select Document
         </label>
-        <input
-          type="text"
-          id="documentId"
-          className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-          value={documentId}
-          onChange={(e) => setDocumentId(e.target.value)}
-          disabled={isLoading}
-        />
+        {documentsLoading ? (
+          <p className="mt-1 text-gray-500">Loading documents...</p>
+        ) : documentsError ? (
+          <p className="mt-1 text-red-500">Error loading documents: {documentsError}</p>
+        ) : documents.length === 0 ? (
+          <p className="mt-1 text-gray-500">No documents available. Please upload one first.</p>
+        ) : (
+          <select
+            id="documentSelect"
+            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+            value={documentId}
+            onChange={(e) => setDocumentId(e.target.value)}
+            disabled={isLoading || documentsLoading}
+          >
+            {documents.map((doc) => (
+              <option key={doc.id} value={doc.id}>
+                {doc.original_name}
+              </option>
+            ))}
+          </select>
+        )}
       </div>
 
       <div className="mb-4">
@@ -91,7 +135,7 @@ export default function QuizGenerationPage() {
           className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
           value={quizLength}
           onChange={(e) => setQuizLength(e.target.value as QuizLength)}
-          disabled={isLoading}
+          disabled={isLoading || documentsLoading}
         >
           <option value="short">Short (5 questions)</option>
           <option value="medium">Medium (10 questions)</option>
@@ -101,7 +145,7 @@ export default function QuizGenerationPage() {
 
       <button
         onClick={handleGenerateQuiz}
-        disabled={isLoading || !documentId}
+        disabled={isLoading || !documentId || documentsLoading}
         className="px-4 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 disabled:opacity-50"
       >
         {isLoading ? 'Generating Quiz...' : 'Generate Quiz'}

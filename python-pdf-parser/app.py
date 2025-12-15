@@ -33,6 +33,8 @@ def parse_pdf():
             page = reader.pages[page_num]
             extracted_text += page.extract_text() or "" # extract_text can return None
 
+        app.logger.info(f"PDF Parser: Extracted text length: {len(extracted_text.strip())}") # Added log
+
         if not extracted_text.strip():
             return jsonify({"error": "No text extracted from the PDF."}), 422
 

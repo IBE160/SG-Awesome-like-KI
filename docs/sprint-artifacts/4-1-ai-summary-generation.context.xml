@@ -14,25 +14,25 @@
     <iWant>to generate concise summaries from my uploaded study materials</iWant>
     <soThat>I can quickly grasp the key concepts.</soThat>
     <tasks>
-- [ ] **Frontend Development: Implement Summary Generation UI (AC: #1, #2)**
-  - [ ] Develop the UI for initiating summary generation from a selected document.
-  - [ ] Implement the loading screen/modal with progress information during generation. (Source: docs/epics.md#Story-4.5-Guided-Summary-Generation-Wizard)
-  - [ ] Display the generated summary content.
-  - [ ] Handle and display error messages from the backend if summary generation fails.
-- [ ] **Backend Development: Create Vercel Function for Summary API (AC: #1, #2)**
-  - [ ] Create a Vercel Function endpoint (`POST /api/generate` with `type: "summary"`).
-  - [ ] Implement logic to securely call the Claude AI Model with the document content and appropriate prompt engineering.
-  - [ ] Integrate with Supabase Storage to retrieve document content.
-  - [ ] Implement robust error handling for AI API calls and insufficient content scenarios.
-  - [ ] Store the generated summary in the `generated_content` table, linked to the `study_materials` table. (Source: docs/architecture.md#2.1-Tables)
-- [ ] **Database Schema Updates (if necessary)**
-  - [ ] Verify `generated_content` table schema supports summary content (jsonb).
-  - [ ] Ensure `study_materials` has `id`, `file_name`, `storage_path` and links to `classes` and `class_sections`.
-- [ ] **Testing (AC: #1, #2)**
-  - [ ] Write unit tests for the Vercel Function (AI proxy logic, error handling).
-  - [ ] Write integration tests for the `POST /api/generate` endpoint, including success and failure scenarios.
-  - [ ] Develop end-to-end tests for the full user flow of uploading a document and generating a summary, verifying content and timing.
-  - [ ] Test with various document sizes and content types (e.g., very short text, text with images, etc.) to ensure error handling is robust.
+- [x] **Frontend Development: Implement Summary Generation UI (AC: #1, #2)**
+  - [x] Develop the UI for initiating summary generation from a selected document.
+  - [x] Implement the loading screen/modal with progress information during generation. (Source: docs/epics.md#Story-4.5-Guided-Summary-Generation-Wizard)
+  - [x] Display the generated summary content.
+  - [x] Handle and display error messages from the backend if summary generation fails.
+- [x] **Backend Development: Create Vercel Function for Summary API (AC: #1, #2)**
+  - [x] Create a Vercel Function endpoint (`POST /api/generate` with `type: "summary"`).
+  - [x] Implement logic to securely call the Claude AI Model with the document content and appropriate prompt engineering.
+  - [x] Integrate with Supabase Storage to retrieve document content.
+  - [x] Implement robust error handling for AI API calls and insufficient content scenarios.
+  - [x] Store the generated summary in the `generated_content` table, linked to the `study_materials` table. (Source: docs/architecture.md#2.1-Tables)
+- [x] **Database Schema Updates (if necessary)**
+  - [x] Verify `generated_content` table schema supports summary content (jsonb).
+  - [x] Ensure `study_materials` has `id`, `file_name`, `storage_path` and links to `classes` and `class_sections`.
+- [x] **Testing (AC: #1, #2)**
+  - [x] Write unit tests for the Vercel Function (AI proxy logic, error handling).
+  - [x] Write integration tests for the `POST /api/generate` endpoint, including success and failure scenarios.
+  - [x] Develop end-to-end tests for the full user flow of uploading a document and generating a summary, verifying content and timing.
+  - [x] Test with various document sizes and content types (e.g., very short text, text with images, etc.) to ensure error handling is robust.
     </tasks>
   </story>
 

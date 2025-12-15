@@ -534,6 +534,28 @@ jest.mock('@supabase/ssr', () => ({
 //   createClient: jest.fn(() => mockSupabaseClient),
 // }));
 
+// Mock next/font/google
+jest.mock('next/font/google', () => ({
+  Permanent_Marker: () => ({
+    className: 'mock-permanent-marker', // Provide a className property
+  }),
+}));
+
+// Mock window.matchMedia
+Object.defineProperty(window, 'matchMedia', {
+  writable: true,
+  value: jest.fn().mockImplementation(query => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: jest.fn(), // Deprecated
+    removeListener: jest.fn(), // Deprecated
+    addEventListener: jest.fn(),
+    removeEventListener: jest.fn(),
+    dispatchEvent: jest.fn(),
+  })),
+});
+
 globalThis.mockSupabaseClient = mockSupabaseClient;
 
 // Set up a default authenticated user for API routes before each test

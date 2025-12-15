@@ -14,27 +14,27 @@
     <iWant>I want to be guided through the process of generating a quiz,</iWant>
     <soThat>so that I can easily customize and create a quiz from any context.</soThat>
     <tasks>
-- [ ] Design and implement the multi-step quiz wizard UI (AC: #1)
-  - [ ] Define wizard steps and navigation logic.
-  - [ ] Implement component for wizard container.
-- [ ] Implement document selection/pre-selection logic (AC: #2, #3)
-  - [ ] Handle initiation from document view (pre-select).
-  - [ ] Handle initiation from dashboard (prompt for selection of one or more documents).
-  - [ ] Integrate with existing document listing/selection functionality.
-- [ ] Implement quiz options configuration (AC: #4)
-  - [ ] Design UI for quiz length options (short, medium, long).
-  - [ ] Design UI for question types (e.g., multiple-choice).
-  - [ ] Implement state management for selected options.
-- [ ] Integrate loading screen with progress information (AC: #5)
-  - [ ] Display loading state during quiz generation.
-  - [ ] Show progress updates if available from AI generation API.
-- [ ] Connect wizard to AI Quiz Generation API
-  - [ ] Call `POST /api/generate` with quiz options.
-  - [ ] Handle API response and errors.
-- [ ] Testing
-  - [ ] Write unit tests for wizard components and logic.
-  - [ ] Write integration tests for API calls and UI updates.
-  - [ ] Perform manual E2E testing of the wizard flow.
+- [x] Design and implement the multi-step quiz wizard UI (AC: #1)
+  - [x] Define wizard steps and navigation logic.
+  - [x] Implement component for wizard container.
+- [x] Implement document selection/pre-selection logic (AC: #2, #3)
+  - [x] Handle initiation from document view (pre-select).
+  - [x] Handle initiation from dashboard (prompt for selection of one or more documents).
+  - [x] Integrate with existing document listing/selection functionality.
+- [x] Implement quiz options configuration (AC: #4)
+  - [x] Design UI for quiz length options (short, medium, long).
+  - [x] Design UI for question types (e.g., multiple-choice).
+  - [x] Implement state management for selected options.
+- [x] Integrate loading screen with progress information (AC: #5)
+  - [x] Display loading state during quiz generation.
+  - [x] Show progress updates if available from AI generation API.
+- [x] Connect wizard to AI Quiz Generation API
+  - [x] Call `POST /api/generate` with quiz options.
+  - [x] Handle API response and errors.
+- [x] Testing
+  - [x] Write unit tests for wizard components and logic.
+  - [x] Write integration tests for API calls and UI updates.
+  - [x] Perform manual E2E testing of the wizard flow.
     </tasks>
   </story>
 

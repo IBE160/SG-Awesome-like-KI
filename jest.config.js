@@ -11,10 +11,7 @@ const customJestConfig = {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
   },
-  transform: {
-    '^.+\.(ts|tsx)$': ['babel-jest', { presets: ['next/babel', '@babel/preset-typescript'] }],
-    '^.+\.(js|jsx|mjs)$': ['babel-jest', { presets: ['next/babel'] }],
-  },
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'], // Added
   transformIgnorePatterns: [
     '/node_modules/(?!(?:.pnpm/)?(@shadcn/ui|@radix-ui|lucide-react|uuid)/)',
   ],

@@ -1,70 +1,74 @@
+// src/components/quiz-wizard/QuizWizard.tsx
 'use client';
 
 import React, { useState } from 'react';
 import DocumentSelectionStep from './DocumentSelectionStep';
-import SummaryOptionsStep from './SummaryOptionsStep';
+import QuizOptionsStep from './QuizOptionsStep';
 import GenerationProgressStep from './GenerationProgressStep';
 
-type SummaryFormat = 'paragraph' | 'bullet_points'; // Define SummaryFormat here
+// Define QuizLength and QuestionType here or import from a common type file
+type QuizLength = 'short' | 'medium' | 'long';
+type QuestionType = 'multiple_choice'; // For now, only multiple choice
 
-interface SummaryWizardProps {
-  initialDocumentId?: string; // Optional prop for pre-selecting a document
+interface QuizWizardProps {
+  initialDocumentId?: string; // Optional prop for pre-selecting a single document
+  onClose: () => void; // Function to call when the wizard is closed/completed
 }
 
-const SummaryWizard: React.FC<SummaryWizardProps> = ({ initialDocumentId }) => {
+const QuizWizard: React.FC<QuizWizardProps> = ({ initialDocumentId, onClose }) => {
   const [currentStep, setCurrentStep] = useState(0);
-  const [selectedDocumentId, setSelectedDocumentId] = useState<string | null>(initialDocumentId || null);
-  const [summaryOptions, setSummaryOptions] = useState<{ format: SummaryFormat }>({ format: 'paragraph' });
+  const [selectedDocumentIds, setSelectedDocumentIds] = useState<string[]>(
+    initialDocumentId ? [initialDocumentId] : []
+  );
+  const [quizOptions, setQuizOptions] = useState<{
+    quizLength: QuizLength;
+    questionType: QuestionType;
+  }>({
+    quizLength: 'medium', // Default
+    questionType: 'multiple_choice', // Default
+  });
   const [showDocumentSelectionError, setShowDocumentSelectionError] = useState(false); // New state for error message
-  
-  // States for summary generation
+
+  // States for quiz generation
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
   const [generationStatus, setGenerationStatus] = useState<string | null>(null);
   const [generatedContentId, setGeneratedContentId] = useState<string | null>(null);
   const [generationError, setGenerationError] = useState<string | null>(null);
 
-  const handleGenerateSummary = async () => {
-    if (!selectedDocumentId) {
-      setGenerationError('No document selected for summary generation.');
+  const handleGenerateQuiz = async () => {
+    if (selectedDocumentIds.length === 0) {
+      setGenerationError('No document(s) selected for quiz generation.');
       return;
     }
 
     setIsGenerating(true);
-    setGenerationStatus('Starting summary generation...');
+    setGenerationStatus('Starting quiz generation...');
     setGeneratedContentId(null);
     setGenerationError(null);
 
-        try {
-
-          console.log('SummaryWizard: Attempting API call with selectedDocumentId:', selectedDocumentId); // ADD THIS LOG
-
-          const response = await fetch('/api/generate', {
-
-            method: 'POST',
-
-            headers: { 'Content-Type': 'application/json' },
-
-                body: JSON.stringify({
-
-                  studyMaterialId: selectedDocumentId,          type: 'summary', // Always 'summary' for this wizard
-
-              options: { format: summaryOptions.format },
-
-            }),
-
-          });
+    try {
+            // Assuming /api/generate handles multiple document IDs and quiz options
+            console.log('QuizWizard: Attempting API call with selectedDocumentIds:', selectedDocumentIds); // ADD THIS LOG
+            const response = await fetch('/api/generate', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    studyMaterialIds: selectedDocumentIds, // Use array for multiple documents          type: 'quiz', // Always 'quiz' for this wizard
+                options: quizOptions,
+              }),
+            });
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || data.message || 'Failed to generate summary.');
+        throw new Error(data.error || data.message || 'Failed to generate quiz.');
       }
 
       setGeneratedContentId(data.content.id); // Assuming the API returns the generated content ID
-      setGenerationStatus('Summary generated successfully!');
-      // TODO: Potentially navigate to the summary view page here
+      setGenerationStatus('Quiz generated successfully!');
+      // TODO: Potentially navigate to the generated quiz view page here
     } catch (err: any) {
-      setGenerationError(err.message || 'An unexpected error occurred during summary generation.');
+      setGenerationError(err.message || 'An unexpected error occurred during quiz generation.');
     } finally {
       setIsGenerating(false);
     }
@@ -75,30 +79,30 @@ const SummaryWizard: React.FC<SummaryWizardProps> = ({ initialDocumentId }) => {
       name: 'Document Selection',
       component: (
         <DocumentSelectionStep
-          onDocumentSelect={setSelectedDocumentId}
-          preselectedDocumentId={initialDocumentId}
+          onDocumentSelect={setSelectedDocumentIds} // This step should handle multiple selections
+          preselectedDocumentIds={initialDocumentId ? [initialDocumentId] : []} // Pass array
         />
       ),
     },
     {
-      name: 'Summary Options',
+      name: 'Quiz Options',
       component: (
-        <SummaryOptionsStep
-          onSelectOptions={setSummaryOptions}
-          initialFormat={summaryOptions.format}
+        <QuizOptionsStep
+          onSelectOptions={setQuizOptions}
+          initialOptions={quizOptions}
         />
       ),
     },
     {
-      name: 'Generate Summary',
+      name: 'Generate Quiz',
       component: (
         <GenerationProgressStep
           isGenerating={isGenerating}
           status={generationStatus}
           error={generationError}
           generatedContentId={generatedContentId}
-          onGenerate={handleGenerateSummary}
-          selectedDocumentId={selectedDocumentId} // Pass selectedDocumentId
+          onGenerate={handleGenerateQuiz}
+          // Note: selectedDocumentIds might need to be passed down if GenerationProgressStep needs it
         />
       ),
     },
@@ -106,16 +110,16 @@ const SummaryWizard: React.FC<SummaryWizardProps> = ({ initialDocumentId }) => {
 
   const handleNext = () => {
     if (currentStep === 0) {
-      if (!selectedDocumentId) {
+      if (selectedDocumentIds.length === 0) {
         setShowDocumentSelectionError(true); // Set error state
         return;
       } else {
         setShowDocumentSelectionError(false); // Clear error if document is selected
       }
     }
-    if (currentStep === steps.length - 1) { // If it's the last step, trigger generation
-      handleGenerateSummary();
-      return; // Prevent advancing the step further
+    if (currentStep === steps.length - 1) {
+      handleGenerateQuiz();
+      return;
     }
     if (currentStep < steps.length - 1) {
       setCurrentStep(currentStep + 1);
@@ -133,7 +137,7 @@ const SummaryWizard: React.FC<SummaryWizardProps> = ({ initialDocumentId }) => {
     <div className="flex flex-col items-center justify-center bg-gray-100 py-8 px-4">
       <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md md:max-w-3xl lg:max-w-4xl xl:max-w-5xl mx-auto max-h-[90vh] overflow-y-auto">
         <h2 className="text-2xl font-semibold text-gray-800 mb-6 text-center">
-          Guided Summary Generation
+          Guided Quiz Generation
         </h2>
 
         {/* Step Indicator */}
@@ -165,7 +169,7 @@ const SummaryWizard: React.FC<SummaryWizardProps> = ({ initialDocumentId }) => {
         {/* Navigation Buttons */}
         {showDocumentSelectionError && currentStep === 0 && (
           <p className="text-red-500 text-center mb-4">
-            Please select a document to proceed.
+            Please select at least one document to proceed.
           </p>
         )}
         <div className="flex justify-between">
@@ -178,7 +182,7 @@ const SummaryWizard: React.FC<SummaryWizardProps> = ({ initialDocumentId }) => {
           </button>
           <button
             onClick={handleNext}
-            disabled={isGenerating || (currentStep === 0 && !selectedDocumentId)}
+            disabled={isGenerating || (currentStep === 0 && selectedDocumentIds.length === 0)}
             className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
           >
             {currentStep === steps.length - 1 ? (isGenerating ? 'Generating...' : 'Generate') : 'Next'}
@@ -189,4 +193,4 @@ const SummaryWizard: React.FC<SummaryWizardProps> = ({ initialDocumentId }) => {
   );
 };
 
-export default SummaryWizard;
+export default QuizWizard;

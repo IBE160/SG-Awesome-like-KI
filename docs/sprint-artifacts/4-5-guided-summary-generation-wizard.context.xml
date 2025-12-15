@@ -14,26 +14,26 @@
     <iWant>I want to be guided through the process of generating a summary,</iWant>
     <soThat>so that I can easily configure and create a summary from any context.</soThat>
     <tasks>
-- [ ] Design and implement the multi-step wizard UI (AC: #1)
-  - [ ] Define wizard steps and navigation logic.
-  - [ ] Implement component for wizard container.
-- [ ] Implement document selection/pre-selection logic (AC: #2, #3)
-  - [ ] Handle initiation from document view (pre-select).
-  - [ ] Handle initiation from dashboard (prompt for selection).
-  - [ ] Integrate with existing document listing/selection functionality.
-- [ ] Implement summary options configuration (AC: #4)
-  - [ ] Design UI for summary format options (paragraph, bullet points).
-  - [ ] Implement state management for selected options.
-- [ ] Integrate loading screen with progress information (AC: #5)
-  - [ ] Display loading state during summary generation.
-  - [ ] Show progress updates if available from AI generation API.
-- [ ] Connect wizard to AI Summary Generation API
-  - [ ] Call `POST /api/generate` with summary options.
-  - [ ] Handle API response and errors.
-- [ ] Testing
-  - [ ] Write unit tests for wizard components and logic.
-  - [ ] Write integration tests for API calls and UI updates.
-  - [ ] Perform manual E2E testing of the wizard flow.
+- [x] Design and implement the multi-step wizard UI (AC: #1)
+  - [x] Define wizard steps and navigation logic.
+  - [x] Implement component for wizard container.
+- [x] Implement document selection/pre-selection logic (AC: #2, #3)
+  - [x] Handle initiation from document view (pre-select).
+  - [x] Handle initiation from dashboard (prompt for selection).
+  - [x] Integrate with existing document listing/selection functionality.
+- [x] Implement summary options configuration (AC: #4)
+  - [x] Design UI for summary format options (paragraph, bullet points).
+  - [x] Implement state management for selected options.
+- [x] Integrate loading screen with progress information (AC: #5)
+  - [x] Display loading state during summary generation.
+  - [x] Show progress updates if available from AI generation API.
+- [x] Connect wizard to AI Summary Generation API
+  - [x] Call `POST /api/generate` with summary options.
+  - [x] Handle API response and errors.
+- [x] Testing
+  - [x] Write unit tests for wizard components and logic.
+  - [x] Write integration tests for API calls and UI updates.
+  - [x] Perform manual E2E testing of the wizard flow.
     </tasks>
   </story>
 
@@ -110,7 +110,7 @@
         <reason>Component for selecting a document within the wizard.</reason>
       </code_artifact>
       <code_artifact>
-        <path>src/app/page.tsx</path>
+        <path>src/app/dashboard/page.tsx</path>
         <kind>page</kind>
         <reason>Entry point for initiating the wizard from the dashboard.</reason>
       </code_artifact>

@@ -1,6 +1,6 @@
 # Story 5.1: Implement Core UI Design System
 
-Status: ready-for-dev
+Status: Approved
 
 ## Story
 
@@ -18,8 +18,8 @@ So that all user-facing components have a consistent, clean, and friendly aesthe
 
 ## Tasks / Subtasks
 
--   [ ] **Implement Core UI Components (AC: 1)**
-    -   [ ] Configure Tailwind CSS for "Guided Minimalism" principles (e.g., spacing, typography).
+-   [x] **Implement Core UI Components (AC: 1)**
+    -   [x] Configure Tailwind CSS for "Guided Minimalism" principles (e.g., spacing, typography).
     -   [ ] Integrate shadcn/ui components into the project.
     -   [ ] Create initial styled button components.
     -   [ ] Create initial styled form input and label components.

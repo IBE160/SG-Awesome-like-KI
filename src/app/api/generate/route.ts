@@ -30,26 +30,45 @@ export async function POST(req: Request) {
     const supabase = await createClient();
 
     const {
-      data: { session },
+      data: { user },
     }
-    = await supabase.auth.getSession();
+    = await supabase.auth.getUser(); // Changed to getUser
 
-    if (!session) {
+    if (!user) { // Check for user
       logger.warn('Unauthorized access attempt to API Generate', { requestId });
-      throw new NextResponse('Unauthorized', { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    userId = session.user.id; // Assign to the already declared userId
+    userId = user.id; // Use user.id
     let body;
     try {
       body = await req.json();
     } catch (parseError) {
       logger.error('Failed to parse request body as JSON', { requestId, error: parseError });
-      throw new NextResponse('Invalid JSON in request body', { status: 400 });
+      return NextResponse.json({ error: 'Invalid JSON in request body' }, { status: 400 });
     }
 
-    const { type, studyMaterialId, options } = body;
-    actualDocumentId = studyMaterialId; // Assign studyMaterialId to actualDocumentId
+    const { type, documentId, studyMaterialIds, options } = body;
+    let documentIdToFetch: string | undefined;
+
+    if (type === 'summary') {
+      documentIdToFetch = documentId;
+    } else if (type === 'quiz') {
+      if (!studyMaterialIds || !Array.isArray(studyMaterialIds) || studyMaterialIds.length === 0) {
+        logger.warn('Missing or empty studyMaterialIds for quiz generation', { requestId, userId, type });
+        return new NextResponse('Missing or empty studyMaterialIds for quiz generation', { status: 400 });
+      }
+      documentIdToFetch = studyMaterialIds[0];
+    } else {
+      logger.warn('Invalid request type', { requestId, userId, type });
+      return new NextResponse('Invalid type', { status: 400 });
+    }
+
+    if (!documentIdToFetch) {
+        logger.warn('Missing document ID for content generation', { requestId, userId, type });
+        return NextResponse.json({ error: 'Missing document ID for content generation' }, { status: 400 });
+    }
+    actualDocumentId = documentIdToFetch; // Ensure actualDocumentId for the query is derived from validated ID
     logger.info('Request body details', { requestId, userId, type, documentId: actualDocumentId, options });
 
     let docError: any;
@@ -67,13 +86,13 @@ export async function POST(req: Request) {
 
     if (docError || !document) {
       logger.error('Error retrieving document from Supabase', { requestId, docError, documentId: actualDocumentId, userId });
-      throw new NextResponse('Document not found or access denied', { status: 404 });
+      return NextResponse.json({ error: 'Document not found or access denied' }, { status: 404 });
     }
     logger.info('Document successfully retrieved from Supabase', { requestId, documentId: actualDocumentId, userId, class_section_id: document.class_section_id });
 
     if (!document.extracted_text) {
       logger.warn('Document has no extracted text content', { requestId, documentId, userId });
-      throw new NextResponse('Document has no text content to summarize', { status: 400 });
+      return NextResponse.json({ error: 'Document has no text content to summarize' }, { status: 400 });
     }
 
     let generatedContent: any;
@@ -91,7 +110,7 @@ export async function POST(req: Request) {
         }
         if (document.extracted_text.length < 100) { // Specific check for summary length
           logger.warn('Document content too short for meaningful summarization', { requestId, actualDocumentId, userId, content_length: document.extracted_text.length });
-          throw new NextResponse('Document content is too short for meaningful summarization.', { status: 400 });
+          return NextResponse.json({ error: 'Document content is too short for meaningful summarization.' }, { status: 400 });
         }
 
                     const prompt = `Please provide a concise summary of the following text, ensuring the summary is in the same language as the original text: ${document.extracted_text}`;        logger.info('Calling Gemini API for summary generation', { requestId, userId, prompt_length: prompt.length });
@@ -116,7 +135,7 @@ export async function POST(req: Request) {
       const { quizLength: requestedQuizLength } = options || {};
       if (!requestedQuizLength || !['short', 'medium', 'long'].includes(requestedQuizLength)) {
         logger.warn('Invalid or missing quizLength option for quiz generation', { requestId, userId, quizLength: requestedQuizLength });
-        throw new NextResponse('Invalid or missing quizLength option', { status: 400 });
+        return NextResponse.json({ error: 'Invalid or missing quizLength option' }, { status: 400 });
       }
 
       const textLength = document.extracted_text.length;
@@ -208,7 +227,7 @@ export async function POST(req: Request) {
 
     if (dbError) {
       logger.error('Error saving generated content to Supabase', { requestId, dbError, documentId: originalDocumentId, userId, contentType: type });
-      throw new NextResponse('Internal Server Error', { status: 500 });
+      return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
     logger.info('Generated content successfully saved to Supabase', { requestId, generatedContentId: data?.[0]?.id, documentId: originalDocumentId, userId, contentType: type });
 
