@@ -4,6 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { DragAndDropUploadArea } from '@/components/DragAndDropUploadArea';
 import { PostUploadActionsUI } from '@/components/PostUploadActionsUI';
 import { User } from '@supabase/supabase-js';
+import SummaryWizard from "@/components/summary-wizard/SummaryWizard";
+import QuizWizard from "@/components/quiz-wizard/QuizWizard";
 
 const MAX_RETRIES = 3;
 
@@ -17,7 +19,7 @@ interface UploadClientPageProps {
   user: User; // Passed for potential future use, though not directly used in this client component for auth
 }
 
-export default function UploadClientPage({ initialClasses, user }: UploadClientPageProps) {
+export default function UploadClientPage({ initialClasses }: UploadClientPageProps) {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [validationError, setValidationError] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState<boolean>(false);
@@ -26,12 +28,12 @@ export default function UploadClientPage({ initialClasses, user }: UploadClientP
   const [uploadedDocumentId, setUploadedDocumentId] = useState<string | null>(null);
   const [retryCount, setRetryCount] = useState<number>(0);
 
-  // New state for generation
-  const [isGenerating, setIsGenerating] = useState<boolean>(false);
-  const [generationStatus, setGenerationStatus] = useState<string | null>(null);
+  // New states for wizard generation
+  const [isSummaryWizardOpen, setIsSummaryWizardOpen] = useState<boolean>(false);
+  const [isQuizWizardOpen, setIsQuizWizardOpen] = useState<boolean>(false);
 
   // States for class and section assignment
-  const [classes, setClasses] = useState<ClassItem[]>(initialClasses);
+  const [classes] = useState<ClassItem[]>(initialClasses);
   const [sections, setSections] = useState<any[]>([]);
   const [selectedClassId, setSelectedClassId] = useState<string | null>(null);
   const [selectedSectionId, setSelectedSectionId] = useState<string | null>(null);
@@ -47,7 +49,7 @@ export default function UploadClientPage({ initialClasses, user }: UploadClientP
           } else {
             setSections([]);
           }
-        } catch (error) {
+        } catch {
           setSections([]);
         }
       };
@@ -56,30 +58,6 @@ export default function UploadClientPage({ initialClasses, user }: UploadClientP
       setSections([]);
     }
   }, [selectedClassId]);
-
-  const handleGeneration = async (type: 'summary' | 'quiz', studyMaterialId: string) => {
-    setIsGenerating(true);
-    setGenerationStatus(`Generating ${type}...`);
-    try {
-      const response = await fetch(`/api/generate`, { // Corrected: Use the static, real endpoint
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        // Corrected: Send 'type' in the body along with the ID
-        body: JSON.stringify({ studyMaterialIds: [studyMaterialId], type, options: { quizLength: 'short' } }), // Corrected to send as an array
-      });
-      const data = await response.json();
-      if (!response.ok) {
-        // The real API might return errors in a different format, e.g., data.message
-        throw new Error(data.error || data.message || `Failed to generate ${type}`);
-      }
-      setGenerationStatus(`${type.charAt(0).toUpperCase() + type.slice(1)} generated successfully! You can find it in the "Unorganized" section.`);
-    } catch (error) {
-      const err = error as Error;
-      setGenerationStatus(`Error: ${err.message}`);
-    } finally {
-      setIsGenerating(false);
-    }
-  };
 
   const handleFileUpload = (file: File) => {
     setSelectedFile(file);
@@ -187,30 +165,54 @@ export default function UploadClientPage({ initialClasses, user }: UploadClientP
     handleUploadDocument();
   };
 
-  const handleViewDocument = (docId: string) => {
-    console.log(`Placeholder: View document: ${docId}`);
-    // Future enhancement: Implement actual navigation to the document view page.
-    // For example: router.push(`/documents/${docId}`);
-  };
+
 
   if (uploadedDocumentId) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-100">
-        {isGenerating && (
-          <div className="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded relative mb-4" role="alert">
-            <span className="block sm:inline">{generationStatus}</span>
-          </div>
+        <div className="text-center mb-8">
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">Document Uploaded Successfully!</h2>
+          <p className="text-gray-600">What would you like to do next?</p>
+        </div>
+        <div className="flex space-x-4 mb-8">
+          <button
+            onClick={() => setIsSummaryWizardOpen(true)}
+            className="px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            disabled={isSummaryWizardOpen || isQuizWizardOpen}
+          >
+            Generate Summary
+          </button>
+          <button
+            onClick={() => setIsQuizWizardOpen(true)}
+            className="px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+            disabled={isSummaryWizardOpen || isQuizWizardOpen}
+          >
+            Generate Quiz
+          </button>
+        </div>
+
+        {isSummaryWizardOpen && uploadedDocumentId && (
+          <SummaryWizard
+            initialDocumentId={uploadedDocumentId}
+            onClose={() => setIsSummaryWizardOpen(false)}
+          />
         )}
-        {!isGenerating && generationStatus && (
-          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
-            <span className="block sm:inline">{generationStatus}</span>
-          </div>
+
+        {isQuizWizardOpen && uploadedDocumentId && (
+          <QuizWizard
+            initialDocumentId={uploadedDocumentId}
+            onClose={() => setIsQuizWizardOpen(false)}
+          />
         )}
-        <PostUploadActionsUI
-          documentId={uploadedDocumentId}
-          onGenerateSummary={(docId) => handleGeneration('summary', docId)}
-          onGenerateQuiz={(docId) => handleGeneration('quiz', docId)}
-        />
+
+        {!isSummaryWizardOpen && !isQuizWizardOpen && (
+            <PostUploadActionsUI
+              documentId={uploadedDocumentId}
+              onGenerateSummary={() => setIsSummaryWizardOpen(true)}
+              onGenerateQuiz={() => setIsQuizWizardOpen(true)}
+              onViewDocument={handleViewDocument}
+            />
+        )}
       </div>
     );
   }
