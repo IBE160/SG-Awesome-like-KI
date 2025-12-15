@@ -181,10 +181,29 @@ export async function POST(req: Request) {
         startTime = Date.now(); // Assign value here
         const geminiQuiz = await generateQuizWithGemini(quizPrompt, requestId);
         const duration = Date.now() - startTime; // End timer
-        // Clean the geminiQuiz string by removing markdown code block fences before parsing
-        const cleanedGeminiResponse = geminiQuiz.replace(/```json\n|\n```/g, '');
-        const parsedGeminiResponse = JSON.parse(cleanedGeminiResponse);
-        logger.info('Parsed Gemini Response:', { requestId, parsedGeminiResponse });
+
+        // Find the start and end of the JSON object in the response
+        const jsonStartIndex = geminiQuiz.indexOf('{');
+        const jsonEndIndex = geminiQuiz.lastIndexOf('}');
+        let cleanedGeminiResponse = '';
+
+        if (jsonStartIndex !== -1 && jsonEndIndex !== -1 && jsonEndIndex > jsonStartIndex) {
+            cleanedGeminiResponse = geminiQuiz.substring(jsonStartIndex, jsonEndIndex + 1);
+        } else {
+            // Fallback if direct { } aren't found, try removing markdown fences as before
+            cleanedGeminiResponse = geminiQuiz.replace(/```json\n|\n```/g, '');
+            logger.warn('JSON object boundaries not found, falling back to markdown fence removal.', { requestId, geminiQuizSample: geminiQuiz.substring(0, 200) });
+        }
+        
+        let parsedGeminiResponse;
+        try {
+            parsedGeminiResponse = JSON.parse(cleanedGeminiResponse);
+            logger.info('Parsed Gemini Response:', { requestId, parsedGeminiResponse });
+        } catch (parseError: any) {
+            logger.error('Failed to parse Gemini response into JSON', { requestId, cleanedGeminiResponse, parseError: parseError.message });
+            throw new GeminiAPIError(`Failed to parse Gemini response: ${parseError.message}`, 500, parseError);
+        }
+
         motivationalFeedback = parsedGeminiResponse.motivational_feedback; // Extract motivational feedback
         let quizData = parsedGeminiResponse.quiz; // Extract quiz
 
