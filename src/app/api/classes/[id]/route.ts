@@ -67,4 +67,34 @@ export async function DELETE(req: NextRequest, { params: paramsPromise }: { para
       return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
   }
+
+export async function GET(req: NextRequest, { params: paramsPromise }: { params: Promise<{ id: string }> }) {
+  try {
+    const params = await paramsPromise;
+    const classId = params.id;
+    const supabase = await createClient();
+
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const { data: cls, error } = await supabase
+      .from("classes")
+      .select("id, name")
+      .eq("id", classId)
+      .eq("user_id", user.id)
+      .single();
+
+    if (error || !cls) {
+      console.error("Error fetching class:", error);
+      return NextResponse.json({ error: 'Class not found or unauthorized' }, { status: 404 });
+    }
+
+    return NextResponse.json({ name: cls.name }, { status: 200 });
+  } catch (error) {
+    console.error('Error in GET /api/classes/[id]:', error);
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+  }
+}
   

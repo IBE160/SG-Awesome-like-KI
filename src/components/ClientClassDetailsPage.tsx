@@ -133,9 +133,6 @@ export function ClientClassDetailsPage({ classId, initialClassName, initialStudy
               <SectionContainer
                 key={section.id}
                 section={section}
-                fileCount={fileCount}
-                summaryCount={summaryCount}
-                quizCount={quizCount}
               />
             );
           })
