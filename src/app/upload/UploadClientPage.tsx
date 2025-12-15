@@ -205,14 +205,7 @@ export default function UploadClientPage({ initialClasses }: UploadClientPagePro
           />
         )}
 
-        {!isSummaryWizardOpen && !isQuizWizardOpen && (
-            <PostUploadActionsUI
-              documentId={uploadedDocumentId}
-              onGenerateSummary={() => setIsSummaryWizardOpen(true)}
-              onGenerateQuiz={() => setIsQuizWizardOpen(true)}
-              onViewDocument={handleViewDocument}
-            />
-        )}
+
       </div>
     );
   }

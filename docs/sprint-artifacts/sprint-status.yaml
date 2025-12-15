@@ -61,9 +61,9 @@ development_status:
   4-4-motivational-feedback-explanations: done
   4-5-guided-summary-generation-wizard: done
   4-6-guided-quiz-generation-wizard: done
-  epic-4-retrospective: done
+  epic-4-retrospective: optional
   epic-5: contexted
-  5-1-implement-core-ui-design-system: review
+  5-1-implement-core-ui-design-system: done
   5-2-ensure-mobile-responsiveness: ready-for-dev
   5-3-implement-wcag-aa-screen-reader-support: ready-for-dev
   5-4-implement-reduced-motion-options: ready-for-dev
