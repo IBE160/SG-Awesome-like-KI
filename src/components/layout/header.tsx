@@ -49,10 +49,57 @@ export function Header({ pathname }: HeaderProps) {
           console.error('Failed to fetch section name:', error);
           title = sectionId.toUpperCase(); // Fallback
         }
+      } else if (pathSegments[0] === 'summary-view' && pathSegments[1]) { // Corrected summary view route
+        const summaryId = pathSegments[1];
+        try {
+          const summaryResponse = await fetch(`/api/summaries/${summaryId}`);
+          if (summaryResponse.ok) {
+            const summaryData = await summaryResponse.json();
+            const studyMaterialId = summaryData.study_material_id;
+            const studyMaterialResponse = await fetch(`/api/study-materials/${studyMaterialId}`);
+            if (studyMaterialResponse.ok) {
+              const studyMaterialData = await studyMaterialResponse.json();
+              title = studyMaterialData.name.toUpperCase();
+            } else {
+              console.error(`Failed to fetch study material name for ID: ${studyMaterialId}`);
+              title = `SUMMARY: ${studyMaterialId.toUpperCase()}`; // Fallback to ID
+            }
+          } else {
+            console.error(`Failed to fetch summary data for ID: ${summaryId}`);
+            title = `SUMMARY: ${summaryId.toUpperCase()}`; // Fallback to ID
+          }
+        } catch (error) {
+          console.error('Error fetching summary document name:', error);
+          title = `SUMMARY: ${summaryId.toUpperCase()}`; // Fallback
+        }
+      } else if (pathSegments[0] === 'quiz-take' && pathSegments[1]) {
+        const quizId = pathSegments[1];
+        try {
+          const quizResponse = await fetch(`/api/quizzes/${quizId}`);
+          if (quizResponse.ok) {
+            const quizData = await quizResponse.json();
+            const studyMaterialId = quizData.study_material_id;
+            const studyMaterialResponse = await fetch(`/api/study-materials/${studyMaterialId}`);
+            if (studyMaterialResponse.ok) {
+              const studyMaterialData = await studyMaterialResponse.json();
+              title = studyMaterialData.name.toUpperCase();
+            } else {
+              console.error(`Failed to fetch study material name for ID: ${studyMaterialId}`);
+              title = `QUIZ: ${studyMaterialId.toUpperCase()}`; // Fallback to ID
+            }
+          } else {
+            console.error(`Failed to fetch quiz data for ID: ${quizId}`);
+            title = `QUIZ: ${quizId.toUpperCase()}`; // Fallback to ID
+          }
+        } catch (error) {
+          console.error('Error fetching quiz document name:', error);
+          title = `QUIZ: ${quizId.toUpperCase()}`; // Fallback
+        }
       } else if (pathSegments.length > 0) {
         // For other pages, use the last segment as title
         title = pathSegments[pathSegments.length - 1].toUpperCase();
       }
+
 
       setPageTitle(title);
     };
