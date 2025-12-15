@@ -108,13 +108,19 @@ export function Header({ pathname }: HeaderProps) {
   }, [pathname]); // Re-run effect when pathname changes
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b bg-white px-4 py-3 flex items-center shadow-sm">
+    <header className="sticky top-0 z-40 w-full border-b bg-white px-4 py-3 flex items-center shadow-sm h-16">
+      <div className="flex-none">
+        <Link href="/" className="text-xl font-bold text-gray-800">
+          AI Study Buddy
+        </Link>
+      </div>
+
       {/* Right section for the page title, centered within its available space */}
       <div className="flex-1 flex justify-center items-center">
         {pageTitle && <h1 className="text-xl font-bold">{pageTitle}</h1>}
       </div>
 
-      <nav>
+      <nav className="flex-none">
       </nav>
     </header>
   );
