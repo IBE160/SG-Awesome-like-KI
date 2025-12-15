@@ -18,7 +18,7 @@ export default async function QuizTakePage({ params }: QuizTakePageProps) {
 
   const { data: generatedContent, error: contentError } = await supabase
     .from('generated_content')
-    .select('content')
+    .select('content, type')
     .eq('id', id)
     .single();
 
