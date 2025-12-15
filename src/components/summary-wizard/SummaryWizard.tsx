@@ -54,9 +54,10 @@ const SummaryWizard: React.FC<SummaryWizardProps> = ({ initialDocumentId }) => {
 
       setGeneratedContentId(data.generatedContentId); // Correctly extract from top-level
       setGenerationStatus('Summary generated successfully!');
-      // TODO: Potentially navigate to the summary view page here
+      setCurrentStep(steps.length - 1); // Advance to the new Generation Result step
     } catch (err: any) {
       setGenerationError(err.message || 'An unexpected error occurred during summary generation.');
+      setCurrentStep(steps.length - 1); // Stay on the current step but show error
     } finally {
       setIsGenerating(false);
     }
@@ -94,6 +95,19 @@ const SummaryWizard: React.FC<SummaryWizardProps> = ({ initialDocumentId }) => {
         />
       ),
     },
+    {
+      name: 'Generation Result',
+      component: (
+        <GenerationProgressStep
+          isGenerating={isGenerating}
+          status={generationStatus}
+          error={generationError}
+          generatedContentId={generatedContentId}
+          onGenerate={handleGenerateSummary}
+          selectedDocumentId={selectedDocumentId}
+        />
+      ),
+    },
   ];
 
   const handleNext = () => {
@@ -105,11 +119,11 @@ const SummaryWizard: React.FC<SummaryWizardProps> = ({ initialDocumentId }) => {
         setShowDocumentSelectionError(false); // Clear error if document is selected
       }
     }
-    if (currentStep === steps.length - 1) { // If it's the last step, trigger generation
+    if (currentStep === steps.length - 2) { // If it's the 'Generate Summary' step
       handleGenerateSummary();
       return; // Prevent advancing the step further
     }
-    if (currentStep < steps.length - 1) {
+    if (currentStep < steps.length - 1) { // Only advance if not on the last step
       setCurrentStep(currentStep + 1);
     }
   };
@@ -170,10 +184,10 @@ const SummaryWizard: React.FC<SummaryWizardProps> = ({ initialDocumentId }) => {
           </button>
           <button
             onClick={handleNext}
-            disabled={isGenerating || (currentStep === 0 && !selectedDocumentId)}
+            disabled={isGenerating || (currentStep === 0 && !selectedDocumentId) || currentStep === steps.length - 1}
             className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
           >
-            {currentStep === steps.length - 1 ? (isGenerating ? 'Generating...' : 'Generate') : 'Next'}
+            {currentStep === steps.length - 2 ? (isGenerating ? 'Generating...' : 'Generate') : currentStep === steps.length - 1 ? 'Done' : 'Next'}
           </button>
         </div>
       </div>

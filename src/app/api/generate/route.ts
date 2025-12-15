@@ -238,7 +238,7 @@ export async function POST(req: Request) {
     logger.info('Generated content successfully saved to Supabase', { requestId, generatedContentId: data?.[0]?.id, documentId: originalDocumentId, userId, contentType: type });
 
     logger.info('API Generate Request completed successfully', { requestId, userId, type, documentId: originalDocumentId, metrics: requestMetrics });
-    return NextResponse.json({ content: generatedContent, message: userMessage });
+    return NextResponse.json({ content: generatedContent, message: userMessage, generatedContentId: data?.[0]?.id });
   } catch (err: any) { // Top-level catch block
     if (err instanceof NextResponse) {
       return err; // Return the specific NextResponse
