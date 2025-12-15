@@ -47,7 +47,8 @@ export const QuizProvider: React.FC<QuizProviderProps> = ({ children, initialQui
   const [quizCompleted, setQuizCompleted] = useState(false);
 
   const currentQuestion = quizData?.questions[currentQuestionIndex];
-  const isCorrect = currentQuestion ? selectedAnswer === currentQuestion.correctAnswer : null;
+  const normalizeAnswer = (answer: string | null | undefined) => (answer || '').trim().toLowerCase();
+  const isCorrect = currentQuestion ? normalizeAnswer(selectedAnswer) === normalizeAnswer(currentQuestion.correctAnswer) : null;
 
   const handleAnswerSelect = (value: string) => {
     setSelectedAnswer(value);
@@ -57,7 +58,18 @@ export const QuizProvider: React.FC<QuizProviderProps> = ({ children, initialQui
   const handleSubmitAnswer = () => {
     if (selectedAnswer !== null && currentQuestion) {
       setShowFeedback(true);
-      if (selectedAnswer === currentQuestion.correctAnswer) {
+
+      console.log('--- Debugging Answer Comparison ---');
+      console.log('Current Question:', currentQuestion.questionText);
+      console.log('Selected Answer (raw):', selectedAnswer);
+      console.log('Correct Answer (raw):', currentQuestion.correctAnswer);
+      console.log('Options:', currentQuestion.options);
+      console.log('Normalized Selected Answer:', normalizeAnswer(selectedAnswer));
+      console.log('Normalized Correct Answer:', normalizeAnswer(currentQuestion.correctAnswer));
+      console.log('Are they equal (normalized)?', normalizeAnswer(selectedAnswer) === normalizeAnswer(currentQuestion.correctAnswer));
+      console.log('--- End Debug ---');
+
+      if (normalizeAnswer(selectedAnswer) === normalizeAnswer(currentQuestion.correctAnswer)) {
         setScore(prevScore => prevScore + 1);
       }
     }

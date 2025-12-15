@@ -183,15 +183,20 @@ export async function POST(req: Request) {
         // Clean the geminiQuiz string by removing markdown code block fences before parsing
         const cleanedGeminiResponse = geminiQuiz.replace(/```json\n|\n```/g, '');
         const parsedGeminiResponse = JSON.parse(cleanedGeminiResponse);
+        logger.info('Parsed Gemini Response:', { requestId, parsedGeminiResponse });
         motivationalFeedback = parsedGeminiResponse.motivational_feedback; // Extract motivational feedback
         let quizData = parsedGeminiResponse.quiz; // Extract quiz
 
-        // Ensure each quiz question has an explanation, if not, provide a default message (AC3)
         if (Array.isArray(quizData)) {
           quizData = quizData.map((question: any) => {
             if (!question.explanation || question.explanation.trim() === '') {
               logger.warn('AI did not provide an explanation for a quiz question', { requestId, question: question.question });
-              return { ...question, explanation: 'Explanation not available.' };
+              question.explanation = 'Explanation not available.';
+            }
+            if (typeof question.answer !== 'string') {
+                logger.warn('AI did not provide a valid string answer for a quiz question, setting to empty string', { requestId, question: question.question, originalAnswer: question.answer });
+                question.answer = ''; // Ensure answer is always a string
+                logger.info('Question answer was invalid, set to empty string', { requestId, question: question.question, modifiedQuestion: question });
             }
             return question;
           });
