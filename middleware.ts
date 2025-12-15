@@ -54,9 +54,22 @@ export async function middleware(request: NextRequest) {
     }
   )
 
-  // This will refresh session if expired - required for Server Components
-  // and theoretical in `ManageClassesPage.tsx`
-  await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  const LOGIN_PATH = '/login'
+  const DASHBOARD_PATH = '/dashboard'
+  const isLoginPage = request.nextUrl.pathname === LOGIN_PATH
+  const isRootPath = request.nextUrl.pathname === '/'
+
+  if (user && isLoginPage) {
+    return NextResponse.redirect(new URL(DASHBOARD_PATH, request.url))
+  }
+
+  if (!user && (isRootPath || request.nextUrl.pathname.startsWith(DASHBOARD_PATH))) {
+    return NextResponse.redirect(new URL(LOGIN_PATH, request.url))
+  }
 
   return response
 }

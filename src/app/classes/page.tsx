@@ -103,14 +103,7 @@ export default function ClassesPage() {
           </Link>
         </div>
 
-        <form action="/auth/sign-out" method="post">
-          <button
-            className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
-            type="submit"
-          >
-            Log out
-          </button>
-        </form>
+
       </div>
 
       {loading && <p>Loading content...</p>}
