@@ -65,7 +65,7 @@ export default function UploadClientPage({ initialClasses, user }: UploadClientP
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         // Corrected: Send 'type' in the body along with the ID
-        body: JSON.stringify({ studyMaterialId, type, options: { quizLength: 'short' } }), // Added a default quizLength
+        body: JSON.stringify({ studyMaterialIds: [studyMaterialId], type, options: { quizLength: 'short' } }), // Corrected to send as an array
       });
       const data = await response.json();
       if (!response.ok) {

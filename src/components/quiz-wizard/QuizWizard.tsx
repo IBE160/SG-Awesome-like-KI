@@ -47,8 +47,7 @@ const QuizWizard: React.FC<QuizWizardProps> = ({ initialDocumentId, onClose }) =
     setGenerationError(null);
 
     try {
-            // Assuming /api/generate handles multiple document IDs and quiz options
-            console.log('QuizWizard: Attempting API call with selectedDocumentIds:', selectedDocumentIds); // ADD THIS LOG
+            // Assuming /api/generate handles multiple document IDs and quiz options // ADD THIS LOG
             const response = await fetch('/api/generate', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
