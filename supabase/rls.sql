@@ -69,3 +69,22 @@ CREATE POLICY "Users can view their own folder" ON storage.objects FOR SELECT US
 CREATE POLICY "Users can upload to their own folder" ON storage.objects FOR INSERT WITH CHECK (bucket_id = 'study-materials' AND (storage.foldername(name))[1] = auth.uid()::text);
 CREATE POLICY "Users can update their own files" ON storage.objects FOR UPDATE USING (bucket_id = 'study-materials' AND (storage.foldername(name))[1] = auth.uid()::text);
 CREATE POLICY "Users can delete their own files" ON storage.objects FOR DELETE USING (bucket_id = 'study-materials' AND (storage.foldername(name))[1] = auth.uid()::text);
+
+--
+-- RLS Policies for `profiles`
+--
+ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Users can insert their own profile" ON public.profiles;
+DROP POLICY IF EXISTS "Users can view their own profile" ON public.profiles;
+DROP POLICY IF EXISTS "Users can update their own profile" ON public.profiles;
+
+CREATE POLICY "Users can insert their own profile" ON public.profiles
+  FOR INSERT WITH CHECK (auth.uid() = id);
+
+CREATE POLICY "Users can view their own profile" ON public.profiles
+  FOR SELECT USING (auth.uid() = id);
+
+CREATE POLICY "Users can update their own profile" ON public.profiles
+  FOR UPDATE USING (auth.uid() = id);
+
