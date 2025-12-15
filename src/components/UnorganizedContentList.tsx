@@ -43,6 +43,47 @@ export const UnorganizedContentList = () => {
     fetchItems();
   }, []);
 
+  const handleDeleteMaterial = async (materialId: string) => {
+    if (!confirm('Are you sure you want to delete this entire material and all its generated content?')) {
+      return;
+    }
+    try {
+      const response = await fetch(`/api/unorganized/${materialId}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) {
+        const errData = await response.json();
+        throw new Error(errData.error || 'Failed to delete material');
+      }
+      setItems(prevItems => prevItems.filter(item => item.id !== materialId));
+    } catch (err) {
+      setError((err as Error).message);
+    }
+  };
+
+  const handleDeleteGeneratedContent = async (materialId: string, contentId: string) => {
+    if (!confirm('Are you sure you want to delete this generated content?')) {
+      return;
+    }
+    try {
+      const response = await fetch(`/api/generated-content/${contentId}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) {
+        const errData = await response.json();
+        throw new Error(errData.error || 'Failed to delete generated content');
+      }
+      setItems(prevItems => prevItems.map(material => 
+        material.id === materialId
+          ? { ...material, generated_content: material.generated_content.filter(content => content.id !== contentId) }
+          : material
+      ));
+    } catch (err) {
+      setError((err as Error).message);
+    }
+  };
+
+
   if (loading) return <p>Loading content...</p>;
   if (error) return <p className="text-red-500">Error: {error}</p>;
   if (items.length === 0) return <p>No unorganized content found.</p>;
@@ -51,39 +92,55 @@ export const UnorganizedContentList = () => {
     <div className="space-y-6">
       {items.map((material) => (
         <div key={material.id} className="p-4 border rounded-lg bg-white shadow">
-          <h3 className="font-bold text-lg text-gray-800">
-            From: {material.original_name}
-          </h3>
+          <div className="flex justify-between items-center mb-3">
+            <h3 className="font-bold text-lg text-gray-800">
+              From: {material.original_name}
+            </h3>
+            <button
+              onClick={() => handleDeleteMaterial(material.id)}
+              className="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600"
+            >
+              Delete File
+            </button>
+          </div>
           <p className="text-sm text-gray-500 mb-3">
             Uploaded on: {new Date(material.created_at).toLocaleDateString()}
           </p>
           <div className="space-y-3 pl-4 border-l-2">
             {material.generated_content.map((content) => (
-              <div key={content.id} className="p-3 bg-gray-50 rounded-md">
-                <p className="font-semibold capitalize text-gray-700">{content.type}</p>
-                {content.type === 'summary' && content.content.summary && (
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-                    <p className="text-sm text-gray-600 truncate">Summary: {content.content.summary}</p>
-                    <Link href={`/summary-view/${content.id}`} passHref>
-                      <button className="bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 mt-2 sm:mt-0">
-                        Read Summary
-                      </button>
-                    </Link>
-                  </div>
-                )}
-                {content.type === 'quiz' && content.content.quiz && (
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-                    <p className="text-sm text-gray-600">
-                      Quiz: {content.content.quiz.length} questions
-                      {content.content.message && ` (${content.content.message})`}
-                    </p>
-                    <Link href={`/quiz-take/${content.id}`} passHref>
-                      <button className="bg-green-500 text-white px-3 py-1 rounded text-sm hover:bg-green-600 mt-2 sm:mt-0">
-                        Start Quiz
-                      </button>
-                    </Link>
-                  </div>
-                )}
+              <div key={content.id} className="p-3 bg-gray-50 rounded-md flex justify-between items-center">
+                <div>
+                  <p className="font-semibold capitalize text-gray-700">{content.type}</p>
+                  {content.type === 'summary' && content.content.summary && (
+                    <div className="flex flex-col sm:flex-row sm:items-center">
+                      <p className="text-sm text-gray-600 whitespace-normal break-words">Summary: {content.content.summary}</p>
+                      <Link href={`/summary-view/${content.id}`} passHref>
+                        <button className="bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 mt-2 sm:mt-0 ml-0 sm:ml-2">
+                          Read Summary
+                        </button>
+                      </Link>
+                    </div>
+                  )}
+                  {content.type === 'quiz' && content.content.quiz && (
+                    <div className="flex flex-col sm:flex-row sm:items-center">
+                      <p className="text-sm text-gray-600">
+                        Quiz: {content.content.quiz.length} questions
+                        {content.content.message && ` (${content.content.message})`}
+                      </p>
+                      <Link href={`/quiz-take/${content.id}`} passHref>
+                        <button className="bg-green-500 text-white px-3 py-1 rounded text-sm hover:bg-green-600 mt-2 sm:mt-0 ml-0 sm:ml-2">
+                          Start Quiz
+                        </button>
+                      </Link>
+                    </div>
+                  )}
+                </div>
+                <button
+                  onClick={() => handleDeleteGeneratedContent(material.id, content.id)}
+                  className="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600 flex-shrink-0 ml-4"
+                >
+                  Delete
+                </button>
               </div>
             ))}
           </div>

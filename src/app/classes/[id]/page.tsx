@@ -30,7 +30,7 @@ export default async function ClassDetailsPage({ params }: { params: { id: strin
 
   const { data: studyMaterials, error: docError } = await supabase
     .from("study_materials")
-    .select("*")
+    .select("*, generated_content!generated_content_study_material_id_fkey(*)") // Explicitly specify the relationship
     .eq("class_id", classId)
     .eq("user_id", user.id); // Ensure user can only see their own materials
 

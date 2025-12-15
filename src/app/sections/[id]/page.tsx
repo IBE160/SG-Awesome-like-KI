@@ -115,6 +115,11 @@ export default function SectionDetailsPage() {
     }
   };
 
+  // Function to refresh the page after a material is moved
+  const handleMaterialMoved = () => {
+    router.refresh();
+  };
+
 
   if (isLoading) {
     return <div className="text-center py-8">Loading section content...</div>;
@@ -207,6 +212,7 @@ export default function SectionDetailsPage() {
         studyMaterials={studyMaterials}
         title={`Content in ${sectionName}`}
         description="Documents and generated content organized within this section."
+        onMaterialMoved={handleMaterialMoved} // Pass the handler here
       />
     </div>
   );

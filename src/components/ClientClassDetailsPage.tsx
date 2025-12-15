@@ -4,6 +4,25 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { ClassActions } from '@/components/ClassActions';
 import { SectionContainer } from '@/components/SectionContainer';
+import { OrganizedContentView } from '@/components/OrganizedContentView'; // Import OrganizedContentView
+
+interface GeneratedContent {
+  id: string;
+  type: 'summary' | 'quiz';
+  content: { summary?: string; quiz?: any; message?: string };
+  created_at?: string;
+}
+
+interface StudyMaterial {
+  id: string;
+  original_name: string;
+  file_type: string;
+  file_size: number;
+  extracted_text: string | null;
+  generated_content: GeneratedContent[];
+  created_at: string;
+  class_section_id: string | null; // Add this property
+}
 
 interface ClassSection {
   id: string;
@@ -14,7 +33,7 @@ interface ClassSection {
 interface ClientClassDetailsPageProps {
   classId: string;
   initialClassName: string;
-  initialStudyMaterials: any[];
+  initialStudyMaterials: StudyMaterial[]; // Update type here
   initialSections: ClassSection[];
 }
 
@@ -23,7 +42,7 @@ export function ClientClassDetailsPage({ classId, initialClassName, initialStudy
   const [showNewSectionForm, setShowNewSectionForm] = useState(false);
   const [newSectionName, setNewSectionName] = useState('');
   const [sections, setSections] = useState<ClassSection[]>(initialSections);
-  const [studyMaterialsState, setStudyMaterialsState] = useState<any[]>(initialStudyMaterials); // New state for study materials
+  const [studyMaterialsState, setStudyMaterialsState] = useState<StudyMaterial[]>(initialStudyMaterials); // New state for study materials
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -75,6 +94,11 @@ export function ClientClassDetailsPage({ classId, initialClassName, initialStudy
     const summaryCount = sectionMaterials.filter(material => material.type === 'summary').length;
     const quizCount = sectionMaterials.filter(material => material.type === 'quiz').length;
     return { fileCount, summaryCount, quizCount };
+  };
+
+  // Function to refresh the page after a material is moved
+  const handleMaterialMoved = () => {
+    router.refresh();
   };
 
   return (
@@ -133,6 +157,7 @@ export function ClientClassDetailsPage({ classId, initialClassName, initialStudy
               <SectionContainer
                 key={section.id}
                 section={section}
+                // studyMaterials={studyMaterialsState.filter(material => material.class_section_id === section.id)} // Pass materials to SectionContainer
               />
             );
           })
@@ -142,19 +167,12 @@ export function ClientClassDetailsPage({ classId, initialClassName, initialStudy
       </div>
 
       {/* Unorganized Content - materials without a section */}
-      <h2 className="text-2xl font-bold mt-8 mb-4">Unorganized Content</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {studyMaterialsState.filter(material => !material.class_section_id).map((material) => (
-          <div key={material.id} className="bg-white p-4 rounded-lg shadow-md">
-            <h3 className="text-lg font-semibold">{material.original_name}</h3>
-            <p className="text-gray-600 capitalize">Type: {material.type}</p>
-            {/* Add more material details or actions here */}
-          </div>
-        ))}
-        {studyMaterialsState.filter(material => !material.class_section_id).length === 0 && (
-          <p className="text-gray-600 col-span-full">All content is organized into sections.</p>
-        )}
-      </div>
+      <OrganizedContentView
+        studyMaterials={studyMaterialsState.filter(material => !material.class_section_id)}
+        title="Unorganized Content in this Class"
+        description="Study materials not yet assigned to a specific section within this class."
+        onMaterialMoved={handleMaterialMoved} // Pass the handler here
+      />
     </div>
   );
 }

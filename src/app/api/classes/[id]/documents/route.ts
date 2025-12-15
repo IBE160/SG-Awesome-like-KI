@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(req: NextRequest, context: any) {
+  const classId: string = context.params.id; // Explicitly cast to string
   try {
     const supabase = await createClient();
 
@@ -14,7 +15,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
     const { data: cls, error: classError } = await supabase
       .from("classes")
       .select("id, user_id")
-      .eq("id", params.id)
+      .eq("id", classId)
       .eq("user_id", user.id)
       .single();
 
@@ -29,7 +30,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
     const { data: studyMaterials, error: docError } = await supabase
       .from("study_materials")
       .select("*")
-      .eq("class_id", params.id);
+      .eq("class_id", classId);
 
     if (docError) {
       console.error("Document fetch error:", docError);

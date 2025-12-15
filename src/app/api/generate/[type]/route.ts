@@ -2,14 +2,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 
-export async function POST(
-  req: NextRequest,
-  { params }: { params: { type: string } }
-) {
+export async function POST(req: NextRequest, context: any) {
   const supabase = await createClient();
-  const { type } = params;
+  const contentType: string = context.params.type; // Explicitly cast to string
 
-  if (type !== 'summary' && type !== 'quiz') {
+  if (contentType !== 'summary' && contentType !== 'quiz') {
     return NextResponse.json({ error: 'Invalid generation type' }, { status: 400 });
   }
 
@@ -38,28 +35,28 @@ export async function POST(
     }
 
     // Generate mock content
-    const mockContent = `This is a generated ${type} for the document "${material.original_name}". It was created at ${new Date().toISOString()}.`;
+    const mockContent = `This is a generated ${contentType} for the document "${material.original_name}". It was created at ${new Date().toISOString()}.`;
 
     const { data: generatedRecord, error: insertError } = await supabase
       .from('generated_content')
       .insert({
         study_material_id: studyMaterialId,
         user_id: user.id,
-        type: type,
+        type: contentType,
         content: mockContent,
       })
       .select()
       .single();
 
     if (insertError) {
-      console.error(`Error generating ${type}:`, insertError);
-      return NextResponse.json({ error: `Failed to generate ${type}` }, { status: 500 });
+      console.error(`Error generating ${contentType}:`, insertError);
+      return NextResponse.json({ error: `Failed to generate ${contentType}` }, { status: 500 });
     }
 
-    return NextResponse.json({ message: `${type} generated successfully`, data: generatedRecord }, { status: 201 });
+    return NextResponse.json({ message: `${contentType} generated successfully`, data: generatedRecord }, { status: 201 });
 
   } catch (err) {
-    console.error(`Error in POST /api/generate/${type}:`, err);
+    console.error(`Error in POST /api/generate/${contentType}:`, err);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }

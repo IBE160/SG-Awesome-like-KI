@@ -1,12 +1,14 @@
 // src/components/OrganizedContentView.tsx
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { StudyMaterialCard } from './StudyMaterialCard'; // Import the new component
 
 type GeneratedContent = {
   id: string;
   type: string;
   content: any; // jsonb type
+  created_at?: string; // Add this as it's used in StudyMaterialCard
 };
 
 type StudyMaterial = {
@@ -16,21 +18,107 @@ type StudyMaterial = {
   file_size: number;
   extracted_text: string | null;
   generated_content: GeneratedContent[]; // Assuming generated_content is an array
+  created_at: string; // Add this as it's used in StudyMaterialCard
+  class_id: string | null; // Add this
+  class_section_id: string | null; // Add this
 };
 
 interface OrganizedContentViewProps {
   studyMaterials: StudyMaterial[];
   title: string;
   description?: string;
+  onMaterialMoved?: () => void; // Callback to notify parent a material was moved
 }
 
-export const OrganizedContentView: React.FC<OrganizedContentViewProps> = ({ studyMaterials, title, description }) => {
+export const OrganizedContentView: React.FC<OrganizedContentViewProps> = ({ studyMaterials: initialStudyMaterials, title, description, onMaterialMoved }) => {
+  const [studyMaterials, setStudyMaterials] = useState<StudyMaterial[]>(initialStudyMaterials);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    setStudyMaterials(initialStudyMaterials);
+  }, [initialStudyMaterials]);
+
+  const handleDeleteMaterial = async (materialId: string) => {
+    if (!confirm('Are you sure you want to delete this entire material and all its generated content?')) {
+      return;
+    }
+    try {
+      const response = await fetch(`/api/unorganized/${materialId}`, { // Reusing unorganized API for now
+        method: 'DELETE',
+      });
+      if (!response.ok) {
+        const errData = await response.json();
+        throw new Error(errData.error || 'Failed to delete material');
+      }
+      setStudyMaterials(prevMaterials => prevMaterials.filter(material => material.id !== materialId));
+    } catch (err) {
+      setError((err as Error).message);
+    }
+  };
+
+  const handleDeleteGeneratedContent = async (materialId: string, contentId: string) => {
+    if (!confirm('Are you sure you want to delete this generated content?')) {
+      return;
+    }
+    try {
+      const response = await fetch(`/api/generated-content/${contentId}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) {
+        const errData = await response.json();
+        throw new Error(errData.error || 'Failed to delete generated content');
+      }
+      setStudyMaterials(prevMaterials => prevMaterials.map(material => 
+        material.id === materialId
+          ? { ...material, generated_content: material.generated_content.filter(content => content.id !== contentId) }
+          : material
+      ));
+    } catch (err) {
+      setError((err as Error).message);
+    }
+  };
+
+  const handleMoveMaterial = async (
+    materialId: string,
+    targetClassId: string | null,
+    targetSectionId: string | null
+  ) => {
+    try {
+      const response = await fetch(`/api/study-materials/${materialId}/move`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ targetClassId, targetSectionId }),
+      });
+
+      if (!response.ok) {
+        const errData = await response.json();
+        throw new Error(errData.error || 'Failed to move material');
+      }
+
+      // If moved, remove from current view
+      setStudyMaterials(prevMaterials => prevMaterials.filter(material => material.id !== materialId));
+      
+      // Notify parent component that a material was moved (e.g., to trigger a refresh)
+      if (onMaterialMoved) {
+        onMaterialMoved();
+      }
+
+    } catch (err) {
+      setError((err as Error).message);
+      throw err; // Re-throw to allow StudyMaterialCard to catch and display error
+    }
+  };
+
+
   if (!studyMaterials || studyMaterials.length === 0) {
     return (
       <div className="text-center py-8">
         <h2 className="text-2xl font-bold text-gray-800 mb-2">{title}</h2>
         {description && <p className="text-gray-600 mb-4">{description}</p>}
         <p className="text-gray-500">No study materials assigned yet.</p>
+        {error && <p className="text-red-500 mt-4">{error}</p>}
       </div>
     );
   }
@@ -39,39 +127,17 @@ export const OrganizedContentView: React.FC<OrganizedContentViewProps> = ({ stud
     <div className="bg-white p-6 rounded-lg shadow-md max-w-4xl mx-auto my-8">
       <h2 className="text-2xl font-bold text-gray-800 mb-2">{title}</h2>
       {description && <p className="text-gray-600 mb-4">{description}</p>}
+      {error && <p className="text-red-500 mt-4">{error}</p>}
 
       <div className="space-y-6">
         {studyMaterials.map((material) => (
-          <div key={material.id} className="border p-4 rounded-lg bg-gray-50">
-            <h3 className="text-xl font-semibold text-blue-700 mb-2">{material.original_name} ({material.file_type})</h3>
-            <p className="text-sm text-gray-600 mb-3">Size: {(material.file_size / (1024 * 1024)).toFixed(2)} MB</p>
-
-            {material.extracted_text && (
-              <div className="mb-3">
-                <h4 className="font-medium text-gray-700">Extracted Text Preview:</h4>
-                <p className="text-sm text-gray-800 max-h-24 overflow-y-auto bg-gray-100 p-2 rounded">{material.extracted_text.substring(0, 300)}...</p>
-              </div>
-            )}
-
-            {material.generated_content && material.generated_content.length > 0 && (
-              <div className="mt-4 border-t pt-3">
-                <h4 className="text-lg font-medium text-gray-700 mb-2">Generated Content:</h4>
-                <div className="space-y-3">
-                  {material.generated_content.map((gc) => (
-                    <div key={gc.id} className="bg-white p-3 rounded shadow-sm border border-gray-200">
-                      <p className="font-semibold text-gray-800">Type: {gc.type}</p>
-                      <pre className="text-sm text-gray-700 whitespace-pre-wrap max-h-40 overflow-y-auto bg-gray-50 p-2 rounded mt-1">
-                        {JSON.stringify(gc.content, null, 2)}
-                      </pre>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-            {(!material.generated_content || material.generated_content.length === 0) && (
-              <p className="text-sm text-gray-500 mt-4">No generated content for this document.</p>
-            )}
-          </div>
+          <StudyMaterialCard
+            key={material.id}
+            material={material}
+            onDeleteMaterial={handleDeleteMaterial}
+            onDeleteGeneratedContent={handleDeleteGeneratedContent}
+            onMoveMaterial={handleMoveMaterial} // Pass the new handler
+          />
         ))}
       </div>
     </div>

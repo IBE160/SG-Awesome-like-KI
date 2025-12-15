@@ -28,6 +28,11 @@ export function Sidebar() {
             </Link>
           </Button>
           <Button variant="default" asChild className="justify-start shadow-sm hover:bg-primary/90">
+            <Link href="/unorganized">
+              Unorganized Content
+            </Link>
+          </Button>
+          <Button variant="default" asChild className="justify-start shadow-sm hover:bg-primary/90">
             <Link href="/profile">
               Profile
             </Link>
