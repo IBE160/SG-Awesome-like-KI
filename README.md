@@ -4,13 +4,28 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 Follow these steps to get your local development environment set up.
 
-1.  **Install Dependencies:**
+1.  **Install JavaScript Dependencies:**
     Open a terminal in the project root and run the following command to install the necessary packages:
     ```bash
     npm install
     ```
 
-2.  **Set Up Environment Variables:**
+2.  **Verify Python Installation:**
+    This project uses a Python Flask server for PDF parsing. Ensure Python 3 is installed on your system. You can check by running:
+    ```bash
+    python3 --version
+    # or
+    python --version
+    ```
+    If Python 3 is not installed, please download and install it from [python.org](https://www.python.org/).
+
+3.  **Install Python Dependencies:**
+    Once Python is set up, install the required Python packages for the PDF parser:
+    ```bash
+    npm run install-pdf-parser-deps
+    ```
+
+4.  **Set Up Environment Variables:**
     This project requires API keys to connect to Supabase and Google Gemini.
     - First, copy the example environment file to a new local file:
       ```bash
