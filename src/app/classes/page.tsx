@@ -162,12 +162,14 @@ export default function ClassesPage() {
             {/* Render Wizards */}
             {isSummaryWizardOpen && (
               <SummaryWizard
+                key="summary-wizard" // Add key here
                 initialDocumentId={selectedDocumentId || undefined}
                 onClose={() => setIsSummaryWizardOpen(false)}
               />
             )}
             {isQuizWizardOpen && (
               <QuizWizard
+                key="quiz-wizard" // Add key here
                 initialDocumentId={selectedDocumentId || undefined}
                 onClose={() => setIsQuizWizardOpen(false)}
               />

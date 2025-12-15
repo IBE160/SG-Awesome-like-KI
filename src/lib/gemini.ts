@@ -1,6 +1,4 @@
-import { NextResponse } from 'next/server'; // Import NextResponse for direct error throwing
-
-import { GoogleGenerativeAI } from '@google/generative-ai'; // Uncomment and install if needed
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
 const GEMINI_MODEL_NAME = process.env.GEMINI_MODEL_NAME || 'gemini-pro';
 
@@ -19,6 +17,18 @@ if (!API_KEY_FOR_APP) {
 
 gemini = new GoogleGenerativeAI(API_KEY_FOR_APP); // Pass it directly
 
+
+export class GeminiAPIError extends Error {
+    status: number;
+    originalError: any;
+
+    constructor(message: string, status: number, originalError: any) {
+        super(message);
+        this.name = 'GeminiAPIError';
+        this.status = status;
+        this.originalError = originalError;
+    }
+}
 
 /**
  * Handles errors from the Gemini API.
@@ -56,7 +66,7 @@ export function handleGeminiError(geminiError: any, generationType: string, requ
         message = `Gemini API Error: ${geminiError.message}`;
     }
 
-    throw new NextResponse(message, { status }); // Throw NextResponse directly
+    throw new GeminiAPIError(message, status, geminiError); // Throw GeminiAPIError directly
 }
 
 

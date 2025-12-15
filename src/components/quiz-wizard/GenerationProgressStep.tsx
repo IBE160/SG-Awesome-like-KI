@@ -21,14 +21,6 @@ const GenerationProgressStep: React.FC<GenerationProgressStepProps> = ({
 }) => {
   const router = useRouter();
 
-  // Effect to navigate once content is generated
-  React.useEffect(() => {
-    if (generatedContentId && !isGenerating && !error) {
-      // Assuming a route like /quiz/[id] exists to view the generated quiz
-      router.push(`/quiz/${generatedContentId}`);
-    }
-  }, [generatedContentId, isGenerating, error, router]);
-
   return (
     <div className="p-4 text-center">
       <h3 className="text-xl font-medium text-gray-700 mb-4">Quiz Generation Progress</h3>
@@ -75,11 +67,13 @@ const GenerationProgressStep: React.FC<GenerationProgressStepProps> = ({
       {!isGenerating && !error && generatedContentId && (
         <div className="text-green-600">
           <p>Quiz generated successfully!</p>
-          <p className="text-sm text-gray-500">Redirecting to your quiz...</p>
-          {/* A direct link for fallback/testing */}
-          <a href={`/quiz/${generatedContentId}`} className="text-blue-500 hover:underline">
-            View Quiz
-          </a>
+          <p className="text-sm text-gray-500">
+            You can view your quiz{' '}
+            <a href={`/quiz/${generatedContentId}`} className="text-blue-500 hover:underline">
+              here
+            </a>
+            .
+          </p>
         </div>
       )}
     </div>

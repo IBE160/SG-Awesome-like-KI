@@ -1,8 +1,8 @@
 // src/components/quiz-wizard/QuizWizard.tsx
 'use client';
 
-import React, { useState } from 'react';
-import DocumentSelectionStep from './DocumentSelectionStep';
+import React, { useState, useCallback, useRef } from 'react';
+import DocumentSelectionStep, { DocumentSelectionStepHandle } from './DocumentSelectionStep';
 import QuizOptionsStep from './QuizOptionsStep';
 import GenerationProgressStep from './GenerationProgressStep';
 
@@ -17,9 +17,11 @@ interface QuizWizardProps {
 
 const QuizWizard: React.FC<QuizWizardProps> = ({ initialDocumentId, onClose }) => {
   const [currentStep, setCurrentStep] = useState(0);
+  // selectedDocumentIds will be managed by the parent via the ref for the first step
   const [selectedDocumentIds, setSelectedDocumentIds] = useState<string[]>(
     initialDocumentId ? [initialDocumentId] : []
   );
+  const documentSelectionRef = useRef<DocumentSelectionStepHandle>(null);
   const [quizOptions, setQuizOptions] = useState<{
     quizLength: QuizLength;
     questionType: QuestionType;
@@ -47,12 +49,13 @@ const QuizWizard: React.FC<QuizWizardProps> = ({ initialDocumentId, onClose }) =
     setGenerationError(null);
 
     try {
-            // Assuming /api/generate handles multiple document IDs and quiz options // ADD THIS LOG
+            // Assuming /api/generate handles multiple document IDs and quiz options
             const response = await fetch('/api/generate', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({
-                    studyMaterialIds: selectedDocumentIds, // Use array for multiple documents          type: 'quiz', // Always 'quiz' for this wizard
+              body: JSON.stringify({
+                studyMaterialIds: selectedDocumentIds,
+                type: 'quiz', // Always 'quiz' for this wizard
                 options: quizOptions,
               }),
             });
@@ -63,7 +66,7 @@ const QuizWizard: React.FC<QuizWizardProps> = ({ initialDocumentId, onClose }) =
         throw new Error(data.error || data.message || 'Failed to generate quiz.');
       }
 
-      setGeneratedContentId(data.content.id); // Assuming the API returns the generated content ID
+      setGeneratedContentId(data.generatedContentId); // Correctly extract from top-level
       setGenerationStatus('Quiz generated successfully!');
       // TODO: Potentially navigate to the generated quiz view page here
     } catch (err: any) {
@@ -78,7 +81,7 @@ const QuizWizard: React.FC<QuizWizardProps> = ({ initialDocumentId, onClose }) =
       name: 'Document Selection',
       component: (
         <DocumentSelectionStep
-          onDocumentSelect={setSelectedDocumentIds} // This step should handle multiple selections
+          ref={documentSelectionRef} // Pass the ref here
           preselectedDocumentIds={initialDocumentId ? [initialDocumentId] : []} // Pass array
         />
       ),
@@ -109,11 +112,14 @@ const QuizWizard: React.FC<QuizWizardProps> = ({ initialDocumentId, onClose }) =
 
   const handleNext = () => {
     if (currentStep === 0) {
-      if (selectedDocumentIds.length === 0) {
-        setShowDocumentSelectionError(true); // Set error state
+      const currentSelectedIds = documentSelectionRef.current?.getSelectedDocumentIds() || [];
+      setSelectedDocumentIds(currentSelectedIds); // Update parent state from ref
+
+      if (currentSelectedIds.length === 0) {
+        setShowDocumentSelectionError(true);
         return;
       } else {
-        setShowDocumentSelectionError(false); // Clear error if document is selected
+        setShowDocumentSelectionError(false);
       }
     }
     if (currentStep === steps.length - 1) {

@@ -22,13 +22,6 @@ const GenerationProgressStep: React.FC<GenerationProgressStepProps> = ({
 }) => {
   const router = useRouter();
 
-  useEffect(() => {
-    // Trigger generation when this step becomes active and a document is selected
-    if (selectedDocumentId && !isGenerating && !generatedContentId && !error) {
-      onGenerate();
-    }
-  }, [selectedDocumentId, isGenerating, generatedContentId, error, onGenerate]);
-
   const handleViewSummary = () => {
     if (generatedContentId) {
       router.push(`/summary-view/${generatedContentId}`); // Navigate to the summary view page

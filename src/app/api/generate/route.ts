@@ -3,7 +3,7 @@ import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 import { v4 as uuidv4 } from 'uuid'; // Import uuid
 
-import { generateSummaryWithGemini, generateQuizWithGemini, handleGeminiError } from '@/lib/gemini';
+import { generateSummaryWithGemini, generateQuizWithGemini, handleGeminiError, GeminiAPIError } from '@/lib/gemini';
 
 const logger = {
   info: (message: string, context?: object) => console.log(`INFO: ${message}`, context),
@@ -43,16 +43,17 @@ export async function POST(req: Request) {
     let body;
     try {
       body = await req.json();
+      logger.info('Raw request body received', { requestId, body }); // Diagnostic log
     } catch (parseError) {
       logger.error('Failed to parse request body as JSON', { requestId, error: parseError });
       return NextResponse.json({ error: 'Invalid JSON in request body' }, { status: 400 });
     }
 
-    const { type, documentId, studyMaterialIds, options } = body;
+    const { type, studyMaterialId, studyMaterialIds, options } = body;
     let documentIdToFetch: string | undefined;
 
     if (type === 'summary') {
-      documentIdToFetch = documentId;
+      documentIdToFetch = studyMaterialId;
     } else if (type === 'quiz') {
       if (!studyMaterialIds || !Array.isArray(studyMaterialIds) || studyMaterialIds.length === 0) {
         logger.warn('Missing or empty studyMaterialIds for quiz generation', { requestId, userId, type });
@@ -61,7 +62,7 @@ export async function POST(req: Request) {
       documentIdToFetch = studyMaterialIds[0];
     } else {
       logger.warn('Invalid request type', { requestId, userId, type });
-      return new NextResponse('Invalid type', { status: 400 });
+      return NextResponse.json({ error: 'Invalid type' }, { status: 400 });
     }
 
     if (!documentIdToFetch) {
@@ -241,6 +242,9 @@ export async function POST(req: Request) {
   } catch (err: any) { // Top-level catch block
     if (err instanceof NextResponse) {
       return err; // Return the specific NextResponse
+    } else if (err instanceof GeminiAPIError) { // Handle GeminiAPIError
+      logger.error('GeminiAPIError caught in top-level handler', { requestId, error: err.message, status: err.status, originalError: err.originalError });
+      return NextResponse.json({ error: err.message }, { status: err.status });
     }
     logger.error('Truly unhandled error during API Generate Request', { requestId, error: err, documentId: originalDocumentId, userId, type, metrics: requestMetrics });
     return NextResponse.json({ error: 'An unexpected internal server error occurred.' }, { status: 500 });

@@ -1,7 +1,7 @@
 // src/components/quiz-wizard/DocumentSelectionStep.tsx
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
 import { createClient } from '@/lib/supabase/client';
 
 interface StudyMaterial {
@@ -9,16 +9,29 @@ interface StudyMaterial {
   original_name: string;
 }
 
+// Define the interface for the ref handle
+export interface DocumentSelectionStepHandle {
+  getSelectedDocumentIds: () => string[];
+  setSelectedDocumentIdsExternally: (ids: string[]) => void;
+}
+
 interface DocumentSelectionStepProps {
-  onDocumentSelect: (documentIds: string[]) => void;
   preselectedDocumentIds?: string[];
 }
 
-const DocumentSelectionStep: React.FC<DocumentSelectionStepProps> = ({ onDocumentSelect, preselectedDocumentIds }) => {
-  const [documents, setDocuments] = useState<StudyMaterial[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-  const [localSelectedDocumentIds, setLocalSelectedDocumentIds] = useState<string[]>(preselectedDocumentIds || []);
+const DocumentSelectionStep = forwardRef<DocumentSelectionStepHandle, DocumentSelectionStepProps>(
+  ({ preselectedDocumentIds }, ref) => {
+    const [documents, setDocuments] = useState<StudyMaterial[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
+    const [localSelectedDocumentIds, setLocalSelectedDocumentIds] = useState<string[]>(preselectedDocumentIds || []);
+
+    useImperativeHandle(ref, () => ({
+      getSelectedDocumentIds: () => localSelectedDocumentIds,
+      setSelectedDocumentIdsExternally: (ids: string[]) => {
+        setLocalSelectedDocumentIds(ids);
+      },
+    }));
 
   useEffect(() => {
     const fetchDocuments = async () => {
@@ -49,23 +62,23 @@ const DocumentSelectionStep: React.FC<DocumentSelectionStepProps> = ({ onDocumen
         const validPreselected = preselectedDocumentIds?.filter(id => data?.some(doc => doc.id === id)) || [];
         if (validPreselected.length > 0) {
           setLocalSelectedDocumentIds(validPreselected);
-          onDocumentSelect(validPreselected);
+          // onDocumentSelect(validPreselected); // Removed from here
         } else {
           // If no valid preselected, or none, ensure initial state reflects no selection
           setLocalSelectedDocumentIds([]);
-          onDocumentSelect([]);
+          // onDocumentSelect([]); // Removed from here
         }
       }
       setLoading(false);
     };
 
     fetchDocuments();
-  }, [preselectedDocumentIds, onDocumentSelect]);
+  }, [preselectedDocumentIds]); // Removed onDocumentSelect from dependency array
 
   const handleLocalDocumentSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedOptions = Array.from(e.target.selectedOptions).map(option => option.value);
     setLocalSelectedDocumentIds(selectedOptions);
-    onDocumentSelect(selectedOptions);
+    // onDocumentSelect(selectedOptions); // Removed from here
   };
 
   return (
@@ -106,6 +119,6 @@ const DocumentSelectionStep: React.FC<DocumentSelectionStepProps> = ({ onDocumen
       )}
     </div>
   );
-};
+}); // Closing parenthesis and semicolon for forwardRef
 
 export default DocumentSelectionStep;

@@ -34,25 +34,17 @@ const SummaryWizard: React.FC<SummaryWizardProps> = ({ initialDocumentId }) => {
     setGeneratedContentId(null);
     setGenerationError(null);
 
-        try {
-
-          console.log('SummaryWizard: Attempting API call with selectedDocumentId:', selectedDocumentId); // ADD THIS LOG
-
-          const response = await fetch('/api/generate', {
-
-            method: 'POST',
-
-            headers: { 'Content-Type': 'application/json' },
-
-                body: JSON.stringify({
-
-                  studyMaterialId: selectedDocumentId,          type: 'summary', // Always 'summary' for this wizard
-
-              options: { format: summaryOptions.format },
-
-            }),
-
-          });
+    try {
+            // Assuming /api/generate handles multiple document IDs and quiz options
+            const response = await fetch('/api/generate', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                studyMaterialId: selectedDocumentId,
+                type: 'summary', // Always 'summary' for this wizard
+                options: { format: summaryOptions.format },
+              }),
+            });
 
       const data = await response.json();
 
@@ -60,7 +52,7 @@ const SummaryWizard: React.FC<SummaryWizardProps> = ({ initialDocumentId }) => {
         throw new Error(data.error || data.message || 'Failed to generate summary.');
       }
 
-      setGeneratedContentId(data.content.id); // Assuming the API returns the generated content ID
+      setGeneratedContentId(data.generatedContentId); // Correctly extract from top-level
       setGenerationStatus('Summary generated successfully!');
       // TODO: Potentially navigate to the summary view page here
     } catch (err: any) {
