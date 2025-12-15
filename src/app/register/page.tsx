@@ -29,7 +29,7 @@ export default function RegisterPage() {
     // Here you would typically call an API route to handle registration
     // For now, we'll simulate a success
     try {
-      const response = await fetch("/api/api/auth/register", {
+      const response = await fetch("/api/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
